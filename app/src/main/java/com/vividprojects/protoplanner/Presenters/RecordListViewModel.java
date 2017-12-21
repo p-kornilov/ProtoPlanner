@@ -7,9 +7,7 @@ import android.content.Context;
 import com.vividprojects.protoplanner.CoreData.Record;
 
 
-import com.vividprojects.protoplanner.DI.DaggerMainComponent;
-import com.vividprojects.protoplanner.DI.MainComponent;
-import com.vividprojects.protoplanner.DI.DataManagerModule;
+import com.vividprojects.protoplanner.DI.AppComponent;
 import com.vividprojects.protoplanner.DataManager.DataManager;
 import com.vividprojects.protoplanner.PPApplication;
 
@@ -24,16 +22,16 @@ import io.realm.RealmResults;
  * Created by Smile on 06.12.2017.
  */
 
-public class RecordListFragmentViewModel extends ViewModel {
+public class RecordListViewModel extends ViewModel {
     private final MutableLiveData<RealmResults<Record>> list = new MutableLiveData<RealmResults<Record>>();
 
     @Inject
     DataManager dataManager;
 
-    public RecordListFragmentViewModel(Context context) {
+    public RecordListViewModel(Context context) {
         super();
-        MainComponent dmc = ((PPApplication) context).getMainComponent();
-        dmc.inject(this);
+        AppComponent dmc = ((PPApplication) context).getMainComponent();
+     //   dmc.inject(this);
         Realm realm = Realm.getDefaultInstance();
         list.setValue(realm.where(Record.class).findAll());
     }

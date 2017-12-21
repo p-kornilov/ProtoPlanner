@@ -1,11 +1,8 @@
 package com.vividprojects.protoplanner.Interface;
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.CoreData.Label;
-import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.MainCommunication;
-import com.vividprojects.protoplanner.Presenters.RecordListFragmentViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.TMP.TestRecyclerAdapter;
 
@@ -89,13 +83,13 @@ public class RecordListFragment extends Fragment {
         };
 
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
- //       recycler.setAdapter(new TestRecyclerAdapter(ar,getActivity()));
+        recycler.setAdapter(new TestRecyclerAdapter(ar,getActivity()));
 //        recycler.setAdapter(new MyAdapter(testarray,getContext()));
  //       RealmResults<Record> ls = realm.where(Record.class).findAll();
 
-        final RecordListFragmentViewModel model = ViewModelProviders.of(getActivity()).get(RecordListFragmentViewModel.class);
+//        final RecordListViewModel model = ViewModelProviders.of(getActivity()).get(RecordListViewModel.class);
 
-        recycler.setAdapter(new RecordListAdapter(model.getTest(),getActivity().getApplicationContext()));
+ //       recycler.setAdapter(new RecordListAdapter(model.getTest(),getActivity().getApplicationContext()));
 /*        model.getList().observe(this,new Observer<RealmResults<Record>>() {
             @Override
             public void onChanged(@Nullable final RealmResults<Record> list) {
@@ -104,9 +98,11 @@ public class RecordListFragment extends Fragment {
             }
         });*/
 
+/*
         for (Record r:model.getTest()) {
             Log.d("Test", "Record - " + r.getId() + " " + r.getMainVariant().getTitle());
         }
+*/
 
     //    recycler.setAdapter(new RecordListAdapter(ls,mCallback));
         return v;

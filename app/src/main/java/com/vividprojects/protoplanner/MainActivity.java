@@ -11,17 +11,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.vividprojects.protoplanner.DI.AppComponent;
+import com.vividprojects.protoplanner.DataManager.DataManager;
 import com.vividprojects.protoplanner.Interface.BlockFragment;
 import com.vividprojects.protoplanner.Interface.RecordActivity;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity implements MainCommunication {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+
+    @Inject
+    DataManager dataManager;
 
     public void onRecordEditClick(String id) {
         Intent intent = new Intent(this, RecordActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -71,6 +79,16 @@ public class MainActivity extends AppCompatActivity implements MainCommunication
         int B = (color      ) & 0xff;
 
         tv.setText("Color is: A=" + A + " R=" + R + "G=" + G + "B=" + B);*/
+
+        AppComponent dmc = ((PPApplication) getApplication()).getMainComponent();
+        //dmc.inject(this);
+
+        dataManager.setContext(this);
+
+        Log.d("Test", "------------------------------ Dimension width " + getResources().getConfiguration().screenWidthDp);
+        Log.d("Test", "------------------------------ Dimension height " + dataManager.getHeight());
+        Log.d("Test", "------------------------------ Type of the device " + dataManager.getType());
+
     }
 
     @Override

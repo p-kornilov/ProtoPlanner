@@ -4,11 +4,9 @@ import android.app.Application;
 import android.util.Log;
 
 
+import com.vividprojects.protoplanner.DI.AppComponent;
 import com.vividprojects.protoplanner.DI.AppControllerModule;
-import com.vividprojects.protoplanner.DI.DaggerMainComponent;
-import com.vividprojects.protoplanner.DI.MainComponent;
-import com.vividprojects.protoplanner.DI.DataManagerModule;
-import com.vividprojects.protoplanner.DataManager.AppController;
+import com.vividprojects.protoplanner.DI.AppModule;
 import com.vividprojects.protoplanner.DataManager.DataManager;
 
 import javax.inject.Inject;
@@ -23,7 +21,7 @@ public class PPApplication extends Application {
 
     @Inject
     DataManager dataManager;
-    private MainComponent mainComponent;
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {
@@ -33,22 +31,22 @@ public class PPApplication extends Application {
         Realm.init(this);
         Log.d("Test", "------------------------------ Start");
 
-        MainComponent mainComponent = DaggerMainComponent.builder()
-                .dataManagerModule(new DataManagerModule())
+/*        appComponent = DaggerAppComponent.builder()
+                .dataManagerModule(new AppModule(this))
                 .appControllerModule(new AppControllerModule(getApplicationContext()))
-                .build();
-        mainComponent.inject(this);
+                .build();*/
+        appComponent.inject(this);
 
         dataManager.initDB();
-        dataManager.showDB();
+ //       dataManager.showDB();
 
    //     RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
    //     Realm.deleteRealm(realmConfiguration); // Clean slate
    //     Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
     }
 
-    public MainComponent getMainComponent() {
-        return mainComponent;
+    public AppComponent getMainComponent() {
+        return appComponent;
     }
 
 }

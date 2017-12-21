@@ -1,5 +1,6 @@
 package com.vividprojects.protoplanner.DataManager;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -9,6 +10,7 @@ import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
+import com.vividprojects.protoplanner.R;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,14 +30,32 @@ import io.realm.RealmResults;
 
 public class DataManager {
     private Realm realm;
+    private Context context;
 
-    public DataManager(){
+    public DataManager(Context context){
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
 
         realm = Realm.getDefaultInstance();
+        this.context = context;
+    }
+
+    public DataManager(){};
+
+    public int getHeight() {return context.getResources().getConfiguration().screenHeightDp;}
+
+    public Context getContext() {return context;}
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public String getType() {
+        boolean isTablet = context.getResources().getBoolean(R.bool.isTablet);
+        if (isTablet) return "This is tablet";
+        else return "This is phone";
     }
 
     public void initDB(){
