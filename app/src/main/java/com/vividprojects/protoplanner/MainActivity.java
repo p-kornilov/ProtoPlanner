@@ -77,11 +77,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             }
         });
 
-        initRecordsList();
-
-       /* TextView tv = (TextView) findViewById(R.id.hello_id);
-
-        int color = tv.getCurrentTextColor();
+/*        int color = tv.getCurrentTextColor();
         int A = (color >> 24) & 0xff; // or color >>> 24
         int R = (color >> 16) & 0xff;
         int G = (color >>  8) & 0xff;
@@ -122,9 +118,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         return super.onOptionsItemSelected(item);
     }
 
-    private void initRecordsList() {
-
-    }
 
     @Override
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
