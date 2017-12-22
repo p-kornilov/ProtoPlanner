@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.CoreData.Record;
-import com.vividprojects.protoplanner.DI.AppComponent;
-import com.vividprojects.protoplanner.DataManager.AppController;
-import com.vividprojects.protoplanner.MainCommunication;
+import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.PPApplication;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Widgets.Chip;
@@ -30,19 +28,21 @@ import javax.inject.Inject;
 public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.ViewHolder> {
 
     private boolean inDeletionMode = false;
-    private MainCommunication mCallback;
     private ViewGroup parent;
 
     private List<Record> data;
     private LayoutInflater inflater;
 
     @Inject
-    AppController appController;
+    NavigationController navigationController;
 
     public RecordListAdapter(List<Record> data,Context context) {
         this.data = data;
-        AppComponent mc = ((PPApplication) context).getMainComponent();
-       // mc.inject(this);
+
+        ((PPApplication) context.getApplicationContext()).getMainComponent().inject(this);   // TODO Пересмотреть, как можно сделать по аналогии с ViewModel - автоматическое инжектирование
+
+        Log.d("Test", "------------------------------ In RLA Type of the device " + navigationController.getType());
+
         //inflater = LayoutInflater.from(context);
     }
 
@@ -113,7 +113,8 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
                 public void onClick(View view) {
                     Log.d("Test", "------------------------------ Edit click" + data.getId());
                     //mCallback.onRecordEditClick(data.getId());
-                    appController.openRecord(data.getId());
+                   // appController.openRecord(data.getId());
+                    navigationController.openRecord(data.getId());
                 }
             });
         }

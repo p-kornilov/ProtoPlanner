@@ -1,7 +1,9 @@
 package com.vividprojects.protoplanner.DI;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.DataManager.DataManager;
 import com.vividprojects.protoplanner.PPApplication;
 
@@ -17,23 +19,25 @@ import dagger.android.AndroidInjectionModule;
 @Singleton
 @Component (modules = {
         AndroidInjectionModule.class,
-        AppModule.class
+        AppModule.class,
+        ActivityModule.class
 })
 public interface AppComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance
-        Builder application(Application application);
+        Builder application(Context context);
 
-    /*    @BindsInstance
+/*        @BindsInstance
         Builder appModule(AppModule appModule);*/
 
         AppComponent build();
     }
 
-    DataManager returnDataManager();
+   // DataManager returnDataManager();
 
     void inject(PPApplication application);
+    void inject(RecordListAdapter recordListAdapter);
 /*
     void inject(MainActivity activity);
     void inject(RecordListViewModel rvm);

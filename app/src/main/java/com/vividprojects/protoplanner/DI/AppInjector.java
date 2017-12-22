@@ -19,9 +19,11 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 public class AppInjector {
     private AppInjector() {}
-    public static void init(PPApplication ppApp) {
-        DaggerAppComponent.builder().application(ppApp)
-                .build().inject(ppApp);
+    public static AppComponent init(PPApplication ppApp) {
+        AppComponent ac = DaggerAppComponent.builder().application(ppApp)
+                .build();
+        ac.inject(ppApp);
+
         ppApp
                 .registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
                     @Override
@@ -59,6 +61,7 @@ public class AppInjector {
 
                     }
                 });
+        return ac;
     }
 
     private static void handleActivity(Activity activity) {

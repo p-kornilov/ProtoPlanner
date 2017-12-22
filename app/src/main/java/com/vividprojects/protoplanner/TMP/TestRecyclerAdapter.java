@@ -15,7 +15,21 @@ import com.vividprojects.protoplanner.R;
  */
 
 public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapter.ViewHolder> {
-    private String[] mDataset;
+    private String[] mDataset = {
+            "Test1",
+            "Test2",
+            "Test3",
+            "Test4",
+            "Test5",
+            "Test6",
+            "Test7",
+            "Test8",
+            "Test9",
+            "Test10",
+            "Test11",
+            "Test12",
+    };
+
     private LayoutInflater inflater;
 
     // Provide a reference to the views for each data item
@@ -38,8 +52,7 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TestRecyclerAdapter(String[] myDataset, Context context) {
-        mDataset = myDataset;
+    public TestRecyclerAdapter(Context context) {
         inflater = LayoutInflater.from(context);
     }
 

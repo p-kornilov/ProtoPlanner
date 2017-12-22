@@ -14,17 +14,17 @@ import dagger.Provides;
  */
 @Module (includes = ViewModelModule.class)
 public class AppModule {
-    private Context context;
+/*    Context context;
 
- public AppModule(Context context) {
-     this.context = context;
- };
+    public AppModule(Context context) {
+        this.context = context;
+    };*/
 
 //    public AppModule() {};
 
     @Provides
     @Singleton
-    DataManager provideDataManager(){
+    DataManager provideDataManager(Context context){
         return new DataManager(context);
     }
 }

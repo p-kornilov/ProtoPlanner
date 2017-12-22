@@ -93,7 +93,7 @@ public class DataManager {
                 Variant v = new Variant("Торт",m,7,100, "Мой торт");
                 Variant v2 = new Variant("Колбаса",m,3,50, "");
                 Variant v3 = new Variant("Хлеб",m,5,60, "");
-                Variant v4 = new Variant("Булка",m,5,60, "");
+                Variant v4 = new Variant("Фильтр для воды",m,5,60, "");
                 v4.addUrl("https://test.com");
                 realm.insertOrUpdate(v);
                 realm.insertOrUpdate(v2);
@@ -106,7 +106,7 @@ public class DataManager {
                 realm.insertOrUpdate(new VariantInShop("Четвертый магазин","https://shop4.ru","Адрес четвертого магазина","Комментарий для четвертого магазина hj hkhjk ghj ghj ghj", 104.0));
 
                 RealmResults<VariantInShop> vsps = realm.where(VariantInShop.class).findAll();
-                Variant vv1 = realm.where(Variant.class).contains("title","Булка").findFirst();
+                Variant vv1 = realm.where(Variant.class).contains("title","Фильтр для воды").findFirst();
                 Variant vv2 = realm.where(Variant.class).contains("title","Хлеб").findFirst();
 
                 for (VariantInShop vis : vsps) {

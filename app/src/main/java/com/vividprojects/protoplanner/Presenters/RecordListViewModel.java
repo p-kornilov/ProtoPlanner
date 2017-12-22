@@ -23,21 +23,19 @@ import io.realm.RealmResults;
  */
 
 public class RecordListViewModel extends ViewModel {
-    private final MutableLiveData<RealmResults<Record>> list = new MutableLiveData<RealmResults<Record>>();
+    private final MutableLiveData<List<Record>> list = new MutableLiveData<>();
 
     @Inject
     DataManager dataManager;
 
+    @Inject
     public RecordListViewModel(Context context) {
         super();
-        AppComponent dmc = ((PPApplication) context).getMainComponent();
-     //   dmc.inject(this);
-        Realm realm = Realm.getDefaultInstance();
-        list.setValue(realm.where(Record.class).findAll());
     }
 
-    public MutableLiveData<RealmResults<Record>> getList(){
+    public MutableLiveData<List<Record>> getList(){
 
+        list.setValue(dataManager.queryRecords().findAll());
         return list;
     }
 

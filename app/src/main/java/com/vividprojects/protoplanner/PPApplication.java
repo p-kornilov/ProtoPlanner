@@ -1,26 +1,32 @@
 package com.vividprojects.protoplanner;
 
+import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
 
 import com.vividprojects.protoplanner.DI.AppComponent;
-import com.vividprojects.protoplanner.DI.AppControllerModule;
-import com.vividprojects.protoplanner.DI.AppModule;
+import com.vividprojects.protoplanner.DI.AppInjector;
 import com.vividprojects.protoplanner.DataManager.DataManager;
 
 import javax.inject.Inject;
 
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
 import io.realm.Realm;
 
 /**
  * Created by Smile on 24.10.2017.
  */
 
-public class PPApplication extends Application {
+public class PPApplication extends Application implements HasActivityInjector {
+
+    @Inject
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
     @Inject
     DataManager dataManager;
+
     private AppComponent appComponent;
 
     @Override
@@ -35,7 +41,8 @@ public class PPApplication extends Application {
                 .dataManagerModule(new AppModule(this))
                 .appControllerModule(new AppControllerModule(getApplicationContext()))
                 .build();*/
-        appComponent.inject(this);
+        //appComponent.inject(this);
+        appComponent = AppInjector.init(this);
 
         dataManager.initDB();
  //       dataManager.showDB();
@@ -47,6 +54,11 @@ public class PPApplication extends Application {
 
     public AppComponent getMainComponent() {
         return appComponent;
+    }
+
+    @Override
+    public DispatchingAndroidInjector<Activity> activityInjector() {
+        return dispatchingAndroidInjector;
     }
 
 }

@@ -15,11 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.Adapters.ShopsAdapter;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
-import com.vividprojects.protoplanner.MainCommunication;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
@@ -36,7 +34,6 @@ public class RecordFragment extends Fragment {
 
     ChipsLayout chl;
     private Realm realm;
-    private MainCommunication mCallback;
     private boolean inCommentEdit = false;
     private ViewSwitcher commentSwitcher;
     private EditText commentEdit;
@@ -98,7 +95,7 @@ public class RecordFragment extends Fragment {
 
 //        lv.setAdapter(new TestRecyclerAdapter(values,getContext()));
         RealmResults<VariantInShop> ls = realm.where(VariantInShop.class).equalTo("variant.title","Булка").findAll();
-        lv.setAdapter(new ShopsAdapter(ls,mCallback));
+        lv.setAdapter(new ShopsAdapter(ls));
 //        lv.setAdapter(new ShopsAdapter(ls,mCallback));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());

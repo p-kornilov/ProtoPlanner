@@ -19,23 +19,32 @@ import android.view.MenuItem;
 import com.vividprojects.protoplanner.DI.AppComponent;
 import com.vividprojects.protoplanner.DataManager.DataManager;
 import com.vividprojects.protoplanner.Interface.BlockFragment;
+import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordActivity;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainCommunication {
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
+
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
     @Inject
+    DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
+
+    @Inject
     DataManager dataManager;
 
-    public void onRecordEditClick(String id) {
-        Intent intent = new Intent(this, RecordActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    @Inject
+    NavigationController navigationController;
 
-        intent.putExtra("RECORD_ID",id);
-        startActivity(intent);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationController.setCurrentActivity(this);
     }
 
     @Override
@@ -80,10 +89,10 @@ public class MainActivity extends AppCompatActivity implements MainCommunication
 
         tv.setText("Color is: A=" + A + " R=" + R + "G=" + G + "B=" + B);*/
 
-        AppComponent dmc = ((PPApplication) getApplication()).getMainComponent();
+       // AppComponent dmc = ((PPApplication) getApplication()).getMainComponent();
         //dmc.inject(this);
 
-        dataManager.setContext(this);
+        //dataManager.setContext(this);
 
         Log.d("Test", "------------------------------ Dimension width " + getResources().getConfiguration().screenWidthDp);
         Log.d("Test", "------------------------------ Dimension height " + dataManager.getHeight());
@@ -115,6 +124,11 @@ public class MainActivity extends AppCompatActivity implements MainCommunication
 
     private void initRecordsList() {
 
+    }
+
+    @Override
+    public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
+        return dispatchingAndroidInjector;
     }
 
 

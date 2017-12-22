@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
-import com.vividprojects.protoplanner.MainCommunication;
 import com.vividprojects.protoplanner.R;
 
 import java.util.HashSet;
@@ -29,19 +28,13 @@ public class ShopsAdapter extends RealmRecyclerViewAdapter<VariantInShop, ShopsA
     private boolean inDeletionMode = false;
     private Set<Integer> countersToDelete = new HashSet<Integer>();
    // private int mExpandedPosition=-1;
-    private MainCommunication mCallback;
     private boolean[] mExpandedArray;
 //    private RecyclerView masterRV;
 
-    public ShopsAdapter(OrderedRealmCollection<VariantInShop> data) {
+    public ShopsAdapter(OrderedRealmCollection<VariantInShop> data /*, RecyclerView rv*/) {
         super(data, true);
         setHasStableIds(true);
-    }
 
-    public ShopsAdapter(OrderedRealmCollection<VariantInShop> data, MainCommunication mCallback/*, RecyclerView rv*/) {
-        super(data, true);
-        setHasStableIds(true);
-        this.mCallback = mCallback;
         mExpandedArray = new boolean[data.size()];
 //        masterRV = rv;
     }
