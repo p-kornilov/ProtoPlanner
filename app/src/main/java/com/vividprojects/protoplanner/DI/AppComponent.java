@@ -38,6 +38,7 @@ public interface AppComponent {
 
     void inject(PPApplication application);
     void inject(RecordListAdapter recordListAdapter);
+
 /*
     void inject(MainActivity activity);
     void inject(RecordListViewModel rvm);

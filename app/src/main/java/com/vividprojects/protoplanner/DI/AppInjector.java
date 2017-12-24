@@ -7,7 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.PPApplication;
+
+import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import dagger.android.support.AndroidSupportInjection;
@@ -18,8 +21,9 @@ import dagger.android.support.HasSupportFragmentInjector;
  */
 
 public class AppInjector {
-    private AppInjector() {}
-    public static AppComponent init(PPApplication ppApp) {
+    private AppInjector() {
+    }
+    public static AppComponent init(final PPApplication ppApp) {
         AppComponent ac = DaggerAppComponent.builder().application(ppApp)
                 .build();
         ac.inject(ppApp);
@@ -38,7 +42,7 @@ public class AppInjector {
 
                     @Override
                     public void onActivityResumed(Activity activity) {
-
+                        ppApp.getNavigationController().setCurrentActivity(activity);
                     }
 
                     @Override

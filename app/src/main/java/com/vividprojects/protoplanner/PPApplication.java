@@ -8,6 +8,7 @@ import android.util.Log;
 import com.vividprojects.protoplanner.DI.AppComponent;
 import com.vividprojects.protoplanner.DI.AppInjector;
 import com.vividprojects.protoplanner.DataManager.DataManager;
+import com.vividprojects.protoplanner.Interface.NavigationController;
 
 import javax.inject.Inject;
 
@@ -26,6 +27,9 @@ public class PPApplication extends Application implements HasActivityInjector {
 
     @Inject
     DataManager dataManager;
+
+    @Inject
+    NavigationController navigationController;
 
     private AppComponent appComponent;
 
@@ -61,4 +65,7 @@ public class PPApplication extends Application implements HasActivityInjector {
         return dispatchingAndroidInjector;
     }
 
+    public NavigationController getNavigationController() {
+        return navigationController;
+    }
 }

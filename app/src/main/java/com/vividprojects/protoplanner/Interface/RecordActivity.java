@@ -48,6 +48,9 @@ public class RecordActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         final RecordFragment fragment = new RecordFragment();
+        fragmentTransaction.add(R.id.record_container, fragment);
+        fragmentTransaction.commit();
+
 
         FloatingActionButton fb = (FloatingActionButton) findViewById(R.id.activity_record_edit);
         fb.setOnClickListener(new View.OnClickListener() {
@@ -60,12 +63,6 @@ public class RecordActivity extends AppCompatActivity {
                     ((FloatingActionButton)view).setImageResource(R.drawable.ic_edit_white_24dp);
             }
         });
-
-
-        fragmentTransaction.add(R.id.record_container, fragment);
-        fragmentTransaction.commit();
-
-
     }
 
     @Override

@@ -19,42 +19,67 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <android.support.design.widget.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/my_tab">
-        </android.support.design.widget.TabLayout>
-
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_white_24dp" />
-
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="horizontal"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
-            android:id="@+id/lists_container"
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:baselineAligned="false">
 
-        </FrameLayout>
+            <Button
+                android:id="@+id/Blocks_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Blocks" />
+            <Button
+                android:id="@+id/Records_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Records" />
+        </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/item_container"
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/lists_container"
-            app:layout_constraintTop_toTopOf="parent">
-        </FrameLayout>
-    </android.support.constraint.ConstraintLayout>
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="35">
+            <FrameLayout
+                android:id="@+id/lists_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                app:srcCompat="@drawable/ic_add_white_24dp" />
+        </android.support.design.widget.CoordinatorLayout>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            card_view:cardCornerRadius="4dp"
+            android:layout_weight="65">
+            <FrameLayout
+                android:id="@+id/item_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

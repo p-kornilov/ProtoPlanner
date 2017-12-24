@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,7 @@ import com.vividprojects.protoplanner.DataManager.DataManager;
 import com.vividprojects.protoplanner.Interface.BlockFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordActivity;
+import com.vividprojects.protoplanner.Interface.RecordFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
 
 import javax.inject.Inject;
@@ -29,9 +31,6 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
 public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -40,12 +39,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Inject
     NavigationController navigationController;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        navigationController.setCurrentActivity(this);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +50,24 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        if (navigationController.isTablet()) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        TabLayout tb = (TabLayout) findViewById(R.id.my_tab);
-//        tb.addTab(tb.newTab().setText("Tab 1"));
-//        tb.addTab(tb.newTab().setText("Tab 2"));
+            final RecordListFragment fragment = new RecordListFragment();
+            fragmentTransaction.replace(R.id.lists_container, fragment);
+            fragmentTransaction.commit();
 
-        tb.setupWithViewPager(mViewPager);
+            setRecordItem("Empty");
+
+        } else {
+            SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+            ViewPager mViewPager = (ViewPager) findViewById(R.id.view_pager);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+
+            TabLayout tb = (TabLayout) findViewById(R.id.my_tab);
+            tb.setupWithViewPager(mViewPager);
+        }
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -90,9 +92,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
         //dataManager.setContext(this);
 
-        Log.d("Test", "------------------------------ Dimension width " + getResources().getConfiguration().screenWidthDp);
-        Log.d("Test", "------------------------------ Dimension height " + dataManager.getHeight());
-        Log.d("Test", "------------------------------ Type of the device " + dataManager.getType());
+        Log.i("Test", "------------------------------ Dimension width " + getResources().getConfiguration().screenWidthDp);
+        Log.i("Test", "------------------------------ Dimension height " + dataManager.getHeight());
+        Log.i("Test", "------------------------------ Type of the device " + dataManager.getType());
 
     }
 
@@ -122,6 +124,15 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingAndroidInjector;
+    }
+
+    public void setRecordItem(String id) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        final RecordFragment fragment = RecordFragment.create(id);
+        fragmentTransaction.replace(R.id.item_container, fragment);
+        fragmentTransaction.commit();
     }
 
 

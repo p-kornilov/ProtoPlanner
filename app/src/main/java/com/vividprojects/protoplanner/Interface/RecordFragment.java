@@ -32,6 +32,8 @@ import io.realm.RealmResults;
 
 public class RecordFragment extends Fragment {
 
+    public static final String RECORD_ID = "record_id";
+
     ChipsLayout chl;
     private Realm realm;
     private boolean inCommentEdit = false;
@@ -214,5 +216,13 @@ public class RecordFragment extends Fragment {
             imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         }
         return inCommentEdit;
+    }
+
+    public static RecordFragment create(String id) {
+        RecordFragment recordFragment = new RecordFragment();
+        Bundle args = new Bundle();
+        args.putString(RECORD_ID,id);
+        recordFragment.setArguments(args);
+        return recordFragment;
     }
 }
