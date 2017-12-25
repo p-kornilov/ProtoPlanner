@@ -85,9 +85,34 @@ public class DataRepository {
             protected LiveData<NetworkResponse<List<Record>>> loadFromNetworkDB() {
                 return new MutableLiveData<NetworkResponse<List<Record>>>();
             }
+        }.asLiveData();
+    }
 
+    public LiveData<Resource<Record>> loadRecord(String id) {
+        return new NetworkBoundResource<Record, Record>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull Record item) {
 
+            }
 
+            @Override
+            protected boolean shouldFetch(@Nullable Record data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Record> loadFromLocalDB() {
+                MutableLiveData<Record> ld = new MutableLiveData<>();
+                ld.setValue(new QueryRecords().id_equalTo(id).findFirst());
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<Record>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<Record>>();
+            }
         }.asLiveData();
     }
 
@@ -294,6 +319,12 @@ public class DataRepository {
             al.addAll(rr);
             return al;
         }
+
+        public Record findFirst() {
+            Record rr = query.findFirst();
+            return rr;
+        }
+
 
     }
 }

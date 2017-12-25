@@ -79,44 +79,15 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
         RecyclerView lv = v.findViewById(R.id.recyclerView1);
 
-        String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
-
-//        lv.setAdapter(new TestRecyclerAdapter(values,getContext()));
-        RealmResults<VariantInShop> ls = realm.where(VariantInShop.class).equalTo("variant.title","Булка").findAll();
+//        lv.setAdapter(new TestRecyclerAdapter(getContext()));
+        RealmResults<VariantInShop> ls = realm.where(VariantInShop.class).equalTo("variant.title","Фильтр для воды").findAll();
         lv.setAdapter(new ShopsAdapter(ls));
-//        lv.setAdapter(new ShopsAdapter(ls,mCallback));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setAutoMeasureEnabled(true);
         lv.setLayoutManager(layoutManager);
         lv.setNestedScrollingEnabled(false);
         lv.setFocusable(false);
-
-/*        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(lv.getContext(), DividerItemDecoration.VERTICAL);
-        lv.addItemDecoration(dividerItemDecoration);*/
 
         chl = v.findViewById(R.id.chipLayout);
 
@@ -145,24 +116,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
         HorizontalImages hi = (HorizontalImages) v.findViewById(R.id.horizontalImages);
         hi.setNoneImage(true);
-//        hi.setNoneImage(false);
-//        hi.setNoneImage(true);
 
-/*
-        ImageView iv = new ImageView(getContext());
-        iv.setImageResource(R.drawable.record_test);
-        int width_in_dp = 100;
-        final float scale = getResources().getDisplayMetrics().density;
-        int width_in_px = (int) (width_in_dp * scale + 0.5f);
-
-        int paddind = (int) (4*scale+0.5f);
-        iv.setLayoutParams(new LinearLayout.LayoutParams(width_in_px,LinearLayout.LayoutParams.MATCH_PARENT));
-        iv.setPadding(paddind,0,paddind,0);
-        hi.addView(iv);
-*/
         RecyclerView alternatives = (RecyclerView) v.findViewById(R.id.recyclerView2);
-//        recycler.setAdapter(new TestRecyclerAdapter(ar,getContext()));
-//        recycler.setAdapter(new MyAdapter(testarray,getContext()));
         RealmResults<Record> ar = realm.where(Record.class).findAllAsync();
 
         Log.d("Test", "--------------- Records count - " + ar.size());
@@ -176,29 +131,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
         alternatives.setFocusable(false);
 
         commentSwitcher = (ViewSwitcher) v.findViewById(R.id.rf_comment_switcher);
-//        ImageButton editCommentButton = (ImageButton) v.findViewById(R.id.rf_comment_edit_button);
-        //commentEdit
         commentEdit = (EditText) v.findViewById(R.id.rf_comment_edit);
         commentView = (TextView) v.findViewById(R.id.rf_comment_text);
-
-/*        editCommentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewSwitcher.showNext();
-                ImageButton im = (ImageButton) view;
-                inCommentEdit = !inCommentEdit;
-                if (inCommentEdit) {
-                    im.setImageResource(R.drawable.ic_check_black_24dp);
-                    editComment.setSelection(editComment.getText().length());
-                    editComment.requestFocus();
-                } else {
-                    im.setImageResource(R.drawable.ic_edit_black_24dp);
-                    textComment.requestFocus();
-                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-            }
-        });*/
 
         return v;
     }
