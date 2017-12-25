@@ -35,7 +35,7 @@ import io.realm.RealmResults;
  */
 
 public class RecordListFragment extends Fragment implements Injectable {
-    RecyclerView recycler;
+    private RecyclerView recycler;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -60,7 +60,7 @@ public class RecordListFragment extends Fragment implements Injectable {
         View v = (View) inflater.inflate(R.layout.records_fragment, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler_records);
 
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+
 //        recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
         return v;
     }
@@ -68,6 +68,8 @@ public class RecordListFragment extends Fragment implements Injectable {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
         final RecordListViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordListViewModel.class);
 

@@ -1,6 +1,5 @@
 package com.vividprojects.protoplanner;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,12 +16,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.vividprojects.protoplanner.DI.AppComponent;
-import com.vividprojects.protoplanner.DataManager.DataManager;
+import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.BlockFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Interface.RecordActivity;
-import com.vividprojects.protoplanner.Interface.RecordFragment;
+import com.vividprojects.protoplanner.Interface.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
 
 import javax.inject.Inject;
@@ -35,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
     @Inject
-    DataManager dataManager;
+    DataRepository dataRepository;
 
     @Inject
     NavigationController navigationController;
@@ -90,11 +87,11 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
        // AppComponent dmc = ((PPApplication) getApplication()).getMainComponent();
         //dmc.inject(this);
 
-        //dataManager.setContext(this);
+        //dataRepository.setContext(this);
 
         Log.i("Test", "------------------------------ Dimension width " + getResources().getConfiguration().screenWidthDp);
-        Log.i("Test", "------------------------------ Dimension height " + dataManager.getHeight());
-        Log.i("Test", "------------------------------ Type of the device " + dataManager.getType());
+        Log.i("Test", "------------------------------ Dimension height " + dataRepository.getHeight());
+        Log.i("Test", "------------------------------ Type of the device " + dataRepository.getType());
 
     }
 
@@ -130,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        final RecordFragment fragment = RecordFragment.create(id);
+        final RecordItemFragment fragment = RecordItemFragment.create(id);
         fragmentTransaction.replace(R.id.item_container, fragment);
         fragmentTransaction.commit();
     }

@@ -1,5 +1,7 @@
 package com.vividprojects.protoplanner.Interface;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,10 +20,14 @@ import android.widget.ViewSwitcher;
 import com.vividprojects.protoplanner.Adapters.ShopsAdapter;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
+import com.vividprojects.protoplanner.DI.Injectable;
+import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 import com.vividprojects.protoplanner.Widgets.HorizontalImages;
+
+import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -30,9 +36,12 @@ import io.realm.RealmResults;
  * Created by Smile on 31.10.2017.
  */
 
-public class RecordFragment extends Fragment {
+public class RecordItemFragment extends Fragment implements Injectable {
 
     public static final String RECORD_ID = "record_id";
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
 
     ChipsLayout chl;
     private Realm realm;
@@ -194,6 +203,13 @@ public class RecordFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+       // final RecordItemViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
+    }
+
     void addChip() {
         Chip chip4 = new Chip(getContext());
         chip4.setTitle("Test chip");
@@ -218,11 +234,11 @@ public class RecordFragment extends Fragment {
         return inCommentEdit;
     }
 
-    public static RecordFragment create(String id) {
-        RecordFragment recordFragment = new RecordFragment();
+    public static RecordItemFragment create(String id) {
+        RecordItemFragment recordItemFragment = new RecordItemFragment();
         Bundle args = new Bundle();
         args.putString(RECORD_ID,id);
-        recordFragment.setArguments(args);
-        return recordFragment;
+        recordItemFragment.setArguments(args);
+        return recordItemFragment;
     }
 }

@@ -163,7 +163,7 @@
 
 <!--        <fragment
             android:id="@+id/fragment"
-            android:name="com.vividprojects.protoplanner.Interface.RecordFragment"
+            android:nacom.vividprojects.protoplanner.Interface.RecordItemFragmentmentment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />-->
 

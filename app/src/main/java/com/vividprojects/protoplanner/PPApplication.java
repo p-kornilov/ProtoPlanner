@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.vividprojects.protoplanner.DI.AppComponent;
 import com.vividprojects.protoplanner.DI.AppInjector;
-import com.vividprojects.protoplanner.DataManager.DataManager;
+import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 
 import javax.inject.Inject;
@@ -26,7 +26,7 @@ public class PPApplication extends Application implements HasActivityInjector {
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
     @Inject
-    DataManager dataManager;
+    DataRepository dataRepository;
 
     @Inject
     NavigationController navigationController;
@@ -48,8 +48,8 @@ public class PPApplication extends Application implements HasActivityInjector {
         //appComponent.inject(this);
         appComponent = AppInjector.init(this);
 
-        dataManager.initDB();
- //       dataManager.showDB();
+        dataRepository.initDB();
+ //       dataRepository.showDB();
 
    //     RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
    //     Realm.deleteRealm(realmConfiguration); // Clean slate

@@ -1,26 +1,33 @@
 package com.vividprojects.protoplanner.DataManager;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.vividprojects.protoplanner.CoreData.Resource;
+import com.vividprojects.protoplanner.DB.LocalDB;
+import com.vividprojects.protoplanner.DB.NetworkDB;
+import com.vividprojects.protoplanner.AppExecutors;
 import com.vividprojects.protoplanner.CoreData.Block;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
+import com.vividprojects.protoplanner.DB.NetworkResponse;
 import com.vividprojects.protoplanner.R;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
@@ -28,21 +35,61 @@ import io.realm.RealmResults;
  * Created by Smile on 05.12.2017.
  */
 
-public class DataManager {
+@Singleton
+public class DataRepository {
     private Realm realm;
     private Context context;
 
-    public DataManager(Context context){
+    private final NetworkDB networkDB;
+    private final LocalDB localDB;
+    private final AppExecutors appExecutors;
+
+    @Inject
+    public DataRepository(Context context, AppExecutors appExecutors, LocalDB ldb, NetworkDB ndb){
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
 
         realm = Realm.getDefaultInstance();
+
+        this.localDB = ldb;
+        this.networkDB = ndb;
+        this.appExecutors = appExecutors;
+
         this.context = context;
     }
 
-    public DataManager(){};
+    public LiveData<Resource<List<Record>>> loadRecords() {
+        return new NetworkBoundResource<List<Record>, List<Record>>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull List<Record> item) {
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable List<Record> data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<List<Record>> loadFromLocalDB() {
+                MutableLiveData<List<Record>> ld = new MutableLiveData<>();
+                ld.setValue(new QueryRecords().findAll());
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<List<Record>>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<List<Record>>>();
+            }
+
+
+
+        }.asLiveData();
+    }
 
     public int getHeight() {return context.getResources().getConfiguration().screenHeightDp;}
 

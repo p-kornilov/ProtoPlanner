@@ -1,5 +1,6 @@
 package com.vividprojects.protoplanner.DI;
 
+import com.vividprojects.protoplanner.Interface.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
 
 import dagger.Module;
@@ -12,7 +13,10 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class FragmentBuildersModule {
     @ContributesAndroidInjector
-    abstract RecordListFragment contributeRepoFragment();
+    abstract RecordListFragment contributeRecordListFragment();
+
+    @ContributesAndroidInjector
+    abstract RecordItemFragment contributeRecordItemFragment();
 
  /*   @ContributesAndroidInjector
     abstract UserFragment contributeUserFragment();

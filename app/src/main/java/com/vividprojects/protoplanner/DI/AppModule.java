@@ -1,8 +1,13 @@
 package com.vividprojects.protoplanner.DI;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 
-import com.vividprojects.protoplanner.DataManager.DataManager;
+import com.vividprojects.protoplanner.CoreData.Record;
+import com.vividprojects.protoplanner.DB.LocalDB;
+import com.vividprojects.protoplanner.DB.NetworkDB;
+import com.vividprojects.protoplanner.DB.NetworkResponse;
+import com.vividprojects.protoplanner.DataManager.DataRepository;
 
 import javax.inject.Singleton;
 
@@ -22,9 +27,21 @@ public class AppModule {
 
 //    public AppModule() {};
 
+    /*@Provides
+    @Singleton
+    DataRepository provideDataManager(Context context){
+        return new DataRepository(context);
+    }*/
+
     @Provides
     @Singleton
-    DataManager provideDataManager(Context context){
-        return new DataManager(context);
+    NetworkDB provideNetworkDB(){
+        return new NetworkDB();
+    }
+
+    @Provides
+    @Singleton
+    LocalDB provideLocalDB(){
+        return new LocalDB();
     }
 }

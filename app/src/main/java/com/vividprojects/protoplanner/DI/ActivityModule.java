@@ -2,6 +2,7 @@ package com.vividprojects.protoplanner.DI;
 
 import android.app.Activity;
 
+import com.vividprojects.protoplanner.Interface.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;
 
 import dagger.Module;
@@ -15,4 +16,7 @@ import dagger.android.ContributesAndroidInjector;
 public abstract class ActivityModule {
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
     abstract MainActivity contributeMainActivity();
+
+    @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
+    abstract RecordActivity contributeRecordActivity();
 }
