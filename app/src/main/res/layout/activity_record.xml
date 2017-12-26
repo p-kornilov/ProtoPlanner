@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginBottom="60dp"
+            app:expandedTitleMarginBottom="24dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
@@ -44,7 +44,7 @@
                 android:layout_height="60dp"
                 android:layout_gravity="top"
                 android:background="@drawable/scrim_top"/>
-           <android.support.constraint.ConstraintLayout
+  <!--         <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_collapseParallaxMultiplier="0.4"
@@ -140,7 +140,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0" />
             </android.support.constraint.ConstraintLayout>
-
+-->
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar1"
                 android:layout_width="match_parent"
