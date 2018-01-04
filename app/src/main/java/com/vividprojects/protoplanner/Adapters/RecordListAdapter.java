@@ -32,12 +32,15 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
 
     private List<Record> data;
     private LayoutInflater inflater;
+    private Context context;
 
     @Inject
     NavigationController navigationController;
 
     public RecordListAdapter(List<Record> data,Context context) {
         this.data = data;
+
+        this.context = context;
 
         ((PPApplication) context.getApplicationContext()).getMainComponent().inject(this);   // TODO Пересмотреть, как можно сделать по аналогии с ViewModel - автоматическое инжектирование
 
@@ -67,15 +70,15 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
         //noinspection ConstantConditions
 //            holder.record_title.setText(obj.getId());
         holder.record_title.setText(obj.getMainVariant().getTitle());
-        holder.record_count.setText(""+obj.getMainVariant().getCount());
-        holder.record_measure.setText(obj.getMainVariant().getMeasure().getTitle());
-        holder.record_value.setText(""+obj.getMainVariant().getValue());
+        holder.record_count.setText(obj.getMainVariant().getFormattedCount());
+       // holder.record_measure.setText(obj.getMainVariant().getMeasure().getTitle());
+        holder.record_value.setText(obj.getMainVariant().getFormattedValue());
 
         holder.record_chiplayout.removeAllViews();
         holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.BLUE,false));
         holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.RED,false));
         holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.GREEN,false));
-        holder.record_chiplayout.noneChip(new Chip(parent.getContext(),Color.GRAY,false));
+        holder.record_chiplayout.noneChip(context);
     }
 
     @Override
@@ -95,7 +98,7 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
             super(view);
             record_title = (TextView) view.findViewById(R.id.record_title);
             record_count = (TextView) view.findViewById(R.id.record_count);
-            record_measure = (TextView) view.findViewById(R.id.record_measure);
+        //    record_measure = (TextView) view.findViewById(R.id.record_measure);
             record_value = (TextView) view.findViewById(R.id.record_value);
             record_chiplayout = (ChipsLayout) view.findViewById(R.id.record_chiplayout);
 

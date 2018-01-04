@@ -54,7 +54,7 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        final RecordItemFragment fragment = new RecordItemFragment();
+        final RecordItemFragment fragment = RecordItemFragment.create(id);
         fragmentTransaction.add(R.id.record_container, fragment);
         fragmentTransaction.commit();
 

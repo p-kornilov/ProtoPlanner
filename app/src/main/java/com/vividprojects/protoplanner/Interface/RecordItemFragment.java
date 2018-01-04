@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.vividprojects.protoplanner.Adapters.ShopsAdapter;
+import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DI.Injectable;
@@ -26,6 +27,10 @@ import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 import com.vividprojects.protoplanner.Widgets.HorizontalImages;
+
+import org.w3c.dom.Text;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -38,36 +43,32 @@ import io.realm.RealmResults;
 
 public class RecordItemFragment extends Fragment implements Injectable {
 
-    public static final String RECORD_ID = "record_id";
+    public static final String RECORD_ID = "RECORD_ID";
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
     ChipsLayout chl;
-    private Realm realm;
+//    private Realm realm;
     private boolean inCommentEdit = false;
     private ViewSwitcher commentSwitcher;
     private EditText commentEdit;
     private TextView commentView;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-/*        Activity activity = getActivity();
-        try {
-            mCallback = (MainCommunication) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement MainCommunication");
-        }*/
-    }
+    private RecyclerView shopsRecycler;
+    private HorizontalImages images;
+    private RecyclerView alternativesRecycler;
+    private TextView mvTitle;
+    private TextView mvPrice;
+    private TextView mvValue;
+    private TextView mvCount;
+   // private TextView mvCurrency1;
+    private TextView mvCurrency2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("Test", "onCreate - Record Fragment");
-        realm = Realm.getDefaultInstance();
+//        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -77,58 +78,36 @@ public class RecordItemFragment extends Fragment implements Injectable {
         Log.d("Test", "onCreateView - Record Fragment");
         View v = (View) inflater.inflate(R.layout.record_fragment, container, false);
 
-        RecyclerView lv = v.findViewById(R.id.recyclerView1);
+        shopsRecycler = v.findViewById(R.id.rf_shops_recycler);
+        mvTitle = v.findViewById(R.id.alt_title);
+        mvPrice = v.findViewById(R.id.alt_price);
+        mvValue = v.findViewById(R.id.alt_value);
+        mvCount = v.findViewById(R.id.alt_count);
+       // mvCurrency1 = v.findViewById(R.id.alt_currency1);
+       // mvCurrency2 = v.findViewById(R.id.alt_currency2);
 
-//        lv.setAdapter(new TestRecyclerAdapter(getContext()));
-        RealmResults<VariantInShop> ls = realm.where(VariantInShop.class).equalTo("variant.title","Фильтр для воды").findAll();
-        lv.setAdapter(new ShopsAdapter(ls));
+    //    RealmResults<VariantInShop> ls = realm.where(VariantInShop.class).equalTo("variant.title","Фильтр для воды").findAll();
+    //!!!    lv.setAdapter(new ShopsAdapter(ls));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setAutoMeasureEnabled(true);
-        lv.setLayoutManager(layoutManager);
-        lv.setNestedScrollingEnabled(false);
-        lv.setFocusable(false);
+        shopsRecycler.setLayoutManager(layoutManager);
+        shopsRecycler.setNestedScrollingEnabled(false);
+        shopsRecycler.setFocusable(false);
 
         chl = v.findViewById(R.id.chipLayout);
 
-        Chip chip = new Chip(getContext());
-        chip.setTitle("Hello");
-        chip.setColor(Color.BLUE);
-        chl.addView(chip);
-        Chip chip1 = new Chip(getContext());
-        chip1.setTitle("Hello sdf sd fsd f");
-        chip1.setColor(Color.RED);
-        chl.addView(chip1);
-        Chip chip2 = new Chip(getContext());
-        chip2.setTitle("SDdfdfg df bgdf gd  sd");
-        chip2.setColor(Color.GREEN);
-        chl.addView(chip2);
-        Chip chip3 = new Chip(getContext());
-        chip3.setTitle("EDFF");
-        chip3.setColor(Color.YELLOW);
-        chl.addView(chip3);
-        Chip chip4 = new Chip(getContext());
-        chip4.setTitle("Aaaaaaaaaaaaaaa");
-        chip4.setColor(Color.MAGENTA);
-        chl.addView(chip4);
-        Chip noneChip = new Chip(getContext(),"None",Color.GRAY,false);
-        chl.noneChip(noneChip);
+        images = (HorizontalImages) v.findViewById(R.id.rf_images);
+        images.setNoneImage(true);
 
-        HorizontalImages hi = (HorizontalImages) v.findViewById(R.id.horizontalImages);
-        hi.setNoneImage(true);
-
-        RecyclerView alternatives = (RecyclerView) v.findViewById(R.id.recyclerView2);
-        RealmResults<Record> ar = realm.where(Record.class).findAllAsync();
-
-        Log.d("Test", "--------------- Records count - " + ar.size());
-
-     //   alternatives.setAdapter(new RecordListAdapter(ar,mCallback));
+        alternativesRecycler = (RecyclerView) v.findViewById(R.id.rf_alternatives_recycler  );
+    //    RealmResults<Record> ar = realm.where(Record.class).findAllAsync();
 
         RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager(getContext());
         layoutManager2.setAutoMeasureEnabled(true);
-        alternatives.setLayoutManager(layoutManager2);
-        alternatives.setNestedScrollingEnabled(false);
-        alternatives.setFocusable(false);
+        alternativesRecycler.setLayoutManager(layoutManager2);
+        alternativesRecycler.setNestedScrollingEnabled(false);
+        alternativesRecycler.setFocusable(false);
 
         commentSwitcher = (ViewSwitcher) v.findViewById(R.id.rf_comment_switcher);
         commentEdit = (EditText) v.findViewById(R.id.rf_comment_edit);
@@ -142,6 +121,37 @@ public class RecordItemFragment extends Fragment implements Injectable {
         super.onActivityCreated(savedInstanceState);
 
        // final RecordItemViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
+
+        final RecordItemViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
+
+        Bundle args = getArguments();
+
+        if (args != null && args.containsKey(RECORD_ID)){
+            //    model.setFilter();
+            model.setId(args.getString(RECORD_ID));
+        } else {
+            model.setId(null);
+        }
+
+        model.getRecordItem().observe(this,resource -> {
+            if (resource.data != null) {
+                commentView.setText(resource.data.getComment());
+                chl.removeAllViews();
+                chl.noneChip(getContext());
+                for (Label label : resource.data.getLabels()) {
+                    Chip chip = new Chip(getContext());
+                    chip.setTitle(label.getName());
+                    chip.setColor(label.getColor());
+                    chl.addView(chip);
+                }
+
+                mvTitle.setText(resource.data.getMainVariant().getTitle());
+                mvCount.setText(resource.data.getMainVariant().getFormattedCount());
+                mvValue.setText(resource.data.getMainVariant().getFormattedValue());
+                mvPrice.setText(resource.data.getMainVariant().getFormattedPriceFull());
+                //mvCurrency1.setText(getResources().getString(R.string.RUB));
+            }
+        });
     }
 
     void addChip() {
@@ -157,10 +167,12 @@ public class RecordItemFragment extends Fragment implements Injectable {
         inCommentEdit = !inCommentEdit;
         if (inCommentEdit) {
         //    im.setImageResource(R.drawable.ic_check_black_24dp);
+            commentEdit.setText(commentView.getText());
             commentEdit.setSelection(commentEdit.getText().length());
             commentEdit.requestFocus();
         } else {
             //im.setImageResource(R.drawable.ic_edit_black_24dp);
+            commentView.setText(commentEdit.getText());
             commentView.requestFocus();
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);

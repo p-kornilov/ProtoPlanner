@@ -27,6 +27,10 @@ public class Label extends RealmObject {
         this.block = block;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void setColor(int color) {
         this.color = color;
     }

@@ -220,9 +220,9 @@ public class ChipsLayout extends ViewGroup {
     // If you do not need these (for example you are writing a layout manager
     // that does fixed positioning of its children), you can drop all of this.
 
-    public void noneChip(View v) {
-        super.addView(v);
-        noneChip = (Chip) v;
+    public void noneChip(Context ctx) {
+        noneChip = new Chip(ctx,"None",Color.GRAY,false);
+        super.addView(noneChip);
         noneChip.setVisibility(GONE);
     }
 

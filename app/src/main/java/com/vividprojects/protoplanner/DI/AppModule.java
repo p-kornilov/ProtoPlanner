@@ -41,7 +41,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    LocalDB provideLocalDB(){
-        return new LocalDB();
+    LocalDB provideLocalDB(Context context){
+        return new LocalDB(context);
     }
 }

@@ -1,15 +1,22 @@
 package com.vividprojects.protoplanner.Presenters;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
+import com.vividprojects.protoplanner.CoreData.Filter;
+import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 
 
+import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Utils.AbsentLiveData;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -18,23 +25,37 @@ import javax.inject.Inject;
  */
 
 public class RecordListViewModel extends ViewModel {
-    private final MutableLiveData<List<Record>> list = new MutableLiveData<>();
+
+    final MutableLiveData<Filter> filter;
+
+    private final LiveData<Resource<List<Record>>> list;
 
     @Inject
-    DataRepository dataRepository;
+    public RecordListViewModel(DataRepository dataRepository) {
+        //super();
+        //list = new MutableLiveData<>();
 
-    @Inject
-    public RecordListViewModel(Context context) {
-        super();
+        this.filter = new MutableLiveData<>();
+        list = Transformations.switchMap(filter,input -> {
+/*            if (input.isEmpty()) {
+                return AbsentLiveData.create();
+            } else {
+                return dataRepository.loadRecords(input.getFilter());
+            }*/
+            return dataRepository.loadRecords(input.getFilter());
+        });
     }
 
-    public MutableLiveData<List<Record>> getList(){
-
-        list.setValue(dataRepository.queryRecords().findAll());
-        return list;
+    public void setFilter(List<String> ids) {
+        Filter update = new Filter(ids);
+        if (Objects.equals(filter.getValue(), update)) {
+            return;
+        }
+        filter.setValue(update);
     }
 
-    public List<Record> getTest() {
-        return dataRepository.queryRecords().findAll();
+    public LiveData<Resource<List<Record>>> getList(){
+
+        return list;//dataRepository.loadRecords();
     }
 }

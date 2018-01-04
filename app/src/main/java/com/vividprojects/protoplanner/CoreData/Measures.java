@@ -3,7 +3,7 @@ package com.vividprojects.protoplanner.CoreData;
 import java.util.List;
 
 public class Measures {
-    private List<Measure> measures;
+/*    private List<Measure> measures;
 
     public Measures() {
         Measure m = new Measure("шт.");
@@ -23,5 +23,5 @@ public class Measures {
 
     public List<Measure> getMeasures() {
         return measures;
-    }
+    }*/
 }

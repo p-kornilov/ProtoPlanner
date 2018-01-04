@@ -16,6 +16,7 @@ public class Record extends RealmObject{
     private RealmList<Variant> variants;
     private RealmList<Label> labels;
     private Block block;
+    private String comment;
 
     public Record() {
         mainVariant = null;
@@ -27,6 +28,14 @@ public class Record extends RealmObject{
         mainVariant = variant;
         variants = new RealmList<>();
         labels = new RealmList<>();
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Block getBlock() {

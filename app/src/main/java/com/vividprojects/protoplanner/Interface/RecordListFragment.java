@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
+import com.vividprojects.protoplanner.CoreData.Filter;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.DI.Injectable;
@@ -23,6 +24,7 @@ import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.TMP.TestRecyclerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -73,11 +75,18 @@ public class RecordListFragment extends Fragment implements Injectable {
 
         final RecordListViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordListViewModel.class);
 
-        model.getList().observe(this,new Observer<List<Record>>() {
-            @Override
-            public void onChanged(@Nullable final List<Record> list) {
-                recycler.setAdapter(new RecordListAdapter(list,getActivity()));
-            }
+        Bundle args = getArguments();
+
+        if (args != null && args.containsKey("FILTER")){  // TODO Сделать восстановление состояния фильтра и ожет быть чего другого
+        //    model.setFilter();
+            model.setFilter(args.getStringArrayList("FILTER"));
+        } else {
+            model.setFilter(null);
+        }
+
+        model.getList().observe(this,resource -> {
+            if (resource.data != null)
+                recycler.setAdapter(new RecordListAdapter(resource.data,getActivity()));
         });
     }
 }

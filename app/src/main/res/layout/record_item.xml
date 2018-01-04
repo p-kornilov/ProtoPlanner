@@ -55,7 +55,7 @@
                 card_view:layout_constraintStart_toEndOf="@+id/imageView"
                 card_view:layout_constraintTop_toBottomOf="@+id/record_title" />
 
-            <TextView
+       <!--     <TextView
                 android:id="@+id/record_measure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +64,8 @@
                 android:text="Measure"
                 card_view:layout_constraintStart_toEndOf="@+id/record_count"
                 card_view:layout_constraintTop_toBottomOf="@+id/record_title" />
-
+-->
+<!--
             <TextView
                 android:id="@+id/record_currency"
                 android:layout_width="wrap_content"
@@ -74,6 +75,7 @@
                 android:text="р."
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/record_title" />
+-->
 
             <TextView
                 android:id="@+id/record_value"
@@ -82,7 +84,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="20dp"
                 android:text="Value"
-                card_view:layout_constraintEnd_toStartOf="@+id/record_currency"
+                card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/record_title" />
 
             <com.vividprojects.protoplanner.Widgets.ChipsLayout

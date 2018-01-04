@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.DI;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
 import com.vividprojects.protoplanner.ViewModel.PPViewModelFactory;
 
@@ -21,6 +22,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RecordListViewModel.class)
     abstract ViewModel bindRecordListViewModel(RecordListViewModel recordListViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RecordItemViewModel.class)
+    abstract ViewModel bindRecordItemViewModel(RecordItemViewModel recordItemViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(PPViewModelFactory factory);

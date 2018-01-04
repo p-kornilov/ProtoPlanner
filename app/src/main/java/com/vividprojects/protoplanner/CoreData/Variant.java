@@ -1,6 +1,9 @@
 package com.vividprojects.protoplanner.CoreData;
 
+import com.vividprojects.protoplanner.Utils.PriceFormatter;
+
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
 //import java.util.Objects;
@@ -14,23 +17,45 @@ public class Variant extends RealmObject {
     private String title;
     private int picture;  // может быть ссылка на одну или несколько картинок
     private Measure measure;
-    private int count;
+    private double count;
     private double price;
-    private double value;
+//    private double value;
     private String comment;
     private RealmList<String> urls;
     private RealmList<VariantInShop> shops;
+    private Currency currency;
 
     public Variant() {};
 
-    public Variant(String title, Measure measure, int count, double price, String comment) {
+    public Variant(String title, Measure measure, double count, double price, String comment, Currency currency) {
         this.title = title;
         this.measure = measure;
         this.count = count;
         this.price = price;
-        this.value = count*price;
+//        this.value = count*price;
         this.comment = comment;
         this.urls = new RealmList<>();
+        this.currency = currency;
+    }
+
+    public String getFormattedValue() {
+        return PriceFormatter.getValue(currency,price*count);
+    }
+
+    public String getFormattedPriceShort() {
+        return PriceFormatter.getValue(currency,price);
+    }
+
+    public String getFormattedPriceFull() {
+        return PriceFormatter.getPrice(currency,price,measure);
+    }
+
+    public String getFormattedCount() {
+        return PriceFormatter.getCount(count,measure);
+    }
+
+    public Currency getCurrency() {
+        return currency;
     }
 
     public String getTitle() {
@@ -46,19 +71,17 @@ public class Variant extends RealmObject {
 
     public void setCount(int count) {
         this.count = count;
-        this.value = count*price;
     }
 
     public void setPrice(double price) {
         this.price = price;
-        this.value = count*price;
     }
 
-    public int getCount() { return count; }
+    public double getCount() { return count; }
 
     public double getPrice() { return price; }
 
-    public double getValue() { return value; }
+    public double getValue() { return price*count; }
 
     public void setComment(String comment) { this.comment = comment; }
 
@@ -74,7 +97,7 @@ public class Variant extends RealmObject {
 
     @Override
     public String toString() {
-        String str= "Title: " + title + " (comment: " + comment + ")" + ", count: " + count + " " + measure.getTitle() + ", for " + price + " each, with total value: " + value + "\n\tURLS:\n";
+        String str= "Title: " + title + " (comment: " + comment + ")" + ", count: " + count + " " + measure.getTitle() + ", for " + price + " each, with total value: " + getFormattedValue() + "\n\tURLS:\n";
 
 
         for (String s : urls) {

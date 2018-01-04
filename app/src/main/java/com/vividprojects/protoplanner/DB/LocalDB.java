@@ -1,8 +1,268 @@
 package com.vividprojects.protoplanner.DB;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
+
+import com.vividprojects.protoplanner.CoreData.Block;
+import com.vividprojects.protoplanner.CoreData.Currency;
+import com.vividprojects.protoplanner.CoreData.Label;
+import com.vividprojects.protoplanner.CoreData.Measure;
+import com.vividprojects.protoplanner.CoreData.Record;
+import com.vividprojects.protoplanner.CoreData.Variant;
+import com.vividprojects.protoplanner.CoreData.VariantInShop;
+import com.vividprojects.protoplanner.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import io.realm.CurrencyRealmProxy;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 /**
  * Created by p.kornilov on 25.12.2017.
  */
 
+@Singleton
 public class LocalDB {
+    private Realm realm;
+    private Context contetx;
+
+    @Inject
+    public LocalDB(Context context){
+        this.contetx = context;
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
+        realm = Realm.getDefaultInstance();
+    }
+
+    public void initDB(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.deleteAll();
+            }
+        });
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Currency c = new Currency("RUB",643,"Russian Ruble",contetx.getResources().getString(R.string.RUB),Currency.AFTER);
+                realm.insertOrUpdate(c);
+                Log.d("Test", "+++++++++++++++++++++++ "+c);
+                c = new Currency("USD",840,"US Dollar",contetx.getResources().getString(R.string.USD),Currency.BEFORE);
+                realm.insertOrUpdate(c);
+                c = new Currency("EUR",978,"Euro",contetx.getResources().getString(R.string.EUR),Currency.BEFORE);
+                realm.insertOrUpdate(c);
+                c = new Currency("XAF",950,"Franc",contetx.getResources().getString(R.string.XAF),Currency.WITHIN);
+                realm.insertOrUpdate(c);
+            }
+        });
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Measure temp = new Measure("шт.",Measure.ENTIRE);
+                realm.insertOrUpdate(temp);
+                temp = new Measure("кг.",Measure.FRACTIONAL);
+                realm.insertOrUpdate(temp);
+                temp = new Measure("м.",Measure.FRACTIONAL);
+                realm.insertOrUpdate(temp);
+                temp = new Measure("кв.м.",Measure.FRACTIONAL);
+                realm.insertOrUpdate(temp);
+                temp = new Measure("л.",Measure.FRACTIONAL);
+                realm.insertOrUpdate(temp);
+
+/*                realm.insertOrUpdate(new Label("Red",1,"",null));
+                realm.insertOrUpdate(new Label("Blue",2,"",null));
+                realm.insertOrUpdate(new Label("Green",3,"",null));
+                realm.insertOrUpdate(new Label("White",4,"",null));*/
+            }
+        });
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Measure m = realm.where(Measure.class).equalTo("title","шт.").findFirst();
+                Measure m1 = realm.where(Measure.class).equalTo("title","кг.").findFirst();
+                Currency cr = realm.where(Currency.class).equalTo("iso_code_str","RUB").findFirst();
+                Currency cf = realm.where(Currency.class).equalTo("iso_code_str","XAF").findFirst();
+                Currency cd = realm.where(Currency.class).equalTo("iso_code_str","USD").findFirst();
+                Variant v = new Variant("Торт",m,7,100, "Мой торт и ссылка http://test.com",cr);
+                Variant v2 = new Variant("Колбаса",m,3,50, "",cd);
+                Variant v3 = new Variant("Хлеб",m1,5.01,60, "",cf);
+                Variant v4 = new Variant("Фильтр для воды",m,5,60, "",cr);
+                v4.addUrl("https://test.com");
+                realm.insertOrUpdate(v);
+                realm.insertOrUpdate(v2);
+                realm.insertOrUpdate(v3);
+                realm.insertOrUpdate(v4);
+
+                realm.insertOrUpdate(new VariantInShop("Первый магазин","https://shop.ru df gsdgf s df gsdf gsdg f","Адрес первого магазина","Комментарий для первого магазина", 91.0));
+                realm.insertOrUpdate(new VariantInShop("Второй магазин","https://shop2.ru","Адрес второго магазина","Комментарий для второго магазина", 101.0));
+                realm.insertOrUpdate(new VariantInShop("Третий магазин","https://shop3.ru","Адрес третьего магазина","Комментарий для третьего магазина", 103.0));
+                realm.insertOrUpdate(new VariantInShop("Четвертый магазин","https://shop4.ru","Адрес четвертого магазина","Комментарий для четвертого магазина hj hkhjk ghj ghj ghj", 104.0));
+
+                RealmResults<VariantInShop> vsps = realm.where(VariantInShop.class).findAll();
+                Variant vv1 = realm.where(Variant.class).contains("title","Фильтр для воды").findFirst();
+                Variant vv2 = realm.where(Variant.class).contains("title","Хлеб").findFirst();
+                Variant vv3 = realm.where(Variant.class).contains("title","Колбаса").findFirst();
+
+                for (VariantInShop vis : vsps) {
+                    vv1.addShop(vis);
+                }
+
+                Record r2 = new Record(vv1);
+                r2.setComment("Комментарий для записи со ссылкой http://test.com");
+                r2.addLabel(new Label("Green", Color.GREEN,"",null));
+                r2.addLabel(new Label("Yellow", Color.YELLOW,"",null));
+                r2.addLabel(new Label("Blue", Color.BLUE,"",null));
+                r2.addLabel(new Label("Red", Color.RED,"",null));
+                r2.addLabel(new Label("Magenta", Color.MAGENTA,"",null));
+                realm.insertOrUpdate(r2);
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv1));
+                realm.insertOrUpdate(new Record(vv2));
+                realm.insertOrUpdate(new Record(vv3));
+
+                Record r = realm.where(Record.class).findFirst();
+                r.addVariant(vv2);
+
+
+/*                RealmResults<Label> ls = realm.where(Label.class).findAll();
+                for (Label l : ls) {
+                    r.addLabel(l);
+                }*/
+
+                realm.insertOrUpdate(new Block("Блокнот 1",Block.PRIORITY_OFF));
+                Block b = realm.where(Block.class).contains("name","Блокнот 1").findFirst();
+                b.addRecord(r);
+
+            }
+        });
+
+        Log.d("Test", "------------------------------ onCreate - DB done");
+    }
+
+    public void showDB(){
+        /*        String measures = "[";
+
+        RealmResults<Measure> ms = realm.where(Measure.class).findAll();
+        for (Measure m : ms) {
+            measures += m.getTitle() + ";";
+        }
+
+        measures = measures.substring(0,measures.length()-1)+"]";
+
+        Log.d("Test", "------------------------------ "+measures);
+
+        Log.d("Test", "------------------------------ Variants:");
+
+        RealmResults<Variant> vs = realm.where(Variant.class).findAll();
+        for (Variant v : vs) {
+            Log.d("Test", v.getTitle());
+        }
+
+        Log.d("Test", "------------------------------ Labels:");
+        RealmResults<Label> ls = realm.where(Label.class).findAll();
+        for (Label l : ls) {
+            Log.d("Test", l.toString());
+        }*/
+
+        Log.d("Test", "------------------------------ Shops:");
+        RealmResults<VariantInShop> vis = realm.where(VariantInShop.class).findAll();
+        for (VariantInShop vi : vis) {
+            Log.d("Test", vi.toString());
+        }
+
+/*        Log.d("Test", "------------------------------ Records:");
+        RealmResults<Record> rs = realm.where(Record.class).findAll();
+        for (Record r : rs) {
+            Log.d("Test", r.toString());
+        }
+
+        Log.d("Test", "------------------------------ Blocks:");
+        RealmResults<Block> bs = realm.where(Block.class).findAll();
+        for (Block b : bs) {
+            Log.d("Test", b.toString());
+        }*/
+
+    }
+
+    public QueryRecords queryRecords() {
+        return new QueryRecords();
+    }
+
+    public class QueryRecords {
+        RealmQuery<Record> query;
+
+        public QueryRecords() {
+            query = realm.where(Record.class);
+        }
+
+        public QueryRecords id_equalTo(String id) {
+            query = query.equalTo("id",id);
+            return this;
+        }
+
+        public QueryRecords mainVariant_equalTo(String title) {
+            query = query.equalTo("mainVariant.title",title);
+            return this;
+        }
+
+        public QueryRecords block_equalTo(String name) {
+            query = query.equalTo("block.name",name);
+            return this;
+        }
+
+        public QueryRecords labels_equalTo(List<String> ids) {
+            if (ids.size()>0) {
+                query = query.beginGroup();
+                for (int i = 0;i<ids.size()-1;i++) {
+                    query = query.equalTo("labels.id",ids.get(i)).or();
+                }
+                query = query.equalTo("labels.id",ids.get(ids.size()-1));
+                query = query.endGroup();
+            }
+            return this;
+        }
+
+        public List<Record> findAll() {
+            RealmResults<Record> rr = query.findAll();
+            ArrayList<Record> al = new ArrayList<>();
+            al.addAll(rr);
+            return al;
+        }
+
+        public Record findFirst() {
+            Record rr = query.findFirst();
+            return rr;
+        }
+    }
 }
