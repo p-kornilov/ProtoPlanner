@@ -34,6 +34,7 @@ public class RecordItemViewModel extends ViewModel {
             }*/
             return dataRepository.loadRecord(input);
         });
+
     }
 
     public void setId(String id) {

@@ -11,7 +11,7 @@ import retrofit2.http.Path;
  * Created by p.kornilov on 25.12.2017.
  */
 
-public class NetworkDB {
+public class NetworkDataDB {
 /*    @GET("users/{login}")
     LiveData<NetworkResponse<Record>> getRecord(@Path("record") String id);*/
 }

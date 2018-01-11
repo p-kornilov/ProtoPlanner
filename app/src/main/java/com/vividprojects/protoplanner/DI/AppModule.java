@@ -1,13 +1,10 @@
 package com.vividprojects.protoplanner.DI;
 
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
 
-import com.vividprojects.protoplanner.CoreData.Record;
-import com.vividprojects.protoplanner.DB.LocalDB;
-import com.vividprojects.protoplanner.DB.NetworkDB;
-import com.vividprojects.protoplanner.DB.NetworkResponse;
-import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.DB.LocalDataDB;
+import com.vividprojects.protoplanner.DB.NetworkDataDB;
+import com.vividprojects.protoplanner.DB.SDFileManager;
 
 import javax.inject.Singleton;
 
@@ -35,13 +32,19 @@ public class AppModule {
 
     @Provides
     @Singleton
-    NetworkDB provideNetworkDB(){
-        return new NetworkDB();
+    NetworkDataDB provideNetworkDB(){
+        return new NetworkDataDB();
     }
 
     @Provides
     @Singleton
-    LocalDB provideLocalDB(Context context){
-        return new LocalDB(context);
+    LocalDataDB provideLocalDB(Context context){
+        return new LocalDataDB(context);
+    }
+
+    @Provides
+    @Singleton
+    SDFileManager provideSDFileManager(Context context){
+        return new SDFileManager(context);
     }
 }

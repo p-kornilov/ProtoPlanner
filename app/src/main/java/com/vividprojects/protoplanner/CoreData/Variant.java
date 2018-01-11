@@ -15,13 +15,13 @@ import io.realm.annotations.PrimaryKey;
 public class Variant extends RealmObject {
     @PrimaryKey
     private String title;
-    private int picture;  // может быть ссылка на одну или несколько картинок
     private Measure measure;
     private double count;
     private double price;
 //    private double value;
     private String comment;
     private RealmList<String> urls;
+    private RealmList<String> images;
     private RealmList<VariantInShop> shops;
     private Currency currency;
 

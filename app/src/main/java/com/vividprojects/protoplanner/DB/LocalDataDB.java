@@ -19,7 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.realm.CurrencyRealmProxy;
+//import io.realm.CurrencyRealmProxy;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
@@ -30,12 +30,12 @@ import io.realm.RealmResults;
  */
 
 @Singleton
-public class LocalDB {
+public class LocalDataDB {
     private Realm realm;
     private Context contetx;
 
     @Inject
-    public LocalDB(Context context){
+    public LocalDataDB(Context context){
         this.contetx = context;
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
