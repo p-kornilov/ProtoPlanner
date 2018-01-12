@@ -54,11 +54,12 @@ public class BlockFragment extends Fragment implements Injectable {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  Log.d("Test", "External Storage - " + getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+                Log.d("Test", "External Storage - " + getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
                 fileManager.test();
                 GlideApp.with(fragment)
                      //  .load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg")
-                        .load(R.raw.testpicture)
+                       // .load(R.raw.testpicture)
+                        .load("testpicture.jpg")
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)
                         .into(iv);

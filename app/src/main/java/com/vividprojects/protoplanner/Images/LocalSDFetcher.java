@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
+import com.vividprojects.protoplanner.DB.SDFileManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +22,6 @@ public class LocalSDFetcher implements DataFetcher<InputStream> {
     private InputStream inputStream;
     private final Context context;
     private final String id;
-
 
     LocalSDFetcher(Context context, String id) {
         this.context = context;
@@ -76,6 +76,8 @@ public class LocalSDFetcher implements DataFetcher<InputStream> {
                 e.printStackTrace();
             }
           //  inputStream = context.getResources().openRawResource(id);
+          //  inputStream = new SDFileManager(context).getFileStream(id);
+            inputStream = new SDFileManager(context).getFileStream("testpicture.jpg");
             return inputStream;
         }
 
