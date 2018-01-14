@@ -18,6 +18,6 @@ public class PPGlideModule extends AppGlideModule {
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         //registry.prepend(Integer.class, InputStream.class, new LocalResourceModelLoaderFactory(context));
-        registry.prepend(String.class, InputStream.class, new LocalSDModelLoaderFactory(context));
+      //  registry.prepend(String.class, InputStream.class, new LocalSDModelLoaderFactory(context));
     }
 }

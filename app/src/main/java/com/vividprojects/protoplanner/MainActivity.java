@@ -17,7 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Interface.BlockFragment;
+import com.vividprojects.protoplanner.Interface.BlockListFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         @Override
         public Fragment getItem(int position) {
             if (position == 0)
-                return new BlockFragment();
+                return new BlockListFragment();
 //            return new FirstFragment();
             else {
                 return new RecordListFragment();

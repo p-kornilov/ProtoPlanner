@@ -3,18 +3,28 @@ package com.vividprojects.protoplanner.DataManager;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.BaseTarget;
+import com.bumptech.glide.request.target.Target;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.DB.LocalDataDB;
 import com.vividprojects.protoplanner.DB.NetworkDataDB;
 import com.vividprojects.protoplanner.AppExecutors;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.DB.NetworkResponse;
+import com.vividprojects.protoplanner.Images.FullTarget;
+import com.vividprojects.protoplanner.Images.GlideApp;
+import com.vividprojects.protoplanner.Images.ThumbnailTarget;
 import com.vividprojects.protoplanner.R;
 
+import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -121,5 +131,34 @@ public class DataRepository {
         localDataDB.showDB();
     }
 
+    public void initImages() {
+        Log.d("Test", "External Storage - " + getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+        //fileManager.test();
+        BaseTarget target = new FullTarget("test.jpg",getContext());
+        GlideApp.with(context)
+                //  .load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg")
+                // .load(R.raw.testpicture)
+                // .load("img_testpicture.jpg")
+                .load(new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),"img_testpicture.jpg"))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                //.into(iv);
+                .into(target);
+    }
+
+    public String saveImageFromURL(String url) {
+        String file_name = UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
+        Log.d("Test", "UUID - " + file_name);
+        Target target = new ThumbnailTarget("img_s_"+file_name,context);
+        GlideApp.with(context)
+                .load(url)
+                .into(target);
+        target = new FullTarget("img_f_"+file_name,context);
+        GlideApp.with(context)
+                .load(url)
+                .into(target);
+
+        return file_name;
+    }
 }
 

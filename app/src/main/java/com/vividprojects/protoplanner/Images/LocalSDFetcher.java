@@ -76,8 +76,8 @@ public class LocalSDFetcher implements DataFetcher<InputStream> {
                 e.printStackTrace();
             }
           //  inputStream = context.getResources().openRawResource(id);
-          //  inputStream = new SDFileManager(context).getFileStream(id);
-            inputStream = new SDFileManager(context).getFileStream("testpicture.jpg");
+            inputStream = new SDFileManager(context).getFileStream(id);
+          //  inputStream = new SDFileManager(context).getFileStream("testpicture.jpg");
             return inputStream;
         }
 

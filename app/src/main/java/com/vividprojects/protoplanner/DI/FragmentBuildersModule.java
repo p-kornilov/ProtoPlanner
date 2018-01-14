@@ -1,6 +1,6 @@
 package com.vividprojects.protoplanner.DI;
 
-import com.vividprojects.protoplanner.Interface.BlockFragment;
+import com.vividprojects.protoplanner.Interface.BlockListFragment;
 import com.vividprojects.protoplanner.Interface.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
 
@@ -20,7 +20,7 @@ public abstract class FragmentBuildersModule {
     abstract RecordItemFragment contributeRecordItemFragment();
 
     @ContributesAndroidInjector
-    abstract BlockFragment contributeBlockFragment();
+    abstract BlockListFragment contributeBlockFragment();
 
  /*   @ContributesAndroidInjector
     abstract UserFragment contributeUserFragment();

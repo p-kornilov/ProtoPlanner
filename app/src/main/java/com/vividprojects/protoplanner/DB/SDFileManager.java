@@ -36,19 +36,20 @@ public class SDFileManager {
 
             if (file.exists()) {
                 try {
-                    InputStream inputStream = new FileInputStream(file);
-                    byte[] data = new byte[inputStream.available()];
-                    inputStream.read(data);
-                    return inputStream;
-
+                    return new FileInputStream(file);
                 } catch (IOException e) {
-                    Log.d("ExternalStorage", "Error writing " + file, e);
+                    Log.d("ExternalStorage", "Error reading " + file, e);
                 }
 
             } else return null;
         }
 
         return null;
+    }
+
+    public boolean saveFileStream(InputStream inputStream, String file_name) {
+
+        return false;
     }
 
 

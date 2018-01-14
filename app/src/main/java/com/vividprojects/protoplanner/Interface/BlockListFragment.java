@@ -1,6 +1,9 @@
 package com.vividprojects.protoplanner.Interface;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -13,13 +16,18 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.BaseTarget;
 import com.vividprojects.protoplanner.CoreData.Block;
 import com.vividprojects.protoplanner.DB.SDFileManager;
 import com.vividprojects.protoplanner.DI.Injectable;
+import com.vividprojects.protoplanner.Images.FullTarget;
 import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.Images.PPGlideModule;
 import com.vividprojects.protoplanner.PPApplication;
+import com.vividprojects.protoplanner.Presenters.BlockListViewModel;
 import com.vividprojects.protoplanner.R;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -27,12 +35,15 @@ import javax.inject.Inject;
  * Created by Smile on 19.10.2017.
  */
 
-public class BlockFragment extends Fragment implements Injectable {
+public class BlockListFragment extends Fragment implements Injectable {
     private ImageView iv;
     private Button button;
     private Fragment fragment;
+
+    private BlockListViewModel model;
+
     @Inject
-    SDFileManager fileManager;   // TODO Заинжектить dataRepository и из нее раскрутить/проверить всю цепочку, потом перенести логику в model
+    ViewModelProvider.Factory viewModelFactory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,18 +65,28 @@ public class BlockFragment extends Fragment implements Injectable {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Test", "External Storage - " + getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-                fileManager.test();
-                GlideApp.with(fragment)
-                     //  .load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg")
-                       // .load(R.raw.testpicture)
-                        .load("testpicture.jpg")
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
-                        .into(iv);
+                model.load();
             }
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(BlockListViewModel.class);
+
+        Bundle args = getArguments();
+
+        if (args != null && args.containsKey("FILTER")){  // TODO Сделать восстановление состояния фильтра и ожет быть чего другого
+            //    model.setFilter();
+            model.setFilter(args.getStringArrayList("FILTER"));
+        } else {
+            model.setFilter(null);
+        }
+
+
     }
 }
