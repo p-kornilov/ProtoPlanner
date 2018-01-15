@@ -7,8 +7,12 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.Target;
 import com.vividprojects.protoplanner.CoreData.Resource;
@@ -23,11 +27,24 @@ import com.vividprojects.protoplanner.Images.ThumbnailTarget;
 import com.vividprojects.protoplanner.R;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import okio.Buffer;
+import okio.BufferedSource;
+import okio.ForwardingSource;
+import okio.Okio;
+import okio.Source;
 
 /**
  * Created by Smile on 05.12.2017.
@@ -40,14 +57,16 @@ public class DataRepository {
     private final NetworkDataDB networkDataDB;
     private final LocalDataDB localDataDB;
     private final AppExecutors appExecutors;
+    private final OkHttpClient okHttpClient;
 
     @Inject
-    public DataRepository(Context context, AppExecutors appExecutors, LocalDataDB ldb, NetworkDataDB ndb){
+    public DataRepository(Context context, AppExecutors appExecutors, LocalDataDB ldb, NetworkDataDB ndb, OkHttpClient okHttpClient){
         this.localDataDB = ldb;
         this.networkDataDB = ndb;
         this.appExecutors = appExecutors;
-
+        this.okHttpClient = okHttpClient;
         this.context = context;
+
     }
 
     public LiveData<Resource<List<Record>>> loadRecords(List<String> filter) {
@@ -146,19 +165,118 @@ public class DataRepository {
                 .into(target);
     }
 
+   // public void save
+
     public String saveImageFromURL(String url) {
         String file_name = UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
         Log.d("Test", "UUID - " + file_name);
         Target target = new ThumbnailTarget("img_s_"+file_name,context);
         GlideApp.with(context)
                 .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(target);
         target = new FullTarget("img_f_"+file_name,context);
         GlideApp.with(context)
                 .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(target);
 
         return file_name;
+    }
+/*
+    public String saveImageFromURL(String URL, ProgressBar bar) {
+
+        final ProgressBar progressBar = bar;
+        final ProgressListener progressListener = new ProgressListener() {
+            @Override
+            public void update(long bytesRead, long contentLength, boolean done) {
+                int progress = (int) ((100 * bytesRead) / contentLength);
+
+                // Enable if you want to see the progress with logcat
+                // Log.v(LOG_TAG, "Progress: " + progress + "%");
+                progressBar.setProgress(progress);
+                if (done) {
+                    Log.d("Test", "Done loading");
+                }
+            }
+        };
+
+        okHttpClient.networkInterceptors().add(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response originalResponse = chain.proceed(chain.request());
+                return originalResponse.newBuilder()
+                        .body(new ProgressResponseBody(originalResponse.body(),progressListener))
+                        .build();
+            }
+        });
+
+        String file_name = UUID.nameUUIDFromBytes(URL.getBytes()).toString() + ".jpg";
+        Log.d("Test", "UUID - " + file_name);
+        Target target = new ThumbnailTarget("img_s_"+file_name,context);
+
+        Glide.with(context).
+                .register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(okHttpClient));
+        Glide.with(context)
+                .load(URL)
+                // Disabling cache to see download progress with every app load
+                // You may want to enable caching again in production
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(imageView);
+    }*/
+
+
+/*
+    private static class ProgressResponseBody extends ResponseBody {
+
+        private final ResponseBody responseBody;
+        private final ProgressListener progressListener;
+        private BufferedSource bufferedSource;
+
+        public ProgressResponseBody(ResponseBody responseBody, ProgressListener progressListener) {
+            this.responseBody = responseBody;
+            this.progressListener = progressListener;
+        }
+
+        @Override
+        public MediaType contentType() {
+            return responseBody.contentType();
+        }
+
+        @Override
+        public long contentLength() throws IOException {
+            return responseBody.contentLength();
+        }
+
+        @Override
+        public BufferedSource source() throws IOException {
+            if (bufferedSource == null) {
+                bufferedSource = Okio.buffer(source(responseBody.source()));
+            }
+            return bufferedSource;
+        }
+
+        private Source source(Source source) {
+            return new ForwardingSource(source) {
+                long totalBytesRead = 0L;
+
+                @Override
+                public long read(Buffer sink, long byteCount) throws IOException {
+                    long bytesRead = super.read(sink, byteCount);
+                    // read() returns the number of bytes read, or -1 if this source is exhausted.
+                    totalBytesRead += bytesRead != -1 ? bytesRead : 0;
+                    progressListener.update(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
+                    return bytesRead;
+                }
+            };
+        }
+    }
+*/
+
+    interface ProgressListener {
+        void update(long bytesRead, long contentLength, boolean done);
     }
 }
 

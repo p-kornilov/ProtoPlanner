@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by Smile on 05.12.2017.
@@ -46,5 +47,11 @@ public class AppModule {
     @Singleton
     SDFileManager provideSDFileManager(Context context){
         return new SDFileManager(context);
+    }
+
+    @Provides
+    @Singleton
+    OkHttpClient provideOKHttpClient() {
+        return new OkHttpClient();
     }
 }
