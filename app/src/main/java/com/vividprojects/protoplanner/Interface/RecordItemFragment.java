@@ -134,7 +134,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
         }
 
         model.getRecordItem().observe(this,resource -> {
-            if (resource.data != null) {
+            if (resource != null && resource.data != null) {
                 commentView.setText(resource.data.getComment());
                 chl.removeAllViews();
                 chl.noneChip(getContext());
@@ -161,7 +161,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
         chl.addView(chip4);
     }
 
-    public boolean onRecordEdit(){
+    public boolean onRecordEdit(){   // TODO !!! Переделать на общение через ViewModel !!!!
         commentSwitcher.showNext();
         //ImageButton im = (ImageButton) view;
         inCommentEdit = !inCommentEdit;

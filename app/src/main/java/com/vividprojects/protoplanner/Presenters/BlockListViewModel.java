@@ -72,7 +72,7 @@ public class BlockListViewModel extends ViewModel {
 
     public void load() {
 //        dataRepository.initImages();
-        dataRepository.saveImageFromURL("http://anub.ru/uploads/07.2015/976_podborka_34.jpg");
+        dataRepository.saveImageFromURL("http://anub.ru/uploads/07.2015/976_podborka_34.jpg",null);
     }
 
 }
