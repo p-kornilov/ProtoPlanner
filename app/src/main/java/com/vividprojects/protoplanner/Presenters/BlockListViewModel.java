@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.os.Environment;
+import android.transition.Transition;
 import android.util.Log;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -29,14 +30,17 @@ import javax.inject.Inject;
 
 public class BlockListViewModel extends ViewModel {
 
-    final MutableLiveData<Filter> filter;
+    private final MutableLiveData<Filter> filter;
 
     private final LiveData<Resource<List<Record>>> list;
 
+    private final LiveData<Integer> loadProgress;
+    private final MutableLiveData<Integer> loadProgressRepo;
+
     private DataRepository dataRepository;
 
-    @Inject
-    SDFileManager fileManager;   // TODO Заинжектить dataRepository и из нее раскрутить/проверить всю цепочку, потом перенести логику в model
+ //   @Inject
+ //   SDFileManager fileManager;   // TODO Заинжектить dataRepository и из нее раскрутить/проверить всю цепочку, потом перенести логику в model
 
 
     @Inject
@@ -55,6 +59,11 @@ public class BlockListViewModel extends ViewModel {
             }*/
             return dataRepository.loadRecords(input.getFilter());
         });
+
+        loadProgressRepo = new MutableLiveData<>();
+        loadProgress = Transformations.switchMap(loadProgressRepo,progress->{
+           return progress;
+        });
     }
 
     public void setFilter(List<String> ids) {
@@ -70,9 +79,15 @@ public class BlockListViewModel extends ViewModel {
         return list;//dataRepository.loadRecords();
     }
 
+    public LiveData<Integer> getLoadProgress(){
+        return loadProgress;
+    }
+
     public void load() {
 //        dataRepository.initImages();
-        dataRepository.saveImageFromURL("http://anub.ru/uploads/07.2015/976_podborka_34.jpg",null);
+        dataRepository.saveImageFromURL("http://anub.ru/uploads/07.2015/976_podborka_34.jpg",null).observe(this,progress->{
+
+        });
     }
 
 }

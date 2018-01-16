@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,6 +47,7 @@ public class NetworkLoader {
 
     public LiveData<Integer> load(String URL, String file_name) {
         final MutableLiveData<Integer> progress = new MutableLiveData<>();
+        progress.setValue(0);
 
         final ProgressListener progressListener = new ProgressListener() {
             @Override
@@ -54,6 +56,11 @@ public class NetworkLoader {
 
                 // Enable if you want to see the progress with logcat
                  Log.d("Test", "Progress: " + p + "%");
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 progress.postValue(p);
                 if (done) {
                     Log.d("Test", "Done loading");

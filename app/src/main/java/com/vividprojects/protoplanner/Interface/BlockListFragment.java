@@ -1,6 +1,8 @@
 package com.vividprojects.protoplanner.Interface;
 
 import android.app.Activity;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -61,11 +64,23 @@ public class BlockListFragment extends Fragment implements Injectable {
         fragment = this;
         iv = rootView.findViewById(R.id.imageView2);
 
+        ProgressBar pBar = rootView.findViewById(R.id.progressBar);
+
+        Fragment fragment = this;
         button = rootView.findViewById(R.id.button_load);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                model.load();
+                LiveData<Integer> progress = model.load();
+                pBar.setVisibility(ProgressBar.VISIBLE);
+                progress.observe( fragment,resource -> {
+                    if (resource != null) {
+                        pBar.setProgress(resource);
+                        if (resource==100) {
+                            pBar.setVisibility(ProgressBar.INVISIBLE);
+                        }
+                    }
+                    });
             }
         });
 
