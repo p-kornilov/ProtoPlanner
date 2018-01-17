@@ -14,9 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
 import com.vividprojects.protoplanner.Adapters.ShopsAdapter;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
@@ -24,12 +27,14 @@ import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 import com.vividprojects.protoplanner.Widgets.HorizontalImages;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -55,12 +60,15 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private EditText commentEdit;
     private TextView commentView;
     private RecyclerView shopsRecycler;
-    private HorizontalImages images;
+  //  private HorizontalImages images;
     private RecyclerView alternativesRecycler;
     private TextView mvTitle;
     private TextView mvPrice;
     private TextView mvValue;
     private TextView mvCount;
+    private RecyclerView imagesRecycler;
+    private ImageButton add_image;
+    private HorizontalImagesListAdapter imagesListAdapter;
    // private TextView mvCurrency1;
     private TextView mvCurrency2;
 
@@ -97,8 +105,35 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
         chl = v.findViewById(R.id.chipLayout);
 
-        images = (HorizontalImages) v.findViewById(R.id.rf_images);
-        images.setNoneImage(true);
+/*        images = (HorizontalImages) v.findViewById(R.id.rf_images);
+        images.setNoneImage(true);*/
+        imagesRecycler = (RecyclerView) v.findViewById(R.id.ai_images);
+        RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        imagesRecycler.setLayoutManager(layoutManager3);
+        imagesRecycler.setNestedScrollingEnabled(false);
+        imagesRecycler.setFocusable(false);
+        List<String> names = new ArrayList<>();
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
+/*        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_testpicture.jpg"));
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_testpicture.jpg"));
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
+        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));*/
+        //imagesRecycler.setAdapter(new HorizontalImagesListAdapter(names,null));
+        imagesListAdapter = new HorizontalImagesListAdapter(null,null);
+        imagesRecycler.setAdapter(imagesListAdapter);
+
+        add_image = (ImageButton) v.findViewById(R.id.rf_add_image);
+        add_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imagesListAdapter.addMode();
+            }
+        });
 
         alternativesRecycler = (RecyclerView) v.findViewById(R.id.rf_alternatives_recycler  );
     //    RealmResults<Record> ar = realm.where(Record.class).findAllAsync();
@@ -135,21 +170,48 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
         model.getRecordItem().observe(this,resource -> {
             if (resource != null && resource.data != null) {
-                commentView.setText(resource.data.getComment());
+                commentView.setText(resource.data.comment);
                 chl.removeAllViews();
                 chl.noneChip(getContext());
-                for (Label label : resource.data.getLabels()) {
+/*                for (Label label : resource.data.getLabels()) {
                     Chip chip = new Chip(getContext());
                     chip.setTitle(label.getName());
                     chip.setColor(label.getColor());
                     chl.addView(chip);
+                }*/
+
+/*                public String getFormattedValue() {
+                    return PriceFormatter.getValue(currency,price*count);
                 }
 
-                mvTitle.setText(resource.data.getMainVariant().getTitle());
+                public String getFormattedPriceShort() {
+                    return PriceFormatter.getValue(currency,price);
+                }
+
+                public String getFormattedPriceFull() {
+                    return PriceFormatter.getPrice(currency,price,measure);
+                }
+
+                public String getFormattedCount() {
+                    return PriceFormatter.getCount(count,measure);
+                }*/
+/*
                 mvCount.setText(resource.data.getMainVariant().getFormattedCount());
                 mvValue.setText(resource.data.getMainVariant().getFormattedValue());
                 mvPrice.setText(resource.data.getMainVariant().getFormattedPriceFull());
-                //mvCurrency1.setText(getResources().getString(R.string.RUB));
+                imagesListAdapter.setData(new ArrayList<String>(resource.data.getMainVariant().getImages()));
+*/
+
+            }
+        });
+
+        model.getMainVariantItem().observe(this,resource ->{
+            if (resource != null && resource.data != null) {
+                mvTitle.setText(resource.data.title);
+                mvCount.setText(PriceFormatter.getCount(resource.data.count,resource.data.measure));
+                mvValue.setText(PriceFormatter.getValue(resource.data.currency,resource.data.price*resource.data.count));
+                mvPrice.setText(PriceFormatter.getPrice(resource.data.currency,resource.data.price,resource.data.measure));
+                imagesListAdapter.setData(new ArrayList<String>(resource.data.images));
             }
         });
     }

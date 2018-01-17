@@ -8,6 +8,7 @@ import android.provider.ContactsContract;
 
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Resource;
+import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 
 import java.util.Objects;
@@ -20,7 +21,8 @@ import javax.inject.Inject;
 
 public class RecordItemViewModel extends ViewModel {
     final MutableLiveData<String> recordItemId;
-    private final LiveData<Resource<Record>> recordItem;
+    private final LiveData<Resource<Record.Plain>> recordItem;
+    private final LiveData<Resource<Variant.Plain>> mainVariantItem;
     private DataRepository dataRepository;
 
     @Inject
@@ -36,6 +38,14 @@ public class RecordItemViewModel extends ViewModel {
             }*/
             return dataRepository.loadRecord(input);
         });
+        mainVariantItem = Transformations.switchMap(recordItem, input -> {
+/*            if (input.isEmpty()) {
+                return AbsentLiveData.create();
+            } else {
+                return dataRepository.loadRecords(input.getFilter());
+            }*/
+            return dataRepository.loadVariant(input.data.mainVariant);
+        });
 
     }
 
@@ -46,12 +56,15 @@ public class RecordItemViewModel extends ViewModel {
         recordItemId.setValue(id);
     }
 
-    public LiveData<Resource<Record>> getRecordItem() {
+    public LiveData<Resource<Record.Plain>> getRecordItem() {
         return recordItem;
+    }
+    public LiveData<Resource<Variant.Plain>> getMainVariantItem() {
+        return mainVariantItem;
     }
 
     public LiveData<Integer> saveImage(String URL) {
-        return dataRepository.saveImageFromURL(URL,recordItem.getValue().data.getMainVariant());
+        return dataRepository.saveImageFromURL(URL,recordItem.getValue().data.mainVariant);
     }
 
 }

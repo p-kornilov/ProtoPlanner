@@ -102,22 +102,86 @@ public class DataRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<Record>> loadRecord(String id) {
-        return new NetworkBoundResource<Record, Record>(appExecutors) {
+    public LiveData<Resource<Record.Plain>> loadRecord(String id) {
+        return new NetworkBoundResource<Record.Plain, Record.Plain>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull Record item) {
+            protected void saveCallResult(@NonNull Record.Plain item) {
 
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable Record data) {
+            protected boolean shouldFetch(@Nullable Record.Plain data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<Record> loadFromLocalDB() {
-                MutableLiveData<Record> ld = new MutableLiveData<>();
+            protected LiveData<Record.Plain> loadFromLocalDB() {
+                MutableLiveData<Record.Plain> ld = new MutableLiveData<>();
+                ld.setValue(localDataDB
+                        .queryRecords()
+                        .id_equalTo(id)
+                        .findFirst()
+                        .getPlain());
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<Record.Plain>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<Record.Plain>>();
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<Variant.Plain>> loadVariant(String id) {
+        return new NetworkBoundResource<Variant.Plain, Variant.Plain>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull Variant.Plain item) {
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Variant.Plain data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Variant.Plain> loadFromLocalDB() {
+                MutableLiveData<Variant.Plain> ld = new MutableLiveData<>();
+                ld.setValue(localDataDB
+                        .queryVariants()
+                        .title_equalTo(id)
+                        .findFirst()
+                        .getPlain());
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<Variant.Plain>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<Variant.Plain>>();
+            }
+        }.asLiveData();
+    }
+
+/*    public LiveData<Resource<String>> loadVariantImages(String title) {
+        return new NetworkBoundResource<String, String>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull String item) {
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable String data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<String> loadFromLocalDB() {
+                MutableLiveData<String> ld = new MutableLiveData<>();
                 ld.setValue(localDataDB.queryRecords().id_equalTo(id).findFirst());
                 return ld;
             }
@@ -128,7 +192,7 @@ public class DataRepository {
                 return new MutableLiveData<NetworkResponse<Record>>();
             }
         }.asLiveData();
-    }
+    }*/
 
     public int getHeight() {return context.getResources().getConfiguration().screenHeightDp;}
 
@@ -169,7 +233,7 @@ public class DataRepository {
 
    // public void save
 
-    public LiveData<Integer> saveImageFromURL(String url, Variant variant) {
+    public LiveData<Integer> saveImageFromURL(String url, String variant) {
         MutableLiveData<Integer> progress = new MutableLiveData<>();
         String file_name = UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
 /*        Log.d("Test", "UUID - " + file_name);

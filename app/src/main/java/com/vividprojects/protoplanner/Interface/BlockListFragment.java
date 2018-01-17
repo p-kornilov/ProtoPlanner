@@ -42,6 +42,7 @@ public class BlockListFragment extends Fragment implements Injectable {
     private ImageView iv;
     private Button button;
     private Fragment fragment;
+    private ProgressBar pBar;
 
     private BlockListViewModel model;
 
@@ -64,23 +65,17 @@ public class BlockListFragment extends Fragment implements Injectable {
         fragment = this;
         iv = rootView.findViewById(R.id.imageView2);
 
-        ProgressBar pBar = rootView.findViewById(R.id.progressBar);
+        pBar = rootView.findViewById(R.id.progressBar);
 
         Fragment fragment = this;
         button = rootView.findViewById(R.id.button_load);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LiveData<Integer> progress = model.load();
-                pBar.setVisibility(ProgressBar.VISIBLE);
-                progress.observe( fragment,resource -> {
-                    if (resource != null) {
-                        pBar.setProgress(resource);
-                        if (resource==100) {
-                            pBar.setVisibility(ProgressBar.INVISIBLE);
-                        }
-                    }
-                    });
+                GlideApp.with(iv)
+                        .load(new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),"img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"))
+                        .into(iv);
+                model.load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg");
             }
         });
 
@@ -101,6 +96,17 @@ public class BlockListFragment extends Fragment implements Injectable {
         } else {
             model.setFilter(null);
         }
+
+        model.getLoadProgress().observe(this,progress->{
+            if (progress != null) {
+                pBar.setVisibility(ProgressBar.VISIBLE);
+                pBar.setProgress(progress);
+                if (progress==100) {
+                    pBar.setVisibility(ProgressBar.INVISIBLE);
+                }
+            }
+
+        });
 
 
     }

@@ -48,6 +48,10 @@ public class VariantInShop extends RealmObject {
         return result;
     }
 
+    public int getHash() {
+        return hash;
+    }
+
     public String getTitle() { return title;}
 
     public String getAddress() { return address;}

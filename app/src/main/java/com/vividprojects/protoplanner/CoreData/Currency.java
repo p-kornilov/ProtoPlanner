@@ -57,4 +57,23 @@ public class Currency extends RealmObject {
     public String toString() {
         return "Currency : "+symbol+" iso code - " + iso_code_str + "(" + iso_code_int + ")" + ", name - " + iso_name;
     }
+
+    public Plain getPlain() {
+        Plain plain = new Plain();
+        plain.iso_code_int = iso_code_int;
+        plain.iso_name = iso_name;
+        plain.iso_code_str = iso_code_str;
+        plain.symbol = symbol;
+        plain.position = position;
+        return plain;
+    }
+
+    public class Plain {
+        public int iso_code_int;
+        public String iso_code_str;
+        public String iso_name;
+        public String symbol;
+        public int position;
+    }
+
 }

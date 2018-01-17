@@ -117,6 +117,12 @@ public class LocalDataDB {
                 Variant vv2 = realm.where(Variant.class).contains("title","Хлеб").findFirst();
                 Variant vv3 = realm.where(Variant.class).contains("title","Колбаса").findFirst();
 
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+
                 for (VariantInShop vis : vsps) {
                     vv1.addShop(vis);
                 }
@@ -218,6 +224,9 @@ public class LocalDataDB {
     public QueryRecords queryRecords() {
         return new QueryRecords();
     }
+    public QueryVariants queryVariants() {
+        return new QueryVariants();
+    }
 
     public class QueryRecords {
         RealmQuery<Record> query;
@@ -265,4 +274,30 @@ public class LocalDataDB {
             return rr;
         }
     }
+
+    public class QueryVariants {
+        RealmQuery<Variant> query;
+
+        public QueryVariants () {
+            query = realm.where(Variant.class);
+        }
+
+        public QueryVariants title_equalTo(String title) {
+            query = query.equalTo("title",title);
+            return this;
+        }
+
+        public List<Variant> findAll() {
+            RealmResults<Variant> rr = query.findAll();
+            ArrayList<Variant> al = new ArrayList<>();
+            al.addAll(rr);
+            return al;
+        }
+
+        public Variant findFirst() {
+            Variant rr = query.findFirst();
+            return rr;
+        }
+    }
+
 }

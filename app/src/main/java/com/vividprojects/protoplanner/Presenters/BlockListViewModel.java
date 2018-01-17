@@ -35,7 +35,7 @@ public class BlockListViewModel extends ViewModel {
     private final LiveData<Resource<List<Record>>> list;
 
     private final LiveData<Integer> loadProgress;
-    private final MutableLiveData<Integer> loadProgressRepo;
+    private final MutableLiveData<String> loadProgressSwitcher;
 
     private DataRepository dataRepository;
 
@@ -60,9 +60,9 @@ public class BlockListViewModel extends ViewModel {
             return dataRepository.loadRecords(input.getFilter());
         });
 
-        loadProgressRepo = new MutableLiveData<>();
-        loadProgress = Transformations.switchMap(loadProgressRepo,progress->{
-           return progress;
+        loadProgressSwitcher = new MutableLiveData<>();
+        loadProgress = Transformations.switchMap(loadProgressSwitcher,url->{
+           return dataRepository.saveImageFromURL(url,null);
         });
     }
 
@@ -83,11 +83,12 @@ public class BlockListViewModel extends ViewModel {
         return loadProgress;
     }
 
-    public void load() {
+    public void load(String url) {
+        loadProgressSwitcher.setValue(url);
 //        dataRepository.initImages();
-        dataRepository.saveImageFromURL("http://anub.ru/uploads/07.2015/976_podborka_34.jpg",null).observe(this,progress->{
+     //   dataRepository.saveImageFromURL("http://anub.ru/uploads/07.2015/976_podborka_34.jpg",null).observe(this,progress->{
 
-        });
+      //  });
     }
 
 }

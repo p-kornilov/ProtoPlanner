@@ -159,4 +159,30 @@ public class Record extends RealmObject{
 
         return Objects.equals(mainVariant,other.mainVariant) && Objects.equals(variants,other.variants);
     }
+
+    public Plain getPlain() {
+        Plain plain = new Plain();
+        plain.id = id;
+        plain.mainVariant = mainVariant.getTitle();
+        plain.variants = new ArrayList<>();
+        for (Variant variant : variants) {
+            plain.variants.add(variant.getTitle());
+        }
+        plain.labels = new ArrayList<>();
+        for (Label label: labels) {
+            plain.labels.add(label.getId());
+        }
+        plain.block = block.getName();
+        plain.comment = comment;
+        return plain;
+    }
+
+    public class Plain {
+        public String id;
+        public String mainVariant;
+        public List<String> variants;
+        public List<String> labels;
+        public String block;
+        public String comment;
+    }
 }

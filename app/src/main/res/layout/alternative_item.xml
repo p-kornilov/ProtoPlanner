@@ -224,7 +224,7 @@
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
     <ImageButton
-        android:id="@+id/rf_add_foto"
+        android:id="@+id/rf_add_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
@@ -244,7 +244,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/pictures_view"/>-->
 
-    <HorizontalScrollView
+<!--    <HorizontalScrollView
         android:id="@+id/pictures_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -253,9 +253,9 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView5">
+        app:layout_constraintTop_toBottomOf="@id/textView5">-->
 
-        <com.vividprojects.protoplanner.Widgets.HorizontalImages
+<!--        <com.vividprojects.protoplanner.Widgets.HorizontalImages
             android:id="@+id/rf_images"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -295,8 +295,22 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 app:srcCompat="@drawable/record_test" />
-        </com.vividprojects.protoplanner.Widgets.HorizontalImages>
+        </com.vividprojects.protoplanner.Widgets.HorizontalImages>-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ai_images"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/record_left_padding"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView5">
+        </android.support.v7.widget.RecyclerView>
+<!--
     </HorizontalScrollView>
+-->
 
     <View
         android:id="@+id/divider3"
@@ -308,7 +322,7 @@
         android:background="@color/black_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pictures_view" />
+        app:layout_constraintTop_toBottomOf="@id/ai_images" />
 
     <TextView
         android:id="@+id/textView6"

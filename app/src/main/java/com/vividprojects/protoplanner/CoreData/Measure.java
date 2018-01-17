@@ -46,5 +46,17 @@ public class Measure extends RealmObject{
 
         return Objects.equals(title,other.title);
     }
+
+    public Plain getPlain() {
+        Plain plain = new Plain();
+        plain.title = title;
+        plain.part = part;
+        return plain;
+    }
+
+    public class Plain {
+        public String title;
+        public int part;
+    }
 }
 

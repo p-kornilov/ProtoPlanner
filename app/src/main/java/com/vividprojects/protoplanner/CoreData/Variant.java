@@ -4,6 +4,7 @@ import com.vividprojects.protoplanner.Utils.PriceFormatter;
 
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 //import java.util.Objects;
@@ -36,9 +37,10 @@ public class Variant extends RealmObject {
         this.comment = comment;
         this.urls = new RealmList<>();
         this.currency = currency;
+        this.images = new RealmList<>();
     }
 
-    public String getFormattedValue() {
+/*    public String getFormattedValue() {
         return PriceFormatter.getValue(currency,price*count);
     }
 
@@ -52,7 +54,7 @@ public class Variant extends RealmObject {
 
     public String getFormattedCount() {
         return PriceFormatter.getCount(count,measure);
-    }
+    }*/
 
     public Currency getCurrency() {
         return currency;
@@ -93,11 +95,19 @@ public class Variant extends RealmObject {
 
     public boolean addShop(VariantInShop v) { return shops.add(v); }
 
+    public List<String> getImages() {
+        return images;
+    }
+
+    public boolean addImage(String image) {
+        return images.add(image);
+    }
+
 //    public List<String> getShops() { return urls; }
 
     @Override
     public String toString() {
-        String str= "Title: " + title + " (comment: " + comment + ")" + ", count: " + count + " " + measure.getTitle() + ", for " + price + " each, with total value: " + getFormattedValue() + "\n\tURLS:\n";
+        String str= "Title: " + title + " (comment: " + comment + ")" + ", count: " + count + " " + measure.getTitle() + ", for " + price + " each, with total value: " + PriceFormatter.getValue(currency.getPlain(),price*count) + "\n\tURLS:\n";
 
 
         for (String s : urls) {
@@ -124,6 +134,35 @@ public class Variant extends RealmObject {
         Variant other = (Variant) obj;
 
         return Objects.equals(title,other.title) && Objects.equals(measure,other.measure) && count == other.count && price == other.price;
+    }
+
+    public Plain getPlain(){
+        Plain plain = new Plain();
+        plain.title = title;
+        plain.measure = measure.getPlain();
+        plain.count = count;
+        plain.price = price;
+        plain.comment = comment;
+        plain.urls = new ArrayList<>(urls);
+        plain.images = new ArrayList<>(images);
+        plain.shops = new ArrayList<>();
+        for (VariantInShop shop : shops) {
+            plain.shops.add(shop.getHash());
+        }
+        plain.currency = currency.getPlain();
+        return plain;
+    }
+
+    public class Plain {
+        public String title;
+        public Measure.Plain  measure;
+        public double count;
+        public double price;
+        public String comment;
+        public List<String> urls;
+        public List<String> images;
+        public List<Integer> shops;
+        public Currency.Plain currency;
     }
 
 }
