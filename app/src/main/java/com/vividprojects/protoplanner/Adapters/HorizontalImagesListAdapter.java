@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;

@@ -2,6 +2,7 @@ package com.vividprojects.protoplanner.DataManager;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -31,6 +32,7 @@ import com.vividprojects.protoplanner.R;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,6 +57,7 @@ import okio.Source;
 @Singleton
 public class DataRepository {
     private Context context;
+    private String imagesDirectory;
 
     private final NetworkDataDB networkDataDB;
     private final LocalDataDB localDataDB;
@@ -68,7 +71,7 @@ public class DataRepository {
         this.appExecutors = appExecutors;
         this.networkLoader = networkLoader;
         this.context = context;
-
+        imagesDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
     public LiveData<Resource<List<Record>>> loadRecords(List<String> filter) {
@@ -118,11 +121,12 @@ public class DataRepository {
             @Override
             protected LiveData<Record.Plain> loadFromLocalDB() {
                 MutableLiveData<Record.Plain> ld = new MutableLiveData<>();
-                ld.setValue(localDataDB
+                Record.Plain record = localDataDB
                         .queryRecords()
                         .id_equalTo(id)
                         .findFirst()
-                        .getPlain());
+                        .getPlain();
+                ld.setValue(record);
                 return ld;
             }
 
@@ -150,11 +154,14 @@ public class DataRepository {
             @Override
             protected LiveData<Variant.Plain> loadFromLocalDB() {
                 MutableLiveData<Variant.Plain> ld = new MutableLiveData<>();
-                ld.setValue(localDataDB
+                Variant.Plain variant = localDataDB
                         .queryVariants()
                         .title_equalTo(id)
                         .findFirst()
-                        .getPlain());
+                        .getPlain();
+                for (int i = 0;i<variant.small_images.size();i++) variant.small_images.set(i, imagesDirectory + "/img_s_" + variant.small_images.get(i) + ".jpg");
+                for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + "/img_f_" + variant.full_images.get(i) + ".jpg");
+                ld.setValue(variant);
                 return ld;
             }
 
@@ -233,25 +240,13 @@ public class DataRepository {
 
    // public void save
 
-    public LiveData<Integer> saveImageFromURL(String url, String variant) {
-        MutableLiveData<Integer> progress = new MutableLiveData<>();
-        String file_name = UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
-/*        Log.d("Test", "UUID - " + file_name);
-        Target target = new ThumbnailTarget("img_s_"+file_name,context);
-        GlideApp.with(context)
-                .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(target);
-        target = new FullTarget("img_f_"+file_name,context);
-        GlideApp.with(context)
-                .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(target);
-        */
-
-        return networkLoader.load(url,file_name);
+    public LiveData<Integer> saveImageFromURLtoVariant(String url, String variant) {
+        //MutableLiveData<Integer> progress = new MutableLiveData<>();
+        String file_name = imagesDirectory + "/img_f_" + UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
+        LiveData<Integer> progress = networkLoader.loadImage(url,file_name,()->{
+            Log.d("Test", "Done loading in Repository!!!");
+        });
+        return progress;
     }
 /*
     public String saveImageFromURL(String URL, ProgressBar bar) {

@@ -144,7 +144,8 @@ public class Variant extends RealmObject {
         plain.price = price;
         plain.comment = comment;
         plain.urls = new ArrayList<>(urls);
-        plain.images = new ArrayList<>(images);
+        plain.small_images = new ArrayList<>(images);
+        plain.full_images = new ArrayList<>(images);
         plain.shops = new ArrayList<>();
         for (VariantInShop shop : shops) {
             plain.shops.add(shop.getHash());
@@ -160,7 +161,8 @@ public class Variant extends RealmObject {
         public double price;
         public String comment;
         public List<String> urls;
-        public List<String> images;
+        public List<String> small_images;
+        public List<String> full_images;
         public List<Integer> shops;
         public Currency.Plain currency;
     }

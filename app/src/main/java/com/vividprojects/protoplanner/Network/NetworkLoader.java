@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,15 +38,15 @@ import okio.Source;
 @Singleton
 public class NetworkLoader {
     private OkHttpClient client;
-    private Context context;
+  //  private Context context;
 
     @Inject
     public NetworkLoader(OkHttpClient client, Context context) {
         this.client = client;
-        this.context = context;
+       // this.context = context;
     }
 
-    public LiveData<Integer> load(String URL, String file_name) {
+    public LiveData<Integer> loadImage(String URL, String file_name, Runnable f) {
         final MutableLiveData<Integer> progress = new MutableLiveData<>();
         progress.setValue(0);
 
@@ -64,6 +65,7 @@ public class NetworkLoader {
                 progress.postValue(p);
                 if (done) {
                     Log.d("Test", "Done loading");
+                    f.run();
                 }
             }
         };
@@ -164,7 +166,7 @@ public class NetworkLoader {
                 InputStream is = response.body().byteStream();
 
                 BufferedInputStream input = new BufferedInputStream(is);
-                OutputStream output = new FileOutputStream(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)+"/"+file_name);
+                OutputStream output = new FileOutputStream(file_name);
 
                 byte[] data = new byte[1024];
 

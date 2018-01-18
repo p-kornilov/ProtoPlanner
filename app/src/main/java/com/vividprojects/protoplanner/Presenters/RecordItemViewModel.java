@@ -53,7 +53,7 @@ public class RecordItemViewModel extends ViewModel {
 
         loadProgressSwitcher = new MutableLiveData<>();
         loadProgress = Transformations.switchMap(loadProgressSwitcher,url->{
-            return dataRepository.saveImageFromURL(url,null);
+            return dataRepository.saveImageFromURLtoVariant(url,mainVariantItem.getValue().data.title);
         });
 
     }
@@ -72,9 +72,9 @@ public class RecordItemViewModel extends ViewModel {
         return mainVariantItem;
     }
 
-    public LiveData<Integer> saveImage(String URL) {
+/*    public LiveData<Integer> saveImage(String URL) {
         return dataRepository.saveImageFromURL(URL,recordItem.getValue().data.mainVariant);
-    }
+    }*/
 
     public LiveData<Integer> getLoadProgress(){
         return loadProgress;

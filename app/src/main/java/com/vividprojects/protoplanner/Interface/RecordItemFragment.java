@@ -205,7 +205,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 mvCount.setText(PriceFormatter.getCount(resource.data.count,resource.data.measure));
                 mvValue.setText(PriceFormatter.getValue(resource.data.currency,resource.data.price*resource.data.count));
                 mvPrice.setText(PriceFormatter.getPrice(resource.data.currency,resource.data.price,resource.data.measure));
-                imagesListAdapter.setData(new ArrayList<String>(resource.data.images));
+                imagesListAdapter.setData(new ArrayList<String>(resource.data.small_images));
             }
         });
 

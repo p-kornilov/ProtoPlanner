@@ -62,7 +62,7 @@ public class BlockListViewModel extends ViewModel {
 
         loadProgressSwitcher = new MutableLiveData<>();
         loadProgress = Transformations.switchMap(loadProgressSwitcher,url->{
-           return dataRepository.saveImageFromURL(url,null);
+           return dataRepository.saveImageFromURLtoVariant(url,null);
         });
     }
 
