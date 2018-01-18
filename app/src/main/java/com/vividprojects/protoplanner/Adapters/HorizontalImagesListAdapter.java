@@ -32,12 +32,13 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
 
     private boolean inDeletionMode = false;
     private ViewGroup parent;
+    private int progress;
 
     private List<String> data;
   //  private LayoutInflater inflater;
     private RecordItemViewModel model;
 
-    private boolean inAddMode = false;
+    private boolean inLoadingState = false;
     //private Context context;
 
     @Inject
@@ -55,18 +56,43 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         notifyDataSetChanged();
     }
 
-    public void addMode() {
-        if (inAddMode) {
-            inAddMode = false;
-            int index = data.indexOf("");
+    public int addMode() {
+        int index;
+        if (inLoadingState) {
+            inLoadingState = false;
+            index = data.indexOf("");
             data.remove("");
             notifyItemRemoved(index);
 
         } else {
-            inAddMode = true;
+            inLoadingState = true;
             data.add("");
+            index = data.indexOf("");
             notifyItemInserted(data.indexOf(""));
         }
+        return index;
+    }
+
+    public int loadingState(boolean state, int progress) {
+        int index=0;
+        if (state) {
+            if (inLoadingState) {
+                this.progress = progress;
+                notifyItemChanged(index = data.indexOf(""));
+            } else {
+                inLoadingState = true;
+                this.progress = progress;
+                data.add("");
+                index = data.indexOf("");
+                notifyItemInserted(data.indexOf(""));
+            }
+        } else {
+            inLoadingState = false;
+            index = data.indexOf("");
+            data.remove("");
+            notifyItemRemoved(index);
+        }
+        return index;
     }
 
     @Override
@@ -93,8 +119,10 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
                     .into(holder.image);
             holder.circlePBar.setVisibility(ProgressBar.INVISIBLE);
         } else {
-            holder.circlePBar.setVisibility(ProgressBar.VISIBLE);
+//            holder.circlePBar.setVisibility(ProgressBar.VISIBLE);
             holder.image.setImageResource(0);
+            holder.horisontalPBar.setVisibility(ProgressBar.VISIBLE);
+            holder.horisontalPBar.setProgress(progress);
         }
 
 

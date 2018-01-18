@@ -117,11 +117,16 @@ public class LocalDataDB {
                 Variant vv2 = realm.where(Variant.class).contains("title","Хлеб").findFirst();
                 Variant vv3 = realm.where(Variant.class).contains("title","Колбаса").findFirst();
 
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+/*
                 vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
                 vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
                 vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
                 vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
-                vv1.addImage("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg");
+*/
 
                 for (VariantInShop vis : vsps) {
                     vv1.addShop(vis);

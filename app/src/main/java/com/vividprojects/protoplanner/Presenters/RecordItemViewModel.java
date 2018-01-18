@@ -23,7 +23,11 @@ public class RecordItemViewModel extends ViewModel {
     final MutableLiveData<String> recordItemId;
     private final LiveData<Resource<Record.Plain>> recordItem;
     private final LiveData<Resource<Variant.Plain>> mainVariantItem;
+
     private DataRepository dataRepository;
+
+    private final LiveData<Integer> loadProgress;
+    private final MutableLiveData<String> loadProgressSwitcher;
 
     @Inject
     public RecordItemViewModel(DataRepository dataRepository) {
@@ -47,6 +51,11 @@ public class RecordItemViewModel extends ViewModel {
             return dataRepository.loadVariant(input.data.mainVariant);
         });
 
+        loadProgressSwitcher = new MutableLiveData<>();
+        loadProgress = Transformations.switchMap(loadProgressSwitcher,url->{
+            return dataRepository.saveImageFromURL(url,null);
+        });
+
     }
 
     public void setId(String id) {
@@ -65,6 +74,14 @@ public class RecordItemViewModel extends ViewModel {
 
     public LiveData<Integer> saveImage(String URL) {
         return dataRepository.saveImageFromURL(URL,recordItem.getValue().data.mainVariant);
+    }
+
+    public LiveData<Integer> getLoadProgress(){
+        return loadProgress;
+    }
+
+    public void load(String url) {
+        loadProgressSwitcher.setValue(url);
     }
 
 }

@@ -105,7 +105,6 @@ public class BlockListFragment extends Fragment implements Injectable {
                     pBar.setVisibility(ProgressBar.INVISIBLE);
                 }
             }
-
         });
 
 

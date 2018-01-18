@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -71,6 +73,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private HorizontalImagesListAdapter imagesListAdapter;
    // private TextView mvCurrency1;
     private TextView mvCurrency2;
+    private RecordItemViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,26 +115,17 @@ public class RecordItemFragment extends Fragment implements Injectable {
         imagesRecycler.setLayoutManager(layoutManager3);
         imagesRecycler.setNestedScrollingEnabled(false);
         imagesRecycler.setFocusable(false);
-        List<String> names = new ArrayList<>();
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
-/*        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_testpicture.jpg"));
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_testpicture.jpg"));
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));
-        names.add(new String("/storage/emulated/0/Android/data/com.vividprojects.protoplanner/files/Pictures/img_f_c3c59002-5a86-3c7e-b7ed-93f2c79255de.jpg"));*/
-        //imagesRecycler.setAdapter(new HorizontalImagesListAdapter(names,null));
         imagesListAdapter = new HorizontalImagesListAdapter(null,null);
         imagesRecycler.setAdapter(imagesListAdapter);
+        ((SimpleItemAnimator) imagesRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
 
         add_image = (ImageButton) v.findViewById(R.id.rf_add_image);
         add_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imagesListAdapter.addMode();
+                //imagesRecycler.scrollToPosition(imagesListAdapter.addMode());
+                imagesRecycler.scrollToPosition(imagesListAdapter.loadingState(true,0));
+                model.load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg");
             }
         });
 
@@ -157,7 +151,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
        // final RecordItemViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
 
-        final RecordItemViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
+        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
 
         Bundle args = getArguments();
 
@@ -212,6 +206,15 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 mvValue.setText(PriceFormatter.getValue(resource.data.currency,resource.data.price*resource.data.count));
                 mvPrice.setText(PriceFormatter.getPrice(resource.data.currency,resource.data.price,resource.data.measure));
                 imagesListAdapter.setData(new ArrayList<String>(resource.data.images));
+            }
+        });
+
+        model.getLoadProgress().observe(this,progress->{
+            if (progress != null) {
+                imagesListAdapter.loadingState(true,progress);
+                if (progress==100) {
+                    imagesListAdapter.loadingState(false,0);
+                }
             }
         });
     }
