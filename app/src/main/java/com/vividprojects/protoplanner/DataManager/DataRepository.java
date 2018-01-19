@@ -242,10 +242,13 @@ public class DataRepository {
 
     public LiveData<Integer> saveImageFromURLtoVariant(String url, String variant) {
         //MutableLiveData<Integer> progress = new MutableLiveData<>();
-        String file_name = imagesDirectory + "/img_f_" + UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
-        LiveData<Integer> progress = networkLoader.loadImage(url,file_name,()->{
+        String file_name = UUID.nameUUIDFromBytes(url.getBytes()).toString();
+        String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
+        MutableLiveData<Integer> progress = networkLoader.loadImage(url,full_name,()->{
             Log.d("Test", "Done loading in Repository!!!");
+            localDataDB.addImageToVariant(variant,file_name);
         });
+
         return progress;
     }
 /*

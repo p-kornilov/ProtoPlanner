@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import com.vividprojects.protoplanner.AppExecutors;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,16 +39,21 @@ import okio.Source;
 
 @Singleton
 public class NetworkLoader {
+    public static final int LOAD_DONE = 200;
+    public static final int LOAD_ERROR = -1;
+
     private OkHttpClient client;
+    private AppExecutors appExecutors;
   //  private Context context;
 
     @Inject
-    public NetworkLoader(OkHttpClient client, Context context) {
+    public NetworkLoader(OkHttpClient client, Context context, AppExecutors appExecutors) {
         this.client = client;
+        this.appExecutors = appExecutors;
        // this.context = context;
     }
 
-    public LiveData<Integer> loadImage(String URL, String file_name, Runnable f) {
+    public MutableLiveData<Integer> loadImage(String URL, String file_name, Runnable onDone) {
         final MutableLiveData<Integer> progress = new MutableLiveData<>();
         progress.setValue(0);
 
@@ -65,7 +72,8 @@ public class NetworkLoader {
                 progress.postValue(p);
                 if (done) {
                     Log.d("Test", "Done loading");
-                    f.run();
+                    appExecutors.mainThread().execute(onDone);
+                    progress.postValue(LOAD_DONE);
                 }
             }
         };
@@ -82,8 +90,8 @@ public class NetworkLoader {
                 })
                 .build();
 
-
-/*        client.networkInterceptors().add(new Interceptor() {
+/*
+        client.networkInterceptors().add(new Interceptor() {
             @Override
             public Response intercept(Interceptor.Chain chain) throws IOException {
                 Response originalResponse = chain.proceed(chain.request());
@@ -91,10 +99,37 @@ public class NetworkLoader {
                         .body(new ProgressResponseBody(originalResponse.body(),progressListener))
                         .build();
             }
-        });*/
+        });
+*/
 
-        LoadTask loadTask = new LoadTask(URL,file_name);
-        loadTask.execute();
+        appExecutors.networkIO().execute(()->{
+            try {
+                Request request = new Request.Builder().url(URL).build();
+                Response response = client.newCall(request).execute();
+
+                InputStream is = response.body().byteStream();
+
+                BufferedInputStream input = new BufferedInputStream(is);
+                OutputStream output = new FileOutputStream(file_name);
+
+                byte[] data = new byte[1024];
+
+                long total = 0;
+                int count = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+            } catch (IOException e) {
+                progress.postValue(LOAD_ERROR);
+                e.printStackTrace();
+            }
+        });
 
         return progress;
     }
@@ -147,52 +182,4 @@ public class NetworkLoader {
     interface ProgressListener {
         void update(long bytesRead, long contentLength, boolean done);
     }
-
-    class LoadTask extends AsyncTask<Void,Void,Void> {
-       // private final DataCallback<? super InputStream> callback;
-        private String URL;
-        private String file_name;
-
-        LoadTask(String URL, String file_name) {
-            this.URL = URL;
-            this.file_name = file_name;
-        }
-
-        protected Void doInBackground(Void... params) {
-            try {
-                Request request = new Request.Builder().url(URL).build();
-                Response response = client.newCall(request).execute();
-
-                InputStream is = response.body().byteStream();
-
-                BufferedInputStream input = new BufferedInputStream(is);
-                OutputStream output = new FileOutputStream(file_name);
-
-                byte[] data = new byte[1024];
-
-                long total = 0;
-                int count = 0;
-
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-                    output.write(data, 0, count);
-                }
-
-                output.flush();
-                output.close();
-                input.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        protected void onPostExecute(InputStream is) {
-            //callback.onDataReady(is);
-            //callback.onLoadFailed();  //TODO Посмотреть где проверить!!!
-        }
-    }
-
-
 }

@@ -220,6 +220,16 @@ public class LocalDataDB {
 
     }
 
+    public void addImageToVariant(String variant, String image) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Variant v = realm.where(Variant.class).contains("title",variant).findFirst();
+                v.addImage(image);
+            }
+        });
+    }
+
     public QueryRecords queryRecords() {
         return new QueryRecords();
     }

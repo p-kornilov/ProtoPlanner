@@ -1,15 +1,19 @@
 package com.vividprojects.protoplanner.Interface;
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +31,7 @@ import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DI.Injectable;
+import com.vividprojects.protoplanner.Network.NetworkLoader;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
@@ -205,15 +210,39 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 mvCount.setText(PriceFormatter.getCount(resource.data.count,resource.data.measure));
                 mvValue.setText(PriceFormatter.getValue(resource.data.currency,resource.data.price*resource.data.count));
                 mvPrice.setText(PriceFormatter.getPrice(resource.data.currency,resource.data.price,resource.data.measure));
-                imagesListAdapter.setData(new ArrayList<String>(resource.data.small_images));
+                imagesListAdapter.setData(resource.data.small_images);
             }
         });
 
         model.getLoadProgress().observe(this,progress->{
             if (progress != null) {
-                imagesListAdapter.loadingState(true,progress);
-                if (progress==100) {
-                    imagesListAdapter.loadingState(false,0);
+                if (progress>=0 && progress <=100) {
+                    imagesListAdapter.loadingState(true, progress);
+                }
+                if (progress == NetworkLoader.LOAD_ERROR) {
+                    AlertDialog alert = new AlertDialog.Builder(getContext()).create();
+                    alert.setTitle("Error");
+                    alert.setMessage("Enable to load image");
+                    alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    imagesListAdapter.loadingState(false, 0);
+                                }
+                            });
+                    alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            dialog.dismiss();
+                            imagesListAdapter.loadingState(false, 0);
+                        }
+                    });
+                    alert.show();
+                }
+                if (progress == NetworkLoader.LOAD_DONE) {
+                    imagesListAdapter.loadingState(false, 0);
+                    //imagesListAdapter.setData(resource.data.small_images);
+                   // imagesRecycler.
                 }
             }
         });
