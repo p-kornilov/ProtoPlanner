@@ -20,31 +20,35 @@ import java.io.OutputStream;
 
 public class ThumbnailTarget extends BaseTarget<BitmapDrawable> {
     private String file_name;
-    private Context context;
+    private Runnable onError;
+    private Runnable onSuccess;
 
-    public ThumbnailTarget(String file_name, Context context) {
+    public ThumbnailTarget(String file_name, Runnable onError, Runnable onSuccess) {
         this.file_name = file_name;
-        this.context = context; // TODO !!! Удалить
+        this.onError = onError;
+        this.onSuccess = onSuccess;
     }
 
 
     @Override
     public void onResourceReady(BitmapDrawable bitmap, Transition<? super BitmapDrawable> transition) {
-        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),file_name);
+        File file = new File(file_name);
         try {
             OutputStream stream = new FileOutputStream(file);
             bitmap.getBitmap().compress(Bitmap.CompressFormat.JPEG,80,stream);
             stream.flush();
             stream.close();
+            onSuccess.run();
         } catch (IOException e) {
             e.printStackTrace();
+            onError.run();
         }
     }
 
     @Override
     public void getSize(SizeReadyCallback cb) {
         //cb.onSizeReady(Resources.getSystem().getDisplayMetrics().widthPixels, Resources.getSystem().getDisplayMetrics().heightPixels);
-        cb.onSizeReady(256,256);
+        cb.onSizeReady(100,100);
     }
 
     @Override

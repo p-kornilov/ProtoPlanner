@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mli_url"
+        android:title="from URL"/>
+
+    <item
+        android:id="@+id/mli_gallery"
+        android:title="from Gallery"/>
+
+    <item
+        android:id="@+id/mli_foto"
+        android:title="from Camera"/>
+</menu>

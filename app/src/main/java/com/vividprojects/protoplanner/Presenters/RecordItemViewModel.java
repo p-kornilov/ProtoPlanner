@@ -1,16 +1,25 @@
 package com.vividprojects.protoplanner.Presenters;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Utils.SingleEventTransformations;
+import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
+import java.security.PublicKey;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -28,6 +37,14 @@ public class RecordItemViewModel extends ViewModel {
 
     private final LiveData<Integer> loadProgress;
     private final MutableLiveData<String> loadProgressSwitcher;
+    private final MutableLiveData<String> cameraProgressSwitcher;
+
+    private final SingleLiveEvent<Integer> sle;
+
+    private String loaded_image = "";
+
+    private boolean loading = false;
+    private final LiveData<Integer> lp;
 
     @Inject
     public RecordItemViewModel(DataRepository dataRepository) {
@@ -52,9 +69,20 @@ public class RecordItemViewModel extends ViewModel {
         });
 
         loadProgressSwitcher = new MutableLiveData<>();
-        loadProgress = Transformations.switchMap(loadProgressSwitcher,url->{
+        loadProgress = Transformations.switchMap(loadProgressSwitcher, url->{
+            loaded_image = dataRepository.getImageName(url);
             return dataRepository.saveImageFromURLtoVariant(url,mainVariantItem.getValue().data.title);
         });
+
+        sle = new SingleLiveEvent<>();
+
+        lp = Transformations.switchMap(loadProgress,p->{
+            sle.setValue(p);
+            Log.d("Test", "Single - " + p);
+
+            return new MutableLiveData<>();
+        });
+
 
     }
 
@@ -76,12 +104,25 @@ public class RecordItemViewModel extends ViewModel {
         return dataRepository.saveImageFromURL(URL,recordItem.getValue().data.mainVariant);
     }*/
 
-    public LiveData<Integer> getLoadProgress(){
+
+    public SingleLiveEvent<Integer> getLoadProgress(){
+        return sle;//loadProgress;
+    }
+
+/*    public LiveData<Integer> getLoadProgress(){
         return loadProgress;
+    }*/
+
+    public LiveData<Integer> getLp() {
+        return lp;
     }
 
     public void load(String url) {
         loadProgressSwitcher.setValue(url);
+    }
+
+    public String getLoadedImage() {
+        return loaded_image;
     }
 
 }

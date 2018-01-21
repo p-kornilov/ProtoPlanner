@@ -5,16 +5,26 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -31,6 +41,8 @@ import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DI.Injectable;
+import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Network.NetworkLoader;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
@@ -41,6 +53,8 @@ import com.vividprojects.protoplanner.Widgets.HorizontalImages;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +63,8 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Smile on 31.10.2017.
  */
@@ -56,6 +72,8 @@ import io.realm.RealmResults;
 public class RecordItemFragment extends Fragment implements Injectable {
 
     public static final String RECORD_ID = "RECORD_ID";
+    private static final String FILE_PROVIDER_AUTHORITY = "com.vividprojects.protoplanner.file_provider";
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -79,6 +97,9 @@ public class RecordItemFragment extends Fragment implements Injectable {
    // private TextView mvCurrency1;
     private TextView mvCurrency2;
     private RecordItemViewModel model;
+    private PopupMenu loadImagePopup;
+
+    private String mTempPhotoPath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,13 +145,34 @@ public class RecordItemFragment extends Fragment implements Injectable {
         imagesRecycler.setAdapter(imagesListAdapter);
         ((SimpleItemAnimator) imagesRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
 
+
         add_image = (ImageButton) v.findViewById(R.id.rf_add_image);
         add_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //imagesRecycler.scrollToPosition(imagesListAdapter.addMode());
-                imagesRecycler.scrollToPosition(imagesListAdapter.loadingState(true,0));
-                model.load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg");
+                PopupMenu popup = new PopupMenu(getContext(), view);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mli_url:
+                                imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+                                model.load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg");
+                                return true;
+                            case R.id.mli_gallery:
+
+                                return true;
+                            case R.id.mli_foto:
+                                launchCamera();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.menu_load_image, popup.getMenu());
+                popup.show();
             }
         });
 
@@ -147,7 +189,75 @@ public class RecordItemFragment extends Fragment implements Injectable {
         commentEdit = (EditText) v.findViewById(R.id.rf_comment_edit);
         commentView = (TextView) v.findViewById(R.id.rf_comment_text);
 
+       // registerForContextMenu(add_image);
+
         return v;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+/*        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = this.
+        inflater.inflate(R.menu.context_menu, menu);*/
+    }
+
+    private void launchCamera() {
+
+        // Create the capture image intent
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the temporary File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = BitmapUtils.createTempImageFile(getContext().getApplicationContext());
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+
+                // Get the path of the temporary file
+                mTempPhotoPath = photoFile.getAbsolutePath();
+
+                // Get the content URI for the image file
+                Uri photoURI = FileProvider.getUriForFile(getContext().getApplicationContext(),
+                        FILE_PROVIDER_AUTHORITY,
+                        photoFile);
+
+                // Add the URI so the camera can store the image
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                // Launch the camera activity
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If the image capture activity was called and was successful
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // Process the image and set it to the TextView
+            processAndSetImage();
+        } else {
+
+            // Otherwise, delete the temporary image file
+            BitmapUtils.deleteImageFile(getContext().getApplicationContext(), mTempPhotoPath);
+        }
+    }
+
+    private void processAndSetImage() {
+
+        // Resample the saved image to fit the ImageView
+        mResultsBitmap = BitmapUtils.resamplePic(getContext().getApplicationContext(), mTempPhotoPath);
+
+        mResultsBitmap = Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap);
+
+        // Set the new bitmap to the ImageView
+        mImageView.setImageBitmap(mResultsBitmap);
     }
 
     @Override
@@ -178,29 +288,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     chip.setColor(label.getColor());
                     chl.addView(chip);
                 }*/
-
-/*                public String getFormattedValue() {
-                    return PriceFormatter.getValue(currency,price*count);
-                }
-
-                public String getFormattedPriceShort() {
-                    return PriceFormatter.getValue(currency,price);
-                }
-
-                public String getFormattedPriceFull() {
-                    return PriceFormatter.getPrice(currency,price,measure);
-                }
-
-                public String getFormattedCount() {
-                    return PriceFormatter.getCount(count,measure);
-                }*/
-/*
-                mvCount.setText(resource.data.getMainVariant().getFormattedCount());
-                mvValue.setText(resource.data.getMainVariant().getFormattedValue());
-                mvPrice.setText(resource.data.getMainVariant().getFormattedPriceFull());
-                imagesListAdapter.setData(new ArrayList<String>(resource.data.getMainVariant().getImages()));
-*/
-
             }
         });
 
@@ -217,9 +304,9 @@ public class RecordItemFragment extends Fragment implements Injectable {
         model.getLoadProgress().observe(this,progress->{
             if (progress != null) {
                 if (progress>=0 && progress <=100) {
-                    imagesListAdapter.loadingState(true, progress);
+                    imagesListAdapter.loadingInProgress(progress);
                 }
-                if (progress == NetworkLoader.LOAD_ERROR) {
+                if (progress == DataRepository.LOAD_ERROR) {
                     AlertDialog alert = new AlertDialog.Builder(getContext()).create();
                     alert.setTitle("Error");
                     alert.setMessage("Enable to load image");
@@ -227,25 +314,32 @@ public class RecordItemFragment extends Fragment implements Injectable {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    imagesListAdapter.loadingState(false, 0);
+                                    imagesListAdapter.loadingDone(false, "");
                                 }
                             });
                     alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
                             dialog.dismiss();
-                            imagesListAdapter.loadingState(false, 0);
+                            imagesListAdapter.loadingDone(false, "");
                         }
                     });
                     alert.show();
                 }
-                if (progress == NetworkLoader.LOAD_DONE) {
-                    imagesListAdapter.loadingState(false, 0);
+                if (progress == DataRepository.LOAD_DONE) {
+                    imagesListAdapter.imageReady();
+                    //imagesListAdapter.setData(resource.data.small_images);
+                    // imagesRecycler.
+                }
+                if (progress == DataRepository.SAVE_TO_DB_DONE) {
+                    imagesListAdapter.loadingDone(true, model.getLoadedImage());
                     //imagesListAdapter.setData(resource.data.small_images);
                    // imagesRecycler.
                 }
             }
         });
+
+        model.getLp().observe(this,p->{});
     }
 
     void addChip() {

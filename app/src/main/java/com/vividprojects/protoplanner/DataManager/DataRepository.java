@@ -1,9 +1,16 @@
 package com.vividprojects.protoplanner.DataManager;
 
+import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,8 +19,11 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.Target;
 import com.vividprojects.protoplanner.CoreData.Resource;
@@ -28,6 +38,8 @@ import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.Images.ThumbnailTarget;
 import com.vividprojects.protoplanner.Network.NetworkLoader;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.RunnableParam;
+import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +47,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,6 +69,11 @@ import okio.Source;
 
 @Singleton
 public class DataRepository {
+    public static final int SAVE_TO_DB_DONE = 300;
+    public static final int CONVERT_DONE = 202;
+    public static final int LOAD_DONE = 200;
+    public static final int LOAD_ERROR = -1;
+
     private Context context;
     private String imagesDirectory;
 
@@ -226,7 +244,7 @@ public class DataRepository {
     public void initImages() {
         Log.d("Test", "External Storage - " + getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
         //fileManager.test();
-        BaseTarget target = new FullTarget("test.jpg",getContext());
+   /*     BaseTarget target = new FullTarget("test.jpg");
         GlideApp.with(context)
                 //  .load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg")
                 // .load(R.raw.testpicture)
@@ -235,21 +253,160 @@ public class DataRepository {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 //.into(iv);
-                .into(target);
+                .into(target);*/
     }
 
-   // public void save
+    public MutableLiveData<Integer> saveImageFromURLtoVariant(String url, String variant) {
 
-    public LiveData<Integer> saveImageFromURLtoVariant(String url, String variant) {
-        //MutableLiveData<Integer> progress = new MutableLiveData<>();
         String file_name = UUID.nameUUIDFromBytes(url.getBytes()).toString();
         String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
-        MutableLiveData<Integer> progress = networkLoader.loadImage(url,full_name,()->{
+        String thumb_name = imagesDirectory + "/img_s_" + file_name + ".jpg";
+        String temp_name = imagesDirectory + "/img_t_" + file_name;
+
+        return networkLoader.loadImage(url,temp_name,(p)->{
             Log.d("Test", "Done loading in Repository!!!");
-            localDataDB.addImageToVariant(variant,file_name);
+
+            RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    p.setValue(LOAD_ERROR);
+                    return false;
+                }
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    return false;
+                }
+            };
+
+            appExecutors.mainThread().execute(()-> {
+                BaseTarget target = new FullTarget(full_name,
+                        () -> {
+                    p.setValue(LOAD_ERROR);},
+                        () -> {
+                    if (p.getValue() != LOAD_ERROR) p.setValue(p.getValue()+1);
+                });
+
+                GlideApp.with(context)
+                        .load(new File(temp_name))
+                        .listener(requestListener)
+                        .into(target);
+
+                target = new ThumbnailTarget(thumb_name,
+                        () -> {
+                            p.setValue(LOAD_ERROR);
+                        },
+                        () -> {
+                            if (p.getValue() != LOAD_ERROR) p.setValue(p.getValue()+1);
+                        });
+
+                GlideApp.with(context)
+                        .load(new File(temp_name))
+                        .listener(requestListener)
+                        .into(target);
+            });
+
+            while (p.getValue() != CONVERT_DONE) { // Wait while images is saved
+                try {
+                    TimeUnit.MILLISECONDS.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            };
+
+            appExecutors.mainThread().execute(()-> {
+/*                MediaScannerConnection.scanFile(context, new String[]{full_name}, null,  // TODO Проверить почему не работает
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
+                                Log.d("ExternalStorage", "Scanned " + path + ":");
+                                Log.d("ExternalStorage", "-> uri=" + uri);
+                            }
+                        });*/
+
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                File f = new File(full_name);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                context.sendBroadcast(mediaScanIntent);
+
+                localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                p.setValue(SAVE_TO_DB_DONE);
+            });
+        });
+    }
+
+    public String getImageName(String url) {
+        return imagesDirectory + "/img_f_" + UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
+    }
+
+    public String getImageName() {
+        return UUID.randomUUID().toString();
+    }
+
+    public MutableLiveData<Integer> saveImageFromCameratoVariant(Bitmap bitmap, String file_name, String variant) {
+        MutableLiveData<Integer> p = new MutableLiveData<>();
+        p.setValue(LOAD_DONE);
+
+        String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
+        String thumb_name = imagesDirectory + "/img_s_" + file_name + ".jpg";
+
+        RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                p.setValue(LOAD_ERROR);
+                return false;
+            }
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                return false;
+            }
+        };
+
+        appExecutors.diskIO().execute(()-> {
+
+            appExecutors.diskIO().execute(()-> {
+                BaseTarget target = new FullTarget(full_name,
+                        () -> {
+                            p.setValue(LOAD_ERROR);
+                        },
+                        () -> {
+                            if (p.getValue() != LOAD_ERROR) p.setValue(p.getValue() + 1);
+                        });
+
+                GlideApp.with(context)
+                        .load(bitmap)
+                        .listener(requestListener)
+                        .into(target);
+
+                target = new ThumbnailTarget(thumb_name,
+                        () -> {
+                            p.setValue(LOAD_ERROR);
+                        },
+                        () -> {
+                            if (p.getValue() != LOAD_ERROR) p.setValue(p.getValue() + 1);
+                        });
+
+                GlideApp.with(context)
+                        .load(bitmap)
+                        .listener(requestListener)
+                        .into(target);
+            });
+
+            while (p.getValue() != CONVERT_DONE) { // Wait while images is saved
+                try {
+                    TimeUnit.MILLISECONDS.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            };
+
+            appExecutors.mainThread().execute(()-> {
+                localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                p.setValue(SAVE_TO_DB_DONE);
+            });
         });
 
-        return progress;
+        return p;
+
     }
 /*
     public String saveImageFromURL(String URL, ProgressBar bar) {

@@ -221,6 +221,7 @@ public class LocalDataDB {
     }
 
     public void addImageToVariant(String variant, String image) {
+        final Integer result = 0;
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {

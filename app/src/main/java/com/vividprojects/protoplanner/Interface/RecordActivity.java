@@ -1,9 +1,12 @@
 package com.vividprojects.protoplanner.Interface;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +15,9 @@ import android.view.Menu;
 import android.view.View;
 
 import com.vividprojects.protoplanner.CoreData.Record;
+import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
 
 import javax.inject.Inject;
 
@@ -28,11 +33,23 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+    private Fragment mViewModelHolder;
+
     Realm realm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+
+        mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
+        if (mViewModelHolder == null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(ViewModelHolder.createContainer(obtainViewModel()),ViewModelHolder.TAG).commit();
+            mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
+        }
 
 
         realm = Realm.getDefaultInstance();
@@ -70,6 +87,10 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
                     ((FloatingActionButton)view).setImageResource(R.drawable.ic_edit_white_24dp);
             }
         });
+    }
+
+    private RecordItemViewModel obtainViewModel() {
+        return ViewModelProviders.of(this,viewModelFactory).get(RecordItemViewModel.class);
     }
 
     @Override

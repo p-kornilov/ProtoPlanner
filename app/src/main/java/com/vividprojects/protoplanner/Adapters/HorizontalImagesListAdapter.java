@@ -74,7 +74,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         return index;
     }
 
-    public int loadingState(boolean state, int progress) {
+/*    public int loadingState(boolean state, int progress) {
         int index=0;
         if (state) {
             if (inLoadingState) {
@@ -94,6 +94,42 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
             notifyItemRemoved(index);
         }
         return index;
+    }*/
+
+    public int loadingInProgress(int progress) {
+        int index;
+        if (inLoadingState) {
+            this.progress = progress;
+            index = data.indexOf("");
+            notifyItemChanged(index);
+        } else {
+            inLoadingState = true;
+            this.progress = progress;
+            index = data.indexOf("");
+            if (data.indexOf("") == -1) {
+                data.add("");
+                index = data.indexOf("");
+                notifyItemInserted(index);
+            }
+        }
+        return index;
+    }
+
+    public void imageReady() {
+        inLoadingState = false;
+        notifyItemChanged(data.indexOf(""));
+    }
+
+    public void loadingDone(boolean result_ok, String image) {
+        inLoadingState = false;
+        int index = data.indexOf("");
+        if (result_ok) {
+            data.set(index,image);
+            notifyItemChanged(index);
+        } else {
+            data.remove("");
+            notifyItemRemoved(index);
+        }
     }
 
     @Override
@@ -117,16 +153,22 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         if (!obj.equals("")) {
             GlideApp.with(holder.image)
                     .load(new File(obj))
+                    .error(R.drawable.ic_error_outline_black_24dp)
                     .into(holder.image);
             holder.circlePBar.setVisibility(ProgressBar.INVISIBLE);
+            holder.horisontalPBar.setVisibility(ProgressBar.INVISIBLE);
         } else {
 //            holder.circlePBar.setVisibility(ProgressBar.VISIBLE);
-            holder.image.setImageResource(0);
-            holder.horisontalPBar.setVisibility(ProgressBar.VISIBLE);
-            holder.horisontalPBar.setProgress(progress);
+            if (inLoadingState) {
+                holder.image.setImageResource(0);
+                holder.horisontalPBar.setVisibility(ProgressBar.VISIBLE);
+                holder.horisontalPBar.setProgress(progress);
+            } else {
+                holder.image.setImageResource(0);
+                holder.horisontalPBar.setVisibility(ProgressBar.INVISIBLE);
+                holder.circlePBar.setVisibility(ProgressBar.VISIBLE);
+            }
         }
-
-
     }
 
     @Override

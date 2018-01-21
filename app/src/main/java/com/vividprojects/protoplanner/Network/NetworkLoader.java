@@ -8,6 +8,8 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.vividprojects.protoplanner.AppExecutors;
+import com.vividprojects.protoplanner.Utils.RunnableParam;
+import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -16,7 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,14 +37,15 @@ import okio.ForwardingSource;
 import okio.Okio;
 import okio.Source;
 
+import static com.vividprojects.protoplanner.DataManager.DataRepository.LOAD_DONE;
+import static com.vividprojects.protoplanner.DataManager.DataRepository.LOAD_ERROR;
+
 /**
  * Created by p.kornilov on 16.01.2018.
  */
 
 @Singleton
 public class NetworkLoader {
-    public static final int LOAD_DONE = 200;
-    public static final int LOAD_ERROR = -1;
 
     private OkHttpClient client;
     private AppExecutors appExecutors;
@@ -53,7 +58,7 @@ public class NetworkLoader {
        // this.context = context;
     }
 
-    public MutableLiveData<Integer> loadImage(String URL, String file_name, Runnable onDone) {
+    public MutableLiveData<Integer> loadImage(String URL, String file_name, RunnableParam<MutableLiveData<Integer>> onDone) {
         final MutableLiveData<Integer> progress = new MutableLiveData<>();
         progress.setValue(0);
 
@@ -72,8 +77,9 @@ public class NetworkLoader {
                 progress.postValue(p);
                 if (done) {
                     Log.d("Test", "Done loading");
-                    appExecutors.mainThread().execute(onDone);
+                    //appExecutors.mainThread().execute(onDone);
                     progress.postValue(LOAD_DONE);
+                    onDone.run(progress);
                 }
             }
         };
