@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -243,7 +244,11 @@ public class RecordItemFragment extends Fragment implements Injectable {
         // If the image capture activity was called and was successful
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             // Process the image and set it to the TextView
-            processAndSetImage();
+            //processAndSetImage();
+            Bitmap mResultsBitmap = BitmapUtils.resamplePic(getContext().getApplicationContext(), mTempPhotoPath);
+            imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+            model.loadImage(mResultsBitmap).observe(getActivity(),progressObserver);
+            BitmapUtils.deleteImageFile(getContext().getApplicationContext(), mTempPhotoPath);
         } else {
 
             // Otherwise, delete the temporary image file

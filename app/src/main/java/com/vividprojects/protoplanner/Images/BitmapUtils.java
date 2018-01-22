@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
@@ -40,6 +41,33 @@ public class BitmapUtils {
 
         int targetH = metrics.heightPixels;
         int targetW = metrics.widthPixels;
+
+        // Get the dimensions of the original bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+
+        return BitmapFactory.decodeFile(imagePath);
+    }
+
+    public static Bitmap resamplePic(Context context, String imagePath, int targetH, int targetW) {
+
+/*        // Get device screen size information
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        manager.getDefaultDisplay().getMetrics(metrics);
+
+        int targetH = metrics.heightPixels;
+        int targetW = metrics.widthPixels;*/
 
         // Get the dimensions of the original bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -121,9 +149,9 @@ public class BitmapUtils {
      * @param image   The image to be saved.
      * @return The path of the saved image.
      */
-    public static String saveImage(Context context, Bitmap image) {
+    public static boolean saveImage(Context context, Bitmap image, String file_name, boolean publicGallery) {
 
-        String savedImagePath = null;
+/*        String savedImagePath = null;
 
         // Create the new file in the external storage
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
@@ -138,25 +166,28 @@ public class BitmapUtils {
         }
 
         // Save the new Bitmap
-        if (success) {
-            File imageFile = new File(storageDir, imageFileName);
-            savedImagePath = imageFile.getAbsolutePath();
+        if (success) {*/
+        boolean success = true;
+            File imageFile = new File(file_name);
             try {
                 OutputStream fOut = new FileOutputStream(imageFile);
-                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                image.compress(Bitmap.CompressFormat.JPEG, 80, fOut);
                 fOut.close();
+                success = true;
             } catch (Exception e) {
                 e.printStackTrace();
+                success = false;
             }
 
             // Add the image to the system gallery
-            galleryAddPic(context, savedImagePath);
+        if (success && publicGallery)
+            galleryAddPic(context, file_name);
 
             // Show a Toast with the save location
            // String savedMessage = context.getString(R.string.saved_message, savedImagePath);
-            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
-        }
+           // Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
 
-        return savedImagePath;
+
+        return success;
     }
 }

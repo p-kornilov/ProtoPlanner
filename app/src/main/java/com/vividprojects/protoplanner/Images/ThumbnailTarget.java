@@ -48,7 +48,7 @@ public class ThumbnailTarget extends BaseTarget<BitmapDrawable> {
     @Override
     public void getSize(SizeReadyCallback cb) {
         //cb.onSizeReady(Resources.getSystem().getDisplayMetrics().widthPixels, Resources.getSystem().getDisplayMetrics().heightPixels);
-        cb.onSizeReady(100,100);
+        cb.onSizeReady(256,256);
     }
 
     @Override

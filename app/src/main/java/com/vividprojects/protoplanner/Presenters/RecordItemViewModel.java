@@ -7,6 +7,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,15 +38,10 @@ public class RecordItemViewModel extends ViewModel {
     private DataRepository dataRepository;
 
     private final SingleLiveEvent<Integer> loadProgress;
- //   private final MutableLiveData<String> loadProgressSwitcher;
- //   private final MutableLiveData<String> cameraProgressSwitcher;
-
-//    private final SingleLiveEvent<Integer> sle;
 
     private String loaded_image = "";
 
     private boolean inImageLoading = false;
-//    private final LiveData<Integer> lp;
 
     @Inject
     public RecordItemViewModel(DataRepository dataRepository) {
@@ -68,20 +65,7 @@ public class RecordItemViewModel extends ViewModel {
             return dataRepository.loadVariant(input.data.mainVariant);
         });
 
-/*        loadProgressSwitcher = new MutableLiveData<>();
-        loadProgress = Transformations.switchMap(loadProgressSwitcher, url->{
-            loaded_image = dataRepository.getImageName(url);
-            return dataRepository.saveImageFromURLtoVariant(url,mainVariantItem.getValue().data.title);
-        });*/
 
-/*        sle = new SingleLiveEvent<>();
-
-        lp = Transformations.switchMap(loadProgress,p->{
-            sle.setValue(p);
-            Log.d("Test", "Single - " + p);
-
-            return new MutableLiveData<>();
-        });*/
         loadProgress = new SingleLiveEvent<>();
 
     }
@@ -101,31 +85,18 @@ public class RecordItemViewModel extends ViewModel {
     }
     public SingleLiveEvent<Integer> getLoadProgress() {return loadProgress;}
 
-/*    public LiveData<Integer> saveImage(String URL) {
-        return dataRepository.saveImageFromURL(URL,recordItem.getValue().data.mainVariant);
-    }*/
-
-
-   /* public SingleLiveEvent<Integer> getLoadProgress(){
-        return sle;//loadProgress;
-    }
-*/
-/*    public LiveData<Integer> getLoadProgress(){
-        return loadProgress;
-    }*/
-
-/*    public LiveData<Integer> getLp() {
-        return lp;
-    }*/
-
-/*    public void load(String url) {
-        loadProgressSwitcher.setValue(url);
-    }*/
-
     public SingleLiveEvent<Integer> loadImage(String url) {
         if (!inImageLoading) {
             inImageLoading = true;
             loaded_image = dataRepository.saveImageFromURLtoVariant(url, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
+        }
+        return loadProgress;
+    }
+
+    public SingleLiveEvent<Integer> loadImage(Bitmap bitmap) {
+        if (!inImageLoading) {
+            inImageLoading = true;
+            loaded_image = dataRepository.saveImageFromCameratoVariant(bitmap, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
         }
         return loadProgress;
     }

@@ -33,6 +33,7 @@ import com.vividprojects.protoplanner.DB.NetworkDataDB;
 import com.vividprojects.protoplanner.AppExecutors;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.DB.NetworkResponse;
+import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Images.FullTarget;
 import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.Images.ThumbnailTarget;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -90,6 +92,14 @@ public class DataRepository {
         this.networkLoader = networkLoader;
         this.context = context;
         imagesDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+
+/*        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/ProtoPlanner");
+//        boolean success = true;
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+        imagesDirectory = storageDir.getAbsolutePath();
+        Log.d("Test", "External Storage - " + imagesDirectory);*/
     }
 
     public LiveData<Resource<List<Record>>> loadRecords(List<String> filter) {
@@ -266,28 +276,72 @@ public class DataRepository {
         networkLoader.loadImage(url, temp_name, progress, ()->{
             Log.d("Test", "Done loading in Repository!!!");
 
-            RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    progress.setValue(LOAD_ERROR);
-                    return false;
-                }
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    return false;
-                }
-            };
+            boolean success = BitmapUtils.saveImage(context,BitmapUtils.resamplePic(context,temp_name),full_name,true);
+            if (success)
+                success = BitmapUtils.saveImage(context,BitmapUtils.resamplePic(context,temp_name,256,256),thumb_name,false);
+            if (success)
+                BitmapUtils.deleteImageFile(context,temp_name);
 
+            if (success)
             appExecutors.mainThread().execute(()-> {
+                progress.setValue(CONVERT_DONE);
+
+                localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                BitmapUtils.deleteImageFile(context, temp_name);
+                progress.setValue(SAVE_TO_DB_DONE);
+                onDone.run();
+            });
+            else appExecutors.mainThread().execute(()-> {
+                progress.setValue(LOAD_ERROR);
+                onDone.run();
+            });
+        });
+
+        return thumb_name;
+    }
+
+/*    public String getImageName(String url) {
+        return imagesDirectory + "/img_f_" + UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
+    }
+
+    public String getImageName() {
+        return UUID.randomUUID().toString();
+    }*/
+
+    public String saveImageFromCameratoVariant(Bitmap bitmap, String variant, MutableLiveData<Integer> progress, Runnable onDone) {
+
+        progress.setValue(LOAD_DONE);
+
+        String file_name = UUID.randomUUID().toString();
+        String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
+        String thumb_name = imagesDirectory + "/img_s_" + file_name + ".jpg";
+
+/*        RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                progress.setValue(LOAD_ERROR);
+                return false;
+            }
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                return false;
+            }
+        };*/
+
+        appExecutors.diskIO().execute(()-> {
+
+/*            appExecutors.mainThread().execute(()-> {
                 BaseTarget target = new FullTarget(full_name,
                         () -> {
-                    progress.setValue(LOAD_ERROR);},
+                            progress.setValue(LOAD_ERROR);
+                        },
                         () -> {
-                    if (progress.getValue() != LOAD_ERROR) progress.setValue(progress.getValue()+1);
-                });
+                            if (progress.getValue() != LOAD_ERROR)
+                                progress.setValue(progress.getValue() + 1);
+                        });
 
                 GlideApp.with(context)
-                        .load(new File(temp_name))
+                        .load(bitmap)
                         .listener(requestListener)
                         .into(target);
 
@@ -296,38 +350,31 @@ public class DataRepository {
                             progress.setValue(LOAD_ERROR);
                         },
                         () -> {
-                            if (progress.getValue() != LOAD_ERROR) progress.setValue(progress.getValue()+1);
+                            if (progress.getValue() != LOAD_ERROR)
+                                progress.setValue(progress.getValue() + 1);
                         });
 
                 GlideApp.with(context)
-                        .load(new File(temp_name))
+                        .load(bitmap)
                         .listener(requestListener)
                         .into(target);
-            });
+            });*/
 
-            while (progress.getValue() != CONVERT_DONE) { // Wait while images is saved
+            boolean success = BitmapUtils.saveImage(context,BitmapUtils.resamplePic(context,temp_name),full_name,true);
+            if (success)
+                success = BitmapUtils.saveImage(context,BitmapUtils.resamplePic(context,temp_name,256,256),thumb_name,false);
+            if (success)
+                BitmapUtils.deleteImageFile(context,temp_name);
+
+/*            while (progress.getValue() != CONVERT_DONE) { // Wait while images is saved
                 try {
                     TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            };
+            };*/
 
             appExecutors.mainThread().execute(()-> {
-/*                MediaScannerConnection.scanFile(context, new String[]{full_name}, null,  // TODO Проверить почему не работает
-                        new MediaScannerConnection.OnScanCompletedListener() {
-                            public void onScanCompleted(String path, Uri uri) {
-                                Log.d("ExternalStorage", "Scanned " + path + ":");
-                                Log.d("ExternalStorage", "-> uri=" + uri);
-                            }
-                        });*/
-
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                File f = new File(full_name);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                context.sendBroadcast(mediaScanIntent);
-
                 localDataDB.addImageToVariant(variant, file_name); // сделать проверку
                 progress.setValue(SAVE_TO_DB_DONE);
                 onDone.run();
@@ -335,81 +382,6 @@ public class DataRepository {
         });
 
         return thumb_name;
-    }
-
-    public String getImageName(String url) {
-        return imagesDirectory + "/img_f_" + UUID.nameUUIDFromBytes(url.getBytes()).toString() + ".jpg";
-    }
-
-    public String getImageName() {
-        return UUID.randomUUID().toString();
-    }
-
-    public MutableLiveData<Integer> saveImageFromCameratoVariant(Bitmap bitmap, String file_name, String variant) {
-        MutableLiveData<Integer> p = new MutableLiveData<>();
-        p.setValue(LOAD_DONE);
-
-        String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
-        String thumb_name = imagesDirectory + "/img_s_" + file_name + ".jpg";
-
-        RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                p.setValue(LOAD_ERROR);
-                return false;
-            }
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                return false;
-            }
-        };
-
-        appExecutors.diskIO().execute(()-> {
-
-            appExecutors.diskIO().execute(()-> {
-                BaseTarget target = new FullTarget(full_name,
-                        () -> {
-                            p.setValue(LOAD_ERROR);
-                        },
-                        () -> {
-                            if (p.getValue() != LOAD_ERROR) p.setValue(p.getValue() + 1);
-                        });
-
-                GlideApp.with(context)
-                        .load(bitmap)
-                        .listener(requestListener)
-                        .into(target);
-
-                target = new ThumbnailTarget(thumb_name,
-                        () -> {
-                            p.setValue(LOAD_ERROR);
-                        },
-                        () -> {
-                            if (p.getValue() != LOAD_ERROR) p.setValue(p.getValue() + 1);
-                        });
-
-                GlideApp.with(context)
-                        .load(bitmap)
-                        .listener(requestListener)
-                        .into(target);
-            });
-
-            while (p.getValue() != CONVERT_DONE) { // Wait while images is saved
-                try {
-                    TimeUnit.MILLISECONDS.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            };
-
-            appExecutors.mainThread().execute(()-> {
-                localDataDB.addImageToVariant(variant, file_name); // сделать проверку
-                p.setValue(SAVE_TO_DB_DONE);
-            });
-        });
-
-        return p;
-
     }
 /*
     public String saveImageFromURL(String URL, ProgressBar bar) {
