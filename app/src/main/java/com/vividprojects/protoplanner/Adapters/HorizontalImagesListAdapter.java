@@ -162,6 +162,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
             if (inLoadingState) {
                 holder.image.setImageResource(0);
                 holder.horisontalPBar.setVisibility(ProgressBar.VISIBLE);
+                holder.circlePBar.setVisibility(ProgressBar.INVISIBLE);
                 holder.horisontalPBar.setProgress(progress);
             } else {
                 holder.image.setImageResource(0);

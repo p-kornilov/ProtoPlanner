@@ -256,20 +256,20 @@ public class DataRepository {
                 .into(target);*/
     }
 
-    public MutableLiveData<Integer> saveImageFromURLtoVariant(String url, String variant) {
+    public String saveImageFromURLtoVariant(String url, String variant, MutableLiveData<Integer> progress, Runnable onDone) {
 
         String file_name = UUID.nameUUIDFromBytes(url.getBytes()).toString();
         String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
         String thumb_name = imagesDirectory + "/img_s_" + file_name + ".jpg";
         String temp_name = imagesDirectory + "/img_t_" + file_name;
 
-        return networkLoader.loadImage(url,temp_name,(p)->{
+        networkLoader.loadImage(url, temp_name, progress, ()->{
             Log.d("Test", "Done loading in Repository!!!");
 
             RequestListener<Drawable> requestListener = new RequestListener<Drawable>() {
                 @Override
                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    p.setValue(LOAD_ERROR);
+                    progress.setValue(LOAD_ERROR);
                     return false;
                 }
                 @Override
@@ -281,9 +281,9 @@ public class DataRepository {
             appExecutors.mainThread().execute(()-> {
                 BaseTarget target = new FullTarget(full_name,
                         () -> {
-                    p.setValue(LOAD_ERROR);},
+                    progress.setValue(LOAD_ERROR);},
                         () -> {
-                    if (p.getValue() != LOAD_ERROR) p.setValue(p.getValue()+1);
+                    if (progress.getValue() != LOAD_ERROR) progress.setValue(progress.getValue()+1);
                 });
 
                 GlideApp.with(context)
@@ -293,10 +293,10 @@ public class DataRepository {
 
                 target = new ThumbnailTarget(thumb_name,
                         () -> {
-                            p.setValue(LOAD_ERROR);
+                            progress.setValue(LOAD_ERROR);
                         },
                         () -> {
-                            if (p.getValue() != LOAD_ERROR) p.setValue(p.getValue()+1);
+                            if (progress.getValue() != LOAD_ERROR) progress.setValue(progress.getValue()+1);
                         });
 
                 GlideApp.with(context)
@@ -305,7 +305,7 @@ public class DataRepository {
                         .into(target);
             });
 
-            while (p.getValue() != CONVERT_DONE) { // Wait while images is saved
+            while (progress.getValue() != CONVERT_DONE) { // Wait while images is saved
                 try {
                     TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {
@@ -329,9 +329,12 @@ public class DataRepository {
                 context.sendBroadcast(mediaScanIntent);
 
                 localDataDB.addImageToVariant(variant, file_name); // сделать проверку
-                p.setValue(SAVE_TO_DB_DONE);
+                progress.setValue(SAVE_TO_DB_DONE);
+                onDone.run();
             });
         });
+
+        return thumb_name;
     }
 
     public String getImageName(String url) {

@@ -1,6 +1,7 @@
 package com.vividprojects.protoplanner.Interface;
 
 import android.app.Dialog;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -57,6 +58,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import javax.inject.Inject;
 
@@ -157,7 +159,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                         switch (item.getItemId()) {
                             case R.id.mli_url:
                                 imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
-                                model.load("http://anub.ru/uploads/07.2015/976_podborka_34.jpg");
+                                model.loadImage("http://anub.ru/uploads/07.2015/976_podborka_34.jpg").observe(getActivity(),progressObserver);
                                 return true;
                             case R.id.mli_gallery:
 
@@ -252,12 +254,12 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private void processAndSetImage() {
 
         // Resample the saved image to fit the ImageView
-        mResultsBitmap = BitmapUtils.resamplePic(getContext().getApplicationContext(), mTempPhotoPath);
+/*        mResultsBitmap = BitmapUtils.resamplePic(getContext().getApplicationContext(), mTempPhotoPath);
 
         mResultsBitmap = Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap);
 
         // Set the new bitmap to the ImageView
-        mImageView.setImageBitmap(mResultsBitmap);
+        mImageView.setImageBitmap(mResultsBitmap);*/
     }
 
     @Override
@@ -301,46 +303,49 @@ public class RecordItemFragment extends Fragment implements Injectable {
             }
         });
 
-        model.getLoadProgress().observe(this,progress->{
-            if (progress != null) {
-                if (progress>=0 && progress <=100) {
-                    imagesListAdapter.loadingInProgress(progress);
-                }
-                if (progress == DataRepository.LOAD_ERROR) {
-                    AlertDialog alert = new AlertDialog.Builder(getContext()).create();
-                    alert.setTitle("Error");
-                    alert.setMessage("Enable to load image");
-                    alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    imagesListAdapter.loadingDone(false, "");
-                                }
-                            });
-                    alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            dialog.dismiss();
-                            imagesListAdapter.loadingDone(false, "");
-                        }
-                    });
-                    alert.show();
-                }
-                if (progress == DataRepository.LOAD_DONE) {
-                    imagesListAdapter.imageReady();
-                    //imagesListAdapter.setData(resource.data.small_images);
-                    // imagesRecycler.
-                }
-                if (progress == DataRepository.SAVE_TO_DB_DONE) {
-                    imagesListAdapter.loadingDone(true, model.getLoadedImage());
-                    //imagesListAdapter.setData(resource.data.small_images);
-                   // imagesRecycler.
-                }
-            }
-        });
+        if (model.isInImageLoading())
+            model.getLoadProgress().observe(this,progressObserver);
 
-        model.getLp().observe(this,p->{});
+      //  model.getLp().observe(this,p->{});
     }
+
+    Observer<Integer> progressObserver = (progress) -> {
+        if (progress != null) {
+            if (progress>=0 && progress <=100) {
+                imagesListAdapter.loadingInProgress(progress);
+            }
+            if (progress == DataRepository.LOAD_ERROR) {
+                AlertDialog alert = new AlertDialog.Builder(getContext()).create();
+                alert.setTitle("Error");
+                alert.setMessage("Enable to load image");
+                alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                imagesListAdapter.loadingDone(false, "");
+                            }
+                        });
+                alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
+                        imagesListAdapter.loadingDone(false, "");
+                    }
+                });
+                alert.show();
+            }
+            if (progress == DataRepository.LOAD_DONE) {
+                imagesListAdapter.imageReady();
+                //imagesListAdapter.setData(resource.data.small_images);
+                // imagesRecycler.
+            }
+            if (progress == DataRepository.SAVE_TO_DB_DONE) {
+                imagesListAdapter.loadingDone(true, model.getLoadedImage());
+                //imagesListAdapter.setData(resource.data.small_images);
+                // imagesRecycler.
+            }
+        }
+    };
 
     void addChip() {
         Chip chip4 = new Chip(getContext());

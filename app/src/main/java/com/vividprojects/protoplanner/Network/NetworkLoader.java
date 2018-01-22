@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.MultiAutoCompleteTextView;
 
 import com.vividprojects.protoplanner.AppExecutors;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
@@ -58,8 +59,7 @@ public class NetworkLoader {
        // this.context = context;
     }
 
-    public MutableLiveData<Integer> loadImage(String URL, String file_name, RunnableParam<MutableLiveData<Integer>> onDone) {
-        final MutableLiveData<Integer> progress = new MutableLiveData<>();
+    public void loadImage(String URL, String file_name, MutableLiveData<Integer> progress, Runnable onDone) {
         progress.setValue(0);
 
         final ProgressListener progressListener = new ProgressListener() {
@@ -79,7 +79,7 @@ public class NetworkLoader {
                     Log.d("Test", "Done loading");
                     //appExecutors.mainThread().execute(onDone);
                     progress.postValue(LOAD_DONE);
-                    onDone.run(progress);
+                    onDone.run();
                 }
             }
         };
@@ -137,7 +137,7 @@ public class NetworkLoader {
             }
         });
 
-        return progress;
+       // return progress;
     }
 
     private static class ProgressResponseBody extends ResponseBody {
