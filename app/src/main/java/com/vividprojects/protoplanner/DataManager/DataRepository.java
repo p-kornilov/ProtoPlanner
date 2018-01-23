@@ -7,6 +7,7 @@ import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
@@ -276,11 +277,9 @@ public class DataRepository {
         networkLoader.loadImage(url, temp_name, progress, ()->{
             Log.d("Test", "Done loading in Repository!!!");
 
-            boolean success = BitmapUtils.saveImage(context,BitmapUtils.resamplePic(context,temp_name),full_name,true);
+            boolean success = BitmapUtils.saveImage(context, BitmapFactory.decodeFile(temp_name),full_name,true);
             if (success)
                 success = BitmapUtils.saveImage(context,BitmapUtils.resamplePic(context,temp_name,256,256),thumb_name,false);
-            if (success)
-                BitmapUtils.deleteImageFile(context,temp_name);
 
             if (success)
             appExecutors.mainThread().execute(()-> {
@@ -308,7 +307,7 @@ public class DataRepository {
         return UUID.randomUUID().toString();
     }*/
 
-    public String saveImageFromCameratoVariant(Bitmap bitmap, String variant, MutableLiveData<Integer> progress, Runnable onDone) {
+    public String saveImageFromCameratoVariant(String temp_name, String variant, MutableLiveData<Integer> progress, Runnable onDone) {
 
         progress.setValue(LOAD_DONE);
 

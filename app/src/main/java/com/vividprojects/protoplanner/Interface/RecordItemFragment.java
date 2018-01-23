@@ -226,9 +226,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 mTempPhotoPath = photoFile.getAbsolutePath();
 
                 // Get the content URI for the image file
-                Uri photoURI = FileProvider.getUriForFile(getContext().getApplicationContext(),
-                        FILE_PROVIDER_AUTHORITY,
-                        photoFile);
+                Uri photoURI = FileProvider.getUriForFile(getContext().getApplicationContext(),FILE_PROVIDER_AUTHORITY,photoFile);
 
                 // Add the URI so the camera can store the image
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -241,17 +239,10 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If the image capture activity was called and was successful
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Process the image and set it to the TextView
-            //processAndSetImage();
-            Bitmap mResultsBitmap = BitmapUtils.resamplePic(getContext().getApplicationContext(), mTempPhotoPath);
             imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
-            model.loadImage(mResultsBitmap).observe(getActivity(),progressObserver);
-            BitmapUtils.deleteImageFile(getContext().getApplicationContext(), mTempPhotoPath);
+            model.loadCameraImage(mTempPhotoPath).observe(getActivity(),progressObserver);
         } else {
-
-            // Otherwise, delete the temporary image file
             BitmapUtils.deleteImageFile(getContext().getApplicationContext(), mTempPhotoPath);
         }
     }

@@ -93,10 +93,10 @@ public class RecordItemViewModel extends ViewModel {
         return loadProgress;
     }
 
-    public SingleLiveEvent<Integer> loadImage(Bitmap bitmap) {
+    public SingleLiveEvent<Integer> loadCameraImage(String tempFileName) {
         if (!inImageLoading) {
             inImageLoading = true;
-            loaded_image = dataRepository.saveImageFromCameratoVariant(bitmap, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
+            loaded_image = dataRepository.saveImageFromCameratoVariant(tempFileName, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
         }
         return loadProgress;
     }

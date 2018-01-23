@@ -56,7 +56,7 @@ public class BitmapUtils {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
 
-        return BitmapFactory.decodeFile(imagePath);
+        return BitmapFactory.decodeFile(imagePath,bmOptions);
     }
 
     public static Bitmap resamplePic(Context context, String imagePath, int targetH, int targetW) {
@@ -80,10 +80,17 @@ public class BitmapUtils {
         int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
         // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inJustDecodeBounds = false;
 
-        return BitmapFactory.decodeFile(imagePath);
+        Bitmap temp = BitmapFactory.decodeFile(imagePath,bmOptions);
+        float pW = temp.getWidth();
+        float pH = temp.getHeight();
+        float sFactor = Math.max(pW / targetW, pH / targetH);
+        targetH = Math.round(pH/sFactor);
+        targetW = Math.round(pW/sFactor);
+
+        return Bitmap.createScaledBitmap(temp,targetW,targetH,false);
     }
 
     /**
