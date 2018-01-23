@@ -159,8 +159,12 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.mli_url:
-                                imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
-                                model.loadImage("http://anub.ru/uploads/07.2015/976_podborka_34.jpg").observe(getActivity(),progressObserver);
+                                RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
+                                addImageURLDialog.setOnOK((url)->{
+                                    imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+                                    model.loadImage(url).observe(getActivity(),progressObserver);
+                                });
+                                addImageURLDialog.show(getFragmentManager(),"Add_image_url");
                                 return true;
                             case R.id.mli_gallery:
 
