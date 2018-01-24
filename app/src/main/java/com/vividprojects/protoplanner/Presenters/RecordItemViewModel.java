@@ -9,6 +9,7 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -97,6 +98,14 @@ public class RecordItemViewModel extends ViewModel {
         if (!inImageLoading) {
             inImageLoading = true;
             loaded_image = dataRepository.saveImageFromCameratoVariant(tempFileName, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
+        }
+        return loadProgress;
+    }
+
+    public SingleLiveEvent<Integer> loadGalleryImage(Uri fileName) {
+        if (!inImageLoading) {
+            inImageLoading = true;
+            loaded_image = dataRepository.saveImageFromGallerytoVariant(fileName, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
         }
         return loadProgress;
     }

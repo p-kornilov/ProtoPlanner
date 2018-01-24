@@ -1,5 +1,6 @@
 package com.vividprojects.protoplanner.Interface;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
@@ -7,13 +8,16 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -77,6 +81,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
     public static final String RECORD_ID = "RECORD_ID";
     private static final String FILE_PROVIDER_AUTHORITY = "com.vividprojects.protoplanner.file_provider";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_GALLERY = 2;
+    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 3;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -167,7 +173,37 @@ public class RecordItemFragment extends Fragment implements Injectable {
                                 addImageURLDialog.show(getFragmentManager(),"Add_image_url");
                                 return true;
                             case R.id.mli_gallery:
+                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                                } else {
+                                    Intent i = new Intent(
+                                            Intent.ACTION_PICK,
+                                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
+                                    startActivityForResult(i, REQUEST_IMAGE_GALLERY);
+                                }
+
+/*                                Intent intent = new Intent();
+                                intent.setType("image*//*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+
+
+                                @Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (resultCode == RESULT_OK) {
+        if (requestCode == SELECT_PICTURE) {
+
+            //Get ImageURi and load with help of picasso
+            //Uri selectedImageURI = data.getData();
+
+            Picasso.with(MainActivity1.this).load(data.getData()).noPlaceholder().centerCrop().fit()
+                    .into((ImageView) findViewById(R.id.imageView1));
+        }
+
+    }
+}*/
                                 return true;
                             case R.id.mli_foto:
                                 launchCamera();
@@ -199,6 +235,27 @@ public class RecordItemFragment extends Fragment implements Injectable {
        // registerForContextMenu(add_image);
 
         return v;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
     }
 
     @Override
@@ -243,23 +300,22 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
-            model.loadCameraImage(mTempPhotoPath).observe(getActivity(),progressObserver);
-        } else {
-            BitmapUtils.deleteImageFile(getContext().getApplicationContext(), mTempPhotoPath);
+        switch (requestCode) {
+            case REQUEST_IMAGE_CAPTURE:
+                if (resultCode == RESULT_OK) {
+                    imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+                    model.loadCameraImage(mTempPhotoPath).observe(getActivity(), progressObserver);
+                } else {
+                    BitmapUtils.deleteImageFile(getContext().getApplicationContext(), mTempPhotoPath);
+                }
+                return;
+            case REQUEST_IMAGE_GALLERY:
+                if (resultCode == RESULT_OK && data != null) {
+                    imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+                    model.loadGalleryImage(data.getData()).observe(getActivity(), progressObserver);
+                }
+                return;
         }
-    }
-
-    private void processAndSetImage() {
-
-        // Resample the saved image to fit the ImageView
-/*        mResultsBitmap = BitmapUtils.resamplePic(getContext().getApplicationContext(), mTempPhotoPath);
-
-        mResultsBitmap = Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap);
-
-        // Set the new bitmap to the ImageView
-        mImageView.setImageBitmap(mResultsBitmap);*/
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -373,15 +375,60 @@ public class DataRepository {
                 }
             };*/
 
-            appExecutors.mainThread().execute(()-> {
-                localDataDB.addImageToVariant(variant, file_name); // сделать проверку
-                progress.setValue(SAVE_TO_DB_DONE);
+            if (success)
+                appExecutors.mainThread().execute(()-> {
+                    localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                    progress.setValue(SAVE_TO_DB_DONE);
+                    onDone.run();
+                });
+            else appExecutors.mainThread().execute(()-> {
+                progress.setValue(LOAD_ERROR);
                 onDone.run();
             });
         });
 
         return thumb_name;
     }
+
+    public String saveImageFromGallerytoVariant(Uri temp_name_uri, String variant, MutableLiveData<Integer> progress, Runnable onDone) {
+
+        progress.setValue(LOAD_DONE);
+
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+        Cursor cursor = context.getContentResolver().query(temp_name_uri,
+                filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String temp_name = cursor.getString(columnIndex);
+        cursor.close();
+
+        String file_name = UUID.randomUUID().toString();
+        String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
+        String thumb_name = imagesDirectory + "/img_s_" + file_name + ".jpg";
+
+        appExecutors.diskIO().execute(()-> {
+
+            boolean success = BitmapUtils.saveImage(context,BitmapFactory.decodeFile(temp_name),full_name,false);
+            if (success)
+                success = BitmapUtils.saveImage(context,BitmapUtils.resamplePic(context,temp_name,256,256),thumb_name,false);
+
+            if (success)
+                appExecutors.mainThread().execute(()-> {
+                    localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                    progress.setValue(SAVE_TO_DB_DONE);
+                    onDone.run();
+                });
+            else appExecutors.mainThread().execute(()-> {
+                progress.setValue(LOAD_ERROR);
+                onDone.run();
+            });
+        });
+
+        return thumb_name;
+    }
+
 /*
     public String saveImageFromURL(String URL, ProgressBar bar) {
 
