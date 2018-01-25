@@ -53,6 +53,7 @@ import com.vividprojects.protoplanner.Network.NetworkLoader;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
+import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 import com.vividprojects.protoplanner.Widgets.HorizontalImages;
@@ -87,6 +88,9 @@ public class RecordItemFragment extends Fragment implements Injectable {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
+    @Inject
+    NavigationController navigationController;
+
     ChipsLayout chl;
 //    private Realm realm;
     private boolean inCommentEdit = false;
@@ -109,6 +113,10 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private PopupMenu loadImagePopup;
 
     private String mTempPhotoPath;
+
+    private RunnableParam<String> onImageSelect = (image)->{
+        navigationController.openImageView(image,model.getMainVariantItem().getValue().data.title);
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,7 +158,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
         imagesRecycler.setLayoutManager(layoutManager3);
         imagesRecycler.setNestedScrollingEnabled(false);
         imagesRecycler.setFocusable(false);
-        imagesListAdapter = new HorizontalImagesListAdapter(null,null);
+        imagesListAdapter = new HorizontalImagesListAdapter(null,null, onImageSelect);
         imagesRecycler.setAdapter(imagesListAdapter);
         ((SimpleItemAnimator) imagesRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
 

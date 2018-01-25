@@ -15,6 +15,7 @@ import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 import com.vividprojects.protoplanner.Widgets.HorizontalImages;
@@ -42,12 +43,12 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
     private boolean inLoadingState = false;
     //private Context context;
 
-    @Inject
-    NavigationController navigationController;
+    private RunnableParam<String> onImageClick;
 
-    public HorizontalImagesListAdapter(List<String> data, RecordItemViewModel model) {
+    public HorizontalImagesListAdapter(List<String> data, RecordItemViewModel model, RunnableParam<String> onImageClick) {
         this.data = data;
         this.model = model;
+        this.onImageClick = onImageClick;
 /*        data.add("");
         data.remove("");*/
     }
@@ -192,6 +193,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    onImageClick.run(data);
                 }
             });
         }
