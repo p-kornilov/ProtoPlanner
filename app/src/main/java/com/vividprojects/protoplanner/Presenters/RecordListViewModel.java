@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
+import android.provider.ContactsContract;
 
 import com.vividprojects.protoplanner.CoreData.Filter;
 import com.vividprojects.protoplanner.CoreData.Label;
@@ -30,10 +31,14 @@ public class RecordListViewModel extends ViewModel {
 
     private final LiveData<Resource<List<Record>>> list;
 
+    private DataRepository dataRepository;
+
     @Inject
     public RecordListViewModel(DataRepository dataRepository) {
         //super();
         //list = new MutableLiveData<>();
+
+        this.dataRepository = dataRepository;
 
         this.filter = new MutableLiveData<>();
         list = Transformations.switchMap(filter,input -> {
@@ -42,7 +47,7 @@ public class RecordListViewModel extends ViewModel {
             } else {
                 return dataRepository.loadRecords(input.getFilter());
             }*/
-            return dataRepository.loadRecords(input.getFilter());
+            return RecordListViewModel.this.dataRepository.loadRecords(input.getFilter());
         });
     }
 

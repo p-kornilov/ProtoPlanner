@@ -204,6 +204,40 @@ public class DataRepository {
         }.asLiveData();
     }
 
+    public LiveData<Resource<List<String>>> loadImagesForVariant(String id) {
+        return new NetworkBoundResource<List<String>, List<String>>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull List<String> item) {
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable List<String> data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<List<String>> loadFromLocalDB() {
+                MutableLiveData<List<String>> ld = new MutableLiveData<>();
+                Variant.Plain variant = localDataDB
+                        .queryVariants()
+                        .title_equalTo(id)
+                        .findFirst()
+                        .getPlain();
+                for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + "/img_f_" + variant.full_images.get(i) + ".jpg");
+                ld.setValue(variant.full_images);
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<List<String>>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<List<String>>>();
+            }
+        }.asLiveData();
+    }
+
 /*    public LiveData<Resource<String>> loadVariantImages(String title) {
         return new NetworkBoundResource<String, String>(appExecutors) {
             @Override

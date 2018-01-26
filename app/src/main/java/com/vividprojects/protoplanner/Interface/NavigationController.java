@@ -79,12 +79,10 @@ public class NavigationController {
 
             intent.putExtra("RECORD_ID",id);
             context.startActivity(intent);
-
         }
     }
 
     public void openImageView(String image, String variant) {
-        boolean isTablet = context.getResources().getBoolean(R.bool.isTablet);
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
@@ -95,7 +93,6 @@ public class NavigationController {
         intent.putExtra("IMAGE_ID",image);
         intent.putExtra("VARIANT_ID",variant);
         context.startActivity(intent);
-
     }
 
     public String getType() {

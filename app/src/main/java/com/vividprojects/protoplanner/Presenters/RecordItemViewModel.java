@@ -55,7 +55,7 @@ public class RecordItemViewModel extends ViewModel {
             } else {
                 return dataRepository.loadRecords(input.getFilter());
             }*/
-            return dataRepository.loadRecord(input);
+            return RecordItemViewModel.this.dataRepository.loadRecord(input);
         });
         mainVariantItem = Transformations.switchMap(recordItem, input -> {
 /*            if (input.isEmpty()) {
@@ -63,7 +63,9 @@ public class RecordItemViewModel extends ViewModel {
             } else {
                 return dataRepository.loadRecords(input.getFilter());
             }*/
-            return dataRepository.loadVariant(input.data.mainVariant);
+            if (!input.equals("Empty"))
+                return RecordItemViewModel.this.dataRepository.loadVariant(input.data.mainVariant);
+            else return null;
         });
 
 

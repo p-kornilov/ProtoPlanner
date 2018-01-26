@@ -57,7 +57,7 @@ public class BlockListViewModel extends ViewModel {
             } else {
                 return dataRepository.loadRecords(input.getFilter());
             }*/
-            return dataRepository.loadRecords(input.getFilter());
+            return BlockListViewModel.this.dataRepository.loadRecords(input.getFilter());
         });
 
         loadProgressSwitcher = new MutableLiveData<>();

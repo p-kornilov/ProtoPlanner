@@ -111,6 +111,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private TextView mvCurrency2;
     private RecordItemViewModel model;
     private PopupMenu loadImagePopup;
+    private boolean empty = false;
 
     private String mTempPhotoPath;
 
@@ -130,66 +131,81 @@ public class RecordItemFragment extends Fragment implements Injectable {
                              Bundle savedInstanceState) {
 
         Log.d("Test", "onCreateView - Record Fragment");
-        View v = (View) inflater.inflate(R.layout.record_fragment, container, false);
+        Bundle args = getArguments();
 
-        shopsRecycler = v.findViewById(R.id.rf_shops_recycler);
-        mvTitle = v.findViewById(R.id.alt_title);
-        mvPrice = v.findViewById(R.id.alt_price);
-        mvValue = v.findViewById(R.id.alt_value);
-        mvCount = v.findViewById(R.id.alt_count);
-       // mvCurrency1 = v.findViewById(R.id.alt_currency1);
-       // mvCurrency2 = v.findViewById(R.id.alt_currency2);
+        if (args != null && args.containsKey(RECORD_ID)){
+            //    model.setFilter();
+            if (args.getString(RECORD_ID).equals("Empty"))
+                empty = true;
+            else
+                empty= false;
+        }
 
-    //    RealmResults<VariantInShop> ls = realm.where(VariantInShop.class).equalTo("variant.title","Фильтр для воды").findAll();
-    //!!!    lv.setAdapter(new ShopsAdapter(ls));
+        View v;
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setAutoMeasureEnabled(true);
-        shopsRecycler.setLayoutManager(layoutManager);
-        shopsRecycler.setNestedScrollingEnabled(false);
-        shopsRecycler.setFocusable(false);
+        if (empty) {
+            v = (View) inflater.inflate(R.layout.empty_item_fragment, container, false);
+        } else {
+            v = (View) inflater.inflate(R.layout.record_fragment, container, false);
 
-        chl = v.findViewById(R.id.chipLayout);
+            shopsRecycler = v.findViewById(R.id.rf_shops_recycler);
+            mvTitle = v.findViewById(R.id.alt_title);
+            mvPrice = v.findViewById(R.id.alt_price);
+            mvValue = v.findViewById(R.id.alt_value);
+            mvCount = v.findViewById(R.id.alt_count);
+            // mvCurrency1 = v.findViewById(R.id.alt_currency1);
+            // mvCurrency2 = v.findViewById(R.id.alt_currency2);
+
+            //    RealmResults<VariantInShop> ls = realm.where(VariantInShop.class).equalTo("variant.title","Фильтр для воды").findAll();
+            //!!!    lv.setAdapter(new ShopsAdapter(ls));
+
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+            layoutManager.setAutoMeasureEnabled(true);
+            shopsRecycler.setLayoutManager(layoutManager);
+            shopsRecycler.setNestedScrollingEnabled(false);
+            shopsRecycler.setFocusable(false);
+
+            chl = v.findViewById(R.id.chipLayout);
 
 /*        images = (HorizontalImages) v.findViewById(R.id.rf_images);
         images.setNoneImage(true);*/
-        imagesRecycler = (RecyclerView) v.findViewById(R.id.ai_images);
-        RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        imagesRecycler.setLayoutManager(layoutManager3);
-        imagesRecycler.setNestedScrollingEnabled(false);
-        imagesRecycler.setFocusable(false);
-        imagesListAdapter = new HorizontalImagesListAdapter(null,null, onImageSelect);
-        imagesRecycler.setAdapter(imagesListAdapter);
-        ((SimpleItemAnimator) imagesRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
+            imagesRecycler = (RecyclerView) v.findViewById(R.id.ai_images);
+            RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            imagesRecycler.setLayoutManager(layoutManager3);
+            imagesRecycler.setNestedScrollingEnabled(false);
+            imagesRecycler.setFocusable(false);
+            imagesListAdapter = new HorizontalImagesListAdapter(null, null, onImageSelect);
+            imagesRecycler.setAdapter(imagesListAdapter);
+            ((SimpleItemAnimator) imagesRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
 
 
-        add_image = (ImageButton) v.findViewById(R.id.rf_add_image);
-        add_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(getContext(), view);
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.mli_url:
-                                RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
-                                addImageURLDialog.setOnOK((url)->{
-                                    imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
-                                    model.loadImage(url).observe(getActivity(),progressObserver);
-                                });
-                                addImageURLDialog.show(getFragmentManager(),"Add_image_url");
-                                return true;
-                            case R.id.mli_gallery:
-                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                                } else {
-                                    Intent i = new Intent(
-                                            Intent.ACTION_PICK,
-                                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            add_image = (ImageButton) v.findViewById(R.id.rf_add_image);
+            add_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(getContext(), view);
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.mli_url:
+                                    RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
+                                    addImageURLDialog.setOnOK((url) -> {
+                                        imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+                                        model.loadImage(url).observe(getActivity(), progressObserver);
+                                    });
+                                    addImageURLDialog.show(getFragmentManager(), "Add_image_url");
+                                    return true;
+                                case R.id.mli_gallery:
+                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                                    } else {
+                                        Intent i = new Intent(
+                                                Intent.ACTION_PICK,
+                                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                                    startActivityForResult(i, REQUEST_IMAGE_GALLERY);
-                                }
+                                        startActivityForResult(i, REQUEST_IMAGE_GALLERY);
+                                    }
 
 /*                                Intent intent = new Intent();
                                 intent.setType("image*//*");
@@ -212,33 +228,34 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }
 }*/
-                                return true;
-                            case R.id.mli_foto:
-                                launchCamera();
-                                return true;
-                            default:
-                                return false;
+                                    return true;
+                                case R.id.mli_foto:
+                                    launchCamera();
+                                    return true;
+                                default:
+                                    return false;
+                            }
                         }
-                    }
-                });
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.menu_load_image, popup.getMenu());
-                popup.show();
-            }
-        });
+                    });
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.menu_load_image, popup.getMenu());
+                    popup.show();
+                }
+            });
 
-        alternativesRecycler = (RecyclerView) v.findViewById(R.id.rf_alternatives_recycler  );
-    //    RealmResults<Record> ar = realm.where(Record.class).findAllAsync();
+            alternativesRecycler = (RecyclerView) v.findViewById(R.id.rf_alternatives_recycler);
+            //    RealmResults<Record> ar = realm.where(Record.class).findAllAsync();
 
-        RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager(getContext());
-        layoutManager2.setAutoMeasureEnabled(true);
-        alternativesRecycler.setLayoutManager(layoutManager2);
-        alternativesRecycler.setNestedScrollingEnabled(false);
-        alternativesRecycler.setFocusable(false);
+            RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager(getContext());
+            layoutManager2.setAutoMeasureEnabled(true);
+            alternativesRecycler.setLayoutManager(layoutManager2);
+            alternativesRecycler.setNestedScrollingEnabled(false);
+            alternativesRecycler.setFocusable(false);
 
-        commentSwitcher = (ViewSwitcher) v.findViewById(R.id.rf_comment_switcher);
-        commentEdit = (EditText) v.findViewById(R.id.rf_comment_edit);
-        commentView = (TextView) v.findViewById(R.id.rf_comment_text);
+            commentSwitcher = (ViewSwitcher) v.findViewById(R.id.rf_comment_switcher);
+            commentEdit = (EditText) v.findViewById(R.id.rf_comment_edit);
+            commentView = (TextView) v.findViewById(R.id.rf_comment_text);
+        };
 
        // registerForContextMenu(add_image);
 
@@ -332,43 +349,46 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
        // final RecordItemViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
 
-        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
+        if (!empty) {
+            model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
-        Bundle args = getArguments();
+            Bundle args = getArguments();
 
-        if (args != null && args.containsKey(RECORD_ID)){
-            //    model.setFilter();
-            model.setId(args.getString(RECORD_ID));
-        } else {
-            model.setId(null);
-        }
+            if (args != null && args.containsKey(RECORD_ID)) {
+                //    model.setFilter();
+                model.setId(args.getString(RECORD_ID));
+            } else {
+                model.setId(null);
+            }
 
-        model.getRecordItem().observe(this,resource -> {
-            if (resource != null && resource.data != null) {
-                commentView.setText(resource.data.comment);
-                chl.removeAllViews();
-                chl.noneChip(getContext());
+            model.getRecordItem().observe(this, resource -> {
+                if (resource != null && resource.data != null) {
+                    commentView.setText(resource.data.comment);
+                    chl.removeAllViews();
+                    chl.noneChip(getContext());
 /*                for (Label label : resource.data.getLabels()) {
                     Chip chip = new Chip(getContext());
                     chip.setTitle(label.getName());
                     chip.setColor(label.getColor());
                     chl.addView(chip);
                 }*/
-            }
-        });
+                }
+            });
 
-        model.getMainVariantItem().observe(this,resource ->{
-            if (resource != null && resource.data != null) {
-                mvTitle.setText(resource.data.title);
-                mvCount.setText(PriceFormatter.getCount(resource.data.count,resource.data.measure));
-                mvValue.setText(PriceFormatter.getValue(resource.data.currency,resource.data.price*resource.data.count));
-                mvPrice.setText(PriceFormatter.getPrice(resource.data.currency,resource.data.price,resource.data.measure));
-                imagesListAdapter.setData(resource.data.small_images);
-            }
-        });
+            model.getMainVariantItem().observe(this, resource -> {
+                if (resource != null && resource.data != null) {
+                    mvTitle.setText(resource.data.title);
+                    mvCount.setText(PriceFormatter.getCount(resource.data.count, resource.data.measure));
+                    mvValue.setText(PriceFormatter.getValue(resource.data.currency, resource.data.price * resource.data.count));
+                    mvPrice.setText(PriceFormatter.getPrice(resource.data.currency, resource.data.price, resource.data.measure));
+                    imagesListAdapter.setData(resource.data.small_images);
+                }
+            });
 
-        if (model.isInImageLoading())
-            model.getLoadProgress().observe(this,progressObserver);
+            if (model.isInImageLoading())
+                model.getLoadProgress().observe(this, progressObserver);
+
+        }
 
       //  model.getLp().observe(this,p->{});
     }
