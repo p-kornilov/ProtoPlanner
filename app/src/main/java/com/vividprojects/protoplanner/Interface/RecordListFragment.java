@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -62,6 +63,14 @@ public class RecordListFragment extends Fragment implements Injectable {
         View v = (View) inflater.inflate(R.layout.records_fragment, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler_records);
 
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setAutoMeasureEnabled(true);
+        recycler.setLayoutManager(layoutManager);
+        recycler.setNestedScrollingEnabled(false);
+        recycler.setFocusable(false);
+
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        recycler.addItemDecoration(mDividerItemDecoration);
 
 //        recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
         return v;

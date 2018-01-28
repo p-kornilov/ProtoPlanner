@@ -62,4 +62,18 @@ public class Label extends RealmObject {
         else block_name += block.getName();
         return "Label name: " + name + ", color: " + color + ", comment: " + comment + block_name;
     }
+
+    public Plain getPlain(){
+        Plain plain = new Plain();
+        plain.color = color;
+        plain.name = name;
+        plain.id = id;
+        return plain;
+    }
+
+    public class Plain {
+        public String name;
+        public int color;
+        public String id;
+    }
 }

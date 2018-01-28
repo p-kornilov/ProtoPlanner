@@ -338,6 +338,12 @@ public class ZoomImageView extends AppCompatImageView implements ScaleGestureDet
                 setImageMatrix(matrix);
 
                 last.set(focusx, focusy);
+
+                float[] mv = new float[9];
+                matrix.getValues(mv);
+
+                if (mv[Matrix.MSCALE_X] != startValues[Matrix.MSCALE_X])
+                    this.getParent().requestDisallowInterceptTouchEvent(true);
             }
 
             if (event.getActionMasked() == MotionEvent.ACTION_UP) {

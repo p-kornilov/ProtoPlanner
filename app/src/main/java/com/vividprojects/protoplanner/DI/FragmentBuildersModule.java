@@ -4,6 +4,7 @@ import com.vividprojects.protoplanner.Interface.BlockListFragment;
 import com.vividprojects.protoplanner.Interface.ImageViewFragment;
 import com.vividprojects.protoplanner.Interface.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
+import com.vividprojects.protoplanner.Interface.SelectTagsDialog;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -25,6 +26,9 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract ImageViewFragment contributeImageViewFragment();
+
+    @ContributesAndroidInjector
+    abstract SelectTagsDialog contributeSelectTagsDialog();
 
  /*   @ContributesAndroidInjector
     abstract UserFragment contributeUserFragment();

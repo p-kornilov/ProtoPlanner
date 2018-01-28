@@ -1,7 +1,11 @@
 package com.vividprojects.protoplanner.Interface;
 
+
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -17,12 +21,7 @@ import com.vividprojects.protoplanner.Utils.RunnableParam;
  */
 
 public class RecordAddImageURLDialog extends DialogFragment {
-    private RunnableParam<String> onOK;
     private EditText url;
-
-    public void setOnOK(RunnableParam<String> onOK) {
-        this.onOK = onOK;
-    };
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -41,7 +40,9 @@ public class RecordAddImageURLDialog extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        onOK.run(url.getText().toString());
+                        Intent intent = new Intent();
+                        intent.putExtra("URL",url.getText());
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
                         RecordAddImageURLDialog.this.getDialog().cancel();
                     }
                 })

@@ -8,12 +8,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/rf_card1"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
         <android.support.constraint.ConstraintLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp">
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
@@ -140,30 +148,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"/>
 
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="@dimen/record_left_padding"
-                android:layout_marginTop="13dp"
-                android:background="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/chipLayout" />
         </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/rf_card2"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/white">
 
         <include
             layout="@layout/alternative_item"
             android:id="@+id/alter_layout" />
+        </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/rf_card3"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/white">
         <android.support.constraint.ConstraintLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
+<!--            <View
                 android:id="@+id/divider4"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -173,7 +192,7 @@
                 android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
                 android:id="@+id/textView7"
@@ -185,7 +204,7 @@
                 android:text="Alternatives"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider4" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/rf_filter_alt"
@@ -197,7 +216,7 @@
                 android:cropToPadding="false"
                 android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider4"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_filter_list_black_24dp" />
 
             <ImageButton
@@ -210,7 +229,7 @@
                 android:cropToPadding="false"
                 android:padding="12dp"
                 app:layout_constraintEnd_toStartOf="@id/rf_filter_alt"
-                app:layout_constraintTop_toBottomOf="@+id/divider4"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_add_list_black_24dp" />
 
             <android.support.v7.widget.RecyclerView
@@ -246,6 +265,7 @@
 
 
         </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
 

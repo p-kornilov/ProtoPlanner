@@ -58,12 +58,12 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             setRecordItem("Empty");
 
         } else {
-            SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-            ViewPager mViewPager = (ViewPager) findViewById(R.id.view_pager);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            TabLayout tb = (TabLayout) findViewById(R.id.my_tab);
-            tb.setupWithViewPager(mViewPager);
+            final RecordListFragment fragment = new RecordListFragment();
+            fragmentTransaction.replace(R.id.lists_container, fragment);
+            fragmentTransaction.commit();
         }
 
 

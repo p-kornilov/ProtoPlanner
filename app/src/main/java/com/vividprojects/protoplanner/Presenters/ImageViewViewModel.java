@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 public class ImageViewViewModel extends ViewModel {
     final MutableLiveData<String> variantId;
-    private final LiveData<Resource<List<String>>> images;
+    private final LiveData<List<String>> images;
 
     private DataRepository dataRepository;
 
@@ -33,7 +33,8 @@ public class ImageViewViewModel extends ViewModel {
         this.dataRepository = dataRepository;
         variantId = new MutableLiveData<>();
         images = Transformations.switchMap(variantId, input -> {
-            return ImageViewViewModel.this.dataRepository.loadImagesForVariant(input);
+            LiveData<List<String>> ll = ImageViewViewModel.this.dataRepository.loadImagesForVariant2(input);
+            return ll;
         });
     }
 
@@ -44,7 +45,11 @@ public class ImageViewViewModel extends ViewModel {
         variantId.setValue(id);
     }
 
-    public LiveData<Resource<List<String>>> getImages(){
+    public LiveData<List<String>> getImages(){
         return images;
+    }
+
+    public LiveData<String> getV(){
+        return variantId;
     }
 }

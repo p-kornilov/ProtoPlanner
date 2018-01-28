@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
@@ -19,6 +20,8 @@ import com.vividprojects.protoplanner.Presenters.ImageViewViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Widgets.ZoomImageView;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 
@@ -37,6 +40,7 @@ public class ImageViewFragment extends Fragment implements Injectable {
 
     private int position;
     private ZoomImageView imageView;
+    private TextView textView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class ImageViewFragment extends Fragment implements Injectable {
         Log.d("Test", "onCreateView - RootListFragment");
         View v = (View) inflater.inflate(R.layout.image_view_fragment, container, false);
         imageView = (ZoomImageView) v.findViewById(R.id.iv_iv);
+        textView = v.findViewById(R.id.iv_name);
 //        recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
         return v;
     }
@@ -75,11 +80,13 @@ public class ImageViewFragment extends Fragment implements Injectable {
             position = 0;
         }
 
+        textView.setText("Position " + position);
+
         model.getImages().observe(this,resource -> {
-            if (resource.data != null)
+            if (resource != null)
                 GlideApp.with(imageView)
-                        .load(new File(resource.data.get(position)))
-                        .error(R.drawable.ic_error_outline_black_24dp)
+                        .load(new File(resource.get(position)))
+                        .error(R.drawable.ic_error_outline_white_24dp)
                         .into(imageView);
         });
     }

@@ -170,7 +170,7 @@ public class Record extends RealmObject{
         }
         plain.labels = new ArrayList<>();
         for (Label label: labels) {
-            plain.labels.add(label.getId());
+            plain.labels.add(label.getPlain());
         }
         plain.block = block.getName();
         plain.comment = comment;
@@ -181,7 +181,7 @@ public class Record extends RealmObject{
         public String id;
         public String mainVariant;
         public List<String> variants;
-        public List<String> labels;
+        public List<Label.Plain> labels;
         public String block;
         public String comment;
     }

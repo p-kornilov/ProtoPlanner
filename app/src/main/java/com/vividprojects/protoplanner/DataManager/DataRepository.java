@@ -29,6 +29,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.Target;
+import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.DB.LocalDataDB;
@@ -236,6 +237,39 @@ public class DataRepository {
                 return new MutableLiveData<NetworkResponse<List<String>>>();
             }
         }.asLiveData();
+    }
+
+    public LiveData<List<String>> loadImagesForVariant2(String id) {
+                MutableLiveData<List<String>> ld = new MutableLiveData<>();
+                Variant.Plain variant = localDataDB
+                        .queryVariants()
+                        .title_equalTo(id)
+                        .findFirst()
+                        .getPlain();
+                for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + "/img_f_" + variant.full_images.get(i) + ".jpg");
+                ld.setValue(variant.full_images);
+                return ld;
+    }
+
+    public LiveData<List<Label.Plain>> getLabels(MutableLiveData<List<Label.Plain>> labels) {
+        List<Label> labelsL = localDataDB
+                .queryLabels()
+                .findAll();
+        ArrayList<Label.Plain> al = new ArrayList<>();
+        for (Label label:labelsL) {
+            al.add(label.getPlain());
+        }
+        for (Label label:labelsL) {
+            al.add(label.getPlain());
+        }
+        for (Label label:labelsL) {
+            al.add(label.getPlain());
+        }
+        for (Label label:labelsL) {
+            al.add(label.getPlain());
+        }
+        labels.setValue(al);
+        return labels;
     }
 
 /*    public LiveData<Resource<String>> loadVariantImages(String title) {

@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.CoreData.Record;
+import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.PPApplication;
 import com.vividprojects.protoplanner.R;
@@ -17,6 +19,7 @@ import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -80,6 +83,11 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
         holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.RED,false));
         holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.GREEN,false));
         holder.record_chiplayout.noneChip(context);
+
+        GlideApp.with(holder.record_image)
+                .load(R.drawable.orig)
+                .error(R.drawable.ic_error_outline_black_24dp)
+                .into(holder.record_image);
     }
 
     @Override
@@ -93,6 +101,7 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
         TextView record_measure;
         TextView record_value;
         ChipsLayout record_chiplayout;
+        ImageView record_image;
         public Record data;
 
         ViewHolder(View view) {
@@ -102,6 +111,7 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
         //    record_measure = (TextView) view.findViewById(R.id.record_measure);
             record_value = (TextView) view.findViewById(R.id.record_value);
             record_chiplayout = (ChipsLayout) view.findViewById(R.id.record_chiplayout);
+            record_image = view.findViewById(R.id.record_image);
 
 /*            Button edit_button = (Button) view.findViewById(R.id.record_list_edit);
             edit_button.setOnClickListener(new View.OnClickListener() {

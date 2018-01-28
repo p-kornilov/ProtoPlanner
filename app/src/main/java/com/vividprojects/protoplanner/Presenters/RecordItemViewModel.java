@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
@@ -23,6 +24,7 @@ import com.vividprojects.protoplanner.Utils.SingleEventTransformations;
 import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
 import java.security.PublicKey;
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -35,6 +37,7 @@ public class RecordItemViewModel extends ViewModel {
     final MutableLiveData<String> recordItemId;
     private final LiveData<Resource<Record.Plain>> recordItem;
     private final LiveData<Resource<Variant.Plain>> mainVariantItem;
+    private final MutableLiveData<List<Label.Plain>> labels;
 
     private DataRepository dataRepository;
 
@@ -68,6 +71,7 @@ public class RecordItemViewModel extends ViewModel {
             else return null;
         });
 
+        labels = new MutableLiveData<>();
 
         loadProgress = new SingleLiveEvent<>();
 
@@ -118,6 +122,10 @@ public class RecordItemViewModel extends ViewModel {
 
     public String getLoadedImage() {
         return loaded_image;
+    }
+
+    public LiveData<List<Label.Plain>> getLabels() {
+        return dataRepository.getLabels(labels);
     }
 
 }

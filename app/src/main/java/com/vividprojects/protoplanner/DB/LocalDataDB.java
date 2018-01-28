@@ -119,7 +119,7 @@ public class LocalDataDB {
 
                 vv1.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
                 vv1.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
-                vv1.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
+                vv1.addImage("89d4f6cd-1f3b-382e-b4cd-38602710fc74");
                 vv1.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
 
                 for (VariantInShop vis : vsps) {
@@ -237,6 +237,9 @@ public class LocalDataDB {
     public QueryVariants queryVariants() {
         return new QueryVariants();
     }
+    public QueryLabels queryLabels() {
+        return new QueryLabels();
+    }
 
     public class QueryRecords {
         RealmQuery<Record> query;
@@ -306,6 +309,31 @@ public class LocalDataDB {
 
         public Variant findFirst() {
             Variant rr = query.findFirst();
+            return rr;
+        }
+    }
+
+    public class QueryLabels {
+        RealmQuery<Label> query;
+
+        public QueryLabels () {
+            query = realm.where(Label.class);
+        }
+
+        public QueryLabels id_equalTo(String id) {
+            query = query.equalTo("id",id);
+            return this;
+        }
+
+        public List<Label> findAll() {
+            RealmResults<Label> rr = query.findAll();
+            ArrayList<Label> al = new ArrayList<>();
+            al.addAll(rr);
+            return al;
+        }
+
+        public Label findFirst() {
+            Label rr = query.findFirst();
             return rr;
         }
     }

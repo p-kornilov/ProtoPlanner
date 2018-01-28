@@ -12,7 +12,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -23,6 +25,9 @@ import com.vividprojects.protoplanner.Presenters.ImageViewViewModel;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
+import com.vividprojects.protoplanner.Widgets.TouchableViewPager;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -42,11 +47,18 @@ public class ImageViewActivity extends AppCompatActivity implements HasSupportFr
     ViewModelProvider.Factory viewModelFactory;
 
     private Fragment mViewModelHolder;
+    private ImageViewViewModel model;
+    private TouchableViewPager viewPager;
+    private boolean requestListener = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
         if (mViewModelHolder == null) {
@@ -55,16 +67,19 @@ public class ImageViewActivity extends AppCompatActivity implements HasSupportFr
             mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
         }
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        int position = getIntent().getIntExtra("POSITION",0);
+        String variant = getIntent().getStringExtra("VARIANT_ID");
 
-        ImageViewActivity.SectionsPagerAdapter mSectionsPagerAdapter = new ImageViewActivity.SectionsPagerAdapter(getSupportFragmentManager(),5);
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.iv_pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(3);
+        model.getV().observe(this,(item)->{});
+        model.setVariantId(variant);
 
-        String id = getIntent().getStringExtra("RECORD_ID");
+        model.getImages().observe(this,(item)->{
+
+            ImageViewActivity.SectionsPagerAdapter mSectionsPagerAdapter = new ImageViewActivity.SectionsPagerAdapter(getSupportFragmentManager(),item.size());
+            viewPager = findViewById(R.id.iv_pager);
+            viewPager.setAdapter(mSectionsPagerAdapter);
+            viewPager.setCurrentItem(position);
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,7 +87,8 @@ public class ImageViewActivity extends AppCompatActivity implements HasSupportFr
     }
 
     private ImageViewViewModel obtainViewModel() {
-        return ViewModelProviders.of(this,viewModelFactory).get(ImageViewViewModel.class);
+        model = ViewModelProviders.of(this,viewModelFactory).get(ImageViewViewModel.class);
+        return model;
     }
 
     @Override
@@ -80,6 +96,27 @@ public class ImageViewActivity extends AppCompatActivity implements HasSupportFr
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        Log.d("Listener", "Listener000 - " + requestListener);
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.change_listener) {
+            requestListener = !requestListener;
+            viewPager.requestDisallowInterceptTouchEvent(requestListener);
+      //      viewPager.requestD
+            Log.d("Listener", "Listener - " + requestListener);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

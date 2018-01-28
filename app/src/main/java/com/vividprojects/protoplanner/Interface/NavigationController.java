@@ -82,7 +82,7 @@ public class NavigationController {
         }
     }
 
-    public void openImageView(String image, String variant) {
+    public void openImageView(int position, String variant) {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
@@ -90,7 +90,7 @@ public class NavigationController {
         } else {
             intent = new Intent(context, ImageViewActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
-        intent.putExtra("IMAGE_ID",image);
+        intent.putExtra("POSITION",position);
         intent.putExtra("VARIANT_ID",variant);
         context.startActivity(intent);
     }

@@ -43,9 +43,9 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
     private boolean inLoadingState = false;
     //private Context context;
 
-    private RunnableParam<String> onImageClick;
+    private RunnableParam<Integer> onImageClick;
 
-    public HorizontalImagesListAdapter(List<String> data, RecordItemViewModel model, RunnableParam<String> onImageClick) {
+    public HorizontalImagesListAdapter(List<String> data, RecordItemViewModel model, RunnableParam<Integer> onImageClick) {
         this.data = data;
         this.model = model;
         this.onImageClick = onImageClick;
@@ -193,7 +193,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onImageClick.run(data);
+                    onImageClick.run(ViewHolder.this.getAdapterPosition());
                 }
             });
         }

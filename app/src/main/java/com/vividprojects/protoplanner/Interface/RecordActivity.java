@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.View;
 
 import com.vividprojects.protoplanner.CoreData.Record;
+import com.vividprojects.protoplanner.Presenters.ImageViewViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
@@ -37,8 +39,10 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     ViewModelProvider.Factory viewModelFactory;
 
     private Fragment mViewModelHolder;
+    private RecordItemViewModel model;
 
     Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +94,8 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     }
 
     private RecordItemViewModel obtainViewModel() {
-        return ViewModelProviders.of(this,viewModelFactory).get(RecordItemViewModel.class);
+        model = ViewModelProviders.of(this,viewModelFactory).get(RecordItemViewModel.class);
+        return model;
     }
 
     @Override
