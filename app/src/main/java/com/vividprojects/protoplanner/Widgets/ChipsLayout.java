@@ -74,7 +74,8 @@ public class ChipsLayout extends ViewGroup {
         int maxWidth = 0;
         int childState = 0;
 
-        noneChip.setVisibility(GONE);
+        if (noneChip!=null)
+            noneChip.setVisibility(GONE);
 
         // Iterate through all children, measuring them and computing our dimensions
         // from their size.
@@ -146,7 +147,7 @@ public class ChipsLayout extends ViewGroup {
                     }
                 }
             }
-        } else {
+        } else if (noneChip!=null) {
             noneChip.setVisibility(VISIBLE);
             noneChip.measure(0,0);
             LayoutParams lp = (LayoutParams) noneChip.getLayoutParams();

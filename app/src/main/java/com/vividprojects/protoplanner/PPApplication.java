@@ -49,7 +49,7 @@ public class PPApplication extends Application implements HasActivityInjector {
         appComponent = AppInjector.init(this);
 
         dataRepository.initDB();
- //       dataRepository.showDB();
+        dataRepository.showDB();
 
    //     RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
    //     Realm.deleteRealm(realmConfiguration); // Clean slate

@@ -156,6 +156,14 @@ public class LocalDataDB {
                 realm.insertOrUpdate(new Record(vv2));
                 realm.insertOrUpdate(new Record(vv3));
 
+                Label l1 = new Label("Gray", Color.GRAY,"",null);
+                Label l2 = new Label("Cyan", Color.CYAN,"",null);
+                Label l3 = new Label("Ltgray", Color.LTGRAY,"",null);
+
+                realm.insertOrUpdate(l1);
+                realm.insertOrUpdate(l2);
+                realm.insertOrUpdate(l3);
+
                 Record r = realm.where(Record.class).findFirst();
                 r.addVariant(vv2);
 
@@ -193,12 +201,12 @@ public class LocalDataDB {
         for (Variant v : vs) {
             Log.d("Test", v.getTitle());
         }
-
+*/
         Log.d("Test", "------------------------------ Labels:");
         RealmResults<Label> ls = realm.where(Label.class).findAll();
         for (Label l : ls) {
             Log.d("Test", l.toString());
-        }*/
+        }
 
         Log.d("Test", "------------------------------ Shops:");
         RealmResults<VariantInShop> vis = realm.where(VariantInShop.class).findAll();

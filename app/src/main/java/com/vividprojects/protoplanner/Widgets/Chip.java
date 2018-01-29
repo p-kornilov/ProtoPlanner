@@ -18,6 +18,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ import com.vividprojects.protoplanner.R;
 public class Chip extends RelativeLayout {
     View rootView;
     TextView textView;
-    View deleteButton;
+    ImageView deleteButton;
     Context mContext;
     LinearLayout mContent;
     boolean type_normal = true;  // TODO Сделать везде проверку
@@ -105,6 +106,10 @@ public class Chip extends RelativeLayout {
             int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
             textView.setPadding(textView.getPaddingLeft(),textView.getPaddingTop(),padding_in_px,textView.getPaddingBottom());
         }
+    }
+
+    public void setDeleteButtonStyle(int id){
+        deleteButton.setImageResource(id);
     }
 
 }

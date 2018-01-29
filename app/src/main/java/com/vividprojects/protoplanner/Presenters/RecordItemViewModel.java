@@ -92,6 +92,10 @@ public class RecordItemViewModel extends ViewModel {
     }
     public SingleLiveEvent<Integer> getLoadProgress() {return loadProgress;}
 
+    public LiveData<String> getRecordItemID() {
+        return recordItemId;
+    }
+
     public SingleLiveEvent<Integer> loadImage(String url) {
         if (!inImageLoading) {
             inImageLoading = true;

@@ -68,6 +68,8 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
             }
         });
 
+        String id = getIntent().getStringExtra("RECORD_ID");
+
         mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
         if (mViewModelHolder == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -88,13 +90,30 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                     chip.setTitle(label.name);
                     chip.setColor(label.color);
                     chip.setDeleteButtonVisible(true);
+                    chip.setDeleteButtonStyle(R.drawable.ic_check_circle_grey_24dp);
                     chipsAvailable.addView(chip);
                 }
             }
         });
 
-        chipsSelected.removeAllViews();
-        chipsSelected.noneChip(this);
+        model.getLabelsRecord(id).observe(this,(labels)->{
+            if (labels != null) {
+                chipsSelected.removeAllViews();
+                chipsSelected.noneChip(this);
+
+                for (Label.Plain label : labels) {
+                    Chip chip = new Chip(this);
+                    chip.setTitle(label.name);
+                    chip.setColor(label.color);
+                    chip.setDeleteButtonVisible(true);
+                    //chip.setDeleteButtonStyle(R.drawable.ic_check_circle_grey_24dp);
+                    chipsSelected.addView(chip);
+                }
+            }
+        });
+
+    //    chipsSelected.removeAllViews();
+    //    chipsSelected.noneChip(this);
     }
 
     private LabelsViewModel obtainViewModel() {
