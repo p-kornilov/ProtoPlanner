@@ -259,16 +259,17 @@ public class DataRepository {
         for (Label label:labelsL) {
             al.add(label.getPlain());
         }
-        for (Label label:labelsL) {
-            al.add(label.getPlain());
-        }
-        for (Label label:labelsL) {
-            al.add(label.getPlain());
-        }
-        for (Label label:labelsL) {
-            al.add(label.getPlain());
-        }
         labels.setValue(al);
+        return labels;
+    }
+
+    public LiveData<List<Label.Plain>> getLabelsRecord(MutableLiveData<List<Label.Plain>> labels, String id) {
+        Record.Plain record = localDataDB
+                .queryRecords()
+                .id_equalTo(id)
+                .findFirst()
+                .getPlain();
+        labels.setValue(record.labels);
         return labels;
     }
 

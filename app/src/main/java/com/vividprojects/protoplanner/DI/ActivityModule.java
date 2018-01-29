@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.DI;
 import android.app.Activity;
 
 import com.vividprojects.protoplanner.Interface.ImageViewActivity;
+import com.vividprojects.protoplanner.Interface.LabelsActivity;
 import com.vividprojects.protoplanner.Interface.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;
 
@@ -23,4 +24,7 @@ public abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
     abstract ImageViewActivity contributeImageViewActivity();
+
+    @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
+    abstract LabelsActivity contributeLabelsActivity();
 }

@@ -95,6 +95,18 @@ public class NavigationController {
         context.startActivity(intent);
     }
 
+    public void openLabels(String record) {
+
+        Intent intent;
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context, LabelsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context, LabelsActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        intent.putExtra("RECORD_ID",record);
+        context.startActivity(intent);
+    }
+
     public String getType() {
         boolean isTablet = context.getResources().getBoolean(R.bool.isTablet);
         if (isTablet) return "This is tablet";

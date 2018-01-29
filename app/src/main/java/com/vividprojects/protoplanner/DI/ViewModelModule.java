@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 
 import com.vividprojects.protoplanner.Presenters.BlockListViewModel;
 import com.vividprojects.protoplanner.Presenters.ImageViewViewModel;
+import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
 import com.vividprojects.protoplanner.ViewModel.PPViewModelFactory;
@@ -39,6 +40,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ImageViewViewModel.class)
     abstract ViewModel bindImageViewViewModel(ImageViewViewModel imageViewViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LabelsViewModel.class)
+    abstract ViewModel bindLabelsViewModel(LabelsViewModel labelsViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(PPViewModelFactory factory);
