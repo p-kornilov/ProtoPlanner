@@ -26,14 +26,13 @@ import javax.inject.Inject;
  */
 
 public class LabelsViewModel extends ViewModel {
-    private final LiveData<List<Label.Plain>> all_labels_live;
-    private final MutableLiveData<List<Label.Plain>> all_labelsRecord_live;
-    private final LiveData<List<Label.Plain>> labels_avail_live;
-    private final MutableLiveData<List<Label.Plain>> labels_selected_live;
+    private final LiveData<List<Label.Plain>> original_labels_live;
+    private final LiveData<List<Label.Plain>> original_labelsSelected_live;
+    private final MutableLiveData<List<Label.Plain>> current_labels_live;
+    private final MutableLiveData<List<Label.Plain>> current_labelsSelected_live;
     private List<Label.Plain> labels_avail;
     private List<Label.Plain> labels_selected;
-    private final MutableLiveData<String> recordItemId;
-    private final MutableLiveData<String> refresh;
+    private final MutableLiveData<String> recordId;
 
     private DataRepository dataRepository;
 
@@ -43,61 +42,53 @@ public class LabelsViewModel extends ViewModel {
         this.dataRepository = dataRepository;
 
       //  all_labels_live = new MutableLiveData<>();
-        all_labelsRecord_live = new MutableLiveData<>();
-
-//        labels_avail_live = new MutableLiveData<>();
-        labels_selected_live = new MutableLiveData<>();
-        recordItemId = new MutableLiveData<>();
-        refresh = new MutableLiveData<>();
-
-        all_labels_live = Transformations.switchMap(refresh,(r)->{
-            MutableLiveData<List<Label.Plain>> data = new MutableLiveData<>();
-            data.setValue(labels_avail);
-            return data;
-        });
-
-        all_labels_live = Transformations.switchMap(refresh,(r)->{
-            MutableLiveData<List<Label.Plain>> data = new MutableLiveData<>();
-            data.setValue(labels_avail);
-            return data;
-        });
-
-        Transformations.switchMap(all_labels_live,labels->{
-            labels_avail.addAll(labels);
-            return null;
-        });
-
-        refresh();
+        current_labels_live = new MutableLiveData<>();
+        current_labelsSelected_live = new MutableLiveData<>();
 
         labels_avail = new ArrayList<>();
         labels_selected = new ArrayList<>();
 
+        recordId = new MutableLiveData<>();
+
+        original_labels_live = Transformations.switchMap(recordId,id->dataRepository.getLabels());
+
+
+        original_labelsSelected_live = Transformations.switchMap(recordId,id->dataRepository.getRecordLabels(id));
+
+
+
+        original_labels_live.observeForever(labels->{
+            labels_avail.clear();
+            labels_avail.addAll(labels);
+            current_labels_live.setValue(labels_avail);
+        });
+
+        original_labelsSelected_live.observeForever(labels->{
+            labels_selected.clear();
+            labels_selected.addAll(labels);
+            current_labelsSelected_live.setValue(labels_selected);
+        });
+
     }
 
-    public LiveData<List<Label.Plain>> get() {return all_labels_live;};
-
-/*    public LiveData<List<Label.Plain>> getLabels() {
-        dataRepository.getLabels(all_labels_live);
-        return dataRepository.getLabels(all_labels_live);
-    }*/
-
-    public LiveData<List<Label.Plain>> getLabelsRecord(String id) {
-        return dataRepository.getLabelsRecord(all_labelsRecord_live, id);
-    }
+    public LiveData<List<Label.Plain>> getLabels() {return current_labels_live;};
+    public LiveData<List<Label.Plain>> getSelectedLabels() {return current_labelsSelected_live;};
 
     public void selectLabel(Label.Plain label) {
         labels_selected.add(label);
         labels_avail.remove(label);
-        refreshLive();
+        current_labelsSelected_live.setValue(labels_selected);
+        current_labels_live.setValue(labels_avail);
     }
 
     public void deselectLabel(Label.Plain label) {
         labels_selected.remove(label);
         labels_avail.add(label);
-        refreshLive();
+        current_labelsSelected_live.setValue(labels_selected);
+        current_labels_live.setValue(labels_avail);
     }
 
-    public void refreshLive() {
-        refresh.setValue("refresh");
+    public void refreshOriginal(String id) {
+        recordId.setValue(id);
     }
 }

@@ -80,7 +80,7 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         if (model==null)
             model = ViewModelProviders.of(this,viewModelFactory).get(LabelsViewModel.class);
 
-        model.getLabels().observe(this,(labels)->{
+         model.getLabels().observe(this,(labels)->{
             if (labels != null) {
                 chipsAvailable.removeAllViews();
                 chipsAvailable.noneChip(this);
@@ -96,7 +96,7 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
             }
         });
 
-        model.getLabelsRecord(id).observe(this,(labels)->{
+        model.getSelectedLabels().observe(this,(labels)->{
             if (labels != null) {
                 chipsSelected.removeAllViews();
                 chipsSelected.noneChip(this);
@@ -111,6 +111,8 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 }
             }
         });
+
+        model.refreshOriginal(id);
 
     //    chipsSelected.removeAllViews();
     //    chipsSelected.noneChip(this);

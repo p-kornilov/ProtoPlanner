@@ -268,21 +268,26 @@ public class DataRepository {
         List<Label> labelsL = localDataDB
                 .queryLabels()
                 .findAll();
-        ArrayList<Label.Plain> al = new ArrayList<>();
-        for (Label label:labelsL) {
-            al.add(label.getPlain());
+        if (labelsL!=null) {
+            ArrayList<Label.Plain> al = new ArrayList<>();
+            for (Label label : labelsL) {
+                al.add(label.getPlain());
+            }
+            labels.setValue(al);
         }
-        labels.setValue(al);
         return labels;
     }
 
-    public LiveData<List<Label.Plain>> getLabelsRecord(MutableLiveData<List<Label.Plain>> labels, String id) {
-        Record.Plain record = localDataDB
+    public LiveData<List<Label.Plain>> getRecordLabels(String id) {
+        MutableLiveData<List<Label.Plain>> labels = new MutableLiveData<>();
+        Record record = localDataDB
                 .queryRecords()
                 .id_equalTo(id)
-                .findFirst()
-                .getPlain();
-        labels.setValue(record.labels);
+                .findFirst();
+
+        if (record!=null) {
+            labels.setValue(record.getPlain().labels);
+        }
         return labels;
     }
 
