@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="?android:attr/colorControlHighlight">
-    <item android:id="@+id/shape">
+    <item>
         <shape android:shape="rectangle">
-            <stroke android:color="@color/green"
-                android:width="3dp"/>
-            <solid android:color="@color/white" />
+            <solid android:color="@color/white_transparency" />
             <corners android:radius="16dp" />
         </shape>
     </item>
+    <item android:drawable="@drawable/bg_chip_view" />
 </ripple>

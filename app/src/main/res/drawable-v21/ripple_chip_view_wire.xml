@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?android:attr/colorControlHighlight">
+    <item android:id="@+id/level1">
+        <shape android:shape="rectangle">
+            <stroke android:width="2dp"
+                android:color="@color/black"></stroke>
+            <solid android:color="@color/white"></solid>
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+<!--    <item android:drawable="@drawable/bg_chip_view" />-->
+</layer-list>

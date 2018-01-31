@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:clickable="true"
-        android:background="@drawable/ripple_chip_view">
+        android:background="@drawable/ripple_chip_view_wire">
         <TextView
             android:id="@+id/textChip"
             android:layout_width="wrap_content"

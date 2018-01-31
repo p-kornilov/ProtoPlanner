@@ -93,9 +93,14 @@ public class Chip extends RelativeLayout {
 
     public void setColor(int color){
         //mContent.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        RippleDrawable rd = (RippleDrawable) mContent.getBackground();
-        GradientDrawable sd = (GradientDrawable) rd.findDrawableByLayerId(R.id.shape);
-        sd.setVisible(false,true);
+        LayerDrawable rd = (LayerDrawable) mContent.getBackground();
+
+        GradientDrawable sd = (GradientDrawable) rd.findDrawableByLayerId(R.id.level1);
+        sd.setLevel(2);
+        sd.setVisible(true,true);
+        //sd.setColor();
+        sd.setStroke(3,color);
+
         Log.d("Test", "< SET Color >");
     }
 
