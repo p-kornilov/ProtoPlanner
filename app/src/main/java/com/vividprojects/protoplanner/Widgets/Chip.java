@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -91,7 +92,10 @@ public class Chip extends RelativeLayout {
     }
 
     public void setColor(int color){
-        mContent.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        //mContent.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        RippleDrawable rd = (RippleDrawable) mContent.getBackground();
+        GradientDrawable sd = (GradientDrawable) rd.findDrawableByLayerId(R.id.shape);
+        sd.setVisible(false,true);
         Log.d("Test", "< SET Color >");
     }
 
