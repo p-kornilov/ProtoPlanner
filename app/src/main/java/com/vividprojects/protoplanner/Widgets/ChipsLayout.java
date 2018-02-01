@@ -179,7 +179,7 @@ public class ChipsLayout extends ViewGroup {
         int curWidth, curHeight, curLeft, curTop, maxHeight;
 
         //get the available size of child view
-        int childLeft = this.getPaddingLeft();
+        int childLeft = this.getPaddingLeft() ;
         int childTop = this.getPaddingTop();
         int childRight = this.getMeasuredWidth() - this.getPaddingRight();
         int childBottom = this.getMeasuredHeight() - this.getPaddingBottom();
@@ -208,8 +208,8 @@ public class ChipsLayout extends ViewGroup {
                 child.layout(curLeft, curTop, curLeft + curWidth, curTop + curHeight);
                 //store the max height
                 if (maxHeight < curHeight)
-                    maxHeight = curHeight;
-                curLeft += curWidth;
+                    maxHeight = curHeight + 20;
+                curLeft += curWidth + 20;
             }
         }
 

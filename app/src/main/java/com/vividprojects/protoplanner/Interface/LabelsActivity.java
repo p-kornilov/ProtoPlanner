@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
@@ -93,7 +94,7 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                     chip.setDeleteButtonStyle(R.drawable.ic_check_circle_grey_24dp);
                     chip.setColor(label.color);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        chip.setElevation(10);
+                        chip.setElevation(20);
                     }
                     chipsAvailable.addView(chip);
                 }

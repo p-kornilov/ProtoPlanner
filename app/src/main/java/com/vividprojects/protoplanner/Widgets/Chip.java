@@ -122,6 +122,7 @@ public class Chip extends RelativeLayout {
     }
 
     private void init(Context context) {
+
         rootView = inflate(context, R.layout.chip_layout,this);
         textView = (TextView) rootView.findViewById(R.id.textChip);
         mContent = (LinearLayout) rootView.findViewById(R.id.content);
@@ -146,13 +147,16 @@ public class Chip extends RelativeLayout {
                 else {
                     setDeleteButtonVisible(true);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        setElevation(10);
+                        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+                        float px = 16 * (metrics.densityDpi / 160f);
+                        setElevation(Math.round(px));
                     }
 
                 }
             }
         });
     }
+
 
     public void setTitle(String title) {
         textView.setText(title);
@@ -281,24 +285,31 @@ public class Chip extends RelativeLayout {
         deleteButton.setImageResource(id);
     }
 
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         /// ..
+        super.onSizeChanged(w,h,oldw,oldh);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setOutlineProvider(new CustomOutline(w, h));
         }
+        invalidate();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private class CustomOutline extends ViewOutlineProvider {
+
+
 
         int width;
         int height;
 
         CustomOutline(int width, int height) {
             this.width = width;
-            this.height = height;
+            this.height = height-3;
         }
+
+
 
         @Override
         public void getOutline(View view, Outline outline) {
@@ -309,5 +320,4 @@ public class Chip extends RelativeLayout {
             outline.setRoundRect(new Rect(0, 0, width, height),Math.round(px));
         }
     }
-
 }
