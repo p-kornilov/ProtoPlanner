@@ -8,23 +8,26 @@
     android:layout_centerInParent="true">
     <!--android:background="@drawable/bg_chip_view"-->
 
+
     <LinearLayout
         android:id="@+id/content"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:clickable="true"
-        android:background="@drawable/ripple_chip_view_wire">
+        android:background="@drawable/ripple_chip_view">
+
         <TextView
             android:id="@+id/textChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto"
             android:layout_gravity="center_vertical"
+            android:fontFamily="@font/roboto"
             android:paddingLeft="8dp"
             android:text="Example chip"
+            android:textColor="@color/white"
             android:textSize="13sp"
-            android:textStyle="normal" />
+            android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/deleteChip"

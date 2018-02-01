@@ -156,13 +156,48 @@ public class LocalDataDB {
                 realm.insertOrUpdate(new Record(vv2));
                 realm.insertOrUpdate(new Record(vv3));
 
-                Label l1 = new Label("Gray", Color.GRAY,"",null);
-                Label l2 = new Label("Cyan", Color.CYAN,"",null);
-                Label l3 = new Label("Ltgray", Color.LTGRAY,"",null);
+
+                Label l1 = new Label("Ltgray", contetx.getResources().getColor(R.color.Red),"",null);
+                Label l2 = new Label("Ltgray", contetx.getResources().getColor(R.color.Pink),"",null);
+                Label l3 = new Label("Ltgray", contetx.getResources().getColor(R.color.Purple),"",null);
+                Label l4 = new Label("Ltgray", contetx.getResources().getColor(R.color.Deep_Purple),"",null);
+                Label l5 = new Label("Ltgray", contetx.getResources().getColor(R.color.Indigo),"",null);
+                Label l6 = new Label("Ltgray", contetx.getResources().getColor(R.color.Blue),"",null);
+                Label l7 = new Label("Ltgray", contetx.getResources().getColor(R.color.Light_Blue),"",null);
+                Label l8 = new Label("Ltgray", contetx.getResources().getColor(R.color.Cyan),"",null);
+                Label l9 = new Label("Ltgray", contetx.getResources().getColor(R.color.Teal),"",null);
+                Label l10 = new Label("Ltgray", contetx.getResources().getColor(R.color.Green),"",null);
+                Label l11 = new Label("Ltgray", contetx.getResources().getColor(R.color.Light_Green),"",null);
+                Label l12 = new Label("Ltgray", contetx.getResources().getColor(R.color.Lime),"",null);
+                Label l13 = new Label("Ltgray", contetx.getResources().getColor(R.color.Yellow),"",null);
+                Label l14 = new Label("Ltgray", contetx.getResources().getColor(R.color.Amber),"",null);
+                Label l15 = new Label("Ltgray", contetx.getResources().getColor(R.color.Orange),"",null);
+                Label l16 = new Label("Ltgray", contetx.getResources().getColor(R.color.Deep_Orange),"",null);
+                Label l17 = new Label("Ltgray", contetx.getResources().getColor(R.color.Brown),"",null);
+                Label l18 = new Label("Ltgray", contetx.getResources().getColor(R.color.Grey),"",null);
+                Label l19 = new Label("Ltgray", contetx.getResources().getColor(R.color.Blue_Grey),"",null);
+                Label l20 = new Label("Ltgray", contetx.getResources().getColor(R.color.Black),"",null);
 
                 realm.insertOrUpdate(l1);
                 realm.insertOrUpdate(l2);
                 realm.insertOrUpdate(l3);
+                realm.insertOrUpdate(l4);
+                realm.insertOrUpdate(l5);
+                realm.insertOrUpdate(l6);
+                realm.insertOrUpdate(l7);
+                realm.insertOrUpdate(l8);
+                realm.insertOrUpdate(l9);
+                realm.insertOrUpdate(l10);
+                realm.insertOrUpdate(l11);
+                realm.insertOrUpdate(l12);
+                realm.insertOrUpdate(l13);
+                realm.insertOrUpdate(l14);
+                realm.insertOrUpdate(l15);
+                realm.insertOrUpdate(l16);
+                realm.insertOrUpdate(l17);
+                realm.insertOrUpdate(l18);
+                realm.insertOrUpdate(l19);
+                realm.insertOrUpdate(l20);
 
                 Record r = realm.where(Record.class).findFirst();
                 r.addVariant(vv2);

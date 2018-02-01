@@ -2,6 +2,7 @@ package com.vividprojects.protoplanner.Interface;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -88,9 +89,12 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 for (Label.Plain label : labels) {
                     Chip chip = new Chip(this);
                     chip.setTitle(label.name);
-                    chip.setColor(label.color);
                     chip.setDeleteButtonVisible(true);
                     chip.setDeleteButtonStyle(R.drawable.ic_check_circle_grey_24dp);
+                    chip.setColor(label.color);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        chip.setElevation(10);
+                    }
                     chipsAvailable.addView(chip);
                 }
             }
@@ -104,8 +108,8 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 for (Label.Plain label : labels) {
                     Chip chip = new Chip(this);
                     chip.setTitle(label.name);
+                    chip.setDeleteButtonVisible(false);
                     chip.setColor(label.color);
-                    chip.setDeleteButtonVisible(true);
                     //chip.setDeleteButtonStyle(R.drawable.ic_check_circle_grey_24dp);
                     chipsSelected.addView(chip);
                 }
