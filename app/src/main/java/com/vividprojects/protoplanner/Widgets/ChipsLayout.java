@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Display;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,12 @@ public class ChipsLayout extends ViewGroup {
     /** These are used for computing child frames based on their gravity. */
     private final Rect mTmpContainerRect = new Rect();
     private final Rect mTmpChildRect = new Rect();
+
+    private final int item_padding = Display.calc_pixels(4);
+    private final int item_shift = Display.calc_pixels(4);
+
+    private int mWidth = 0;
+    private int mHeight = 0;
 
     public ChipsLayout(Context context) {
         super(context);
@@ -108,8 +116,8 @@ public class ChipsLayout extends ViewGroup {
 //                    maxWidth = Math.max(maxWidth,
 //                            child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
 //                }
-                widthList[i] = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
-                heightList[i] = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
+                widthList[i] = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin + item_padding*2;
+                heightList[i] = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin  + item_padding*2;
                 visibilityList[i] = VISIBLE;
 //                childState = combineMeasuredStates(childState, child.getMeasuredState());
             }
@@ -124,7 +132,7 @@ public class ChipsLayout extends ViewGroup {
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
-        maxWidth = widthSize;
+        maxWidth = widthSize;// - getPaddingStart() - getPaddingEnd();
 
         if (!emptyChips) {
             int curWidth = 0;
@@ -154,10 +162,21 @@ public class ChipsLayout extends ViewGroup {
             maxHeight = noneChip.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
         }
 
+        maxHeight += getPaddingBottom() + getPaddingTop();
+
         maxHeight = Math.max(maxHeight, getSuggestedMinimumHeight());
 
         Log.d("Test", "Height - " + maxHeight);
         Log.d("Test", "Width - " + maxWidth);
+        Log.d("Test", "Padding - " + getPaddingStart() + " " + getPaddingEnd());
+        Log.d("Test", "Spec - " + widthMode);
+        Log.d("Test", "Item padding - " + item_padding);
+        Log.d("Test", "------------------------------");
+
+        if (widthMode==MeasureSpec.EXACTLY) {
+            mWidth = maxWidth;
+            mHeight = maxHeight;
+        }
 
         setMeasuredDimension(maxWidth,maxHeight);
 
@@ -181,8 +200,15 @@ public class ChipsLayout extends ViewGroup {
         //get the available size of child view
         int childLeft = this.getPaddingLeft() ;
         int childTop = this.getPaddingTop();
+
+/*
+        int childRight = (mWidth==0)? this.getMeasuredWidth() - this.getPaddingRight() : mWidth;
+        int childBottom = (mHeight==0)? this.getMeasuredHeight() - this.getPaddingBottom() : mHeight;
+*/
         int childRight = this.getMeasuredWidth() - this.getPaddingRight();
         int childBottom = this.getMeasuredHeight() - this.getPaddingBottom();
+        Log.d("Test", "mWidth - " + mWidth);
+        Log.d("Test", "mHeight - " + mHeight);
         int childWidth = childRight - childLeft;
         int childHeight = childBottom - childTop;
 
@@ -198,18 +224,29 @@ public class ChipsLayout extends ViewGroup {
                         MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST));
                 curWidth = child.getMeasuredWidth();
                 curHeight = child.getMeasuredHeight();
+                Log.d("Test", "Item W-H - " + curWidth + "-" + curHeight);
                 //wrap is reach to the end
-                if (curLeft + curWidth >= childRight) {
+                if (curLeft + curWidth + item_padding*2 >= childRight) {
                     curLeft = childLeft;
                     curTop += maxHeight;
                     maxHeight = 0;
                 }
+                Log.d("Test", "CurLeft - childRight - itempadding - " + curLeft + "-" + childRight + "-" + item_padding*2);
+
                 //do the layout
-                child.layout(curLeft, curTop, curLeft + curWidth, curTop + curHeight);
+                boolean elevated = false;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    if (child.getElevation()>0) elevated = true;
+                if (elevated) {
+                    child.layout(curLeft + item_padding, curTop - item_shift + item_padding, curLeft + item_padding + curWidth, curTop + item_padding - item_shift + curHeight);
+                }
+                else
+                    child.layout(curLeft + item_padding, curTop + item_padding, curLeft + item_padding + curWidth, curTop + item_padding + curHeight);
                 //store the max height
-                if (maxHeight < curHeight)
-                    maxHeight = curHeight + 20;
-                curLeft += curWidth + 20;
+                if (maxHeight < curHeight + item_padding*2)
+                    maxHeight = curHeight + item_padding*2;
+                curLeft += curWidth + item_padding*2;
+
             }
         }
 

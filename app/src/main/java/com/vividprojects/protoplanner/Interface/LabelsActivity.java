@@ -23,6 +23,7 @@ import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Display;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
@@ -46,7 +47,6 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
     private LabelsViewModel model;
 
     private ChipsLayout chipsAvailable;
-    private ChipsLayout chipsSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,6 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         setSupportActionBar(toolbar);
 
         chipsAvailable = findViewById(R.id.al_chiplayout_available);
-        chipsSelected = findViewById(R.id.al_chiplayout_selected);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -94,25 +93,9 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                     chip.setDeleteButtonStyle(R.drawable.ic_check_circle_grey_24dp);
                     chip.setColor(label.color);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        chip.setElevation(20);
+                        chip.setElevation(Display.calc_pixels(8));
                     }
                     chipsAvailable.addView(chip);
-                }
-            }
-        });
-
-        model.getSelectedLabels().observe(this,(labels)->{
-            if (labels != null) {
-                chipsSelected.removeAllViews();
-                chipsSelected.noneChip(this);
-
-                for (Label.Plain label : labels) {
-                    Chip chip = new Chip(this);
-                    chip.setTitle(label.name);
-                    chip.setDeleteButtonVisible(false);
-                    chip.setColor(label.color);
-                    //chip.setDeleteButtonStyle(R.drawable.ic_check_circle_grey_24dp);
-                    chipsSelected.addView(chip);
                 }
             }
         });

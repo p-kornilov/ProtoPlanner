@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Display;
 
 import static com.vividprojects.protoplanner.Widgets.Pallet.AMBER;
 import static com.vividprojects.protoplanner.Widgets.Pallet.BLACK;
@@ -147,9 +148,7 @@ public class Chip extends RelativeLayout {
                 else {
                     setDeleteButtonVisible(true);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
-                        float px = 16 * (metrics.densityDpi / 160f);
-                        setElevation(Math.round(px));
+                        setElevation(Display.calc_pixels(8));
                     }
 
                 }
@@ -164,11 +163,6 @@ public class Chip extends RelativeLayout {
 
     public void setColor(int color){
         mContent.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-/*        if (color== Color.YELLOW) {
-            textView.setTextColor(Color.BLACK);
-            deleteButton.setImageResource(R.drawable.ic_check_circle_black_24dp);
-        }*/
-
 
         switch (color) {
             case RED:
@@ -274,10 +268,7 @@ public class Chip extends RelativeLayout {
             textView.setPadding(textView.getPaddingLeft(),textView.getPaddingTop(),0,textView.getPaddingBottom());
         } else {
             deleteButton.setVisibility(GONE);
-            int padding_in_dp = 8;
-            final float scale = getResources().getDisplayMetrics().density;
-            int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
-            textView.setPadding(textView.getPaddingLeft(),textView.getPaddingTop(),padding_in_px,textView.getPaddingBottom());
+            textView.setPadding(textView.getPaddingLeft(),textView.getPaddingTop(),Display.calc_pixels(8),textView.getPaddingBottom());
         }
     }
 
@@ -285,6 +276,14 @@ public class Chip extends RelativeLayout {
         deleteButton.setImageResource(id);
     }
 
+/*    @Override
+    protected void onLayout(boolean c, int l,int t, int r, int b) {
+        super.onLayout(c,l,t,r,b);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setOutlineProvider(new CustomOutline(w, h));
+        }
+        invalidate();
+    }*/
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -294,30 +293,22 @@ public class Chip extends RelativeLayout {
             setOutlineProvider(new CustomOutline(w, h));
         }
         invalidate();
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private class CustomOutline extends ViewOutlineProvider {
-
-
-
         int width;
         int height;
 
         CustomOutline(int width, int height) {
             this.width = width;
-            this.height = height-3;
+            this.height = height;
         }
-
-
 
         @Override
         public void getOutline(View view, Outline outline) {
-           // outline.setRect(0, 0, width, height);
-            DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
-            float px = 16 * (metrics.densityDpi / 160f);
-
-            outline.setRoundRect(new Rect(0, 0, width, height),Math.round(px));
+            outline.setRoundRect(new Rect(0, 0, width, height),Display.calc_pixels(16));
         }
     }
 }
