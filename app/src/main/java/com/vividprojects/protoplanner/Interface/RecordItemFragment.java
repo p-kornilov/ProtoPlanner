@@ -356,7 +356,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                         Chip chip = new Chip(getContext());
                         chip.setTitle(label.name);
                         chip.setColor(label.color);
-                        chip.setDeleteButtonVisible(false);
+                    //    chip.setDeleteButtonVisible(false);
                         chl.addView(chip);
                     }
                 }
@@ -410,13 +410,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 }
             });
         }
-    }
-
-    void addChip() {
-        Chip chip4 = new Chip(getContext());
-        chip4.setTitle("Test chip");
-        chip4.setColor(Color.MAGENTA);
-        chl.addView(chip4);
     }
 
     public boolean onRecordEdit(){   // TODO !!! Переделать на общение через ViewModel !!!!

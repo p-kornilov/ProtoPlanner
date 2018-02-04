@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/sort_by_name"
+            android:title="By Name" />
+        <item
+            android:id="@+id/sort_by_color"
+            android:title="By Color" />
+        <item
+            android:id="@+id/sort_by_select"
+            android:title="Selected First" />
+    </group>
+</menu>

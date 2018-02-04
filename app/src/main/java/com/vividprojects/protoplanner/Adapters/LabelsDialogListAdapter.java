@@ -69,7 +69,7 @@ public class LabelsDialogListAdapter extends RecyclerView.Adapter<LabelsDialogLi
         holder.label_check.setChecked(holder.checked);
         holder.label_chip.setColor(obj.color);
         holder.label_chip.setTitle(obj.name);
-        holder.label_chip.setDeleteButtonVisible(false);
+       // holder.label_chip.setDeleteButtonVisible(false);
     }
 
     @Override

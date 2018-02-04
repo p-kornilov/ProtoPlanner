@@ -36,9 +36,9 @@ public class Pallet {
     public final static int tTEAL           = 0xFFFFFFFF;
     public final static int tGREEN          = 0xFFFFFFFF;
     public final static int tLIGHT_GREEN    = 0xFFFFFFFF;
-    public final static int tLIME           = 0xFF424242;
-    public final static int tYELLOW         = 0xFF424242;
-    public final static int tAMBER          = 0xFF424242;
+    public final static int tLIME           = 0xFF757575;
+    public final static int tYELLOW         = 0xFF757575;
+    public final static int tAMBER          = 0xFF757575;
     public final static int tORANGE         = 0xFFFFFFFF;
     public final static int tDEEP_ORANGE    = 0xFFFFFFFF;
     public final static int tBROWN          = 0xFFFFFFFF;

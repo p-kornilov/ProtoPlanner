@@ -13,10 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
+import com.vividprojects.protoplanner.CoreData.Label;
+import com.vividprojects.protoplanner.Interface.LabelsActivity;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Display;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import static android.view.View.GONE;
 
@@ -25,26 +30,25 @@ import static android.view.View.GONE;
  */
 @RemoteViews.RemoteView
 public class ChipsLayout extends ViewGroup {
-    /** The amount of space used by children in the left gutter. */
-    private int mLeftWidth;
+    public static final int MODE_FULL = 0;
+    public static final int MODE_NON_TOUCH = 1;
+    public static final int MODE_SMALL = 2;
+    public static final int MODE_NONE = 3;
 
-    private Chip noneChip;   // TODO Сделать автоматом
+    private Chip noneChip;
 
-    /** The amount of space used by children in the right gutter. */
-    private int mRightWidth;
-
-    /** These are used for computing child frames based on their gravity. */
-    private final Rect mTmpContainerRect = new Rect();
-    private final Rect mTmpChildRect = new Rect();
+    private boolean selectedSort = false;
+    private boolean nameSort = false;
 
     private final int item_padding = Display.calc_pixels(4);
     private final int item_shift = Display.calc_pixels(4);
 
-    private int mWidth = 0;
-    private int mHeight = 0;
+    private int mode = MODE_FULL;
+    private List<LabelHolder> labels;
 
     public ChipsLayout(Context context) {
         super(context);
+        labels = new ArrayList<>();
     }
 
     public ChipsLayout(Context context, AttributeSet attrs) {
@@ -53,40 +57,145 @@ public class ChipsLayout extends ViewGroup {
 
     public ChipsLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        labels = new ArrayList<>();
     }
 
-    /**
-     * Any layout manager that doesn't scroll will want this.
-     */
+    public void setMode(int mode){
+        this.mode = mode;
+    }
+
+    public void setData(List<Label.Plain> labels, Set<String> selected) {
+        this.labels.clear();
+
+        removeAllViews();
+
+        if (mode == MODE_FULL) {
+            noneChip = new Chip(getContext());
+            noneChip.setData(null, MODE_NONE);
+            noneChip.setVisibility(GONE);
+            addView(noneChip);
+        }
+
+        for (Label.Plain label : labels) {
+            Chip chip = new Chip(getContext());
+            if (selected!=null)
+                chip.setData(label,mode,selected.contains(label.id));
+            else
+                chip.setData(label,mode);
+            addView(chip);
+//            this.labels.add(LabelHolder.getHolder(label.name,isSelected));
+        }
+    }
+
+    public void moveChild(int from, int to){
+        View child = this.getChildAt(from);
+        detachViewFromParent(from);
+        attachViewToParent(child,to,child.getLayoutParams());
+        //requestLayout();
+    }
+
+    public void setFilter(String filter){
+        int count = getChildCount();
+        for (int i = count-1; i >= 0; i--) {
+            Chip child = (Chip) getChildAt(i);
+            if (child.matchFilter(filter))
+                child.setVisibility(VISIBLE);
+            else
+                child.setVisibility(GONE);
+        }
+        invalidate();
+    }
+
+    public void setSelectedSort(boolean sort){
+        selectedSort = sort;
+        if (selectedSort) {
+//            ArrayList<Integer> selected = new ArrayList<>();
+            int countSelected = 0;
+            int childCount = getChildCount();
+            for (int i=0; i < childCount; i++) {
+                if (((Chip)getChildAt(i)).isLabelSelected()) {
+                    moveChild(i,countSelected);
+                    countSelected++;
+//                    selected.add(i);
+
+                }
+            }
+            requestLayout();
+        }
+    }
+
+    public void setNameSort(boolean sort){
+        nameSort = sort;
+        if (nameSort) {
+            int childCount = getChildCount();
+/*            String array[] = new String[childCount];
+            ArrayList<String> oldholder = new ArrayList<>();
+            for (int i=0; i < childCount; i++) {
+                array[i] = ((Chip)getChildAt(i)).getTitle();
+                oldholder.add(array[i]);
+            }
+            Arrays.sort(array);
+
+            for (int i=0; i < childCount; i++) {
+                int curPos = oldholder.indexOf(array[i]);
+                moveChild(curPos,i);
+                oldholder.add(i,array[i].);
+                oldholder.remove(curPos+1);
+            }*/
+            //String array[] = new String[childCount];
+            LabelHolder[] oldholder = new LabelHolder[childCount];
+            String[] test = new String[childCount];
+            for (int i=0; i < childCount; i++) {
+                String t = ((Chip)getChildAt(i)).getTitle();
+                oldholder[i] = LabelHolder.getHolder(t,i);
+                test[i] = t;
+            }
+
+            Arrays.sort(oldholder,(x, y)->{
+                return x.name.compareTo(y.name);
+            });
+
+            ArrayList<LabelHolder> ahl = new ArrayList<>();
+            for (int i=0; i < childCount; i++) {
+                int curPos = oldholder[i].position;
+                moveChild(curPos,i);
+                LabelHolder temp = LabelHolder.getHolder(oldholder[curPos].name,oldholder[curPos].position);
+                for (int k=0;k<childCount;k++) {
+                    if (oldholder[k].position>=i && oldholder[k].position<curPos) oldholder[k].position++;
+                    // = oldholder[k-1].position;
+//                    oldholder[k].name = oldholder[k-1].name;
+                }
+                //oldholder[i].position = temp.position;
+//                oldholder[i].name = temp.name;
+            }
+
+            if (selectedSort)
+                setSelectedSort(true);
+            else
+                requestLayout();
+        }
+    }
+
+    public void chipSelected() {
+        if (selectedSort)
+            setSelectedSort(true);
+    }
+
     @Override
     public boolean shouldDelayChildPressedState() {
         return false;
     }
 
-    /**
-     * Ask all children to measure themselves and compute the measurement of this
-     * layout based on the children.
-     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int count = getChildCount();
-        // These keep track of the space we are using on the left and right for
-        // views positioned there; we need member variables so we can also use
-        // these for layout later.
-        mLeftWidth = 0;
-        mRightWidth = 0;
-
-        // Measurement will ultimately be computing these values.
         int maxHeight = 0;
         int maxWidth = 0;
         int childState = 0;
 
         if (noneChip!=null)
             noneChip.setVisibility(GONE);
-
-        // Iterate through all children, measuring them and computing our dimensions
-        // from their size.
 
         int[] widthList = new int[count];
         int[] heightList = new int[count];
@@ -99,40 +208,18 @@ public class ChipsLayout extends ViewGroup {
             visibilityList[i] = GONE;
             if (child.getVisibility() != GONE) {
                 emptyChips = false;
-                // Measure the child.
                 child.measure(0,0);
-                //measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
-
-                // Update our size information based on the layout params.  Children
-                // that asked to be positioned on the left or right go in those gutters.
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-//                if (lp.position == LayoutParams.POSITION_LEFT) {
-//                    mLeftWidth += Math.max(maxWidth,
-//                            child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
-//                } else if (lp.position == LayoutParams.POSITION_RIGHT) {
-//                    mRightWidth += Math.max(maxWidth,
-//                            child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
-//                } else {
-//                    maxWidth = Math.max(maxWidth,
-//                            child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
-//                }
                 widthList[i] = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin + item_padding*2;
                 heightList[i] = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin  + item_padding*2;
                 visibilityList[i] = VISIBLE;
-//                childState = combineMeasuredStates(childState, child.getMeasuredState());
             }
         }
 
-        // Total width is the maximum width of all inner children plus the gutters.
-//        maxWidth += mLeftWidth + mRightWidth;
-
-        // Check against our minimum height and width
-
-//        maxWidth = Math.max(maxWidth, getSuggestedMinimumWidth());
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
-        maxWidth = widthSize;// - getPaddingStart() - getPaddingEnd();
+        maxWidth = widthSize - getPaddingStart() - getPaddingEnd();
 
         if (!emptyChips) {
             int curWidth = 0;
@@ -144,8 +231,6 @@ public class ChipsLayout extends ViewGroup {
                         maxHeight = heightList[i];
                         firstReal = false;
                     }
-
-                    Log.d("Test", "Child width - " + widthList[i]);
 
                     if (curWidth + widthList[i] > maxWidth) {
                         maxHeight += heightList[i];
@@ -163,52 +248,21 @@ public class ChipsLayout extends ViewGroup {
         }
 
         maxHeight += getPaddingBottom() + getPaddingTop();
-
         maxHeight = Math.max(maxHeight, getSuggestedMinimumHeight());
-
-        Log.d("Test", "Height - " + maxHeight);
-        Log.d("Test", "Width - " + maxWidth);
-        Log.d("Test", "Padding - " + getPaddingStart() + " " + getPaddingEnd());
-        Log.d("Test", "Spec - " + widthMode);
-        Log.d("Test", "Item padding - " + item_padding);
-        Log.d("Test", "------------------------------");
-
-        if (widthMode==MeasureSpec.EXACTLY) {
-            mWidth = maxWidth;
-            mHeight = maxHeight;
-        }
+        maxWidth += getPaddingStart() + getPaddingEnd();
 
         setMeasuredDimension(maxWidth,maxHeight);
-
-        // Report our final dimensions.
-//        setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState),
-//                resolveSizeAndState(maxHeight, heightMeasureSpec,
-//                        childState << MEASURED_HEIGHT_STATE_SHIFT));
-
-      //  setMeasuredDimension(getMeasuredWidth(),200);
     }
 
-    /**
-     * Position all children within this layout.
-     */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 
         final int count = getChildCount();
         int curWidth, curHeight, curLeft, curTop, maxHeight;
-
-        //get the available size of child view
         int childLeft = this.getPaddingLeft() ;
         int childTop = this.getPaddingTop();
-
-/*
-        int childRight = (mWidth==0)? this.getMeasuredWidth() - this.getPaddingRight() : mWidth;
-        int childBottom = (mHeight==0)? this.getMeasuredHeight() - this.getPaddingBottom() : mHeight;
-*/
         int childRight = this.getMeasuredWidth() - this.getPaddingRight();
         int childBottom = this.getMeasuredHeight() - this.getPaddingBottom();
-        Log.d("Test", "mWidth - " + mWidth);
-        Log.d("Test", "mHeight - " + mHeight);
         int childWidth = childRight - childLeft;
         int childHeight = childBottom - childTop;
 
@@ -219,21 +273,15 @@ public class ChipsLayout extends ViewGroup {
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
-                //Get the maximum size of the child
                 child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST),
                         MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST));
                 curWidth = child.getMeasuredWidth();
                 curHeight = child.getMeasuredHeight();
-                Log.d("Test", "Item W-H - " + curWidth + "-" + curHeight);
-                //wrap is reach to the end
                 if (curLeft + curWidth + item_padding*2 >= childRight) {
                     curLeft = childLeft;
                     curTop += maxHeight;
                     maxHeight = 0;
                 }
-                Log.d("Test", "CurLeft - childRight - itempadding - " + curLeft + "-" + childRight + "-" + item_padding*2);
-
-                //do the layout
                 boolean elevated = false;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                     if (child.getElevation()>0) elevated = true;
@@ -242,24 +290,16 @@ public class ChipsLayout extends ViewGroup {
                 }
                 else
                     child.layout(curLeft + item_padding, curTop + item_padding, curLeft + item_padding + curWidth, curTop + item_padding + curHeight);
-                //store the max height
                 if (maxHeight < curHeight + item_padding*2)
                     maxHeight = curHeight + item_padding*2;
                 curLeft += curWidth + item_padding*2;
-
             }
         }
-
-
     }
-
-    // ----------------------------------------------------------------------
-    // The rest of the implementation is for custom per-child layout parameters.
-    // If you do not need these (for example you are writing a layout manager
-    // that does fixed positioning of its children), you can drop all of this.
 
     public void noneChip(Context ctx) {
         noneChip = new Chip(ctx,"None",Color.GRAY,false);
+        noneChip.isNone(true);
         super.addView(noneChip);
         noneChip.setVisibility(GONE);
     }
@@ -284,14 +324,7 @@ public class ChipsLayout extends ViewGroup {
         return p instanceof LayoutParams;
     }
 
-    /**
-     * Custom per-child layout information.
-     */
     public static class LayoutParams extends MarginLayoutParams {
-        /**
-         * The gravity to apply with the View to which these layout parameters
-         * are associated.
-         */
         public int gravity = Gravity.TOP | Gravity.START;
 
         public static int POSITION_MIDDLE = 0;
@@ -302,10 +335,6 @@ public class ChipsLayout extends ViewGroup {
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
-
-            // Pull the layout param values from the layout XML during
-            // inflation.  This is not needed if you don't care about
-            // changing the layout behavior in XML.
             TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.CustomLayoutLP);
             gravity = a.getInt(R.styleable.CustomLayoutLP_android_layout_gravity, gravity);
             position = a.getInt(R.styleable.CustomLayoutLP_layout_position, position);
@@ -319,5 +348,30 @@ public class ChipsLayout extends ViewGroup {
         public LayoutParams(ViewGroup.LayoutParams source) {
             super(source);
         }
+    }
+
+}
+
+class LabelHolder {
+    public String name = "";
+    public boolean selected = false;
+    public int position = 0;
+
+    LabelHolder(String name, boolean selected) {
+        this.name = name;
+        this.selected = selected;
+    }
+
+    LabelHolder(String name, int position) {
+        this.name = name;
+        this.position = position;
+    }
+
+    public static LabelHolder getHolder(String name, boolean selected) {
+        return new LabelHolder(name,selected);
+    }
+
+    public static LabelHolder getHolder(String name, int position) {
+        return new LabelHolder(name,position);
     }
 }

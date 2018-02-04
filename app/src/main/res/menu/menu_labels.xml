@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.vividprojects.protoplanner.Interface.LabelsActivity">
+    <item android:id="@+id/search"
+        android:title="Search"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item android:id="@+id/order_labels"
+        android:title="Order"
+        android:icon="@drawable/ic_sort_white_24dp"
+        app:showAsAction="always">
+        <menu >
+            <group android:checkableBehavior="all">
+                <item
+                    android:id="@+id/sort_by_name"
+                    android:title="By Name" />
+                <item
+                    android:id="@+id/sort_by_select"
+                    android:title="Selected First" />
+            </group>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu>

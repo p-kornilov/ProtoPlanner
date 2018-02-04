@@ -1,5 +1,6 @@
 package com.vividprojects.protoplanner.Widgets;
 
+import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +19,8 @@ import android.graphics.drawable.ShapeDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -32,9 +35,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Display;
 
+import static com.vividprojects.protoplanner.Widgets.ChipsLayout.MODE_FULL;
+import static com.vividprojects.protoplanner.Widgets.ChipsLayout.MODE_NONE;
+import static com.vividprojects.protoplanner.Widgets.ChipsLayout.MODE_NON_TOUCH;
+import static com.vividprojects.protoplanner.Widgets.ChipsLayout.MODE_SMALL;
 import static com.vividprojects.protoplanner.Widgets.Pallet.AMBER;
 import static com.vividprojects.protoplanner.Widgets.Pallet.BLACK;
 import static com.vividprojects.protoplanner.Widgets.Pallet.BLUE;
@@ -80,13 +88,16 @@ import static com.vividprojects.protoplanner.Widgets.Pallet.tYELLOW;
  * Created by Smile on 06.11.2017.
  */
 
-public class Chip extends RelativeLayout {
+public class Chip extends ConstraintLayout {
     View rootView;
     TextView textView;
     ImageView deleteButton;
     Context mContext;
-    LinearLayout mContent;
-    boolean type_normal = true;  // TODO Сделать везде проверку
+    ConstraintLayout mContent;
+
+    private int mode = MODE_FULL;
+    private Label.Plain label;
+    private boolean isNone = false;
 
     public Chip(Context context) {
         super(context);
@@ -98,16 +109,16 @@ public class Chip extends RelativeLayout {
         init(context);
         setTitle(title);
         setColor(color);
-        setDeleteButtonVisible(b);
+        deleteButton.setVisibility(GONE);
     }
 
     public Chip(Context context,int color, boolean type_normal) {
         super(context);
         init(context);
         setColor(color);
-        this.type_normal = type_normal;
+
         if (!type_normal) {
-            setDeleteButtonVisible(false);
+            deleteButton.setVisibility(GONE);
             textView.setText(" ");
 
             LayoutParams params = (LayoutParams) mContent.getLayoutParams();
@@ -123,39 +134,109 @@ public class Chip extends RelativeLayout {
     }
 
     private void init(Context context) {
-
         rootView = inflate(context, R.layout.chip_layout,this);
-        textView = (TextView) rootView.findViewById(R.id.textChip);
-        mContent = (LinearLayout) rootView.findViewById(R.id.content);
-
+        textView = rootView.findViewById(R.id.textChip);
+        mContent = rootView.findViewById(R.id.content);
         deleteButton = rootView.findViewById(R.id.deleteChip);
-
-/*        deleteButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {setVisibility(GONE);
-            }
-        });*/
-
-        mContent.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (deleteButton.getVisibility()==VISIBLE) {
-                    setDeleteButtonVisible(false);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        setElevation(0);
-                    }
-                }
-                else {
-                    setDeleteButtonVisible(true);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        setElevation(Display.calc_pixels(8));
-                    }
-
-                }
-            }
-        });
     }
 
+    public boolean matchFilter(String filter){
+        if (label != null)
+            return label.name.contains(filter);
+        else
+            return false;
+    }
+
+    public void isNone(boolean isNone){
+        this.isNone = isNone;
+    }
+
+    public boolean isLabelSelected() {
+        return deleteButton.getVisibility() == VISIBLE;
+    }
+
+    public void setData(Label.Plain label, int mode,boolean selected){
+        this.mode = mode;
+        this.label = label;
+        switch (mode) {
+            case MODE_FULL:
+                setColor(label.color);
+                textView.setText(label.name);
+                textView.setPadding(0,0,Display.calc_pixels(12),0);
+                if (selected)
+                    deleteButton.setVisibility(VISIBLE);
+                else
+                    deleteButton.setVisibility(GONE);
+                mContent.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (deleteButton.getVisibility()==VISIBLE)
+                            hideButton();
+                        else
+                            showButton();
+                    }
+                });
+                deleteButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        hideButton();
+                    }
+                });
+                break;
+            case MODE_NON_TOUCH:
+                setColor(label.color);
+                textView.setText(label.name);
+                textView.setPadding(0,0,Display.calc_pixels(12),0);
+                deleteButton.setVisibility(GONE);
+                mContent.setOnClickListener(null);
+                deleteButton.setOnClickListener(null);
+                break;
+            case MODE_SMALL:
+                deleteButton.setVisibility(GONE);
+                textView.setText(" ");
+                LayoutParams params = (LayoutParams) mContent.getLayoutParams();
+                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics());
+                mContent.setLayoutParams(params);
+                break;
+            case MODE_NONE:
+                deleteButton.setVisibility(GONE);
+                setColor(Color.GRAY);
+                textView.setText("None");
+                textView.setPadding(0,0,Display.calc_pixels(12),0);
+                deleteButton.setVisibility(GONE);
+                mContent.setOnClickListener(null);
+                deleteButton.setOnClickListener(null);
+        }
+    }
+
+    public void setData(Label.Plain label, int mode){
+        setData(label,mode,false);
+    }
+
+    private void hideButton(){
+        TransitionManager.beginDelayedTransition(mContent, new ChangeBounds());
+        textView.setPadding(0,0,Display.calc_pixels(12),0);
+        deleteButton.setVisibility(GONE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setElevation(0);
+        }
+
+        ((ChipsLayout)getParent()).chipSelected();
+    }
+
+    private void showButton(){
+        TransitionManager.beginDelayedTransition(mContent);
+        deleteButton.setVisibility(VISIBLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setElevation(Display.calc_pixels(8));
+        }
+        textView.setPadding(0,0,0,0);
+        ((ChipsLayout)getParent()).chipSelected();
+    }
+
+    public String getTitle(){
+        return textView.getText().toString();
+    }
 
     public void setTitle(String title) {
         textView.setText(title);
@@ -251,49 +332,15 @@ public class Chip extends RelativeLayout {
                 break;
 
         }
-/*        LayerDrawable rd = (LayerDrawable) mContent.getBackground();
-
-        GradientDrawable sd = (GradientDrawable) rd.findDrawableByLayerId(R.id.level1);
-        sd.setLevel(2);
-        sd.setVisible(true,true);
-        //sd.setColor();
-        sd.setStroke(3,color);*/
-
-        Log.d("Test", "< SET Color >");
     }
-
-    public void setDeleteButtonVisible(boolean b) {
-        if (b) {
-            deleteButton.setVisibility(VISIBLE);
-            textView.setPadding(textView.getPaddingLeft(),textView.getPaddingTop(),0,textView.getPaddingBottom());
-        } else {
-            deleteButton.setVisibility(GONE);
-            textView.setPadding(textView.getPaddingLeft(),textView.getPaddingTop(),Display.calc_pixels(8),textView.getPaddingBottom());
-        }
-    }
-
-    public void setDeleteButtonStyle(int id){
-        deleteButton.setImageResource(id);
-    }
-
-/*    @Override
-    protected void onLayout(boolean c, int l,int t, int r, int b) {
-        super.onLayout(c,l,t,r,b);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setOutlineProvider(new CustomOutline(w, h));
-        }
-        invalidate();
-    }*/
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        /// ..
         super.onSizeChanged(w,h,oldw,oldh);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setOutlineProvider(new CustomOutline(w, h));
         }
         invalidate();
-
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
