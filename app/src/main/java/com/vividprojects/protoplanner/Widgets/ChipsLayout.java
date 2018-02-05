@@ -112,16 +112,16 @@ public class ChipsLayout extends ViewGroup {
             if (nameSort)
                 nameSort();
             selectedSort();
-            invalidate();
-            requestLayout();
         }
+        invalidate();
+        requestLayout();
     }
 
     private void selectedSort() {
         int countSelected = 0;
         int childCount = getChildCount();
         for (int i=0; i < childCount; i++) {
-            if (((Chip)getChildAt(i)).isLabelSelected()) {
+            if (((Chip)getChildAt(i)).isLabelSelected()) { //TODO Заменить на Array поддерживающий состояния chip
                 moveChild(i,countSelected);
                 countSelected++;
             }
@@ -133,7 +133,7 @@ public class ChipsLayout extends ViewGroup {
         LabelHolder[] oldholder = new LabelHolder[childCount];
         String[] test = new String[childCount];
         for (int i=0; i < childCount; i++) {
-            String t = ((Chip)getChildAt(i)).getTitle();
+            String t = ((Chip)getChildAt(i)).getTitle(); //TODO Заменить на Array поддерживающий состояния chip
             oldholder[i] = LabelHolder.getHolder(t,i);
             test[i] = t;
         }
@@ -222,7 +222,7 @@ public class ChipsLayout extends ViewGroup {
                         firstReal = false;
                     }
 
-                    if (lastChecked && !checkedList[i]){
+                    if (selectedSort && lastChecked && !checkedList[i]){
                         maxHeight += heightList[i] + Display.calc_pixels(10);
                         curWidth = widthList[i];
                     } else {
@@ -275,7 +275,7 @@ public class ChipsLayout extends ViewGroup {
                         MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST));
                 curWidth = child.getMeasuredWidth();
                 curHeight = child.getMeasuredHeight();
-                if (lastChecked && !child.isLabelSelected()) {
+                if (selectedSort && lastChecked && !child.isLabelSelected()) {
                     curLeft = childLeft;
                     curTop += maxHeight + Display.calc_pixels(10);
                     maxHeight = 0;
@@ -297,7 +297,7 @@ public class ChipsLayout extends ViewGroup {
                 if (maxHeight < curHeight + item_padding*2)
                     maxHeight = curHeight + item_padding*2;
                 curLeft += curWidth + item_padding*2;
-                lastChecked = child.isLabelSelected();
+                lastChecked = child.isLabelSelected(); //TODO Заменить на Array поддерживающий состояния chip
             }
         }
     }

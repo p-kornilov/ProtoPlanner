@@ -1,5 +1,8 @@
 package com.vividprojects.protoplanner.Widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by p.kornilov on 01.02.2018.
  */
@@ -45,4 +48,124 @@ public class Pallet {
     public final static int tGREY           = 0xFFFFFFFF;
     public final static int tBLUE_GRAY      = 0xFFFFFFFF;
     public final static int tBLACK          = 0xFFFFFFFF;
+
+    public static List<Integer> getColors(){
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(RED);
+        list.add(PINK);
+        list.add(PURPLE);
+        list.add(DEEP_PURPLE);
+        list.add(INDIGO);
+        list.add(BLUE);
+        list.add(LIGHT_BLUE);
+        list.add(CYAN);
+        list.add(TEAL);
+        list.add(GREEN);
+        list.add(LIGHT_GREEN);
+        list.add(LIME);
+        list.add(YELLOW);
+        list.add(AMBER);
+        list.add(ORANGE);
+        list.add(DEEP_ORANGE);
+        list.add(BROWN);
+        list.add(GREY);
+        list.add(BLUE_GRAY);
+        list.add(BLACK);
+        return list;
+    }
+
+    public static List<Integer> getTextColors(){
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(tRED);
+        list.add(tPINK);
+        list.add(tPURPLE);
+        list.add(tDEEP_PURPLE);
+        list.add(tINDIGO);
+        list.add(tBLUE);
+        list.add(tLIGHT_BLUE);
+        list.add(tCYAN);
+        list.add(tTEAL);
+        list.add(tGREEN);
+        list.add(tLIGHT_GREEN);
+        list.add(tLIME);
+        list.add(tYELLOW);
+        list.add(tAMBER);
+        list.add(tORANGE);
+        list.add(tDEEP_ORANGE);
+        list.add(tBROWN);
+        list.add(tGREY);
+        list.add(tBLUE_GRAY);
+        list.add(tBLACK);
+        return list;
+    }
+
+    public static int getTextColor(int color){
+        int textColor;
+        switch (color) {
+            case RED:
+                textColor = tRED;
+                break;
+            case PINK:
+                textColor = tPINK;
+                break;
+            case PURPLE:
+                textColor = tPURPLE;
+                break;
+            case DEEP_PURPLE:
+                textColor = tDEEP_PURPLE;
+                break;
+            case INDIGO:
+                textColor = tINDIGO;
+                break;
+            case BLUE:
+                textColor = tBLUE;
+                break;
+            case LIGHT_BLUE:
+                textColor = tLIGHT_BLUE;
+                break;
+            case CYAN:
+                textColor = tCYAN;
+                break;
+            case TEAL:
+                textColor = tTEAL;
+                break;
+            case GREEN:
+                textColor = tGREEN;
+                break;
+            case LIGHT_GREEN:
+                textColor = tLIGHT_GREEN;
+                break;
+            case LIME:
+                textColor = tLIME;
+                break;
+            case YELLOW:
+                textColor = tYELLOW;
+                break;
+            case AMBER:
+                textColor = tAMBER;
+                break;
+            case ORANGE:
+                textColor = tORANGE;
+                break;
+            case DEEP_ORANGE:
+                textColor = tDEEP_ORANGE;
+                break;
+            case BROWN:
+                textColor = tBROWN;
+                break;
+            case GREY:
+                textColor = tGREY;
+                break;
+            case BLUE_GRAY:
+                textColor = tBLUE_GRAY;
+                break;
+            case BLACK:
+                textColor = tBLACK;
+                break;
+            default:
+                textColor = tRED;
+        }
+
+        return textColor;
+    }
 }
