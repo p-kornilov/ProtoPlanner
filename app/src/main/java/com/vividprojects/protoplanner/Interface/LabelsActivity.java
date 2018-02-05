@@ -98,7 +98,6 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 //chipsAvailable.moveChild(25,23);
-                chipsAvailable.setSelectedSort(true);
 
             }
         });
@@ -120,38 +119,13 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
 
         model.getLabels().observe(this,(labels)->{
             if (labels != null) {
-/*
-                chipsAvailable.removeAllViews();
-                chipsAvailable.noneChip(this);
-
-*/
                 chipsAvailable.setMode(ChipsLayout.MODE_FULL);
                 chipsAvailable.setData(labels,null);
-
-/*
-                for (Label.Plain label : labels) {
-                    Chip chip = new Chip(this);
-                    chip.setTitle(label.name);
-                    chip.setDeleteButtonVisible(true);
-                    chip.setDeleteButtonStyle(R.drawable.ic_check_circle_grey_24dp);
-                    chip.setColor(label.color);
-*/
-/*                    LayoutTransition t = chip.getLayoutTransition();
-                    t.enableTransitionType(LayoutTransition.CHANGING);*//*
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        chip.setElevation(Display.calc_pixels(8));
-                    }
-                    chipsAvailable.addView(chip);
-                }
-*/
             }
         });
 
         model.refreshOriginal(id);
 
-    //    chipsSelected.removeAllViews();
-    //    chipsSelected.noneChip(this);
     }
 
     private LabelsViewModel obtainViewModel() {
@@ -198,23 +172,32 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                break;
+            case R.id.sort_by_name:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    chipsAvailable.setNameSort(true);
+                } else {
+                    item.setChecked(false);
+                    chipsAvailable.setNameSort(false);
+                }
+                break;
+            case R.id.sort_by_select:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    chipsAvailable.setSelectedSort(true);
+                } else {
+                    item.setChecked(false);
+                    chipsAvailable.setSelectedSort(false);
+                }
+                break;
         }
-
-        if (id == R.id.sort_by_name) {
-            //chipsAvailable.sortByName();
-            chipsAvailable.setNameSort(true);
-        }
-
-
-        return super.onOptionsItemSelected(item);
+        return true;
+        //return super.onOptionsItemSelected(item);
     }
 
 

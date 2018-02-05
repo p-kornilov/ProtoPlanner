@@ -15,10 +15,12 @@
             <group android:checkableBehavior="all">
                 <item
                     android:id="@+id/sort_by_name"
-                    android:title="By Name" />
+                    android:title="By Name"
+                    android:checkable="true"/>
                 <item
                     android:id="@+id/sort_by_select"
-                    android:title="Selected First" />
+                    android:title="Selected First"
+                    android:checkable="true"/>
             </group>
         </menu>
     </item>

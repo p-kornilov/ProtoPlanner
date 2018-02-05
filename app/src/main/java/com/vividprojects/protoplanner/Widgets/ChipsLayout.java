@@ -109,70 +109,56 @@ public class ChipsLayout extends ViewGroup {
     public void setSelectedSort(boolean sort){
         selectedSort = sort;
         if (selectedSort) {
-//            ArrayList<Integer> selected = new ArrayList<>();
-            int countSelected = 0;
-            int childCount = getChildCount();
-            for (int i=0; i < childCount; i++) {
-                if (((Chip)getChildAt(i)).isLabelSelected()) {
-                    moveChild(i,countSelected);
-                    countSelected++;
-//                    selected.add(i);
-
-                }
-            }
+            if (nameSort)
+                nameSort();
+            selectedSort();
+            invalidate();
             requestLayout();
+        }
+    }
+
+    private void selectedSort() {
+        int countSelected = 0;
+        int childCount = getChildCount();
+        for (int i=0; i < childCount; i++) {
+            if (((Chip)getChildAt(i)).isLabelSelected()) {
+                moveChild(i,countSelected);
+                countSelected++;
+            }
+        }
+    }
+
+    private void nameSort(){
+        int childCount = getChildCount();
+        LabelHolder[] oldholder = new LabelHolder[childCount];
+        String[] test = new String[childCount];
+        for (int i=0; i < childCount; i++) {
+            String t = ((Chip)getChildAt(i)).getTitle();
+            oldholder[i] = LabelHolder.getHolder(t,i);
+            test[i] = t;
+        }
+
+        Arrays.sort(oldholder,(x, y)->{
+            return x.name.compareTo(y.name);
+        });
+
+        for (int i=0; i < childCount; i++) {
+            int curPos = oldholder[i].position;
+            moveChild(curPos,i);
+            for (int k=0;k<childCount;k++)
+                if (oldholder[k].position>=i && oldholder[k].position<curPos) oldholder[k].position++;
+
         }
     }
 
     public void setNameSort(boolean sort){
         nameSort = sort;
         if (nameSort) {
-            int childCount = getChildCount();
-/*            String array[] = new String[childCount];
-            ArrayList<String> oldholder = new ArrayList<>();
-            for (int i=0; i < childCount; i++) {
-                array[i] = ((Chip)getChildAt(i)).getTitle();
-                oldholder.add(array[i]);
-            }
-            Arrays.sort(array);
-
-            for (int i=0; i < childCount; i++) {
-                int curPos = oldholder.indexOf(array[i]);
-                moveChild(curPos,i);
-                oldholder.add(i,array[i].);
-                oldholder.remove(curPos+1);
-            }*/
-            //String array[] = new String[childCount];
-            LabelHolder[] oldholder = new LabelHolder[childCount];
-            String[] test = new String[childCount];
-            for (int i=0; i < childCount; i++) {
-                String t = ((Chip)getChildAt(i)).getTitle();
-                oldholder[i] = LabelHolder.getHolder(t,i);
-                test[i] = t;
-            }
-
-            Arrays.sort(oldholder,(x, y)->{
-                return x.name.compareTo(y.name);
-            });
-
-            ArrayList<LabelHolder> ahl = new ArrayList<>();
-            for (int i=0; i < childCount; i++) {
-                int curPos = oldholder[i].position;
-                moveChild(curPos,i);
-                LabelHolder temp = LabelHolder.getHolder(oldholder[curPos].name,oldholder[curPos].position);
-                for (int k=0;k<childCount;k++) {
-                    if (oldholder[k].position>=i && oldholder[k].position<curPos) oldholder[k].position++;
-                    // = oldholder[k-1].position;
-//                    oldholder[k].name = oldholder[k-1].name;
-                }
-                //oldholder[i].position = temp.position;
-//                oldholder[i].name = temp.name;
-            }
-
+            nameSort();
             if (selectedSort)
-                setSelectedSort(true);
-            else
-                requestLayout();
+                selectedSort();
+            invalidate();
+            requestLayout();
         }
     }
 
@@ -199,13 +185,15 @@ public class ChipsLayout extends ViewGroup {
 
         int[] widthList = new int[count];
         int[] heightList = new int[count];
+        boolean[] checkedList = new boolean[count];
         int[] visibilityList = new int[count];
         boolean emptyChips = true;
         for (int i = 0; i < count; i++) {
-            final View child = getChildAt(i);
+            final Chip child = (Chip) getChildAt(i);
             widthList[i] = 0;
             heightList[i] = 0;
             visibilityList[i] = GONE;
+            checkedList[i] = child.isLabelSelected();
             if (child.getVisibility() != GONE) {
                 emptyChips = false;
                 child.measure(0,0);
@@ -221,6 +209,8 @@ public class ChipsLayout extends ViewGroup {
 
         maxWidth = widthSize - getPaddingStart() - getPaddingEnd();
 
+        boolean lastChecked = false;
+
         if (!emptyChips) {
             int curWidth = 0;
             boolean firstReal = true;
@@ -232,12 +222,18 @@ public class ChipsLayout extends ViewGroup {
                         firstReal = false;
                     }
 
-                    if (curWidth + widthList[i] > maxWidth) {
-                        maxHeight += heightList[i];
+                    if (lastChecked && !checkedList[i]){
+                        maxHeight += heightList[i] + Display.calc_pixels(10);
                         curWidth = widthList[i];
                     } else {
-                        curWidth += widthList[i];
+                        if (curWidth + widthList[i] > maxWidth) {
+                            maxHeight += heightList[i];
+                            curWidth = widthList[i];
+                        } else {
+                            curWidth += widthList[i];
+                        }
                     }
+                    lastChecked = checkedList[i];
                 }
             }
         } else if (noneChip!=null) {
@@ -270,17 +266,25 @@ public class ChipsLayout extends ViewGroup {
         curLeft = childLeft;
         curTop = childTop;
 
+        boolean lastChecked = false;
+
         for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
+            Chip child = (Chip) getChildAt(i);
             if (child.getVisibility() != GONE) {
                 child.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST),
                         MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST));
                 curWidth = child.getMeasuredWidth();
                 curHeight = child.getMeasuredHeight();
-                if (curLeft + curWidth + item_padding*2 >= childRight) {
+                if (lastChecked && !child.isLabelSelected()) {
                     curLeft = childLeft;
-                    curTop += maxHeight;
+                    curTop += maxHeight + Display.calc_pixels(10);
                     maxHeight = 0;
+                } else {
+                    if (curLeft + curWidth + item_padding * 2 >= childRight) {
+                        curLeft = childLeft;
+                        curTop += maxHeight;
+                        maxHeight = 0;
+                    }
                 }
                 boolean elevated = false;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -293,6 +297,7 @@ public class ChipsLayout extends ViewGroup {
                 if (maxHeight < curHeight + item_padding*2)
                     maxHeight = curHeight + item_padding*2;
                 curLeft += curWidth + item_padding*2;
+                lastChecked = child.isLabelSelected();
             }
         }
     }
