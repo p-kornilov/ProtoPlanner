@@ -17,6 +17,7 @@ import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.Widgets.Pallet;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,8 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
 
     private boolean inDeletionMode = false;
     private ViewGroup parent;
-    private int progress;
+    private int lastChecked = -1;
+
 
     private List<ColorPicker> data;
   //  private LayoutInflater inflater;
@@ -40,6 +42,7 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
     private RunnableParam<Integer> onImageClick;
 
     public ColorPickerAdapter(RecordItemViewModel model) {
+        data = new ArrayList<>();
         for (int color: Pallet.getColors()) {
             data.add(new ColorPicker(color));
         }
@@ -63,6 +66,7 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
 //            holder.record_title.setText(obj.getId());
         if (obj!=null) {
             holder.root.getBackground().setColorFilter(obj.color, PorterDuff.Mode.SRC_ATOP);
+           // holder.image.setVisibility(View.VISIBLE);
             if (obj.checked)
                 holder.image.setVisibility(View.VISIBLE);
             else
@@ -110,7 +114,13 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
     }
 
     private void selected(int position){
-
+        if (lastChecked != position) {
+            data.get(position).checked = true;
+            if (lastChecked != -1)
+                data.get(lastChecked).checked = false;
+            lastChecked = position;
+            notifyDataSetChanged();
+        }
     }
 }
 

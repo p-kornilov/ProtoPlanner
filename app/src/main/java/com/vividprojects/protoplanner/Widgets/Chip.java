@@ -138,6 +138,9 @@ public class Chip extends ConstraintLayout {
         textView = rootView.findViewById(R.id.textChip);
         mContent = rootView.findViewById(R.id.content);
         deleteButton = rootView.findViewById(R.id.deleteChip);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setElevation(Display.calc_pixels(8));
+        }
     }
 
     public boolean matchFilter(String filter){
@@ -217,9 +220,11 @@ public class Chip extends ConstraintLayout {
         TransitionManager.beginDelayedTransition(mContent, new ChangeBounds());
         textView.setPadding(0,0,Display.calc_pixels(12),0);
         deleteButton.setVisibility(GONE);
+/*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setElevation(0);
         }
+*/
 
         ((ChipsLayout)getParent()).chipSelected();
     }
@@ -227,9 +232,11 @@ public class Chip extends ConstraintLayout {
     private void showButton(){
         TransitionManager.beginDelayedTransition(mContent);
         deleteButton.setVisibility(VISIBLE);
+/*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setElevation(Display.calc_pixels(8));
         }
+*/
         textView.setPadding(0,0,0,0);
         ((ChipsLayout)getParent()).chipSelected();
     }

@@ -14,7 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
+import com.vividprojects.protoplanner.Adapters.ColorPickerAdapter;
 import com.vividprojects.protoplanner.Adapters.LabelsDialogListAdapter;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
@@ -34,6 +36,7 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
     private RecyclerView recycler;
 
     private RecordItemViewModel model;
+    private TextView labelName;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -49,6 +52,9 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
         View v = inflater.inflate(R.layout.add_label_dialog, null);
 
         recycler = v.findViewById(R.id.ald_color_picker);
+        labelName = v.findViewById(R.id.ald_name);
+
+        labelName.setSelected(false);
 
 //        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
@@ -90,6 +96,8 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
         recycler.setLayoutManager(layoutManager);
         //recycler.setNestedScrollingEnabled(false);
         recycler.setFocusable(false);
+
+        recycler.setAdapter(new ColorPickerAdapter(null));
 
 /*        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 

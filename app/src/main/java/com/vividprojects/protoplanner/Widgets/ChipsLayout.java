@@ -41,7 +41,7 @@ public class ChipsLayout extends ViewGroup {
     private boolean nameSort = false;
 
     private final int item_padding = Display.calc_pixels(4);
-    private final int item_shift = Display.calc_pixels(4);
+    private final int item_shift = 0;//Display.calc_pixels(4);
 
     private int mode = MODE_FULL;
     private List<LabelHolder> labels;

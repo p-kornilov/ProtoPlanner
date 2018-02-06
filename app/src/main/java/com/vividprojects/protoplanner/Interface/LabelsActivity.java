@@ -95,10 +95,9 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                //chipsAvailable.moveChild(25,23);
-
+                CreateLabelDialog dialog = new CreateLabelDialog();
+                //dialog.setTarget(RecordItemFragment.this,REQUEST_LABELS_SET);
+                dialog.show(getSupportFragmentManager(),"Create Label");
             }
         });
 
