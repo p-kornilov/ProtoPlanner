@@ -1,6 +1,7 @@
 package com.vividprojects.protoplanner.DI;
 
 import com.vividprojects.protoplanner.Interface.BlockListFragment;
+import com.vividprojects.protoplanner.Interface.CreateLabelDialog;
 import com.vividprojects.protoplanner.Interface.ImageViewFragment;
 import com.vividprojects.protoplanner.Interface.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
@@ -29,6 +30,9 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract SelectTagsDialog contributeSelectTagsDialog();
+
+    @ContributesAndroidInjector
+    abstract CreateLabelDialog contributeCreateLabelDialog();
 
  /*   @ContributesAndroidInjector
     abstract UserFragment contributeUserFragment();

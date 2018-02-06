@@ -1,6 +1,7 @@
 package com.vividprojects.protoplanner.Adapters;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,25 +61,12 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
         holder.data = obj;
         //noinspection ConstantConditions
 //            holder.record_title.setText(obj.getId());
-        if (!obj.equals("")) {
-            GlideApp.with(holder.image)
-                    .load(new File(obj))
-                    .error(R.drawable.ic_error_outline_black_24dp)
-                    .into(holder.image);
-            holder.circlePBar.setVisibility(ProgressBar.INVISIBLE);
-            holder.horisontalPBar.setVisibility(ProgressBar.INVISIBLE);
-        } else {
-//            holder.circlePBar.setVisibility(ProgressBar.VISIBLE);
-            if (inLoadingState) {
-                holder.image.setImageResource(0);
-                holder.horisontalPBar.setVisibility(ProgressBar.VISIBLE);
-                holder.circlePBar.setVisibility(ProgressBar.INVISIBLE);
-                holder.horisontalPBar.setProgress(progress);
-            } else {
-                holder.image.setImageResource(0);
-                holder.horisontalPBar.setVisibility(ProgressBar.INVISIBLE);
-                holder.circlePBar.setVisibility(ProgressBar.VISIBLE);
-            }
+        if (obj!=null) {
+            holder.root.getBackground().setColorFilter(obj.color, PorterDuff.Mode.SRC_ATOP);
+            if (obj.checked)
+                holder.image.setVisibility(View.VISIBLE);
+            else
+                holder.image.setVisibility(View.GONE);
         }
     }
 
