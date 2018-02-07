@@ -220,7 +220,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
 /*                    SelectTagsDialog dialog = new SelectTagsDialog();
                     dialog.setTargetFragment(RecordItemFragment.this,REQUEST_LABELS_SET);
                     dialog.show(getFragmentManager(),"Labels_dialog");*/
-                    navigationController.openLabels(model.getRecordItemID().getValue().toString());
+                    //navigationController.openLabels(model.getRecordItemID().getValue().toString());
+                    navigationController.openLabelsForResult(model.getRecordItemID().getValue().toString(),getActivity(),10);
                 }
             });
 

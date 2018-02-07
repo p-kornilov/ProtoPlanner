@@ -37,6 +37,7 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
 
     private RecordItemViewModel model;
     private TextView labelName;
+    private ColorPickerAdapter colorPickerAdapter;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -56,6 +57,8 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
 
         labelName.setSelected(false);
 
+        setRetainInstance(true);
+
 //        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
         // Inflate and set the layout for the dialog
@@ -74,7 +77,10 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
                         }
                         intent.putExtra("LABELS", selectedLabels);
                         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+
 */
+                        ((GetLabelInterface) getActivity()).returnLabel(labelName.getText().toString(),colorPickerAdapter.getColor());
+
                         CreateLabelDialog.this.getDialog().cancel();
 
                     }
@@ -97,7 +103,9 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
         //recycler.setNestedScrollingEnabled(false);
         recycler.setFocusable(false);
 
-        recycler.setAdapter(new ColorPickerAdapter(null));
+        colorPickerAdapter = new ColorPickerAdapter(null);
+
+        recycler.setAdapter(colorPickerAdapter);
 
 /*        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 

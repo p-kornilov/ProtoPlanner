@@ -28,16 +28,22 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/ald_color_picker"
+    <android.support.v4.widget.NestedScrollView
+        android:fitsSystemWindows="true"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
-        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/ald_text_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ald_color_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false" />
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.constraint.ConstraintLayout>

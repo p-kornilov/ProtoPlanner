@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -105,6 +106,17 @@ public class NavigationController {
         }
         intent.putExtra("RECORD_ID",record);
         context.startActivity(intent);
+    }
+
+    public static void openLabelsForResult(String record, FragmentActivity context, int requestCode) {
+        Intent intent;
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context, LabelsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context, LabelsActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        intent.putExtra("RECORD_ID",record);
+        context.startActivityForResult(intent,requestCode);
     }
 
     public String getType() {

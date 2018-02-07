@@ -30,6 +30,7 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
     private boolean inDeletionMode = false;
     private ViewGroup parent;
     private int lastChecked = -1;
+    private int currentColor = -1;
 
 
     private List<ColorPicker> data;
@@ -79,6 +80,10 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
         return data.size();
     }
 
+    public int getColor() {
+        return currentColor;
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         View root;
@@ -116,6 +121,7 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
     private void selected(int position){
         if (lastChecked != position) {
             data.get(position).checked = true;
+            currentColor = data.get(position).color;
             if (lastChecked != -1)
                 data.get(lastChecked).checked = false;
             lastChecked = position;

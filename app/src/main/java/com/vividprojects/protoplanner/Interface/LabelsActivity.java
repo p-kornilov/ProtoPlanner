@@ -44,7 +44,7 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 import static java.security.AccessController.getContext;
 
-public class LabelsActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class LabelsActivity extends AppCompatActivity implements HasSupportFragmentInjector, GetLabelInterface {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -57,6 +57,8 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
     private Fragment mViewModelHolder;
     private LabelsViewModel model;
     private CardView card;
+
+    private boolean startedForResult = false;
 
     private ChipsLayout chipsAvailable;
 
@@ -87,6 +89,9 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         int h = heightPixels - toolBarHeight - statusBarHeight;
         if (h>card.getHeight()) card.setMinimumHeight(h);
 
+        if (getCallingActivity() != null)
+            startedForResult = true;
+
 /*
 
 */
@@ -100,6 +105,11 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 dialog.show(getSupportFragmentManager(),"Create Label");
             }
         });
+
+        if (startedForResult)
+            fab.setImageResource(R.drawable.ic_check_white_24dp);
+        else
+            fab.setImageResource(R.drawable.ic_add_white_24dp);
 
         LayoutTransition transition = chipsAvailable.getLayoutTransition();
         transition.enableTransitionType(LayoutTransition.CHANGING);
@@ -204,4 +214,13 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingAndroidInjector;
     }
+
+    public void returnLabel(String name, int color) {
+        String n = name;
+        int c = color;
+    }
+}
+
+interface GetLabelInterface {
+    public void returnLabel(String name, int color);
 }
