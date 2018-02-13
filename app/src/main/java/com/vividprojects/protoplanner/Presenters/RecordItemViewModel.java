@@ -24,8 +24,10 @@ import com.vividprojects.protoplanner.Utils.SingleEventTransformations;
 import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -130,6 +132,11 @@ public class RecordItemViewModel extends ViewModel {
 
     public LiveData<List<Label.Plain>> getLabels() {
         return dataRepository.getLabels(labels);
+    }
+
+    public void setLabels(String[] ids) {
+        dataRepository.saveLabelsForRecord(recordItemId.getValue(),ids);
+        recordItemId.setValue(recordItemId.getValue());
     }
 
 }

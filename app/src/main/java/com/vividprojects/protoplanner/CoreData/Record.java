@@ -103,6 +103,11 @@ public class Record extends RealmObject{
 
     public boolean addLabel(Label l) { return labels.add(l);}
 
+    public boolean setLebels(List<Label> labels) {
+        this.labels.clear();
+        return this.labels.addAll(labels);
+    }
+
     public boolean removeLabel(Label l) { return labels.remove(l); }
 
     public boolean removeLabel(int i) {

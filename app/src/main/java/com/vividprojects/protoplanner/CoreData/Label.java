@@ -71,7 +71,15 @@ public class Label extends RealmObject {
         return plain;
     }
 
-    public class Plain {
+    public static Plain getPlain(int color, String name, String id){
+        Plain plain = new Plain();
+        plain.color = color;
+        plain.name = name;
+        plain.id = id;
+        return plain;
+    }
+
+    public static class Plain {
         public String name;
         public int color;
         public String id;

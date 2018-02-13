@@ -10,6 +10,12 @@
 <!--        <item name="android:colorBackground">@color/white</item>-->
     </style>
 
+    <style name="AppTheme.Settings" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/white</item>
+        <!--        <item name="android:colorBackground">@color/white</item>-->
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

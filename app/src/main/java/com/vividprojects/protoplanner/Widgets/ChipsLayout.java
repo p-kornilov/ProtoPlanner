@@ -20,6 +20,7 @@ import com.vividprojects.protoplanner.Utils.Display;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,6 +36,12 @@ public class ChipsLayout extends ViewGroup {
     public static final int MODE_SMALL = 2;
     public static final int MODE_NONE = 3;
 
+    private static final int arrayLength = 50;
+    int[] widthList = new int[arrayLength];
+    int[] heightList = new int[arrayLength];
+    boolean[] checkedList = new boolean[arrayLength];
+    int[] visibilityList = new int[arrayLength];
+
     private Chip noneChip;
 
     private boolean selectedSort = false;
@@ -44,7 +51,8 @@ public class ChipsLayout extends ViewGroup {
     private final int item_shift = 0;//Display.calc_pixels(4);
 
     private int mode = MODE_FULL;
-    private List<LabelHolder> labels;
+    private List<Label.Plain> labels;
+    private Set<String> selected;
 
     public ChipsLayout(Context context) {
         super(context);
@@ -58,14 +66,16 @@ public class ChipsLayout extends ViewGroup {
     public ChipsLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         labels = new ArrayList<>();
+        selected = new HashSet<>();
     }
 
     public void setMode(int mode){
         this.mode = mode;
     }
 
-    public void setData(List<Label.Plain> labels, Set<String> selected) {
+    public void setData(List<Label.Plain> labels, String[] selected) {
         this.labels.clear();
+        this.selected.clear();
 
         removeAllViews();
 
@@ -74,12 +84,19 @@ public class ChipsLayout extends ViewGroup {
             noneChip.setData(null, MODE_NONE);
             noneChip.setVisibility(GONE);
             addView(noneChip);
+            this.labels.add(Label.getPlain(0,"None","0"));
         }
 
+        this.labels.addAll(labels);
+        if (selected!=null) {
+            for (int i=0; i < selected.length; i++)
+                this.selected.add(selected[i]);
+        }
+        
         for (Label.Plain label : labels) {
             Chip chip = new Chip(getContext());
             if (selected!=null)
-                chip.setData(label,mode,selected.contains(label.id));
+                chip.setData(label,mode,this.selected.contains(label.id));
             else
                 chip.setData(label,mode);
             addView(chip);
@@ -91,6 +108,7 @@ public class ChipsLayout extends ViewGroup {
         View child = this.getChildAt(from);
         detachViewFromParent(from);
         attachViewToParent(child,to,child.getLayoutParams());
+        labels.add(to,labels.remove(from));
         //requestLayout();
     }
 
@@ -119,9 +137,8 @@ public class ChipsLayout extends ViewGroup {
 
     private void selectedSort() {
         int countSelected = 0;
-        int childCount = getChildCount();
-        for (int i=0; i < childCount; i++) {
-            if (((Chip)getChildAt(i)).isLabelSelected()) { //TODO Заменить на Array поддерживающий состояния chip
+        for (int i=0; i < labels.size(); i++) {
+            if (selected.contains(labels.get(i).id)) {
                 moveChild(i,countSelected);
                 countSelected++;
             }
@@ -129,11 +146,11 @@ public class ChipsLayout extends ViewGroup {
     }
 
     private void nameSort(){
-        int childCount = getChildCount();
+        int childCount = labels.size();
         LabelHolder[] oldholder = new LabelHolder[childCount];
         String[] test = new String[childCount];
         for (int i=0; i < childCount; i++) {
-            String t = ((Chip)getChildAt(i)).getTitle(); //TODO Заменить на Array поддерживающий состояния chip
+            String t = labels.get(i).name;
             oldholder[i] = LabelHolder.getHolder(t,i);
             test[i] = t;
         }
@@ -162,9 +179,30 @@ public class ChipsLayout extends ViewGroup {
         }
     }
 
-    public void chipSelected() {
+    public void chipSelected(String id) {
+        selected.add(id);
         if (selectedSort)
             setSelectedSort(true);
+    }
+
+    public void chipUnSelected(String id) {
+        selected.remove(id);
+        if (selectedSort)
+            setSelectedSort(true);
+    }
+
+    public String[] getSelected(){
+        String[] rlist = new String[selected.size()];
+        selected.toArray(rlist);
+        return rlist;
+    }
+
+    public String[] getAllLabels(){
+        int size = labels.size();
+        String[] rlist = new String[size];
+        for (int i = 0; i < size; i++)
+            rlist[i] = labels.get(i).id;
+        return rlist;
     }
 
     @Override
@@ -183,10 +221,13 @@ public class ChipsLayout extends ViewGroup {
         if (noneChip!=null)
             noneChip.setVisibility(GONE);
 
-        int[] widthList = new int[count];
-        int[] heightList = new int[count];
-        boolean[] checkedList = new boolean[count];
-        int[] visibilityList = new int[count];
+        if (count>arrayLength) {
+            widthList = new int[count];
+            heightList = new int[count];
+            checkedList = new boolean[count];
+            visibilityList = new int[count];
+        }
+
         boolean emptyChips = true;
         for (int i = 0; i < count; i++) {
             final Chip child = (Chip) getChildAt(i);

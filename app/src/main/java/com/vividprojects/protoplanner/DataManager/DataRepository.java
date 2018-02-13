@@ -291,6 +291,10 @@ public class DataRepository {
         return labels;
     }
 
+    public void saveLabelsForRecord(String recordItemId,String[] ids) {
+        localDataDB.saveLabelsForRecord(recordItemId,ids);
+    };
+
 /*    public LiveData<Resource<String>> loadVariantImages(String title) {
         return new NetworkBoundResource<String, String>(appExecutors) {
             @Override

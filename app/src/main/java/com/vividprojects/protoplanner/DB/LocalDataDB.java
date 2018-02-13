@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.DB;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.RelativeLayout;
 
 import com.vividprojects.protoplanner.CoreData.Block;
 import com.vividprojects.protoplanner.CoreData.Currency;
@@ -270,6 +271,17 @@ public class LocalDataDB {
             public void execute(Realm realm) {
                 Variant v = realm.where(Variant.class).contains("title",variant).findFirst();
                 v.addImage(image);
+            }
+        });
+    }
+
+    public void saveLabelsForRecord(String recordId, String[] ids) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Record r = realm.where(Record.class).contains("id",recordId).findFirst();
+                RealmResults<Label> labels = realm.where(Label.class).in("id",ids).findAll();
+                r.setLebels(labels);
             }
         });
     }

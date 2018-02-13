@@ -3,9 +3,13 @@ package com.vividprojects.protoplanner.Interface;
 import android.animation.LayoutTransition;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -92,17 +96,19 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         if (getCallingActivity() != null)
             startedForResult = true;
 
-/*
-
-*/
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreateLabelDialog dialog = new CreateLabelDialog();
-                //dialog.setTarget(RecordItemFragment.this,REQUEST_LABELS_SET);
-                dialog.show(getSupportFragmentManager(),"Create Label");
+                if (startedForResult) {
+                    Intent intent = new Intent();
+                    intent.putExtra("SELECTED", chipsAvailable.getSelected());
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    openNewLabelDialog();
+                }
+
             }
         });
 
@@ -126,15 +132,23 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         if (model==null)
             model = ViewModelProviders.of(this,viewModelFactory).get(LabelsViewModel.class);
 
+        String[] selectedArray = getIntent().getStringArrayExtra("SELECTED");
+
         model.getLabels().observe(this,(labels)->{
             if (labels != null) {
                 chipsAvailable.setMode(ChipsLayout.MODE_FULL);
-                chipsAvailable.setData(labels,null);
+                chipsAvailable.setData(labels,selectedArray);
             }
         });
 
         model.refreshOriginal(id);
 
+    }
+
+    private void openNewLabelDialog() {
+        CreateLabelDialog dialog = new CreateLabelDialog();
+        //dialog.setTarget(RecordItemFragment.this,REQUEST_LABELS_SET);
+        dialog.show(getSupportFragmentManager(),"Create Label");
     }
 
     private LabelsViewModel obtainViewModel() {
@@ -175,6 +189,15 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 return true;
             }
         });
+
+        MenuItem selsort = menu.findItem(R.id.sort_by_select);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean selectedChecked = sharedPref.getBoolean("general_selected_sort", false); // TODO Перенести в отдельный singleton
+        if (selectedChecked) {
+            selsort.setChecked(selectedChecked);
+            chipsAvailable.setSelectedSort(true);
+        }
 
         return true;
     }

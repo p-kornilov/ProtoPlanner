@@ -1,19 +1,14 @@
 package com.vividprojects.protoplanner.Interface;
 
 import android.Manifest;
-import android.app.Dialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -27,7 +22,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,40 +30,25 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
-import com.vividprojects.protoplanner.Adapters.ShopsAdapter;
 import com.vividprojects.protoplanner.CoreData.Label;
-import com.vividprojects.protoplanner.CoreData.Record;
-import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
-import com.vividprojects.protoplanner.Network.NetworkLoader;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
-import com.vividprojects.protoplanner.Widgets.HorizontalImages;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
 
 import javax.inject.Inject;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -93,7 +72,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     @Inject
     NavigationController navigationController;
 
-    ChipsLayout chl;
+    private ChipsLayout labelsLayout;
 //    private Realm realm;
     private boolean inCommentEdit = false;
     private ViewSwitcher commentSwitcher;
@@ -162,7 +141,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
             shopsRecycler.setNestedScrollingEnabled(false);
             shopsRecycler.setFocusable(false);
 
-            chl = v.findViewById(R.id.chipLayout);
+            labelsLayout = v.findViewById(R.id.chipLayout);
 
             imagesRecycler = (RecyclerView) v.findViewById(R.id.ai_images);
             RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -221,7 +200,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     dialog.setTargetFragment(RecordItemFragment.this,REQUEST_LABELS_SET);
                     dialog.show(getFragmentManager(),"Labels_dialog");*/
                     //navigationController.openLabels(model.getRecordItemID().getValue().toString());
-                    navigationController.openLabelsForResult(model.getRecordItemID().getValue().toString(),getActivity(),10);
+                    int i = 1;
+                    navigationController.openLabelsForResult(labelsLayout.getAllLabels(),RecordItemFragment.this,REQUEST_LABELS_SET);
                 }
             });
 
@@ -326,6 +306,12 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     model.loadImage(url);
                 }
                 return;
+            case REQUEST_LABELS_SET:
+                if (resultCode == RESULT_OK && data != null) {
+                    String[] t = data.getStringArrayExtra("SELECTED");
+                    model.setLabels(data.getStringArrayExtra("SELECTED"));
+                }
+                return;
         }
     }
 
@@ -350,16 +336,21 @@ public class RecordItemFragment extends Fragment implements Injectable {
             model.getRecordItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
                     commentView.setText(resource.data.comment);
-                    chl.removeAllViews();
-                    chl.noneChip(getContext());
+/*
+                    labelsLayout.removeAllViews();
+                    labelsLayout.noneChip(getContext());
 
                     for (Label.Plain label : resource.data.labels) {
                         Chip chip = new Chip(getContext());
                         chip.setTitle(label.name);
                         chip.setColor(label.color);
                     //    chip.setDeleteButtonVisible(false);
-                        chl.addView(chip);
+                        labelsLayout.addView(chip);
                     }
+*/
+
+                    labelsLayout.setMode(ChipsLayout.MODE_NON_TOUCH);
+                    labelsLayout.setData(resource.data.labels,null);
                 }
             });
 

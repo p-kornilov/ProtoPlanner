@@ -68,6 +68,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity
+            android:name=".Interface.SettingsActivity"
+            android:label="Settings"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.Settings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 <!--                <activity
                     android:name=".Interface.RecordActivity"
                     android:label="@string/app_name"

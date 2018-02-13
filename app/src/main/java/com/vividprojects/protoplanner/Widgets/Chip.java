@@ -226,7 +226,7 @@ public class Chip extends ConstraintLayout {
         }
 */
 
-        ((ChipsLayout)getParent()).chipSelected();
+        ((ChipsLayout)getParent()).chipUnSelected(label.id);
     }
 
     private void showButton(){
@@ -238,7 +238,7 @@ public class Chip extends ConstraintLayout {
         }
 */
         textView.setPadding(0,0,0,0);
-        ((ChipsLayout)getParent()).chipSelected();
+        ((ChipsLayout)getParent()).chipSelected(label.id);
     }
 
     public String getTitle(){
