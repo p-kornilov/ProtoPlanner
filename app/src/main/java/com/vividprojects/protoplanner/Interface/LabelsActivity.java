@@ -37,6 +37,7 @@ import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Display;
+import com.vividprojects.protoplanner.Utils.Settings;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
@@ -192,10 +193,8 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
 
         MenuItem selsort = menu.findItem(R.id.sort_by_select);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean selectedChecked = sharedPref.getBoolean("general_selected_sort", false); // TODO Перенести в отдельный singleton
-        if (selectedChecked) {
-            selsort.setChecked(selectedChecked);
+        if (Settings.getGeneralSelectedSort(this)) {
+            selsort.setChecked(true);
             chipsAvailable.setSelectedSort(true);
         }
 
