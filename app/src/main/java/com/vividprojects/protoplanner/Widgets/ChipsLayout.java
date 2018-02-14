@@ -1,10 +1,12 @@
 package com.vividprojects.protoplanner.Widgets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -74,6 +76,10 @@ public class ChipsLayout extends ViewGroup {
     }
 
     public void setData(List<Label.Plain> labels, String[] selected) {
+        setData(labels,selected,null);
+    }
+
+    public void setData(List<Label.Plain> labels, String[] selected, Activity activity) {
         this.labels.clear();
         this.selected.clear();
 
@@ -92,7 +98,7 @@ public class ChipsLayout extends ViewGroup {
             for (int i=0; i < selected.length; i++)
                 this.selected.add(selected[i]);
         }
-        
+
         for (Label.Plain label : labels) {
             Chip chip = new Chip(getContext());
             if (selected!=null)
@@ -100,6 +106,8 @@ public class ChipsLayout extends ViewGroup {
             else
                 chip.setData(label,mode);
             addView(chip);
+            if (activity != null)
+                activity.registerForContextMenu(chip);
 //            this.labels.add(LabelHolder.getHolder(label.name,isSelected));
         }
     }

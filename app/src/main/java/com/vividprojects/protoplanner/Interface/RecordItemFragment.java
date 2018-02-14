@@ -414,7 +414,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
             commentEdit.setSelection(commentEdit.getText().length());
             commentEdit.requestFocus();
         } else {
-            //im.setImageResource(R.drawable.ic_edit_black_24dp);
+            //im.setImageResource(R.drawable.ic_edit_gray_24dp);
             commentView.setText(commentEdit.getText());
             commentView.requestFocus();
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

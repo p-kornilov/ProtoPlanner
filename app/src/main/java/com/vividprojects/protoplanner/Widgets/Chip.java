@@ -2,7 +2,9 @@ package com.vividprojects.protoplanner.Widgets;
 
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,6 +25,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -251,7 +254,6 @@ public class Chip extends ConstraintLayout {
 
     public void setColor(int color){
         mContent.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-
         switch (color) {
             case RED:
                 textView.setTextColor(Color.WHITE);

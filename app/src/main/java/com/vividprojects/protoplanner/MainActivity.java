@@ -147,45 +147,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if (position == 0)
-                return new BlockListFragment();
-//            return new FirstFragment();
-            else {
-                return new RecordListFragment();
-            }
-
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            CharSequence returnTitle;
-            switch (position) {
-                case 0:
-                    returnTitle = "Blocks";
-                    break;
-                case 1:
-                    returnTitle = "Apart Records";
-                    break;
-                default:
-                    returnTitle = "null";
-            }
-            return returnTitle;
-        }
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

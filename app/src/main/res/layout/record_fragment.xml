@@ -46,7 +46,7 @@
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_edit_black_24dp" />
+                app:srcCompat="@drawable/ic_edit_gray_24dp" />
 
             <ViewSwitcher
                 android:id="@+id/rf_comment_switcher"

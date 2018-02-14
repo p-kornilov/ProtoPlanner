@@ -25,10 +25,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.vividprojects.protoplanner.CoreData.Label;
@@ -66,6 +69,14 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
     private boolean startedForResult = false;
 
     private ChipsLayout chipsAvailable;
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_labels_longpress, menu);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,11 +149,14 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         model.getLabels().observe(this,(labels)->{
             if (labels != null) {
                 chipsAvailable.setMode(ChipsLayout.MODE_FULL);
-                chipsAvailable.setData(labels,selectedArray);
+                chipsAvailable.setData(labels,selectedArray,LabelsActivity.this);
             }
         });
 
         model.refreshOriginal(id);
+
+        Button pb = findViewById(R.id.button);
+       // registerForContextMenu(chipsAvailable);
 
     }
 
