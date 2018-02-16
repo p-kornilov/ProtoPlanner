@@ -27,27 +27,26 @@ import java.util.List;
 
 public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.ViewHolder> {
 
-    private boolean inDeletionMode = false;
     private ViewGroup parent;
     private int lastChecked = -1;
     private int currentColor = -1;
 
 
     private List<ColorPicker> data;
-  //  private LayoutInflater inflater;
-    private RecordItemViewModel model;
 
-    private boolean inLoadingState = false;
-    //private Context context;
-
-    private RunnableParam<Integer> onImageClick;
-
-    public ColorPickerAdapter(RecordItemViewModel model) {
+    public ColorPickerAdapter() {
         data = new ArrayList<>();
         for (int color: Pallet.getColors()) {
             data.add(new ColorPicker(color));
         }
-        this.model = model;
+    }
+
+    public void setSelectedColor(int color) {
+        for (int i=0; i<data.size(); i++)
+            if (data.get(i).color == color) {
+                selected(i);
+                break;
+            }
     }
 
     @Override

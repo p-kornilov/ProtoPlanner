@@ -30,11 +30,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.vividprojects.protoplanner.CoreData.Label;
+import com.vividprojects.protoplanner.DI.ViewModelModule;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
@@ -65,6 +67,7 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
     private Fragment mViewModelHolder;
     private LabelsViewModel model;
     private CardView card;
+    private Chip currentLongPressedChip;
 
     private boolean startedForResult = false;
 
@@ -76,6 +79,31 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_labels_longpress, menu);
+        currentLongPressedChip = (Chip)v;
+        model.setCurrentLabel(currentLongPressedChip.getChipId());
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.al_edit:
+                CreateLabelDialog dialog = new CreateLabelDialog();
+                Bundle b = new Bundle();
+                b.putInt("COLOR",currentLongPressedChip.getColor());
+                b.putString("NAME",currentLongPressedChip.getTitle());
+                dialog.setArguments(b);
+             //   dialog.setData(currentLongPressedChip.getTitle());
+                dialog.show(getSupportFragmentManager(),"Create Label");
+                return true;
+            case R.id.al_delete:
+                model.deleteCurrentLabel();
+                //chipsAvailable;
+                //deleteNote(info.id);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     @Override

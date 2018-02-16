@@ -102,6 +102,8 @@ public class Chip extends ConstraintLayout {
     private Label.Plain label;
     private boolean isNone = false;
 
+    private int color;
+
     public Chip(Context context) {
         super(context);
         init(context);
@@ -153,6 +155,10 @@ public class Chip extends ConstraintLayout {
             return false;
     }
 
+    public String getChipId() {
+        return label.id;
+    }
+
     public void isNone(boolean isNone){
         this.isNone = isNone;
     }
@@ -168,11 +174,13 @@ public class Chip extends ConstraintLayout {
             case MODE_FULL:
                 setColor(label.color);
                 textView.setText(label.name);
-                textView.setPadding(0,0,Display.calc_pixels(12),0);
-                if (selected)
+                if (selected) {
                     deleteButton.setVisibility(VISIBLE);
-                else
+                    textView.setPadding(Display.calc_pixels(12), 0, 0, 0);
+                } else {
                     deleteButton.setVisibility(GONE);
+                    textView.setPadding(Display.calc_pixels(12),0,Display.calc_pixels(12),0);
+                }
                 mContent.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -182,17 +190,31 @@ public class Chip extends ConstraintLayout {
                             showButton();
                     }
                 });
+
+                mContent.setOnLongClickListener(new OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return false;
+                    }
+                });
+
                 deleteButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         hideButton();
                     }
                 });
+                deleteButton.setOnLongClickListener(new OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return false;
+                    }
+                });
                 break;
             case MODE_NON_TOUCH:
                 setColor(label.color);
                 textView.setText(label.name);
-                textView.setPadding(0,0,Display.calc_pixels(12),0);
+                textView.setPadding(Display.calc_pixels(12),0,Display.calc_pixels(12),0);
                 deleteButton.setVisibility(GONE);
                 mContent.setOnClickListener(null);
                 deleteButton.setOnClickListener(null);
@@ -208,7 +230,7 @@ public class Chip extends ConstraintLayout {
                 deleteButton.setVisibility(GONE);
                 setColor(Color.GRAY);
                 textView.setText("None");
-                textView.setPadding(0,0,Display.calc_pixels(12),0);
+                textView.setPadding(Display.calc_pixels(12),0,Display.calc_pixels(12),0);
                 deleteButton.setVisibility(GONE);
                 mContent.setOnClickListener(null);
                 deleteButton.setOnClickListener(null);
@@ -221,7 +243,7 @@ public class Chip extends ConstraintLayout {
 
     private void hideButton(){
         TransitionManager.beginDelayedTransition(mContent, new ChangeBounds());
-        textView.setPadding(0,0,Display.calc_pixels(12),0);
+        textView.setPadding(Display.calc_pixels(12),0,Display.calc_pixels(12),0);
         deleteButton.setVisibility(GONE);
 /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -240,7 +262,7 @@ public class Chip extends ConstraintLayout {
             setElevation(Display.calc_pixels(8));
         }
 */
-        textView.setPadding(0,0,0,0);
+        textView.setPadding(Display.calc_pixels(12),0,0,0);
         ((ChipsLayout)getParent()).chipSelected(label.id);
     }
 
@@ -248,11 +270,14 @@ public class Chip extends ConstraintLayout {
         return textView.getText().toString();
     }
 
+    public int getColor() {return color;}
+
     public void setTitle(String title) {
         textView.setText(title);
     }
 
     public void setColor(int color){
+        this.color = color;
         mContent.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         switch (color) {
             case RED:

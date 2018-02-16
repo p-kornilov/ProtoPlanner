@@ -264,6 +264,16 @@ public class LocalDataDB {
 
     }
 
+    public void deleteLabel(String id) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Label v = realm.where(Label.class).contains("id",id).findFirst();
+                v.deleteFromRealm();
+            }
+        });
+    }
+
     public void addImageToVariant(String variant, String image) {
         final Integer result = 0;
         realm.executeTransaction(new Realm.Transaction() {

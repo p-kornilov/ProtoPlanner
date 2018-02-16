@@ -103,9 +103,13 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
         //recycler.setNestedScrollingEnabled(false);
         recycler.setFocusable(false);
 
-        colorPickerAdapter = new ColorPickerAdapter(null);
+        colorPickerAdapter = new ColorPickerAdapter();
+
+        Bundle b = getArguments();
+        labelName.setText(b.getString("NAME",""));
 
         recycler.setAdapter(colorPickerAdapter);
+        colorPickerAdapter.setSelectedColor(b.getInt("COLOR",-1));
 
 /*        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 

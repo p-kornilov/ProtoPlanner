@@ -295,6 +295,10 @@ public class DataRepository {
         localDataDB.saveLabelsForRecord(recordItemId,ids);
     };
 
+    public void deleteLabel(String id) {
+        localDataDB.deleteLabel(id);
+    }
+
 /*    public LiveData<Resource<String>> loadVariantImages(String title) {
         return new NetworkBoundResource<String, String>(appExecutors) {
             @Override

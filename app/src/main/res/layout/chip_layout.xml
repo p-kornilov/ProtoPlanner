@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content"
     android:layout_width="wrap_content"
     android:layout_height="32dp"
-    android:clickable="true"
-
-    android:paddingStart="12dp"
-    android:paddingEnd="4dp"
     android:background="@drawable/ripple_chip_view"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:clickable="true">
+
+        <ImageButton
+            android:id="@+id/editChip"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="4dp"
+            android:layout_marginStart="4dp"
+            android:visibility="gone"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_edit_circle_black_24dp" />
 
         <TextView
             android:id="@+id/textChip"
@@ -23,18 +32,19 @@
             android:textSize="13sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/editChip"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/deleteChip"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:paddingStart="4dp"
+            android:layout_margin="4dp"
+            android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textChip"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/textChip"
             app:srcCompat="@drawable/ic_cancel_grey_24dp" />
 </android.support.constraint.ConstraintLayout>

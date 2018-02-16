@@ -34,6 +34,8 @@ public class LabelsViewModel extends ViewModel {
     private List<Label.Plain> labels_selected;
     private final MutableLiveData<String> recordId;
 
+    private String currentLabel = "";
+
     private DataRepository dataRepository;
 
     @Inject
@@ -90,5 +92,14 @@ public class LabelsViewModel extends ViewModel {
 
     public void refreshOriginal(String id) {
         recordId.setValue(id);
+    }
+
+    public void setCurrentLabel(String id) {
+        currentLabel = new String(id);
+        int i =1;
+    }
+
+    public void deleteCurrentLabel() {
+        dataRepository.deleteLabel(currentLabel);
     }
 }
