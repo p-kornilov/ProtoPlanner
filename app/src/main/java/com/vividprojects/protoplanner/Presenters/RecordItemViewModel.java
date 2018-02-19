@@ -40,6 +40,9 @@ public class RecordItemViewModel extends ViewModel {
     private final LiveData<Resource<Record.Plain>> recordItem;
     private final LiveData<Resource<Variant.Plain>> mainVariantItem;
     private final MutableLiveData<List<Label.Plain>> labels;
+    private final MutableLiveData<String> recordNameTrigger;
+    private final LiveData<String> recordNameChange;
+    private final MediatorLiveData<String> recordName;
 
     private DataRepository dataRepository;
 
@@ -54,6 +57,12 @@ public class RecordItemViewModel extends ViewModel {
 
         this.dataRepository = dataRepository;
         recordItemId = new MutableLiveData<>();
+        recordNameTrigger = new MutableLiveData<>();
+
+        recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
+            return RecordItemViewModel.this.dataRepository.setRecordName(recordItemId.getValue(),name);
+        });
+
         recordItem = Transformations.switchMap(recordItemId, input -> {
 /*            if (input.isEmpty()) {
                 return AbsentLiveData.create();
@@ -73,6 +82,10 @@ public class RecordItemViewModel extends ViewModel {
             else return null;
         });
 
+        recordName = new MediatorLiveData<>();
+        recordName.addSource(recordNameChange,name->{recordName.setValue(name);});
+        recordName.addSource(recordItem,record->{recordName.setValue(record.data.name);});
+
         labels = new MutableLiveData<>();
 
         loadProgress = new SingleLiveEvent<>();
@@ -89,6 +102,11 @@ public class RecordItemViewModel extends ViewModel {
     public LiveData<Resource<Record.Plain>> getRecordItem() {
         return recordItem;
     }
+
+    public LiveData<String> getRecordName() {
+        return recordName;
+    }
+
     public LiveData<Resource<Variant.Plain>> getMainVariantItem() {
         return mainVariantItem;
     }
@@ -138,5 +156,14 @@ public class RecordItemViewModel extends ViewModel {
         dataRepository.saveLabelsForRecord(recordItemId.getValue(),ids);
         recordItemId.setValue(recordItemId.getValue());
     }
+
+    public void setRecordName(String name) {
+        if (Objects.equals(recordNameTrigger.getValue(), name)) {
+            return;
+        }
+        recordNameTrigger.setValue(name);
+    }
+
+
 
 }

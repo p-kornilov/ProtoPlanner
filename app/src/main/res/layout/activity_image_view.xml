@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/black"
-    tools:context="com.vividprojects.protoplanner.Interface.RecordActivity">
+    tools:context="com.vividprojects.protoplanner.Interface.Activity.RecordActivity">
 
 <!--    <ImageView
         android:id="@+id/imageView"

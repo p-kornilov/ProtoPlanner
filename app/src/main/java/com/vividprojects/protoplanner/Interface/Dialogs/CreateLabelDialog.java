@@ -1,29 +1,22 @@
-package com.vividprojects.protoplanner.Interface;
+package com.vividprojects.protoplanner.Interface.Dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.Adapters.ColorPickerAdapter;
-import com.vividprojects.protoplanner.Adapters.LabelsDialogListAdapter;
-import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
+import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
 import com.vividprojects.protoplanner.R;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,12 +25,14 @@ import javax.inject.Inject;
  */
 
 public class CreateLabelDialog extends DialogFragment implements Injectable {
-    private List<Label.Plain> labels;
     private RecyclerView recycler;
 
-    private RecordItemViewModel model;
     private TextView labelName;
     private ColorPickerAdapter colorPickerAdapter;
+
+    private LabelsViewModel model;
+
+    private String editId = "";
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -69,20 +64,12 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-/*
-                        Intent intent = new Intent();
-                        String[] selectedLabels = new String[labels.size()];
-                        for (Label.Plain label : labels) {
-                            //selectedLabels[]
-                        }
-                        intent.putExtra("LABELS", selectedLabels);
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-
-*/
-                        ((GetLabelInterface) getActivity()).returnLabel(labelName.getText().toString(),colorPickerAdapter.getColor());
+                        if (!editId.equals(""))
+                            model.editLabel(labelName.getText().toString(),colorPickerAdapter.getColor(),editId);
+                        else
+                            model.newLabel(labelName.getText().toString(),colorPickerAdapter.getColor());
 
                         CreateLabelDialog.this.getDialog().cancel();
-
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -104,17 +91,15 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
         recycler.setFocusable(false);
 
         colorPickerAdapter = new ColorPickerAdapter();
+        recycler.setAdapter(colorPickerAdapter);
 
         Bundle b = getArguments();
-        labelName.setText(b.getString("NAME",""));
+        if ( b!= null) {
+            labelName.setText(b.getString("NAME", ""));
+            colorPickerAdapter.setSelectedColor(b.getInt("COLOR", -1));
+            editId = b.getString("ID","");
+        }
 
-        recycler.setAdapter(colorPickerAdapter);
-        colorPickerAdapter.setSelectedColor(b.getInt("COLOR",-1));
-
-/*        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
-
-        model.getLabels().observe(getActivity(),(labels)->{
-            recycler.setAdapter(new LabelsDialogListAdapter(labels,getActivity()));
-        });*/
+        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(LabelsViewModel.class);
     }
 }

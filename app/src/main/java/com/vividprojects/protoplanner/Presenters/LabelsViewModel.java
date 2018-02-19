@@ -33,6 +33,11 @@ public class LabelsViewModel extends ViewModel {
     private List<Label.Plain> labels_avail;
     private List<Label.Plain> labels_selected;
     private final MutableLiveData<String> recordId;
+    private final MutableLiveData<String> deleteLabelTrigger;
+    private final LiveData<Label.Plain> onNewLabel;
+    private final LiveData<Label.Plain> onEditLabel;
+    private final MutableLiveData<Label.Plain> newLabelTrigger;
+    private final MutableLiveData<Label.Plain> editLabelTrigger;
 
     private String currentLabel = "";
 
@@ -46,17 +51,22 @@ public class LabelsViewModel extends ViewModel {
       //  all_labels_live = new MutableLiveData<>();
         current_labels_live = new MutableLiveData<>();
         current_labelsSelected_live = new MutableLiveData<>();
+        deleteLabelTrigger = new MutableLiveData<>();
+        editLabelTrigger = new MutableLiveData<>();
 
         labels_avail = new ArrayList<>();
         labels_selected = new ArrayList<>();
 
         recordId = new MutableLiveData<>();
+        newLabelTrigger = new MutableLiveData<>();
 
         original_labels_live = Transformations.switchMap(recordId,id->dataRepository.getLabels());
 
 
         original_labelsSelected_live = Transformations.switchMap(recordId,id->dataRepository.getRecordLabels(id));
 
+        onNewLabel = Transformations.switchMap(newLabelTrigger, (label)->dataRepository.createLabel(label));
+        onEditLabel = Transformations.switchMap(editLabelTrigger, (label)->dataRepository.editLabel(label));
 
 
         original_labels_live.observeForever(labels->{
@@ -99,7 +109,33 @@ public class LabelsViewModel extends ViewModel {
         int i =1;
     }
 
+    public String getCurrentLabel() {
+        return currentLabel;
+    }
+
     public void deleteCurrentLabel() {
+        deleteLabelTrigger.setValue(currentLabel);
         dataRepository.deleteLabel(currentLabel);
     }
+
+    public LiveData<String> getDeleteLabelTrigger() {
+        return deleteLabelTrigger;
+    }
+
+    public LiveData<Label.Plain> getOnEditLabel() {
+        return onEditLabel;
+    }
+
+    public void newLabel(String name, int color) {
+        newLabelTrigger.setValue(Label.getPlain(color,name,""));
+    }
+
+    public void editLabel(String name, int color, String id) {
+        editLabelTrigger.setValue(Label.getPlain(color,name,id));
+    }
+
+    public LiveData<Label.Plain> getOnNewLabel() {
+        return onNewLabel;
+    }
+
 }

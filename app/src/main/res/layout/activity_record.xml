@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.vividprojects.protoplanner.Interface.RecordActivity">
+    tools:context="com.vividprojects.protoplanner.Interface.Activity.RecordActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar1"
@@ -36,7 +36,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="100dp"
                 android:layout_gravity="bottom"
                 android:background="@drawable/scrim"/>
             <View
@@ -79,6 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        android:visibility="invisible"
         app:layout_anchor="@id/app_bar1"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_edit_white_24dp" />

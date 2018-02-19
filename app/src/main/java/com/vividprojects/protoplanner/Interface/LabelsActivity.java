@@ -3,23 +3,15 @@ package com.vividprojects.protoplanner.Interface;
 import android.animation.LayoutTransition;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -32,14 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
-import com.vividprojects.protoplanner.CoreData.Label;
-import com.vividprojects.protoplanner.DI.ViewModelModule;
-import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Interface.Dialogs.CreateLabelDialog;
+import com.vividprojects.protoplanner.Interface.Dialogs.DeleteLabelDialog;
 import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
-import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Display;
 import com.vividprojects.protoplanner.Utils.Settings;
@@ -52,9 +40,7 @@ import javax.inject.Inject;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-import static java.security.AccessController.getContext;
-
-public class LabelsActivity extends AppCompatActivity implements HasSupportFragmentInjector, GetLabelInterface {
+public class LabelsActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -92,14 +78,23 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 Bundle b = new Bundle();
                 b.putInt("COLOR",currentLongPressedChip.getColor());
                 b.putString("NAME",currentLongPressedChip.getTitle());
+                b.putString("ID",currentLongPressedChip.getChipId());
                 dialog.setArguments(b);
              //   dialog.setData(currentLongPressedChip.getTitle());
                 dialog.show(getSupportFragmentManager(),"Create Label");
                 return true;
             case R.id.al_delete:
+                DeleteLabelDialog ddialog = new DeleteLabelDialog();
+                Bundle db = new Bundle();
+                db.putInt("COLOR",currentLongPressedChip.getColor());
+                db.putString("NAME",currentLongPressedChip.getTitle());
+                ddialog.setArguments(db);
+                //   dialog.setData(currentLongPressedChip.getTitle());
+                ddialog.show(getSupportFragmentManager(),"Delete Label");
+/*
+                chipsAvailable.deleteChip(model.getCurrentLabel());
                 model.deleteCurrentLabel();
-                //chipsAvailable;
-                //deleteNote(info.id);
+*/
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -181,11 +176,20 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
             }
         });
 
+        model.getDeleteLabelTrigger().observe(this, deletedId->{
+            if (deletedId != null)
+                chipsAvailable.deleteChip(deletedId);
+        });
+
+        model.getOnNewLabel().observe(this,newLabel->{
+            chipsAvailable.insertChip(newLabel, this);
+        });
+
+        model.getOnEditLabel().observe(this,editLabel->{
+            chipsAvailable.editChip(editLabel);
+        });
+
         model.refreshOriginal(id);
-
-        Button pb = findViewById(R.id.button);
-       // registerForContextMenu(chipsAvailable);
-
     }
 
     private void openNewLabelDialog() {
@@ -268,6 +272,9 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                     chipsAvailable.setSelectedSort(false);
                 }
                 break;
+            case R.id.labels_add:
+                openNewLabelDialog();
+                break;
         }
         return true;
         //return super.onOptionsItemSelected(item);
@@ -278,13 +285,5 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingAndroidInjector;
     }
-
-    public void returnLabel(String name, int color) {
-        String n = name;
-        int c = color;
-    }
 }
 
-interface GetLabelInterface {
-    public void returnLabel(String name, int color);
-}

@@ -43,7 +43,7 @@
                 android:background="@null"
                 android:cropToPadding="false"
                 android:padding="12dp"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_edit_gray_24dp" />

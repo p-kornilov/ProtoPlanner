@@ -1,10 +1,8 @@
 package com.vividprojects.protoplanner.DI;
 
-import android.app.Activity;
-
 import com.vividprojects.protoplanner.Interface.ImageViewActivity;
 import com.vividprojects.protoplanner.Interface.LabelsActivity;
-import com.vividprojects.protoplanner.Interface.RecordActivity;
+import com.vividprojects.protoplanner.Interface.Activity.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;
 
 import dagger.Module;

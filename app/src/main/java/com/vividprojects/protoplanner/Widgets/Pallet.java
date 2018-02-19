@@ -99,6 +99,31 @@ public class Pallet {
         return list;
     }
 
+    public static List<String> getNameColors(){
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Red");
+        list.add("Pink");
+        list.add("Purple");
+        list.add("Deep purple");
+        list.add("Indigo");
+        list.add("Blue");
+        list.add("Light blue");
+        list.add("Cyan");
+        list.add("Teal");
+        list.add("Green");
+        list.add("Light green");
+        list.add("Lime");
+        list.add("Yellow");
+        list.add("Amber");
+        list.add("Orange");
+        list.add("Deep orange");
+        list.add("Brown");
+        list.add("Gray");
+        list.add("Blue gray");
+        list.add("Black");
+        return list;
+    }
+
     public static int getTextColor(int color){
         int textColor;
         switch (color) {

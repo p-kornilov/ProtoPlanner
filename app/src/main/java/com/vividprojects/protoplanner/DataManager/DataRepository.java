@@ -251,6 +251,24 @@ public class DataRepository {
                 return ld;
     }
 
+    public LiveData<Label.Plain> createLabel(Label.Plain label) {
+        MutableLiveData<Label.Plain> labelId = new MutableLiveData<>();
+        labelId.setValue(localDataDB.createLabel(label));
+        return labelId;
+    }
+
+    public LiveData<Label.Plain> editLabel(Label.Plain label) {
+        MutableLiveData<Label.Plain> labelId = new MutableLiveData<>();
+        labelId.setValue(localDataDB.editLabel(label));
+        return labelId;
+    }
+
+    public LiveData<String> setRecordName(String id, String name) {
+        MutableLiveData<String> recordName = new MutableLiveData<>();
+        recordName.setValue(localDataDB.setRecordName(id,name));
+        return recordName;
+    }
+
     public LiveData<List<Label.Plain>> getLabels(MutableLiveData<List<Label.Plain>> labels) {
         List<Label> labelsL = localDataDB
                 .queryLabels()

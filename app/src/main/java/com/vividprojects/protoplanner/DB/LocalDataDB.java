@@ -13,6 +13,7 @@ import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Widgets.Pallet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +129,7 @@ public class LocalDataDB {
                 }
 
                 Record r2 = new Record(vv1);
+                r2.setName("Фильтр");
                 r2.setComment("Комментарий для записи со ссылкой http://test.com");
                 r2.addLabel(new Label("Green", Color.GREEN,"",null));
                 r2.addLabel(new Label("Yellow", Color.YELLOW,"",null));
@@ -157,48 +159,11 @@ public class LocalDataDB {
                 realm.insertOrUpdate(new Record(vv2));
                 realm.insertOrUpdate(new Record(vv3));
 
+                int colorCount = Pallet.getColors().size();
 
-                Label l1 = new Label("Ltgray", contetx.getResources().getColor(R.color.Red),"",null);
-                Label l2 = new Label("Ltgray", contetx.getResources().getColor(R.color.Pink),"",null);
-                Label l3 = new Label("Ltgray", contetx.getResources().getColor(R.color.Purple),"",null);
-                Label l4 = new Label("Ltgray", contetx.getResources().getColor(R.color.Deep_Purple),"",null);
-                Label l5 = new Label("Ltgray", contetx.getResources().getColor(R.color.Indigo),"",null);
-                Label l6 = new Label("Ltgray", contetx.getResources().getColor(R.color.Blue),"",null);
-                Label l7 = new Label("Ltgray", contetx.getResources().getColor(R.color.Light_Blue),"",null);
-                Label l8 = new Label("Ltgray", contetx.getResources().getColor(R.color.Cyan),"",null);
-                Label l9 = new Label("Ltgray", contetx.getResources().getColor(R.color.Teal),"",null);
-                Label l10 = new Label("Ltgray", contetx.getResources().getColor(R.color.Green),"",null);
-                Label l11 = new Label("Ltgray", contetx.getResources().getColor(R.color.Light_Green),"",null);
-                Label l12 = new Label("Ltgray", contetx.getResources().getColor(R.color.Lime),"",null);
-                Label l13 = new Label("Ltgray", contetx.getResources().getColor(R.color.Yellow),"",null);
-                Label l14 = new Label("Ltgray", contetx.getResources().getColor(R.color.Amber),"",null);
-                Label l15 = new Label("Ltgray", contetx.getResources().getColor(R.color.Orange),"",null);
-                Label l16 = new Label("Ltgray", contetx.getResources().getColor(R.color.Deep_Orange),"",null);
-                Label l17 = new Label("Ltgray", contetx.getResources().getColor(R.color.Brown),"",null);
-                Label l18 = new Label("Ltgray", contetx.getResources().getColor(R.color.Grey),"",null);
-                Label l19 = new Label("Ltgray", contetx.getResources().getColor(R.color.Blue_Grey),"",null);
-                Label l20 = new Label("Ltgray", contetx.getResources().getColor(R.color.Black),"",null);
-
-                realm.insertOrUpdate(l1);
-                realm.insertOrUpdate(l2);
-                realm.insertOrUpdate(l3);
-                realm.insertOrUpdate(l4);
-                realm.insertOrUpdate(l5);
-                realm.insertOrUpdate(l6);
-                realm.insertOrUpdate(l7);
-                realm.insertOrUpdate(l8);
-                realm.insertOrUpdate(l9);
-                realm.insertOrUpdate(l10);
-                realm.insertOrUpdate(l11);
-                realm.insertOrUpdate(l12);
-                realm.insertOrUpdate(l13);
-                realm.insertOrUpdate(l14);
-                realm.insertOrUpdate(l15);
-                realm.insertOrUpdate(l16);
-                realm.insertOrUpdate(l17);
-                realm.insertOrUpdate(l18);
-                realm.insertOrUpdate(l19);
-                realm.insertOrUpdate(l20);
+                for (int i=0; i<colorCount; i++) {
+                    realm.insertOrUpdate(new Label(Pallet.getNameColors().get(i), Pallet.getColors().get(i),"",null));
+                }
 
                 Record r = realm.where(Record.class).findFirst();
                 r.addVariant(vv2);
@@ -217,6 +182,46 @@ public class LocalDataDB {
         });
 
         Log.d("Test", "------------------------------ onCreate - DB done");
+    }
+
+    public Label.Plain createLabel(Label.Plain label) {
+        Label newLabel = new Label(label.name, label.color,"",null);
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.insertOrUpdate(newLabel);
+            }
+        });
+        return newLabel.getPlain();
+    }
+
+    public Label.Plain editLabel(Label.Plain label) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Label editLabel = realm.where(Label.class).equalTo("id",label.id).findFirst();
+                if (editLabel != null) {
+                    editLabel.setName(label.name);
+                    editLabel.setColor(label.color);
+                    realm.insertOrUpdate(editLabel);
+                }
+            }
+        });
+        return label;
+    }
+
+    public String setRecordName(String id, String name) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Record record = realm.where(Record.class).equalTo("id",id).findFirst();
+                if (record != null) {
+                    record.setName(name);
+                    realm.insertOrUpdate(record);
+                }
+            }
+        });
+        return name;
     }
 
     public void showDB(){

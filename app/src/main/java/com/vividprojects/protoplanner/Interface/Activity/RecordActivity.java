@@ -1,22 +1,19 @@
-package com.vividprojects.protoplanner.Interface;
+package com.vividprojects.protoplanner.Interface.Activity;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.View;
+import android.view.MenuItem;
 
-import com.vividprojects.protoplanner.CoreData.Record;
-import com.vividprojects.protoplanner.Presenters.ImageViewViewModel;
+import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
@@ -25,13 +22,13 @@ import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import io.realm.Realm;
 
 /**
  * Created by Smile on 30.10.2017.
  */
 
 public class RecordActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -40,8 +37,6 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
 
     private Fragment mViewModelHolder;
     private RecordItemViewModel model;
-
-    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,22 +50,19 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
             mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
         }
 
-
-        realm = Realm.getDefaultInstance();
-        // initDB();
         String id = getIntent().getStringExtra("RECORD_ID");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
 
-        String record_title = realm.where(Record.class).equalTo("id",id).findFirst().getMainVariant().getTitle();
-
         CollapsingToolbarLayout mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout1);
-        mCollapsingToolbarLayout.setTitle(record_title);
 
-    /*    TextView t = (TextView) findViewById(R.id.textView2);
-
-        t.setText(id);*/
+        model = ViewModelProviders.of(this, viewModelFactory).get(RecordItemViewModel.class);
+        model.getRecordName().observe(this, name -> {
+            if (name != null) {
+                mCollapsingToolbarLayout.setTitle(name);
+            }
+        });
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -80,7 +72,7 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         fragmentTransaction.commit();
 
 
-        FloatingActionButton fb = (FloatingActionButton) findViewById(R.id.activity_record_edit);
+/*        FloatingActionButton fb = (FloatingActionButton) findViewById(R.id.activity_record_edit);
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +82,25 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
                 else
                     ((FloatingActionButton)view).setImageResource(R.drawable.ic_edit_white_24dp);
             }
-        });
+        });*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+/*
+        switch (id) {
+            case R.id.ra_edit_name:
+                EditTextDialog editNameDialog = new EditTextDialog();
+              //  editNameDialog.setTargetFragment(this, REQUEST_EDIT_NAME);
+                //addImageURLDialog.show(getFragmentManager(), "Add_image_url");
+                break;
+        }
+        return true;
+*/
+        return false;
+        //return super.onOptionsItemSelected(item);
     }
 
     private RecordItemViewModel obtainViewModel() {
@@ -101,7 +111,7 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_record, menu);
+       // getMenuInflater().inflate(R.menu.menu_record, menu);
         return true;
     }
 

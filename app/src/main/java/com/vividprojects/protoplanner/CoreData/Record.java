@@ -12,6 +12,7 @@ import io.realm.annotations.PrimaryKey;
 public class Record extends RealmObject{
     @PrimaryKey
     private String id = UUID.randomUUID().toString();
+    private String name;
     private Variant mainVariant;
     private RealmList<Variant> variants;
     private RealmList<Label> labels;
@@ -25,6 +26,7 @@ public class Record extends RealmObject{
     }
 
     public Record(Variant variant) {
+        name = variant.getTitle();
         mainVariant = variant;
         variants = new RealmList<>();
         labels = new RealmList<>();
@@ -67,6 +69,14 @@ public class Record extends RealmObject{
 
     public List<Label> getLabels() {
         return labels;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 
@@ -127,6 +137,8 @@ public class Record extends RealmObject{
     public String toString() {
         String str = "--- RECORD ---\n";
 
+        str += "Name - " + name + "\n";
+
         if (mainVariant!=null) {
             str += "Main variant - " + mainVariant.toString() + "\n";
         } else {
@@ -168,6 +180,7 @@ public class Record extends RealmObject{
     public Plain getPlain() {
         Plain plain = new Plain();
         plain.id = id;
+        plain.name = name;
         plain.mainVariant = mainVariant.getTitle();
         plain.variants = new ArrayList<>();
         for (Variant variant : variants) {
@@ -184,6 +197,7 @@ public class Record extends RealmObject{
 
     public class Plain {
         public String id;
+        public String name;
         public String mainVariant;
         public List<String> variants;
         public List<Label.Plain> labels;

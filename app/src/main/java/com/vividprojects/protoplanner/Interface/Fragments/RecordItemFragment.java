@@ -1,4 +1,4 @@
-package com.vividprojects.protoplanner.Interface;
+package com.vividprojects.protoplanner.Interface.Fragments;
 
 import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
@@ -23,6 +23,7 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,19 +31,21 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
-import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
+import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
+import com.vividprojects.protoplanner.Interface.NavigationController;
+import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
-import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 
 import java.io.File;
@@ -64,6 +67,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int REQUEST_IMAGE_URL_LOAD = 3;
     private static final int REQUEST_LABELS_SET = 4;
+    private static final int REQUEST_EDIT_NAME = 5;
     private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
 
     @Inject
@@ -88,6 +92,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private RecyclerView imagesRecycler;
     private ImageButton add_image;
     private ImageButton set_labels;
+    private ImageButton commentEditButton;
     private HorizontalImagesListAdapter imagesListAdapter;
    // private TextView mvCurrency1;
     private TextView mvCurrency2;
@@ -97,6 +102,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     private String mTempPhotoPath;
 
+    private String recordName = "";
+
     private RunnableParam<Integer> onImageSelect = (position)->{
         navigationController.openImageView(position,model.getMainVariantItem().getValue().data.title);
     };
@@ -104,6 +111,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Log.d("Test", "onCreate - Record Fragment");
     }
 
@@ -196,10 +204,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
             set_labels.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-/*                    SelectTagsDialog dialog = new SelectTagsDialog();
-                    dialog.setTargetFragment(RecordItemFragment.this,REQUEST_LABELS_SET);
-                    dialog.show(getFragmentManager(),"Labels_dialog");*/
-                    //navigationController.openLabels(model.getRecordItemID().getValue().toString());
                     int i = 1;
                     navigationController.openLabelsForResult(labelsLayout.getAllLabels(),RecordItemFragment.this,REQUEST_LABELS_SET);
                 }
@@ -216,9 +220,44 @@ public class RecordItemFragment extends Fragment implements Injectable {
             commentSwitcher = (ViewSwitcher) v.findViewById(R.id.rf_comment_switcher);
             commentEdit = (EditText) v.findViewById(R.id.rf_comment_edit);
             commentView = (TextView) v.findViewById(R.id.rf_comment_text);
+            commentEditButton = v.findViewById(R.id.rf_comment_edit_button);
+
+            commentEditButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onRecordEdit();
+                }
+            });
         };
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_record, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.ra_edit_name:
+                EditTextDialog editNameDialog = new EditTextDialog();
+                editNameDialog.setTargetFragment(this, REQUEST_EDIT_NAME);
+                Bundle b = new Bundle();
+                b.putString("TITLE","Edit note");
+                b.putString("HINT","Name");
+                b.putString("POSITIVE","Save");
+                b.putString("NEGATIVE","Cancel");
+                b.putString("EDITTEXT",recordName);
+                editNameDialog.setArguments(b);
+                editNameDialog.show(getFragmentManager(), "Edit name");
+                break;
+        }
+        return true;
+        //return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -312,6 +351,11 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     model.setLabels(data.getStringArrayExtra("SELECTED"));
                 }
                 return;
+            case REQUEST_EDIT_NAME:
+                if (resultCode == RESULT_OK && data != null) {
+                    model.setRecordName(data.getStringExtra("EDITTEXT"));
+                }
+                return;
         }
     }
 
@@ -336,18 +380,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
             model.getRecordItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
                     commentView.setText(resource.data.comment);
-/*
-                    labelsLayout.removeAllViews();
-                    labelsLayout.noneChip(getContext());
-
-                    for (Label.Plain label : resource.data.labels) {
-                        Chip chip = new Chip(getContext());
-                        chip.setTitle(label.name);
-                        chip.setColor(label.color);
-                    //    chip.setDeleteButtonVisible(false);
-                        labelsLayout.addView(chip);
-                    }
-*/
+                    recordName = resource.data.name;
 
                     labelsLayout.setMode(ChipsLayout.MODE_NON_TOUCH);
                     labelsLayout.setData(resource.data.labels,null);
@@ -404,17 +437,17 @@ public class RecordItemFragment extends Fragment implements Injectable {
         }
     }
 
-    public boolean onRecordEdit(){   // TODO !!! Переделать на общение через ViewModel !!!!
+    public boolean onRecordEdit(){
         commentSwitcher.showNext();
         //ImageButton im = (ImageButton) view;
         inCommentEdit = !inCommentEdit;
         if (inCommentEdit) {
-        //    im.setImageResource(R.drawable.ic_check_black_24dp);
+            commentEditButton.setImageResource(R.drawable.ic_check_black_24dp);
             commentEdit.setText(commentView.getText());
             commentEdit.setSelection(commentEdit.getText().length());
             commentEdit.requestFocus();
         } else {
-            //im.setImageResource(R.drawable.ic_edit_gray_24dp);
+            commentEditButton.setImageResource(R.drawable.ic_edit_gray_24dp);
             commentView.setText(commentEdit.getText());
             commentView.requestFocus();
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

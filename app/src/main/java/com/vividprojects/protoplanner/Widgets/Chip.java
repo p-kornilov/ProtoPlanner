@@ -150,13 +150,17 @@ public class Chip extends ConstraintLayout {
 
     public boolean matchFilter(String filter){
         if (label != null)
-            return label.name.contains(filter);
+            return label.name.toLowerCase().contains(filter.toLowerCase());
         else
             return false;
     }
 
     public String getChipId() {
         return label.id;
+    }
+
+    public void setName(String name) {
+        textView.setText(name);
     }
 
     public void isNone(boolean isNone){

@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Interface.RecordActivity"
+            android:name=".Interface.Activity.RecordActivity"
             android:label="test"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"

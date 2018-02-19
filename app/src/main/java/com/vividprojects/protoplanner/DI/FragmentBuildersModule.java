@@ -1,11 +1,11 @@
 package com.vividprojects.protoplanner.DI;
 
 import com.vividprojects.protoplanner.Interface.BlockListFragment;
-import com.vividprojects.protoplanner.Interface.CreateLabelDialog;
+import com.vividprojects.protoplanner.Interface.Dialogs.CreateLabelDialog;
+import com.vividprojects.protoplanner.Interface.Dialogs.DeleteLabelDialog;
 import com.vividprojects.protoplanner.Interface.ImageViewFragment;
-import com.vividprojects.protoplanner.Interface.RecordItemFragment;
+import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
-import com.vividprojects.protoplanner.Interface.SelectTagsDialog;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -29,10 +29,10 @@ public abstract class FragmentBuildersModule {
     abstract ImageViewFragment contributeImageViewFragment();
 
     @ContributesAndroidInjector
-    abstract SelectTagsDialog contributeSelectTagsDialog();
+    abstract CreateLabelDialog contributeCreateLabelDialog();
 
     @ContributesAndroidInjector
-    abstract CreateLabelDialog contributeCreateLabelDialog();
+    abstract DeleteLabelDialog contributeDeleteLabelDialog();
 
  /*   @ContributesAndroidInjector
     abstract UserFragment contributeUserFragment();

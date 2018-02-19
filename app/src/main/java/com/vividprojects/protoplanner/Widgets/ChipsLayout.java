@@ -71,6 +71,53 @@ public class ChipsLayout extends ViewGroup {
         selected = new HashSet<>();
     }
 
+    public void deleteChip(String id) {
+        for (int i=0; i < labels.size(); i++) {
+            if (labels.get(i).id.equals(id)) {
+                labels.remove(i);
+                removeViewAt(i);
+                break;
+            }
+        }
+        invalidate();
+        requestLayout();
+    }
+
+    public void insertChip(Label.Plain label, Activity activity) {
+        this.labels.add(label);
+        Chip chip = new Chip(getContext());
+        chip.setData(label,mode);
+        addView(chip);
+        if (activity != null)
+            activity.registerForContextMenu(chip);
+        if (nameSort) {
+            nameSort();
+            if (selectedSort)
+                selectedSort();
+        }
+        invalidate();
+        requestLayout();
+    }
+
+    public void editChip(Label.Plain label) {
+        for (int i=0; i< labels.size(); i++) {
+            if (labels.get(i).id.equals(label.id)) {
+                labels.get(i).name = label.name;
+                labels.get(i).color = label.color;
+                ((Chip)getChildAt(i)).setColor(label.color);
+                ((Chip)getChildAt(i)).setName(label.name);
+                break;
+            }
+        }
+        if (nameSort) {
+            nameSort();
+            if (selectedSort)
+                selectedSort();
+        }
+        invalidate();
+        requestLayout();
+    }
+
     public void setMode(int mode){
         this.mode = mode;
     }
@@ -164,7 +211,7 @@ public class ChipsLayout extends ViewGroup {
         }
 
         Arrays.sort(oldholder,(x, y)->{
-            return x.name.compareTo(y.name);
+            return x.name.toLowerCase().compareTo(y.name.toLowerCase());
         });
 
         for (int i=0; i < childCount; i++) {
