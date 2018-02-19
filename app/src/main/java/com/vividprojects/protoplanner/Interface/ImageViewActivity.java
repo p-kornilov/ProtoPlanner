@@ -108,13 +108,13 @@ public class ImageViewActivity extends AppCompatActivity implements HasSupportFr
         Log.d("Listener", "Listener000 - " + requestListener);
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.change_listener) {
+/*        if (id == R.id.change_listener) {
             requestListener = !requestListener;
             viewPager.requestDisallowInterceptTouchEvent(requestListener);
       //      viewPager.requestD
             Log.d("Listener", "Listener - " + requestListener);
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

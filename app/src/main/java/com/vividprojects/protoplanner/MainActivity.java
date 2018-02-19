@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     NavigationController navigationController;
 
     private Toolbar secondToolBar;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +78,24 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         }
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        NestedScrollView nv = findViewById(R.id.nested_scroll);
+        nv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY-oldScrollY > 0 && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                } else if (scrollY-oldScrollY < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
+                }
             }
         });
 
@@ -132,9 +146,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+/*        if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -154,6 +168,13 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         fragmentTransaction.commit();
     }
 
+    public void hideFab() {
+        fab.hide();
+    }
+
+    public void showFab() {
+        fab.show();
+    }
 
     @Override
     public void onBackPressed() {

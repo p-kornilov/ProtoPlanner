@@ -394,15 +394,20 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     commentView.setText(resource.data.comment);
                     recordName = resource.data.name;
 
-                    if (navigationController.isTablet())
-                        ((MainActivity) getActivity()).getSecondToolBar().setTitle(recordName);
-
                     labelsLayout.setMode(ChipsLayout.MODE_NON_TOUCH);
                     labelsLayout.setData(resource.data.labels,null);
                 }
             });
 
-            model.getMainVariantItem().observe(this, resource -> {
+            if (navigationController.isTablet())
+                model.getRecordName().observe(this, name -> {
+                    if (name != null) {
+                        ((MainActivity) getActivity()).getSecondToolBar().setTitle(name);
+                    }
+                });
+
+
+                model.getMainVariantItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
                     mvTitle.setText(resource.data.title);
                     mvCount.setText(PriceFormatter.getCount(resource.data.count, resource.data.measure));

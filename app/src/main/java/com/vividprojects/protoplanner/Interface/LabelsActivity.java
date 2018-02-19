@@ -252,8 +252,8 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_settings:
-                break;
+/*            case R.id.action_settings:
+                break;*/
             case R.id.sort_by_name:
                 if (!item.isChecked()) {
                     item.setChecked(true);

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.vividprojects.protoplanner.CoreData.Filter;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.DI.Injectable;
+import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.TMP.TestRecyclerAdapter;
@@ -39,6 +41,7 @@ import io.realm.RealmResults;
 
 public class RecordListFragment extends Fragment implements Injectable {
     private RecyclerView recycler;
+    private boolean fabVisible = true;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
