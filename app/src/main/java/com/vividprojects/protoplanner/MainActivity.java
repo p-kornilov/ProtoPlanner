@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Inject
     NavigationController navigationController;
 
+    private Toolbar secondToolBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,10 +47,13 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
         setContentView(R.layout.nav_drawer_main);
 //        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar toolbar;
 
         if (navigationController.isTablet()) {
+            toolbar = (Toolbar) findViewById(R.id.toolbar1);
+            setSupportActionBar(toolbar);
+            secondToolBar = (Toolbar) findViewById(R.id.toolbar2);
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -59,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             setRecordItem("Empty");
 
         } else {
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -103,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         Log.i("Test", "------------------------------ Dimension height " + dataRepository.getHeight());
         Log.i("Test", "------------------------------ Type of the device " + dataRepository.getType());
 
+    }
+
+    public Toolbar getSecondToolBar() {
+        return secondToolBar;
     }
 
     @Override

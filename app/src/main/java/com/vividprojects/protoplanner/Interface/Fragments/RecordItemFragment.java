@@ -20,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
+import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
@@ -235,7 +237,17 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_record, menu);
+        if (navigationController.isTablet()) {
+            ((MainActivity) getActivity()).getSecondToolBar().getMenu().clear();
+            ((MainActivity) getActivity()).getSecondToolBar().inflateMenu(R.menu.menu_record);
+            ((MainActivity) getActivity()).getSecondToolBar().setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return onOptionsItemSelected(item);
+                }
+            });
+        } else
+            inflater.inflate(R.menu.menu_record, menu);
     }
 
     @Override
@@ -381,6 +393,9 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 if (resource != null && resource.data != null) {
                     commentView.setText(resource.data.comment);
                     recordName = resource.data.name;
+
+                    if (navigationController.isTablet())
+                        ((MainActivity) getActivity()).getSecondToolBar().setTitle(recordName);
 
                     labelsLayout.setMode(ChipsLayout.MODE_NON_TOUCH);
                     labelsLayout.setData(resource.data.labels,null);
