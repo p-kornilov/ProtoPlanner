@@ -41,6 +41,7 @@ import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
+import com.vividprojects.protoplanner.Interface.Dialogs.EditVariantDialog;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.MainActivity;
@@ -94,6 +95,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private RecyclerView imagesRecycler;
     private ImageButton add_image;
     private ImageButton set_labels;
+    private ImageButton edit_main_variant;
     private ImageButton commentEditButton;
     private HorizontalImagesListAdapter imagesListAdapter;
    // private TextView mvCurrency1;
@@ -144,6 +146,16 @@ public class RecordItemFragment extends Fragment implements Injectable {
             mvPrice = v.findViewById(R.id.alt_price);
             mvValue = v.findViewById(R.id.alt_value);
             mvCount = v.findViewById(R.id.alt_count);
+
+            edit_main_variant = v.findViewById(R.id.rf_variant_edit_button);
+            edit_main_variant.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditVariantDialog editVariantDialog = new EditVariantDialog();
+                    editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_IMAGE_URL_LOAD);
+                    editVariantDialog.show(getFragmentManager(), "Edit main variant");
+                }
+            });
 
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             layoutManager.setAutoMeasureEnabled(true);
