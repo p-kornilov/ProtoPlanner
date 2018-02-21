@@ -6,5 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_weight="1"
     android:background="@null"
+    android:clipToPadding="false"
+    android:padding="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android" />
 

@@ -95,16 +95,16 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
         holder.mTextView.setText(mDataset[position]);
         if (position==0) {
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
-                p.setMargins(Display.calc_pixels(8), Display.calc_pixels(8), Display.calc_pixels(8), 0);
+                p.setMargins(0, Display.calc_pixels(8), 0, 0);
                 holder.cardView.requestLayout();
         } else if (position == mDataset.length-1) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
-            p.setMargins(Display.calc_pixels(8), 0, Display.calc_pixels(8), Display.calc_pixels(8));
+            p.setMargins(0, 0, 0, Display.calc_pixels(8));
             holder.cardView.requestLayout();
         }
         else {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
-            p.setMargins(Display.calc_pixels(8), 0, Display.calc_pixels(8), 0);
+            p.setMargins(0, 0, 0, 0);
             holder.cardView.requestLayout();
         }
         Log.d("Test", "------------------------------ on Bind View holder - " + mDataset[position]);

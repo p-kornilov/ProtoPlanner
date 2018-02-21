@@ -56,7 +56,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
         recycler.setLayoutManager(layoutManager);
 
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-        recycler.addItemDecoration(mDividerItemDecoration);
+     //   recycler.addItemDecoration(mDividerItemDecoration);
 
         recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
         return v;
