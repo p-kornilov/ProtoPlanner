@@ -22,6 +22,19 @@
             android:title="Settings" />
     </group>
 
+    <item android:title="Journals">
+        <menu>
+            <item
+                android:id="@+id/nav_currency"
+                android:icon="@drawable/ic_currency_black_24dp"
+                android:title="Currency" />
+            <item
+                android:id="@+id/nav_measure"
+                android:icon="@drawable/ic_measure_black_24dp"
+                android:title="Measures" />
+        </menu>
+    </item>
+
     <item android:title="Communicate">
         <menu>
             <item

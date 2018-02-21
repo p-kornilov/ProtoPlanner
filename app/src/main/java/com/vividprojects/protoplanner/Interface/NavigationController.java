@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 
+import com.vividprojects.protoplanner.Interface.Activity.ContainerActivity;
 import com.vividprojects.protoplanner.Interface.Activity.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.R;
@@ -101,6 +102,17 @@ public class NavigationController {
             intent = new Intent(context, LabelsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
             intent = new Intent(context, LabelsActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        context.startActivity(intent);
+    }
+
+    public void openCurrensies() {
+
+        Intent intent;
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
         context.startActivity(intent);
     }

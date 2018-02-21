@@ -1,6 +1,7 @@
 package com.vividprojects.protoplanner.TMP;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Display;
 
 /**
  * Created by Smile on 01.11.2017.
@@ -28,6 +30,18 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
             "Test10",
             "Test11",
             "Test12",
+            "Test1",
+            "Test2",
+            "Test3",
+            "Test4",
+            "Test5",
+            "Test6",
+            "Test7",
+            "Test8",
+            "Test9",
+            "Test10",
+            "Test11",
+            "Test12"
     };
 
     private LayoutInflater inflater;
@@ -38,9 +52,11 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView mTextView;
+        public CardView cardView;
         public ViewHolder(View v) {
             super(v);
             mTextView = (TextView) v.findViewById(R.id.testRecordAdapterLabel);
+            cardView = v.findViewById(R.id.card_view);
             Log.d("Test", "------------------------------ View holder");
             mTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,6 +93,20 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.mTextView.setText(mDataset[position]);
+        if (position==0) {
+                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
+                p.setMargins(Display.calc_pixels(8), Display.calc_pixels(8), Display.calc_pixels(8), 0);
+                holder.cardView.requestLayout();
+        } else if (position == mDataset.length-1) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
+            p.setMargins(Display.calc_pixels(8), 0, Display.calc_pixels(8), Display.calc_pixels(8));
+            holder.cardView.requestLayout();
+        }
+        else {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
+            p.setMargins(Display.calc_pixels(8), 0, Display.calc_pixels(8), 0);
+            holder.cardView.requestLayout();
+        }
         Log.d("Test", "------------------------------ on Bind View holder - " + mDataset[position]);
 
     }

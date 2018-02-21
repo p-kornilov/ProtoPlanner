@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.DI;
 import com.vividprojects.protoplanner.Interface.BlockListFragment;
 import com.vividprojects.protoplanner.Interface.Dialogs.CreateLabelDialog;
 import com.vividprojects.protoplanner.Interface.Dialogs.DeleteLabelDialog;
+import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.ImageViewFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
@@ -33,6 +34,10 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract DeleteLabelDialog contributeDeleteLabelDialog();
+
+    @ContributesAndroidInjector
+    abstract CurrencyListFragment contributeCurrencyListFragment();
+
 
  /*   @ContributesAndroidInjector
     abstract UserFragment contributeUserFragment();

@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
@@ -29,7 +30,7 @@ import javax.inject.Inject;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class ContainerActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationView.OnNavigationItemSelectedListener {
+public class ContainerActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -45,35 +46,17 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.nav_drawer_main);
-//        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_container);
         Toolbar toolbar;
-
-        if (navigationController.isTablet()) {
-            toolbar = (Toolbar) findViewById(R.id.toolbar1);
-            setSupportActionBar(toolbar);
-            //secondToolBar = (Toolbar) findViewById(R.id.toolbar2);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            final RecordListFragment fragment = new RecordListFragment();
-            fragmentTransaction.replace(R.id.lists_container, fragment);
+            final CurrencyListFragment fragment = new CurrencyListFragment();
+            fragmentTransaction.replace(R.id.container_container, fragment);
             fragmentTransaction.commit();
-
-            setRecordItem("Empty");
-
-        } else {
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            final RecordListFragment fragment = new RecordListFragment();
-            fragmentTransaction.replace(R.id.lists_container, fragment);
-            fragmentTransaction.commit();
-        }
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -84,45 +67,6 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
                         .setAction("Action", null).show();
             }
         });
-
-        NestedScrollView nv = findViewById(R.id.nested_scroll);
-        nv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY-oldScrollY > 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
-                } else if (scrollY-oldScrollY < 0 && fab.getVisibility() != View.VISIBLE) {
-                    fab.show();
-                }
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-/*        int color = tv.getCurrentTextColor();
-        int A = (color >> 24) & 0xff; // or color >>> 24
-        int R = (color >> 16) & 0xff;
-        int G = (color >>  8) & 0xff;
-        int B = (color      ) & 0xff;
-
-        tv.setText("Color is: A=" + A + " R=" + R + "G=" + G + "B=" + B);*/
-
-       // AppComponent dmc = ((PPApplication) getApplication()).getMainComponent();
-        //dmc.inject(this);
-
-        //dataRepository.setContext(this);
-
-        Log.i("Test", "------------------------------ Dimension width " + getResources().getConfiguration().screenWidthDp);
-        Log.i("Test", "------------------------------ Dimension height " + dataRepository.getHeight());
-        Log.i("Test", "------------------------------ Type of the device " + dataRepository.getType());
-
     }
 
 
@@ -155,23 +99,7 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
         return dispatchingAndroidInjector;
     }
 
-    public void setRecordItem(String id) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        final RecordItemFragment fragment = RecordItemFragment.create(id);
-        fragmentTransaction.replace(R.id.item_container, fragment);
-        fragmentTransaction.commit();
-    }
-
-    public void hideFab() {
-        fab.hide();
-    }
-
-    public void showFab() {
-        fab.show();
-    }
-
+/*
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -181,31 +109,5 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
             super.onBackPressed();
         }
     }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_labels) {
-            navigationController.openLabels();
-
-        } /*else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        }*/ else if (id == R.id.nav_settings) {
-            navigationController.openSettings();
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+*/
 }
