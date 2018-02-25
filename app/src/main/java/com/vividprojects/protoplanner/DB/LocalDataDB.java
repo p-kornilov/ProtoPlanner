@@ -58,14 +58,16 @@ public class LocalDataDB {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Currency c = new Currency("RUB",643,"Russian Ruble",contetx.getResources().getString(R.string.RUB),Currency.AFTER);
+                Currency c = new Currency("RUB",643,R.string.RUB,contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER);
                 realm.insertOrUpdate(c);
                 Log.d("Test", "+++++++++++++++++++++++ "+c);
-                c = new Currency("USD",840,"US Dollar",contetx.getResources().getString(R.string.USD),Currency.BEFORE);
+                c = new Currency("USD",840,R.string.USD,contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE);
                 realm.insertOrUpdate(c);
-                c = new Currency("EUR",978,"Euro",contetx.getResources().getString(R.string.EUR),Currency.BEFORE);
+                c = new Currency("EUR",978,R.string.EUR,contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE);
                 realm.insertOrUpdate(c);
-                c = new Currency("XAF",950,"Franc",contetx.getResources().getString(R.string.XAF),Currency.WITHIN);
+                c = new Currency("XAF",950,R.string.XAF,contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN);
+                realm.insertOrUpdate(c);
+                c = new Currency("ANG",532,R.string.ANG,contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE);
                 realm.insertOrUpdate(c);
             }
         });
@@ -310,6 +312,9 @@ public class LocalDataDB {
     public QueryLabels queryLabels() {
         return new QueryLabels();
     }
+    public QueryCurrency queryCurrency() {
+        return new QueryCurrency();
+    }
 
     public class QueryRecords {
         RealmQuery<Record> query;
@@ -404,6 +409,36 @@ public class LocalDataDB {
 
         public Label findFirst() {
             Label rr = query.findFirst();
+            return rr;
+        }
+    }
+
+    public class QueryCurrency {
+        RealmQuery<Currency> query;
+
+        public QueryCurrency () {
+            query = realm.where(Currency.class);
+        }
+
+        public QueryCurrency iso_code_equalTo(int iso_code) {
+            query = query.equalTo("iso_code_int",iso_code);
+            return this;
+        }
+
+        public QueryCurrency iso_code_equalTo(String iso_code) {
+            query = query.equalTo("iso_code_str",iso_code);
+            return this;
+        }
+
+        public List<Currency> findAll() {
+            RealmResults<Currency> rr = query.findAll();
+            ArrayList<Currency> al = new ArrayList<>();
+            al.addAll(rr);
+            return al;
+        }
+
+        public Currency findFirst() {
+            Currency rr = query.findFirst();
             return rr;
         }
     }

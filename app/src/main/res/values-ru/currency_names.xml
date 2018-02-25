@@ -1,0 +1,7 @@
+<resources>
+    <string name="RUB" translatable="false">Рубль</string>
+    <string name="USD" translatable="false">Доллар</string>
+    <string name="EUR" translatable="false">Евро</string>
+    <string name="XAF" translatable="false">Франк</string>
+    <string name="ANG" translatable="false">Нидерландский антильский гульден</string>
+</resources>

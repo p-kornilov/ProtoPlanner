@@ -14,6 +14,7 @@
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            card_view:cardCornerRadius="0dp"
             android:background="@color/white">
 
         <android.support.constraint.ConstraintLayout
@@ -164,6 +165,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            card_view:cardCornerRadius="0dp"
             android:background="@color/white">
 
         <include

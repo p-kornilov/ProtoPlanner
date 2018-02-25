@@ -29,6 +29,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.Target;
+import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
@@ -95,7 +96,9 @@ public class DataRepository {
         this.appExecutors = appExecutors;
         this.networkLoader = networkLoader;
         this.context = context;
-        imagesDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (dir != null)
+            imagesDirectory = dir.getAbsolutePath(); //TODO Проверить на Null и подготовить несколько вариантов директорий
 
 /*        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/ProtoPlanner");
 //        boolean success = true;
@@ -307,6 +310,21 @@ public class DataRepository {
             labels.setValue(record.getPlain().labels);
         }
         return labels;
+    }
+
+    public LiveData<List<Currency.Plain>> getCurrencies() {
+        MutableLiveData<List<Currency.Plain>> currencies = new MutableLiveData<>();
+        List<Currency> curL = localDataDB
+                .queryCurrency()
+                .findAll();
+        if (curL!=null) {
+            ArrayList<Currency.Plain> curs = new ArrayList<>();
+            for (Currency cur : curL) {
+                curs.add(cur.getPlain());
+            }
+            currencies.setValue(curs);
+        }
+        return currencies;
     }
 
     public void saveLabelsForRecord(String recordItemId,String[] ids) {

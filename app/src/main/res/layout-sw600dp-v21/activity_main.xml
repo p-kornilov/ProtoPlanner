@@ -81,13 +81,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 card_view:cardCornerRadius="0dp"
-
+                card_view:cardElevation="8dp"
                 android:background="@color/white">
-            <FrameLayout
-                android:id="@+id/lists_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/lists_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </FrameLayout>
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"

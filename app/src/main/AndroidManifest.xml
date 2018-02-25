@@ -73,7 +73,7 @@
             android:label="Settings"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.Settings">
+            android:theme="@style/AppTheme.WhiteBackground">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

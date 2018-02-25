@@ -1,12 +1,21 @@
 package com.vividprojects.protoplanner.TMP;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Outline;
+import android.graphics.Rect;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.R;
@@ -53,10 +62,14 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
         // each data item is just a string in this case
         public TextView mTextView;
         public CardView cardView;
+        public View root;
         public ViewHolder(View v) {
+
             super(v);
+
+            root = v;
             mTextView = (TextView) v.findViewById(R.id.testRecordAdapterLabel);
-            cardView = v.findViewById(R.id.card_view);
+          //  cardView = v.findViewById(R.id.card_view);
             Log.d("Test", "------------------------------ View holder");
             mTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -65,6 +78,7 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
                 }
             });
         }
+
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -82,6 +96,8 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
  //       View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.record_item, parent, false);
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.test_record_adapter_element, parent, false);
         // set the view's size, margins, paddings and layout parameters
+        ViewCompat.setElevation(v,v.getResources().getDimension(R.dimen.cardElevation));
+
         ViewHolder vh = new ViewHolder(v);
         // После найти каждый view findView
         return vh;
@@ -92,21 +108,36 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset[position]);
-        if (position==0) {
+
+
+        int drawableResource;
+        if (mDataset.length == 1)
+            drawableResource = R.drawable.list_item_background_single;
+        else if (position == 0)
+            drawableResource = R.drawable.list_item_background_top;
+        else if (position == mDataset.length - 1)
+            drawableResource = R.drawable.list_item_background_bottom;
+        else
+            drawableResource = R.drawable.list_item_background;
+
+        holder.root.setBackground(ContextCompat.getDrawable(holder.root.getContext(),drawableResource));
+//        holder.root.setPadding(Display.calc_pixels(16),Display.calc_pixels(16),Display.calc_pixels(16),Display.calc_pixels(16));
+
+
+        if (mDataset.length == 1 || position==0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                holder.root.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
+/*
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
                 p.setMargins(0, Display.calc_pixels(8), 0, 0);
                 holder.cardView.requestLayout();
-        } else if (position == mDataset.length-1) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
-            p.setMargins(0, 0, 0, Display.calc_pixels(8));
-            holder.cardView.requestLayout();
+*/
         }
         else {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
-            p.setMargins(0, 0, 0, 0);
-            holder.cardView.requestLayout();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                holder.root.setOutlineProvider(new CustomOutline());
         }
+        holder.mTextView.setText(mDataset[position]);
         Log.d("Test", "------------------------------ on Bind View holder - " + mDataset[position]);
 
     }
@@ -115,5 +146,14 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<TestRecyclerAdapte
     @Override
     public int getItemCount() {
         return mDataset.length;
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private class CustomOutline extends ViewOutlineProvider {
+
+        @Override
+        public void getOutline(View view, Outline outline) {
+            outline.setRect(0, (int)view.getResources().getDimension(R.dimen.cardElevation), view.getWidth(),view.getHeight());
+        }
     }
 }

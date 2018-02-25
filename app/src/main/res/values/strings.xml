@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Proto Planner</string>
     <string name="action_settings">Settings</string>
@@ -44,10 +45,10 @@
     <!-- General settings -->
     <string name="pref_general_selected_sort_summary">Show selected labels first</string>
     <string name="pref_general_selected_sort_title">Selected labels first</string>
-<!--
-    android:summary="@string/pref_general_selected_sort_summary"
-    android:title="@string/pref_general_selected_sort_title" />
--->
+    <!--
+        android:summary="@string/pref_general_selected_sort_summary"
+        android:title="@string/pref_general_selected_sort_title" />
+    -->
 
 
     <string name="large_text">

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="RUB">"\u20BD"</string>
-    <string name="USD">"\u0024"</string>
-    <string name="EUR">"\u20AC"</string>
-    <string name="XAF">"\u20A3"</string>
-</resources>

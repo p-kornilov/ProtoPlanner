@@ -10,7 +10,7 @@
 <!--        <item name="android:colorBackground">@color/white</item>-->
     </style>
 
-    <style name="AppTheme.Settings" parent="AppTheme">
+    <style name="AppTheme.WhiteBackground" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/white</item>
         <!--        <item name="android:colorBackground">@color/white</item>-->

@@ -18,17 +18,17 @@ public class Currency extends RealmObject {
     @PrimaryKey
     private int iso_code_int;
     private String iso_code_str;
-    private String iso_name;
+    private int iso_name_id;
     private String symbol;
     private int position;
 
     public Currency() {
     }
 
-    public Currency(String iso_code_str, int iso_code_int, String iso_name, String symbol, int position){
+    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int position){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;
-        this.iso_name = iso_name;
+        this.iso_name_id = iso_name_id;
         this.symbol = symbol;
         this.position = position;
     }
@@ -45,8 +45,8 @@ public class Currency extends RealmObject {
         return iso_code_int;
     }
 
-    public String getIso_name() {
-        return iso_name;
+    public int getIso_name_id() {
+        return iso_name_id;
     }
 
     public String getSymbol() {
@@ -55,13 +55,13 @@ public class Currency extends RealmObject {
 
     @Override
     public String toString() {
-        return "Currency : "+symbol+" iso code - " + iso_code_str + "(" + iso_code_int + ")" + ", name - " + iso_name;
+        return "Currency : "+symbol+" iso code - " + iso_code_str + "(" + iso_code_int + ")" + ", name id - " + iso_name_id;
     }
 
     public Plain getPlain() {
         Plain plain = new Plain();
         plain.iso_code_int = iso_code_int;
-        plain.iso_name = iso_name;
+        plain.iso_name_id = iso_name_id;
         plain.iso_code_str = iso_code_str;
         plain.symbol = symbol;
         plain.position = position;
@@ -71,7 +71,7 @@ public class Currency extends RealmObject {
     public class Plain {
         public int iso_code_int;
         public String iso_code_str;
-        public String iso_name;
+        public int iso_name_id;
         public String symbol;
         public int position;
     }

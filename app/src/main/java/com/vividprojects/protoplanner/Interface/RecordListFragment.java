@@ -67,13 +67,26 @@ public class RecordListFragment extends Fragment implements Injectable {
         recycler = (RecyclerView) v.findViewById(R.id.recycler_records);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setAutoMeasureEnabled(true);
+       // layoutManager.setAutoMeasureEnabled(true);
         recycler.setLayoutManager(layoutManager);
-        recycler.setNestedScrollingEnabled(false);
-        recycler.setFocusable(false);
+       // recycler.setNestedScrollingEnabled(false);
+       // recycler.setFocusable(false);
 
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         recycler.addItemDecoration(mDividerItemDecoration);
+
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && fabVisible) {
+                    ((MainActivity) getActivity()).hideFab();
+                    fabVisible = false;
+                } else if (dy < 0 && !fabVisible) {
+                    ((MainActivity) getActivity()).showFab();
+                    fabVisible = true;
+                }
+            }
+        });
 
 //        recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
         return v;
@@ -83,7 +96,7 @@ public class RecordListFragment extends Fragment implements Injectable {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+       // recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
         final RecordListViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordListViewModel.class);
 

@@ -87,18 +87,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             }
         });
 
-        NestedScrollView nv = findViewById(R.id.nested_scroll);
-        nv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY-oldScrollY > 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
-                } else if (scrollY-oldScrollY < 0 && fab.getVisibility() != View.VISIBLE) {
-                    fab.show();
-                }
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -108,18 +96,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-/*        int color = tv.getCurrentTextColor();
-        int A = (color >> 24) & 0xff; // or color >>> 24
-        int R = (color >> 16) & 0xff;
-        int G = (color >>  8) & 0xff;
-        int B = (color      ) & 0xff;
-
-        tv.setText("Color is: A=" + A + " R=" + R + "G=" + G + "B=" + B);*/
-
-       // AppComponent dmc = ((PPApplication) getApplication()).getMainComponent();
-        //dmc.inject(this);
-
-        //dataRepository.setContext(this);
 
         Log.i("Test", "------------------------------ Dimension width " + getResources().getConfiguration().screenWidthDp);
         Log.i("Test", "------------------------------ Dimension height " + dataRepository.getHeight());

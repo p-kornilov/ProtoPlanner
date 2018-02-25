@@ -13,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.vividprojects.protoplanner.Adapters.CurrencyListAdapter;
 import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
+import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.TMP.TestRecyclerAdapter;
@@ -68,7 +70,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
  //       recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-//        final RecordListViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordListViewModel.class);
+        final CurrencyListViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyListViewModel.class);
 
         Bundle args = getArguments();
 
@@ -79,9 +81,11 @@ public class CurrencyListFragment extends Fragment implements Injectable {
             model.setFilter(null);
         }*/
 
-/*        model.getList().observe(this,resource -> {
-            if (resource.data != null)
-                recycler.setAdapter(new RecordListAdapter(resource.data,getActivity()));
-        });*/
+        model.setFilter("");
+
+        model.getList().observe(this,list -> {
+            if (list != null)
+                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
+        });
     }
 }
