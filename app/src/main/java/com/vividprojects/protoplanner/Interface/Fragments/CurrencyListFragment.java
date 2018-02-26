@@ -85,7 +85,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
         model.getList().observe(this,list -> {
             if (list != null)
-                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
+                recycler.setAdapter(new CurrencyListAdapter(list,,getActivity()));
         });
     }
 }

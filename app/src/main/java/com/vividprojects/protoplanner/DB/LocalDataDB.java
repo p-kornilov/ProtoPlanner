@@ -5,8 +5,10 @@ import android.graphics.Color;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
+import com.vividprojects.protoplanner.API.ExchangeRates;
 import com.vividprojects.protoplanner.CoreData.Block;
 import com.vividprojects.protoplanner.CoreData.Currency;
+import com.vividprojects.protoplanner.CoreData.Exchange;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Record;
@@ -182,6 +184,21 @@ public class LocalDataDB {
 
             }
         });
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<Currency> crc = realm.where(Currency.class).findAll();
+
+                for (Currency cur : crc) {
+                    if (cur.getIso_code_int() == 643)
+                        realm.insertOrUpdate(new Exchange(643,643,1));
+                    else
+                        realm.insertOrUpdate(new Exchange(643,cur.getIso_code_int(),ExchangeRates.getTestRate()));
+                }
+            }
+        });
+
 
         Log.d("Test", "------------------------------ onCreate - DB done");
     }

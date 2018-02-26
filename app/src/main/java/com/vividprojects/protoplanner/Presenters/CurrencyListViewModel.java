@@ -1,15 +1,15 @@
 package com.vividprojects.protoplanner.Presenters;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.vividprojects.protoplanner.CoreData.Currency;
-import com.vividprojects.protoplanner.CoreData.Filter;
-import com.vividprojects.protoplanner.CoreData.Record;
-import com.vividprojects.protoplanner.CoreData.Resource;
+import com.vividprojects.protoplanner.CoreData.Exchange;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Utils.Bundle2;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +24,9 @@ public class CurrencyListViewModel extends ViewModel {
 
     final MutableLiveData<String> filter;
 
-    private final LiveData<List<Currency.Plain>> list;
+    private final LiveData<List<Currency.Plain>> listCurrency;
+    private final LiveData<List<Exchange.Plain>> listExchange;
+    private final MediatorLiveData<Bundle2<List<Currency.Plain>,List<Exchange.Plain>>> data;
 
     private DataRepository dataRepository;
 
@@ -36,14 +38,21 @@ public class CurrencyListViewModel extends ViewModel {
         this.dataRepository = dataRepository;
 
         this.filter = new MutableLiveData<>();
-        list = Transformations.switchMap(filter,input -> {
-/*            if (input.isEmpty()) {
-                return AbsentLiveData.create();
-            } else {
-                return dataRepository.loadRecords(input.getFilter());
-            }*/
+
+        data = new MediatorLiveData<>();
+
+        listCurrency = Transformations.switchMap(filter,input -> {
             return CurrencyListViewModel.this.dataRepository.getCurrencies();
         });
+        listExchange = Transformations.switchMap(filter,input -> {
+            return CurrencyListViewModel.this.dataRepository.getExchange();
+        });
+
+        data.addSource(listCurrency,list->{
+            Bundle2<List<Currency.Plain>,List<Exchange.Plain>> d = data.getValue();
+            d.first = list;
+        });
+
     }
 
     public void setFilter(String ids) {

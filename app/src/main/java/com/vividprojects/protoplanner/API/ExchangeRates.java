@@ -26,4 +26,10 @@ public class ExchangeRates {
         }
         return rates;
     }
+
+    public static float getTestRate() {
+        Random rnd = new Random();
+        float rate = (float)rnd.nextInt(1000)/100;
+        return rate;
+    }
 }

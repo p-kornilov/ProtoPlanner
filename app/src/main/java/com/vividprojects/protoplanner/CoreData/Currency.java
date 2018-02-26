@@ -21,6 +21,8 @@ public class Currency extends RealmObject {
     private int iso_name_id;
     private String symbol;
     private int position;
+    private int exchange_base;
+    private float exchange_rate;
 
     public Currency() {
     }
@@ -31,6 +33,24 @@ public class Currency extends RealmObject {
         this.iso_name_id = iso_name_id;
         this.symbol = symbol;
         this.position = position;
+        this.exchange_base = 0;
+        this.exchange_rate = 0;
+    }
+
+    public int getExchange_base() {
+        return exchange_base;
+    }
+
+    public void setExchange_base(int exchange_base) {
+        this.exchange_base = exchange_base;
+    }
+
+    public float getExchange_rate() {
+        return exchange_rate;
+    }
+
+    public void setExchange_rate(float exchange_rate) {
+        this.exchange_rate = exchange_rate;
     }
 
     public int getPosition() {
@@ -55,7 +75,15 @@ public class Currency extends RealmObject {
 
     @Override
     public String toString() {
-        return "Currency : "+symbol+" iso code - " + iso_code_str + "(" + iso_code_int + ")" + ", name id - " + iso_name_id;
+        return "Currency{" +
+                "iso_code_int=" + iso_code_int +
+                ", iso_code_str='" + iso_code_str + '\'' +
+                ", iso_name_id=" + iso_name_id +
+                ", symbol='" + symbol + '\'' +
+                ", position=" + position +
+                ", exchange_base=" + exchange_base +
+                ", exchange_rate=" + exchange_rate +
+                '}';
     }
 
     public Plain getPlain() {
@@ -65,6 +93,8 @@ public class Currency extends RealmObject {
         plain.iso_code_str = iso_code_str;
         plain.symbol = symbol;
         plain.position = position;
+        plain.exchange_base = exchange_base;
+        plain.exchange_rate = exchange_rate;
         return plain;
     }
 
@@ -74,6 +104,8 @@ public class Currency extends RealmObject {
         public int iso_name_id;
         public String symbol;
         public int position;
+        public int exchange_base;
+        public float exchange_rate;
     }
 
 }
