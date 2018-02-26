@@ -39,12 +39,10 @@ import javax.inject.Inject;
 
 public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.ViewHolder> {
 
-    private boolean inDeletionMode = false;
     private List<Currency.Plain> data;
-    private LayoutInflater inflater;
     private Context context;
 
-    public CurrencyListAdapter(List<Currency.Plain> data, Context context) {
+    public CurrencyListAdapter(List<Currency.Plain> data, int currency_default, Context context) {
         this.data = data;
         this.context = context;
 
