@@ -191,10 +191,13 @@ public class LocalDataDB {
                 RealmResults<Currency> crc = realm.where(Currency.class).findAll();
 
                 for (Currency cur : crc) {
-                    if (cur.getIso_code_int() == 643)
-                        realm.insertOrUpdate(new Exchange(643,643,1));
-                    else
-                        realm.insertOrUpdate(new Exchange(643,cur.getIso_code_int(),ExchangeRates.getTestRate()));
+                    if (cur.getIso_code_int() == 643) {
+                        cur.setExchange_rate(1, 643);
+                        realm.insertOrUpdate(cur);
+                    } else {
+                        cur.setExchange_rate(ExchangeRates.getTestRate(), 643);
+                        realm.insertOrUpdate(cur);
+                    }
                 }
             }
         });

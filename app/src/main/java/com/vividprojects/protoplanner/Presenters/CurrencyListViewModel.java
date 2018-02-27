@@ -25,8 +25,6 @@ public class CurrencyListViewModel extends ViewModel {
     final MutableLiveData<String> filter;
 
     private final LiveData<List<Currency.Plain>> listCurrency;
-    private final LiveData<List<Exchange.Plain>> listExchange;
-    private final MediatorLiveData<Bundle2<List<Currency.Plain>,List<Exchange.Plain>>> data;
 
     private DataRepository dataRepository;
 
@@ -39,18 +37,8 @@ public class CurrencyListViewModel extends ViewModel {
 
         this.filter = new MutableLiveData<>();
 
-        data = new MediatorLiveData<>();
-
         listCurrency = Transformations.switchMap(filter,input -> {
             return CurrencyListViewModel.this.dataRepository.getCurrencies();
-        });
-        listExchange = Transformations.switchMap(filter,input -> {
-            return CurrencyListViewModel.this.dataRepository.getExchange();
-        });
-
-        data.addSource(listCurrency,list->{
-            Bundle2<List<Currency.Plain>,List<Exchange.Plain>> d = data.getValue();
-            d.first = list;
         });
 
     }
@@ -64,6 +52,6 @@ public class CurrencyListViewModel extends ViewModel {
 
     public LiveData<List<Currency.Plain>> getList(){
 
-        return list;//dataRepository.loadRecords();
+        return listCurrency;
     }
 }

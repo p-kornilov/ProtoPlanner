@@ -41,11 +41,19 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     private List<Currency.Plain> data;
     private Context context;
+    private Currency.Plain base;
 
-    public CurrencyListAdapter(List<Currency.Plain> data, int currency_default, Context context) {
+    public CurrencyListAdapter(List<Currency.Plain> data, Context context) {
         this.data = data;
         this.context = context;
-
+        for (Currency.Plain currency : this.data) {
+            if (currency.iso_code_int == currency.exchange_base) {
+                this.data.remove(currency);
+                this.data.add(0, currency);
+                base = currency;
+                break;
+            }
+        }
     }
 
     @Override
@@ -86,7 +94,13 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
         holder.currency_name.setText(holder.currency_name.getResources().getString(obj.iso_name_id));
         holder.currency_code.setText(obj.iso_code_str);
-        holder.currency_symbol.setText(obj.symbol);
+        if (obj.iso_code_int == obj.exchange_base) {
+            holder.currency_example.setText(PriceFormatter.getValue(obj, 1*obj.exchange_rate));
+            holder.currency_default.setVisibility(View.VISIBLE);
+        } else {
+            holder.currency_example.setText(PriceFormatter.getValue(obj, 1*obj.exchange_rate)+" = " + PriceFormatter.getValue(base, 1));
+            holder.currency_default.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -96,7 +110,8 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView currency_name;
-        TextView currency_symbol;
+        TextView currency_example;
+        TextView currency_default;
         TextView currency_code;
         ImageButton edit_button;
         public Currency.Plain data;
@@ -106,8 +121,9 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             super(view);
             root = view;
             currency_name = view.findViewById(R.id.currency_name);
-            currency_symbol = view.findViewById(R.id.currency_symbol);
+            currency_example = view.findViewById(R.id.currency_symbol);
             currency_code = view.findViewById(R.id.currency_code);
+            currency_default = view.findViewById(R.id.currency_default);
             edit_button = view.findViewById(R.id.currency_edit_button);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

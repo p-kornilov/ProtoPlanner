@@ -41,16 +41,13 @@ public class Currency extends RealmObject {
         return exchange_base;
     }
 
-    public void setExchange_base(int exchange_base) {
-        this.exchange_base = exchange_base;
-    }
-
     public float getExchange_rate() {
         return exchange_rate;
     }
 
-    public void setExchange_rate(float exchange_rate) {
+    public void setExchange_rate(float exchange_rate, int exchange_base) {
         this.exchange_rate = exchange_rate;
+        this.exchange_base = exchange_base;
     }
 
     public int getPosition() {
