@@ -8,18 +8,28 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.Adapters.CurrencyListAdapter;
 import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
+import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
+import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.TMP.TestRecyclerAdapter;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -30,6 +40,7 @@ import javax.inject.Inject;
 public class CurrencyListFragment extends Fragment implements Injectable {
     private RecyclerView recycler;
     private boolean fabVisible = true;
+    private CurrencyListAdapter currencyListAdapter;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -38,6 +49,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Log.d("Test", "onCreate - Records Fragment");
     }
 
@@ -83,9 +95,70 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
         model.setFilter("");
 
+        currencyListAdapter = new CurrencyListAdapter();
+        recycler.setAdapter(currencyListAdapter);
+
         model.getList().observe(this,list -> {
             if (list != null)
-                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
+//                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
+                currencyListAdapter.setData(list,getActivity());
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+
+        MenuItem myActionMenuItem = menu.findItem( R.id.search);
+        final SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("Test","Entered - Submit");
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String filter) {
+                if (TextUtils.isEmpty(filter)) {
+/*
+                    adapter.filter("");
+                    listView.clearTextFilter();
+*/
+                    currencyListAdapter.setFilter(filter);
+                    Log.d("Test","Entered - Empty");
+                } else {
+                    Log.d("Test","Entered - " + filter);
+                    currencyListAdapter.setFilter(filter);
+/*
+                    adapter.filter(newText);
+*/
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.search:
+/*
+                EditTextDialog editNameDialog = new EditTextDialog();
+                editNameDialog.setTargetFragment(this, REQUEST_EDIT_NAME);
+                Bundle b = new Bundle();
+                b.putString("TITLE","Edit note");
+                b.putString("HINT","Name");
+                b.putString("POSITIVE","Save");
+                b.putString("NEGATIVE","Cancel");
+                b.putString("EDITTEXT",recordName);
+                editNameDialog.setArguments(b);
+                editNameDialog.show(getFragmentManager(), "Edit name");
+*/
+                break;
+        }
+        return true;
     }
 }

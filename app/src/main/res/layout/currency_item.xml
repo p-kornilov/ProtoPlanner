@@ -61,24 +61,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
-        android:text="@string/ANG_symbol"
+        android:textColor="@android:color/black"
+        android:text="$1.00"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/currency_name"
         app:layout_constraintBottom_toTopOf="@id/currency_default"/>
 
     <TextView
-        android:id="@+id/temp"
+        android:id="@+id/currency_base"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto"
-        android:text="100.00 = $1.00"
-        android:textSize="14sp"
-        android:visibility="invisible"
+        android:text=" = $1.00"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/currency_default"
         app:layout_constraintStart_toEndOf="@id/currency_symbol"
-        app:layout_constraintTop_toTopOf="@id/currency_symbol"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toTopOf="@id/currency_symbol" />
 
     <TextView
         android:id="@+id/currency_default"

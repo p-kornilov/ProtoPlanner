@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.Images.GlideApp;
+import com.vividprojects.protoplanner.Interface.Activity.ContainerActivity;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.PPApplication;
 import com.vividprojects.protoplanner.R;
@@ -28,7 +29,10 @@ import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -40,20 +44,41 @@ import javax.inject.Inject;
 public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.ViewHolder> {
 
     private List<Currency.Plain> data;
-    private Context context;
+    private List<Currency.Plain> filtered_data;
     private Currency.Plain base;
+    private Map<Integer,String> names;
 
-    public CurrencyListAdapter(List<Currency.Plain> data, Context context) {
+    public CurrencyListAdapter() {
+        filtered_data = new ArrayList<>();
+        names = new HashMap<>();
+    }
+
+    public void setData(List<Currency.Plain> data, Context context) {
         this.data = data;
-        this.context = context;
-        for (Currency.Plain currency : this.data) {
-            if (currency.iso_code_int == currency.exchange_base) {
-                this.data.remove(currency);
-                this.data.add(0, currency);
-                base = currency;
-                break;
-            }
+        names.clear();
+        int i = 0;
+        int base_currency = -1;
+        for (Currency.Plain c : this.data) {
+            names.put(c.iso_name_id,context.getResources().getString(c.iso_name_id));
+            if (c.iso_code_int == c.exchange_base)
+                base_currency = i;
+            i++;
         }
+        if (base_currency > -1) {
+            base = this.data.remove(base_currency);
+            this.data.add(0, base);
+        }
+        this.filtered_data = this.data;
+    }
+
+    public void setFilter(String filter) {
+        filter = filter.toLowerCase();
+        filtered_data = new ArrayList<>();
+        for (Currency.Plain c : data) {
+            if (c.iso_code_str.toLowerCase().contains(filter) || names.get(c.iso_name_id).toLowerCase().contains(filter))
+                filtered_data.add(c);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -67,23 +92,25 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Currency.Plain obj = data.get(position);
+        final Currency.Plain obj = filtered_data.get(position);
+        if (obj == null)
+            return;
         holder.data = obj;
 
 
         int drawableResource;
-        if (data.size() == 1)
+        if (filtered_data.size() == 1)
             drawableResource = R.drawable.list_item_background_single;
         else if (position == 0)
             drawableResource = R.drawable.list_item_background_top;
-        else if (position == data.size() - 1)
+        else if (position == filtered_data.size() - 1)
             drawableResource = R.drawable.list_item_background_bottom;
         else
             drawableResource = R.drawable.list_item_background;
 
         holder.root.setBackground(ContextCompat.getDrawable(holder.root.getContext(),drawableResource));
 
-        if (data.size() == 1 || position==0) {
+        if (filtered_data.size() == 1 || position==0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 holder.root.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
         }
@@ -92,20 +119,22 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
                 holder.root.setOutlineProvider(new CurrencyListAdapter.CustomOutline());
         }
 
-        holder.currency_name.setText(holder.currency_name.getResources().getString(obj.iso_name_id));
+        holder.currency_name.setText(names.get(obj.iso_name_id));
         holder.currency_code.setText(obj.iso_code_str);
         if (obj.iso_code_int == obj.exchange_base) {
             holder.currency_example.setText(PriceFormatter.getValue(obj, 1*obj.exchange_rate));
+            holder.currency_base.setText("");
             holder.currency_default.setVisibility(View.VISIBLE);
         } else {
-            holder.currency_example.setText(PriceFormatter.getValue(obj, 1*obj.exchange_rate)+" = " + PriceFormatter.getValue(base, 1));
+            holder.currency_example.setText(PriceFormatter.getValue(obj, 1*obj.exchange_rate));
+            holder.currency_base.setText(" = " + PriceFormatter.getValue(base, 1));
             holder.currency_default.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return filtered_data.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -113,6 +142,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         TextView currency_example;
         TextView currency_default;
         TextView currency_code;
+        TextView currency_base;
         ImageButton edit_button;
         public Currency.Plain data;
         public View root;
@@ -124,6 +154,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             currency_example = view.findViewById(R.id.currency_symbol);
             currency_code = view.findViewById(R.id.currency_code);
             currency_default = view.findViewById(R.id.currency_default);
+            currency_base = view.findViewById(R.id.currency_base);
             edit_button = view.findViewById(R.id.currency_edit_button);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
