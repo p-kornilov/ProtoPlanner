@@ -1,12 +1,18 @@
 package com.vividprojects.protoplanner.Interface.Fragments;
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -18,11 +24,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.vividprojects.protoplanner.Adapters.CurrencyListAdapter;
 import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
+import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
@@ -73,6 +81,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
      //   recycler.addItemDecoration(mDividerItemDecoration);
 
         recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
+
         return v;
     }
 
@@ -95,13 +104,13 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
         model.setFilter("");
 
-        currencyListAdapter = new CurrencyListAdapter();
+        currencyListAdapter = new CurrencyListAdapter(getActivity());
         recycler.setAdapter(currencyListAdapter);
 
         model.getList().observe(this,list -> {
             if (list != null)
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
-                currencyListAdapter.setData(list,getActivity());
+                currencyListAdapter.setData(list);
         });
     }
 

@@ -7,9 +7,12 @@ import android.graphics.Outline;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
@@ -47,13 +50,15 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
     private List<Currency.Plain> filtered_data;
     private Currency.Plain base;
     private Map<Integer,String> names;
+    private Context context;
 
-    public CurrencyListAdapter() {
+    public CurrencyListAdapter(Context context) {
         filtered_data = new ArrayList<>();
         names = new HashMap<>();
+        this.context = context;
     }
 
-    public void setData(List<Currency.Plain> data, Context context) {
+    public void setData(List<Currency.Plain> data) {
         this.data = data;
         names.clear();
         int i = 0;
@@ -95,7 +100,8 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         final Currency.Plain obj = filtered_data.get(position);
         if (obj == null)
             return;
-        holder.data = obj;
+        holder.currency_item = obj;
+        holder.position = position;
 
 
         int drawableResource;
@@ -144,8 +150,9 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         TextView currency_code;
         TextView currency_base;
         ImageButton edit_button;
-        public Currency.Plain data;
+        public Currency.Plain currency_item;
         public View root;
+        public int position;
 
         ViewHolder(View view) {
             super(view);
@@ -163,6 +170,51 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
                     //mCallback.onRecordEditClick(data.getId());
                    // appController.openRecord(data.getId());
 
+                }
+            });
+
+            edit_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(context, view);
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.mce_edit:
+/*
+                                RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
+                                addImageURLDialog.setTargetFragment(RecordItemFragment.this, REQUEST_IMAGE_URL_LOAD);
+                                addImageURLDialog.show(getFragmentManager(), "Add_image_url");
+*/
+                                    return true;
+                                case R.id.mce_default:
+/*
+                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                                } else {
+                                    Intent i = new Intent(
+                                            Intent.ACTION_PICK,
+                                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                                    startActivityForResult(i, REQUEST_IMAGE_GALLERY);
+                                }
+*/
+                                    return true;
+                                case R.id.mce_delete:
+                                    data.remove(currency_item);
+                                    filtered_data.remove(currency_item);
+                                    notifyItemRemoved(position);
+                                    //launchCamera();
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.menu_currency_edit, popup.getMenu());
+                    popup.show();
                 }
             });
         }

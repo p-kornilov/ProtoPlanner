@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mce_edit"
+        android:title="Edit"/>
+
+    <item
+        android:id="@+id/mce_default"
+        android:title="Set Default"/>
+
+    <item
+        android:id="@+id/mce_delete"
+        android:title="Delete"/>
+</menu>
