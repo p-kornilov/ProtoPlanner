@@ -69,6 +69,14 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
         });
     }
 
+    public void hideFab() {
+        fab.hide();
+    }
+
+    public void showFab() {
+        fab.show();
+    }
+
 
 
 /*    @Override

@@ -17,7 +17,7 @@ public class PriceFormatter {
             case Currency.AFTER:
                 return svalue+ " " + currency.symbol;
             case Currency.WITHIN:
-                return svalue.replace('.',currency.symbol.charAt(0));
+                return svalue.replaceAll("[\\.,]",currency.symbol);
             case Currency.BEFORE:
             default:
                 return currency.symbol + svalue;

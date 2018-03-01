@@ -64,12 +64,25 @@ public class LocalDataDB {
                 realm.insertOrUpdate(c);
                 Log.d("Test", "+++++++++++++++++++++++ "+c);
                 c = new Currency("USD",840,R.string.USD,contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE);
+                c.setSorting_weight(10);
                 realm.insertOrUpdate(c);
                 c = new Currency("EUR",978,R.string.EUR,contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE);
+                c.setSorting_weight(10);
                 realm.insertOrUpdate(c);
                 c = new Currency("XAF",950,R.string.XAF,contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN);
                 realm.insertOrUpdate(c);
                 c = new Currency("ANG",532,R.string.ANG,contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE);
+                realm.insertOrUpdate(c);
+                c = new Currency("RUB",1,"Test 1",contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER);
+                realm.insertOrUpdate(c);
+                Log.d("Test", "+++++++++++++++++++++++ "+c);
+                c = new Currency("USD",2,"Test 2",contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE);
+                realm.insertOrUpdate(c);
+                c = new Currency("EUR",3,"Test 3",contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE);
+                realm.insertOrUpdate(c);
+                c = new Currency("XAF",4,"Test 4",contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN);
+                realm.insertOrUpdate(c);
+                c = new Currency("ANG",5,"Test 5",contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE);
                 realm.insertOrUpdate(c);
             }
         });
@@ -296,7 +309,19 @@ public class LocalDataDB {
             @Override
             public void execute(Realm realm) {
                 Label v = realm.where(Label.class).contains("id",id).findFirst();
-                v.deleteFromRealm();
+                if (v != null)
+                    v.deleteFromRealm();
+            }
+        });
+    }
+
+    public void deleteCurrency(int iso_code_int) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Currency c = realm.where(Currency.class).equalTo("iso_code_int",iso_code_int).findFirst();
+                if (c != null)
+                    c.deleteFromRealm();
             }
         });
     }
@@ -307,7 +332,8 @@ public class LocalDataDB {
             @Override
             public void execute(Realm realm) {
                 Variant v = realm.where(Variant.class).contains("title",variant).findFirst();
-                v.addImage(image);
+                if (v != null)
+                    v.addImage(image);
             }
         });
     }
@@ -318,7 +344,8 @@ public class LocalDataDB {
             public void execute(Realm realm) {
                 Record r = realm.where(Record.class).contains("id",recordId).findFirst();
                 RealmResults<Label> labels = realm.where(Label.class).in("id",ids).findAll();
-                r.setLebels(labels);
+                if (r != null && labels != null)
+                    r.setLebels(labels);
             }
         });
     }

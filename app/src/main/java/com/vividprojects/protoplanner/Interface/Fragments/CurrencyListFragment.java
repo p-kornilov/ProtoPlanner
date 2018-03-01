@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -29,6 +30,7 @@ import android.widget.ImageButton;
 import com.vividprojects.protoplanner.Adapters.CurrencyListAdapter;
 import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
+import com.vividprojects.protoplanner.Interface.Activity.ContainerActivity;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
 import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.MainActivity;
@@ -49,6 +51,8 @@ public class CurrencyListFragment extends Fragment implements Injectable {
     private RecyclerView recycler;
     private boolean fabVisible = true;
     private CurrencyListAdapter currencyListAdapter;
+    private CurrencyListViewModel model;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -74,13 +78,23 @@ public class CurrencyListFragment extends Fragment implements Injectable {
         View v = (View) inflater.inflate(R.layout.fragment_container_list, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler_list);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recycler.setLayoutManager(layoutManager);
-
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
      //   recycler.addItemDecoration(mDividerItemDecoration);
 
-        recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
+       // recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
+
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && fabVisible) {
+                    ((ContainerActivity) getActivity()).hideFab();
+                    fabVisible = false;
+                } else if (dy < 0 && !fabVisible) {
+                    ((ContainerActivity) getActivity()).showFab();
+                    fabVisible = true;
+                }
+            }
+        });
 
         return v;
     }
@@ -91,7 +105,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
  //       recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        final CurrencyListViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyListViewModel.class);
+        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyListViewModel.class);
 
         Bundle args = getArguments();
 
@@ -104,8 +118,11 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
         model.setFilter("");
 
-        currencyListAdapter = new CurrencyListAdapter(getActivity());
+        layoutManager = new LinearLayoutManager(getContext());
+        recycler.setLayoutManager(layoutManager);
+        currencyListAdapter = new CurrencyListAdapter(this,(LinearLayoutManager)layoutManager);
         recycler.setAdapter(currencyListAdapter);
+
 
         model.getList().observe(this,list -> {
             if (list != null)
@@ -169,5 +186,20 @@ public class CurrencyListFragment extends Fragment implements Injectable {
                 break;
         }
         return true;
+    }
+
+    public void deleteCurrency(int iso_code_int) {
+        model.deleteCurrency(iso_code_int);
+    }
+
+    public void scrollToTop() {
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
+            @Override protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
+        smoothScroller.setTargetPosition(0);
+        layoutManager.startSmoothScroll(smoothScroller);
     }
 }

@@ -21,8 +21,10 @@ public class Currency extends RealmObject {
     private int iso_name_id;
     private String symbol;
     private int position;
-    private int exchange_base;
-    private float exchange_rate;
+    private int exchange_base = 0;
+    private float exchange_rate = 0;
+    private int sorting_weight = 0;
+    private String custom_name;
 
     public Currency() {
     }
@@ -33,8 +35,23 @@ public class Currency extends RealmObject {
         this.iso_name_id = iso_name_id;
         this.symbol = symbol;
         this.position = position;
-        this.exchange_base = 0;
-        this.exchange_rate = 0;
+    }
+
+    public Currency(String iso_code_str, int iso_code_int, String custom_name, String symbol, int position){
+        this.iso_code_str = iso_code_str;
+        this.iso_code_int = iso_code_int;
+        this.iso_name_id = 0;
+        this.symbol = symbol;
+        this.position = position;
+        this.custom_name = custom_name;
+    }
+
+    public String getCustom_name() {
+        return custom_name;
+    }
+
+    public void setCustom_name(String custom_name) {
+        this.custom_name = custom_name;
     }
 
     public int getExchange_base() {
@@ -48,6 +65,14 @@ public class Currency extends RealmObject {
     public void setExchange_rate(float exchange_rate, int exchange_base) {
         this.exchange_rate = exchange_rate;
         this.exchange_base = exchange_base;
+    }
+
+    public int getSorting_weight() {
+        return sorting_weight;
+    }
+
+    public void setSorting_weight(int sorting_weight) {
+        this.sorting_weight = sorting_weight;
     }
 
     public int getPosition() {
@@ -92,6 +117,8 @@ public class Currency extends RealmObject {
         plain.position = position;
         plain.exchange_base = exchange_base;
         plain.exchange_rate = exchange_rate;
+        plain.sorting_weight= sorting_weight;
+        plain.custom_name = custom_name;
         return plain;
     }
 
@@ -103,6 +130,8 @@ public class Currency extends RealmObject {
         public int position;
         public int exchange_base;
         public float exchange_rate;
+        public int sorting_weight;
+        public String custom_name;
     }
 
 }
