@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -276,17 +277,29 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         sortList();
         setFilter(filter);
 //        notifyItemMoved(position,0);
-        notifyItemRemoved(position);
+        notifyItemRemoved(position);  //TODO Сделать нормальную анимацию
 //        notifyItemInserted(0);
-        context.scrollToTop();
+        scrollToTop();
       //  notifyDataSetChanged();
         int first = layoutManager.findFirstVisibleItemPosition();
         int last = layoutManager.findLastVisibleItemPosition();
       //  context.scrollToTop();
         for (int i = first; i< last+1; i++)
             notifyItemChanged(i);
+        context.setDefaultCurrency(base.iso_code_int);
         //notifyDataSetChanged();
 
+    }
+
+    public void scrollToTop() {
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(context.getContext()) {
+            @Override protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
+        smoothScroller.setTargetPosition(0);
+        layoutManager.startSmoothScroll(smoothScroller);
     }
 
     private void deleteItem(Currency.Plain currency_item, int position) {

@@ -326,6 +326,25 @@ public class LocalDataDB {
         });
     }
 
+    public void setDefaultCurrency(int iso_code_int) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Currency c = realm.where(Currency.class).equalTo("iso_code_int",iso_code_int).findFirst();
+                RealmResults<Currency> cs = realm.where(Currency.class).findAll();
+                if (cs != null && c != null) {
+                    //Currency base = c;
+                    for (Currency ci : cs) {
+                        ci.setExchange_base(c.getIso_code_int());
+                        if (ci != c)
+                            ci.setExchange_rate(ci.getExchange_rate()/c.getExchange_rate());
+                    }
+                    c.setExchange_rate(1);
+                }
+            }
+        });
+    }
+
     public void addImageToVariant(String variant, String image) {
         final Integer result = 0;
         realm.executeTransaction(new Realm.Transaction() {

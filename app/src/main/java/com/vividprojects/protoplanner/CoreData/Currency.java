@@ -46,6 +46,14 @@ public class Currency extends RealmObject {
         this.custom_name = custom_name;
     }
 
+    public void setExchange_rate(float exchange_rate) {
+        this.exchange_rate = exchange_rate;
+    }
+
+    public void setExchange_base(int exchange_base) {
+        this.exchange_base = exchange_base;
+    }
+
     public String getCustom_name() {
         return custom_name;
     }

@@ -192,14 +192,8 @@ public class CurrencyListFragment extends Fragment implements Injectable {
         model.deleteCurrency(iso_code_int);
     }
 
-    public void scrollToTop() {
-        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
-            @Override protected int getVerticalSnapPreference() {
-                return LinearSmoothScroller.SNAP_TO_START;
-            }
-        };
-
-        smoothScroller.setTargetPosition(0);
-        layoutManager.startSmoothScroll(smoothScroller);
+    public void setDefaultCurrency(int iso_code_int) {
+        model.setDefaultCurrency(iso_code_int);
     }
+
 }

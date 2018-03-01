@@ -58,4 +58,8 @@ public class CurrencyListViewModel extends ViewModel {
     public void deleteCurrency(int iso_code_int) {
         dataRepository.deleteCurrency(iso_code_int);
     }
+
+    public void setDefaultCurrency(int iso_code_int) {
+        dataRepository.setDefaultCurrency(iso_code_int);
+    }
 }

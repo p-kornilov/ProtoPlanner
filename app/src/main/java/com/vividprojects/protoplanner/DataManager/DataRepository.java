@@ -331,6 +331,10 @@ public class DataRepository {
         localDataDB.deleteCurrency(iso_code_int);
     }
 
+    public void setDefaultCurrency(int iso_code_int) {
+        localDataDB.setDefaultCurrency(iso_code_int);
+    }
+
     public void saveLabelsForRecord(String recordItemId,String[] ids) {
         localDataDB.saveLabelsForRecord(recordItemId,ids);
     };
