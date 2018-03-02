@@ -13,4 +13,5 @@
     <color name="black">#000000</color>
     <color name="gray">#eeeeee</color>
     <color name="colorPrimaryBorder">#e0e0e0</color>
+    <color name="secondary_text">#e0e0e0</color>
 </resources>
