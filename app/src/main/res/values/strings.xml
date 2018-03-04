@@ -9,6 +9,12 @@
 
     <string name="currency_default">default currency</string>
 
+    <string-array name="list_currency_sign_position">
+        <item>Before</item>
+        <item>After</item>
+        <item>Within</item>
+    </string-array>
+
     <!-- Data & sync settings -->
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">

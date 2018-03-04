@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         }
 
         if (id == R.id.nav_currency) {
-            navigationController.openCurrensies();
+            navigationController.openCurrencies();
             /*else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

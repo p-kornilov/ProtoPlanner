@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Interface.Fragments.CurrencyFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
@@ -51,22 +52,38 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            final CurrencyListFragment fragment = new CurrencyListFragment();
-            fragmentTransaction.replace(R.id.container_container, fragment);
-            fragmentTransaction.commit();
-
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+        int activityType = getIntent().getIntExtra(NavigationController.ACTIVITY_TYPE,0);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment fragment = null;
+
+        switch (activityType) {
+            case NavigationController.CURRENCY_LIST:
+                fragment = new CurrencyListFragment();
+
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                });
+                break;
+            case NavigationController.CURRENCY_ITEM:
+                fragment = new CurrencyFragment();
+
+                fab.setVisibility(View.GONE);
+                break;
+        }
+
+        if (fragment != null)
+            fragmentTransaction.replace(R.id.container_container, fragment);
+        fragmentTransaction.commit();
+
+
     }
 
     public void hideFab() {

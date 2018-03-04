@@ -90,7 +90,7 @@ public class CustomTextInputLayout extends TextInputLayout {
                             this.mHelperView,
                             ViewCompat.getPaddingStart(getEditText()),
                             0, ViewCompat.getPaddingEnd(getEditText()),
-                            getEditText().getPaddingBottom());
+                            0);
                 }
             } else {
                 this.removeView(this.mHelperView);

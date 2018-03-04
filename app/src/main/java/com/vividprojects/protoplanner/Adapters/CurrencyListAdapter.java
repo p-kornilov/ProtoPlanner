@@ -216,25 +216,10 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.mce_edit:
-/*
-                                RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
-                                addImageURLDialog.setTargetFragment(RecordItemFragment.this, REQUEST_IMAGE_URL_LOAD);
-                                addImageURLDialog.show(getFragmentManager(), "Add_image_url");
-*/
+                                    context.editItem(currency_item.iso_code_int);
                                     return true;
                                 case R.id.mce_default:
                                     setDefaultItem(currency_item,position);
-/*
-                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                                } else {
-                                    Intent i = new Intent(
-                                            Intent.ACTION_PICK,
-                                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                                    startActivityForResult(i, REQUEST_IMAGE_GALLERY);
-                                }
-*/
                                     return true;
                                 case R.id.mce_delete:
                                     deleteItem(currency_item,position);

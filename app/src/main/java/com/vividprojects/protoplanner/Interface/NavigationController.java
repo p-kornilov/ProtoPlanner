@@ -19,6 +19,11 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class NavigationController {
+    public final static int CURRENCY_LIST = 1;
+    public final static int CURRENCY_ITEM = 2;
+
+    public final static String ACTIVITY_TYPE = "ACTIVITY_TYPE";
+
     private Context context;
     private Activity currentActivity;
 
@@ -106,7 +111,7 @@ public class NavigationController {
         context.startActivity(intent);
     }
 
-    public void openCurrensies() {
+    public void openCurrencies() {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
@@ -114,6 +119,19 @@ public class NavigationController {
         } else {
             intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
+        intent.putExtra(ACTIVITY_TYPE,CURRENCY_LIST);
+        context.startActivity(intent);
+    }
+
+    public void openCurrency(int iso_code) {
+
+        Intent intent;
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
         context.startActivity(intent);
     }
 

@@ -1,22 +1,14 @@
 package com.vividprojects.protoplanner.Interface.Fragments;
 
-import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,22 +17,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.vividprojects.protoplanner.Adapters.CurrencyListAdapter;
-import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerActivity;
-import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
-import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
-import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
-import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.TMP.TestRecyclerAdapter;
-
-import java.util.ArrayList;
+import com.vividprojects.protoplanner.Widgets.CustomTextInputLayout;
+import com.vividprojects.protoplanner.Widgets.PrefixedEditText;
 
 import javax.inject.Inject;
 
@@ -48,7 +32,7 @@ import javax.inject.Inject;
  * Created by Smile on 19.10.2017.
  */
 
-public class CurrencyListFragment extends Fragment implements Injectable {
+public class CurrencyFragment extends Fragment implements Injectable {
     private RecyclerView recycler;
     private boolean fabVisible = true;
     private CurrencyListAdapter currencyListAdapter;
@@ -58,13 +42,11 @@ public class CurrencyListFragment extends Fragment implements Injectable {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    @Inject
-    NavigationController navigationController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+   //     setHasOptionsMenu(true);
         Log.d("Test", "onCreate - Records Fragment");
     }
 
@@ -78,15 +60,19 @@ public class CurrencyListFragment extends Fragment implements Injectable {
                              Bundle savedInstanceState) {
 
         Log.d("Test", "onCreateView - RootListFragment");
-        View v = (View) inflater.inflate(R.layout.fragment_container_list, container, false);
-        recycler = (RecyclerView) v.findViewById(R.id.recycler_list);
+        View v = (View) inflater.inflate(R.layout.currency_edit_fragment, container, false);
+
+        PrefixedEditText baseEdit = v.findViewById(R.id.cef_base_rate);
+        baseEdit.setPrefix("$");
+        PrefixedEditText currentEdit = v.findViewById(R.id.cef_currency_rate);
+        baseEdit.setPrefix("F");
 
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
      //   recycler.addItemDecoration(mDividerItemDecoration);
 
        // recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
 
-        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+  /*      recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0 && fabVisible) {
@@ -98,7 +84,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
                 }
             }
         });
-
+*/
         return v;
     }
 
@@ -106,9 +92,8 @@ public class CurrencyListFragment extends Fragment implements Injectable {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
- //       recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyListViewModel.class);
+//        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyListViewModel.class);
 
         Bundle args = getArguments();
 
@@ -119,22 +104,20 @@ public class CurrencyListFragment extends Fragment implements Injectable {
             model.setFilter(null);
         }*/
 
-        model.setFilter("");
-
-        layoutManager = new LinearLayoutManager(getContext());
-        recycler.setLayoutManager(layoutManager);
-        currencyListAdapter = new CurrencyListAdapter(this,(LinearLayoutManager)layoutManager);
-        recycler.setAdapter(currencyListAdapter);
+//        model.setFilter("");
 
 
+
+/*
         model.getList().observe(this,list -> {
             if (list != null)
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
                 currencyListAdapter.setData(list);
         });
+*/
     }
 
-    @Override
+/*    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
 
@@ -150,31 +133,31 @@ public class CurrencyListFragment extends Fragment implements Injectable {
             @Override
             public boolean onQueryTextChange(String filter) {
                 if (TextUtils.isEmpty(filter)) {
-/*
+*//*
                     adapter.filter("");
                     listView.clearTextFilter();
-*/
+*//*
                     currencyListAdapter.setFilter(filter);
                     Log.d("Test","Entered - Empty");
                 } else {
                     Log.d("Test","Entered - " + filter);
                     currencyListAdapter.setFilter(filter);
-/*
+*//*
                     adapter.filter(newText);
-*/
+*//*
                 }
                 return true;
             }
         });
-    }
+    }*/
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
             case R.id.search:
-/*
+*//*
                 EditTextDialog editNameDialog = new EditTextDialog();
                 editNameDialog.setTargetFragment(this, REQUEST_EDIT_NAME);
                 Bundle b = new Bundle();
@@ -185,22 +168,11 @@ public class CurrencyListFragment extends Fragment implements Injectable {
                 b.putString("EDITTEXT",recordName);
                 editNameDialog.setArguments(b);
                 editNameDialog.show(getFragmentManager(), "Edit name");
-*/
+*//*
                 break;
         }
         return true;
-    }
+    }*/
 
-    public void deleteCurrency(int iso_code_int) {
-        model.deleteCurrency(iso_code_int);
-    }
-
-    public void setDefaultCurrency(int iso_code_int) {
-        model.setDefaultCurrency(iso_code_int);
-    }
-
-    public void editItem(int iso_code_int) {
-        navigationController.openCurrency(iso_code_int);
-    }
 
 }

@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
+
 /**
  * Created by p.kornilov on 02.03.2018.
  */
