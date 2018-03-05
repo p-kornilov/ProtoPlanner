@@ -1,29 +1,21 @@
 package com.vividprojects.protoplanner.Interface.Fragments;
 
 import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.Adapters.CurrencyListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.Interface.Activity.ContainerActivity;
 import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Widgets.CustomTextInputLayout;
 import com.vividprojects.protoplanner.Widgets.PrefixedEditText;
 
 import javax.inject.Inject;

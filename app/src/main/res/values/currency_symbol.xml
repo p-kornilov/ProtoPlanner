@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="UNIVERSAL_symbol">\u00A4</string>
     <string name="RUB_symbol">"\u20BD"</string>
     <string name="USD_symbol">"\u0024"</string>
     <string name="EUR_symbol">"\u20AC"</string>

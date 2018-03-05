@@ -9,10 +9,12 @@
 
     <string name="currency_default">default currency</string>
 
-    <string-array name="list_currency_sign_position">
-        <item>Before</item>
-        <item>After</item>
-        <item>Within</item>
+    <string-array name="list_currency_pattern">
+        <item>¤100.00</item>
+        <item>¤ 100.00</item>
+        <item>100¤00</item>
+        <item>100.00¤</item>
+        <item>100.00 ¤</item>
     </string-array>
 
     <!-- Data & sync settings -->
