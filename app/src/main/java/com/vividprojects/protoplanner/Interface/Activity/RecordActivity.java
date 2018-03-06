@@ -13,10 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.vividprojects.protoplanner.Interface.Fragments.CurrencyFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -43,14 +46,6 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-        mViewModelHolder = (ViewModelHolder<RecordItemViewModel>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
-        if (mViewModelHolder == null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            Fragment fff = ViewModelHolder.createContainer(obtainViewModel());
-            ft.add(fff,ViewModelHolder.TAG).commit();
-            mViewModelHolder = (ViewModelHolder<RecordItemViewModel>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
-        }
-
         String id = getIntent().getStringExtra("RECORD_ID");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
@@ -59,7 +54,7 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         CollapsingToolbarLayout mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout1);
 
 //        model = ViewModelProviders.of(this, viewModelFactory).get(RecordItemViewModel.class);
-        model = mViewModelHolder.getViewmodel();
+        model = obtainViewModel();
         model.getRecordName().observe(this, name -> {
             if (name != null) {
                 mCollapsingToolbarLayout.setTitle(name);
@@ -106,7 +101,16 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     }
 
     private RecordItemViewModel obtainViewModel() {
-        return ViewModelProviders.of(this,viewModelFactory).get(RecordItemViewModel.class);
+        ViewModelHolder<RecordItemViewModel> viewModelHolder = (ViewModelHolder<RecordItemViewModel>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
+        if (viewModelHolder != null && viewModelHolder.getViewModel() != null) {
+            return viewModelHolder.getViewModel();
+        } else {
+            RecordItemViewModel model = ViewModelProviders.of(this,viewModelFactory).get(RecordItemViewModel.class);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            Fragment fff = ViewModelHolder.createContainer(model);
+            ft.add(fff,ViewModelHolder.TAG).commit();
+            return model;
+        }
     }
 
     @Override
