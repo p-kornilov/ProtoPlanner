@@ -1,6 +1,7 @@
 package com.vividprojects.protoplanner.Interface.Fragments;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -85,7 +86,7 @@ public class CurrencyFragment extends Fragment implements Injectable {
         super.onActivityCreated(savedInstanceState);
 
 
-//        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyListViewModel.class);
+        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyListViewModel.class);
 
         Bundle args = getArguments();
 

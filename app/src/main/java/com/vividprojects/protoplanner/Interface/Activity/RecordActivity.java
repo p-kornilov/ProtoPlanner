@@ -35,7 +35,7 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    private Fragment mViewModelHolder;
+    private ViewModelHolder<RecordItemViewModel> mViewModelHolder;
     private RecordItemViewModel model;
 
     @Override
@@ -43,11 +43,12 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-        mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
+        mViewModelHolder = (ViewModelHolder<RecordItemViewModel>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
         if (mViewModelHolder == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(ViewModelHolder.createContainer(obtainViewModel()),ViewModelHolder.TAG).commit();
-            mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
+            Fragment fff = ViewModelHolder.createContainer(obtainViewModel());
+            ft.add(fff,ViewModelHolder.TAG).commit();
+            mViewModelHolder = (ViewModelHolder<RecordItemViewModel>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
         }
 
         String id = getIntent().getStringExtra("RECORD_ID");
@@ -57,7 +58,8 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
 
         CollapsingToolbarLayout mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout1);
 
-        model = ViewModelProviders.of(this, viewModelFactory).get(RecordItemViewModel.class);
+//        model = ViewModelProviders.of(this, viewModelFactory).get(RecordItemViewModel.class);
+        model = mViewModelHolder.getViewmodel();
         model.getRecordName().observe(this, name -> {
             if (name != null) {
                 mCollapsingToolbarLayout.setTitle(name);
@@ -104,8 +106,7 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     }
 
     private RecordItemViewModel obtainViewModel() {
-        model = ViewModelProviders.of(this,viewModelFactory).get(RecordItemViewModel.class);
-        return model;
+        return ViewModelProviders.of(this,viewModelFactory).get(RecordItemViewModel.class);
     }
 
     @Override
