@@ -1,5 +1,8 @@
 package com.vividprojects.protoplanner.Interface.Activity;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,13 +21,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
+import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
+import com.vividprojects.protoplanner.Presenters.CurrencyViewModel;
+import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
 
 import javax.inject.Inject;
 
@@ -40,6 +48,10 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
 
     @Inject
     NavigationController navigationController;
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
 
     private FloatingActionButton fab;
 
@@ -63,6 +75,7 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
         switch (activityType) {
             case NavigationController.CURRENCY_LIST:
                 fragment = new CurrencyListFragment();
+                obtainViewModel(CurrencyListViewModel.class);
 
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -74,6 +87,7 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
                 break;
             case NavigationController.CURRENCY_ITEM:
                 fragment = new CurrencyFragment();
+                obtainViewModel(CurrencyViewModel.class);
 
                 fab.setVisibility(View.GONE);
                 break;
@@ -118,6 +132,18 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
         return super.onOptionsItemSelected(item);
     }*/
 
+    private <T extends ViewModel> T obtainViewModel(Class<T> viewModelClass) {
+        ViewModelHolder<T> viewModelHolder = (ViewModelHolder<T>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
+        if (viewModelHolder != null && viewModelHolder.getViewModel() != null) {
+            return viewModelHolder.getViewModel();
+        } else {
+            T model = ViewModelProviders.of(this,viewModelFactory).get(viewModelClass);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            Fragment fff = ViewModelHolder.createContainer(model);
+            ft.add(fff,ViewModelHolder.TAG).commit();
+            return model;
+        }
+    }
 
     @Override
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {

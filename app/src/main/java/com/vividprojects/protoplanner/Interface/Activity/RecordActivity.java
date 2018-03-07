@@ -1,5 +1,6 @@
 package com.vividprojects.protoplanner.Interface.Activity;
 
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -38,7 +39,6 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    private ViewModelHolder<RecordItemViewModel> mViewModelHolder;
     private RecordItemViewModel model;
 
     @Override
@@ -54,7 +54,7 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         CollapsingToolbarLayout mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout1);
 
 //        model = ViewModelProviders.of(this, viewModelFactory).get(RecordItemViewModel.class);
-        model = obtainViewModel();
+        model = obtainViewModel(RecordItemViewModel.class);
         model.getRecordName().observe(this, name -> {
             if (name != null) {
                 mCollapsingToolbarLayout.setTitle(name);
@@ -100,12 +100,12 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         //return super.onOptionsItemSelected(item);
     }
 
-    private RecordItemViewModel obtainViewModel() {
-        ViewModelHolder<RecordItemViewModel> viewModelHolder = (ViewModelHolder<RecordItemViewModel>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
+    private <T extends ViewModel> T obtainViewModel(Class<T> viewModelClass) {
+        ViewModelHolder<T> viewModelHolder = (ViewModelHolder<T>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
         if (viewModelHolder != null && viewModelHolder.getViewModel() != null) {
             return viewModelHolder.getViewModel();
         } else {
-            RecordItemViewModel model = ViewModelProviders.of(this,viewModelFactory).get(RecordItemViewModel.class);
+            T model = ViewModelProviders.of(this,viewModelFactory).get(viewModelClass);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             Fragment fff = ViewModelHolder.createContainer(model);
             ft.add(fff,ViewModelHolder.TAG).commit();
