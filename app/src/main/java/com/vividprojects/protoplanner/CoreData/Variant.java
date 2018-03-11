@@ -2,8 +2,6 @@ package com.vividprojects.protoplanner.CoreData;
 
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 
-import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,19 +39,19 @@ public class Variant extends RealmObject {
     }
 
 /*    public String getFormattedValue() {
-        return PriceFormatter.getValue(currency,price*count);
+        return PriceFormatter.createValue(currency,price*count);
     }
 
     public String getFormattedPriceShort() {
-        return PriceFormatter.getValue(currency,price);
+        return PriceFormatter.createValue(currency,price);
     }
 
     public String getFormattedPriceFull() {
-        return PriceFormatter.getPrice(currency,price,measure);
+        return PriceFormatter.createPrice(currency,price,measure);
     }
 
     public String getFormattedCount() {
-        return PriceFormatter.getCount(count,measure);
+        return PriceFormatter.createCount(count,measure);
     }*/
 
     public Currency getCurrency() {
@@ -107,7 +105,7 @@ public class Variant extends RealmObject {
 
     @Override
     public String toString() {
-        String str= "Title: " + title + " (comment: " + comment + ")" + ", count: " + count + " " + measure.getTitle() + ", for " + price + " each, with total value: " + PriceFormatter.getValue(currency.getPlain(),price*count) + "\n\tURLS:\n";
+        String str= "Title: " + title + " (comment: " + comment + ")" + ", count: " + count + " " + measure.getTitle() + ", for " + price + " each, with total value: " + PriceFormatter.createValue(currency.getPlain(),price*count) + "\n\tURLS:\n";
 
 
         for (String s : urls) {

@@ -1,9 +1,7 @@
 package com.vividprojects.protoplanner.Adapters;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.Outline;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -13,39 +11,25 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.CoreData.Currency;
-import com.vividprojects.protoplanner.CoreData.Record;
-import com.vividprojects.protoplanner.Images.GlideApp;
-import com.vividprojects.protoplanner.Interface.Activity.ContainerActivity;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
-import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.PPApplication;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.TMP.TestRecyclerAdapter;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
-import com.vividprojects.protoplanner.Widgets.Chip;
-import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 /**
  * Created by Smile on 27.10.2017.
@@ -162,12 +146,12 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         holder.currency_name.setText(names.get(obj.iso_code_int));
         holder.currency_code.setText(obj.iso_code_str);
         if (obj.iso_code_int == obj.exchange_base) {
-            holder.currency_example.setText(PriceFormatter.getValue(obj, 1*obj.exchange_rate));
+            holder.currency_example.setText(PriceFormatter.createValue(obj, 1*obj.exchange_rate));
             holder.currency_base.setText("");
             holder.currency_default.setVisibility(View.VISIBLE);
         } else {
-            holder.currency_example.setText(PriceFormatter.getValue(obj, 1*obj.exchange_rate));
-            holder.currency_base.setText(" = " + PriceFormatter.getValue(base, 1));
+            holder.currency_example.setText(PriceFormatter.createValue(obj, 1*obj.exchange_rate));
+            holder.currency_base.setText(" = " + PriceFormatter.createValue(base, 1));
             holder.currency_default.setVisibility(View.GONE);
         }
     }

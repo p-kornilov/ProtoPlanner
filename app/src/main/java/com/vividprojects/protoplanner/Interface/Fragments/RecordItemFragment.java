@@ -32,7 +32,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -422,9 +421,9 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 model.getMainVariantItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
                     mvTitle.setText(resource.data.title);
-                    mvCount.setText(PriceFormatter.getCount(resource.data.count, resource.data.measure));
-                    mvValue.setText(PriceFormatter.getValue(resource.data.currency, resource.data.price * resource.data.count));
-                    mvPrice.setText(PriceFormatter.getPrice(resource.data.currency, resource.data.price, resource.data.measure));
+                    mvCount.setText(PriceFormatter.createCount(resource.data.count, resource.data.measure));
+                    mvValue.setText(PriceFormatter.createValue(resource.data.currency, resource.data.price * resource.data.count));
+                    mvPrice.setText(PriceFormatter.createPrice(resource.data.currency, resource.data.price, resource.data.measure));
                     imagesListAdapter.setData(resource.data.small_images);
                 }
             });

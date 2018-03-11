@@ -37,4 +37,16 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/helperText</item>
     </style>
+
+    <style name="BaseText">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="SpinnerText">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

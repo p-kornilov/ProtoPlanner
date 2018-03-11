@@ -19,7 +19,6 @@ import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Widgets.Chip;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -74,9 +73,9 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
         //noinspection ConstantConditions
 //            holder.record_title.setText(obj.getId());
         holder.record_title.setText(obj.getMainVariant().getTitle());
-        holder.record_count.setText(PriceFormatter.getCount(obj.getMainVariant().getCount(),obj.getMainVariant().getMeasure().getPlain())); // TODO !!!Исправить!!!
+        holder.record_count.setText(PriceFormatter.createCount(obj.getMainVariant().getCount(),obj.getMainVariant().getMeasure().getPlain())); // TODO !!!Исправить!!!
        // holder.record_measure.setText(obj.getMainVariant().getMeasure().getTitle());
-        holder.record_value.setText(PriceFormatter.getValue(obj.getMainVariant().getCurrency().getPlain(),obj.getMainVariant().getPrice()*obj.getMainVariant().getCount()));
+        holder.record_value.setText(PriceFormatter.createValue(obj.getMainVariant().getCurrency().getPlain(),obj.getMainVariant().getPrice()*obj.getMainVariant().getCount()));
 
         holder.record_chiplayout.removeAllViews();
         holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.BLUE,false));

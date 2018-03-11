@@ -203,4 +203,10 @@ public class CurrencyListFragment extends Fragment implements Injectable {
         navigationController.openCurrency(iso_code_int);
     }
 
+    public static CurrencyListFragment create() {
+        CurrencyListFragment currencyListFragment = new CurrencyListFragment();
+        return currencyListFragment;
+    }
+
+
 }

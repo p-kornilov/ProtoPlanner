@@ -4,8 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.vividprojects.protoplanner.Presenters.BlockListViewModel;
+import com.vividprojects.protoplanner.Presenters.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
-import com.vividprojects.protoplanner.Presenters.CurrencyViewModel;
 import com.vividprojects.protoplanner.Presenters.ImageViewViewModel;
 import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
@@ -55,8 +55,8 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(CurrencyViewModel.class)
-    abstract ViewModel bindCurrencyViewModel(CurrencyViewModel currencyViewModel);
+    @ViewModelKey(CurrencyItemViewModel.class)
+    abstract ViewModel bindCurrencyViewModel(CurrencyItemViewModel currencyViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(PPViewModelFactory factory);

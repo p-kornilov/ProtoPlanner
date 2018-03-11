@@ -60,7 +60,7 @@ public class LocalDataDB {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Currency c = new Currency("RUB",643,R.string.RUB,contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER);
+                Currency c = new Currency("RUB",643,R.string.RUB,contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER_SPACE);
                 realm.insertOrUpdate(c);
                 Log.d("Test", "+++++++++++++++++++++++ "+c);
                 c = new Currency("USD",840,R.string.USD,contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE);
@@ -71,9 +71,9 @@ public class LocalDataDB {
                 realm.insertOrUpdate(c);
                 c = new Currency("XAF",950,R.string.XAF,contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN);
                 realm.insertOrUpdate(c);
-                c = new Currency("ANG",532,R.string.ANG,contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE);
+                c = new Currency("ANG",532,R.string.ANG,contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE_SPACE);
                 realm.insertOrUpdate(c);
-                c = new Currency("RUB",1,"Test 1",contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER);
+                c = new Currency("RUB",1,"Test 1",contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER_SPACE);
                 realm.insertOrUpdate(c);
                 Log.d("Test", "+++++++++++++++++++++++ "+c);
                 c = new Currency("USD",2,"Test 2",contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE);

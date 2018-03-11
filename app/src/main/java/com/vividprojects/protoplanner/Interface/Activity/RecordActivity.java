@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,13 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.vividprojects.protoplanner.Interface.Fragments.CurrencyFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
-
-import java.util.List;
 
 import javax.inject.Inject;
 

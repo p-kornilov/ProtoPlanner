@@ -327,6 +327,18 @@ public class DataRepository {
         return currencies;
     }
 
+    public LiveData<Currency.Plain> getCurrency(int iso_code) {
+        MutableLiveData<Currency.Plain> currency = new MutableLiveData<>();
+        Currency currencyF = localDataDB
+                .queryCurrency()
+                .iso_code_equalTo(iso_code)
+                .findFirst();
+        if (currencyF!=null) {
+            currency.setValue(currencyF.getPlain());
+        }
+        return currency;
+    }
+
     public void deleteCurrency(int iso_code_int) {
         localDataDB.deleteCurrency(iso_code_int);
     }
@@ -476,8 +488,8 @@ public class DataRepository {
                             progress.setValue(LOAD_ERROR);
                         },
                         () -> {
-                            if (progress.getValue() != LOAD_ERROR)
-                                progress.setValue(progress.getValue() + 1);
+                            if (progress.createValue() != LOAD_ERROR)
+                                progress.setValue(progress.createValue() + 1);
                         });
 
                 GlideApp.with(context)
@@ -490,8 +502,8 @@ public class DataRepository {
                             progress.setValue(LOAD_ERROR);
                         },
                         () -> {
-                            if (progress.getValue() != LOAD_ERROR)
-                                progress.setValue(progress.getValue() + 1);
+                            if (progress.createValue() != LOAD_ERROR)
+                                progress.setValue(progress.createValue() + 1);
                         });
 
                 GlideApp.with(context)
@@ -506,7 +518,7 @@ public class DataRepository {
             if (success)
                 BitmapUtils.deleteImageFile(context,temp_name);
 
-/*            while (progress.getValue() != CONVERT_DONE) { // Wait while images is saved
+/*            while (progress.createValue() != CONVERT_DONE) { // Wait while images is saved
                 try {
                     TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {

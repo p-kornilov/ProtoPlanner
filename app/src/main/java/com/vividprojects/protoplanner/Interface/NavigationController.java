@@ -24,6 +24,8 @@ public class NavigationController {
 
     public final static String ACTIVITY_TYPE = "ACTIVITY_TYPE";
 
+    public final static String CURRENCY_ID = "CURRENCY_ID";
+
     private Context context;
     private Activity currentActivity;
 
@@ -129,9 +131,10 @@ public class NavigationController {
         if (Build.VERSION.SDK_INT <= 23) {
             intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
-            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
+        intent.putExtra(CURRENCY_ID,iso_code);
         context.startActivity(intent);
     }
 

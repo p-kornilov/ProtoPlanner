@@ -100,15 +100,15 @@ public class ShopsAdapter extends RealmRecyclerViewAdapter<VariantInShop, ShopsA
         });
 
 /*
-            holder.deletedCheckBox.setChecked(countersToDelete.contains(obj.getCount()));
+            holder.deletedCheckBox.setChecked(countersToDelete.contains(obj.createCount()));
             if (inDeletionMode) {
                 holder.deletedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            countersToDelete.add(obj.getCount());
+                            countersToDelete.add(obj.createCount());
                         } else {
-                            countersToDelete.remove(obj.getCount());
+                            countersToDelete.remove(obj.createCount());
                         }
                     }
                 });
@@ -123,7 +123,7 @@ public class ShopsAdapter extends RealmRecyclerViewAdapter<VariantInShop, ShopsA
         @Override
         public long getItemId(int index) {
             //noinspection ConstantConditions
-            return getItem(index).getCount();
+            return getItem(index).createCount();
         }
 */
 

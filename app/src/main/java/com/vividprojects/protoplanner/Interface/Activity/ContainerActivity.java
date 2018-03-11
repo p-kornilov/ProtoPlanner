@@ -5,32 +5,22 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Interface.Fragments.CurrencyFragment;
+import com.vividprojects.protoplanner.Interface.BlockListFragment;
+import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Interface.RecordListFragment;
 import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
-import com.vividprojects.protoplanner.Presenters.CurrencyViewModel;
-import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
+import com.vividprojects.protoplanner.Presenters.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
 
@@ -74,7 +64,8 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
 
         switch (activityType) {
             case NavigationController.CURRENCY_LIST:
-                fragment = new CurrencyListFragment();
+                getSupportActionBar().setTitle("Currency list");
+                fragment = CurrencyListFragment.create();
                 obtainViewModel(CurrencyListViewModel.class);
 
                 fab.setOnClickListener(new View.OnClickListener() {
@@ -86,8 +77,11 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
                 });
                 break;
             case NavigationController.CURRENCY_ITEM:
-                fragment = new CurrencyFragment();
-                obtainViewModel(CurrencyViewModel.class);
+                getSupportActionBar().setTitle("Currency");
+
+                int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
+                fragment = CurrencyItemFragment.create(iso_code);
+                obtainViewModel(CurrencyItemViewModel.class);
 
                 fab.setVisibility(View.GONE);
                 break;

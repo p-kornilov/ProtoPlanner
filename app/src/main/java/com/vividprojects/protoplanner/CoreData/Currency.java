@@ -1,8 +1,5 @@
 package com.vividprojects.protoplanner.CoreData;
 
-import java.text.DecimalFormat;
-import java.util.UUID;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -11,16 +8,18 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Currency extends RealmObject {
+    public static final int BEFORE_SPACE = 0;
     public static final int BEFORE = 1;
-    public static final int AFTER = 2;
-    public static final int WITHIN = 3;
+    public static final int WITHIN = 2;
+    public static final int AFTER = 3;
+    public static final int AFTER_SPACE = 4;
 
     @PrimaryKey
     private int iso_code_int;
     private String iso_code_str;
     private int iso_name_id;
     private String symbol;
-    private int position;
+    private int pattern;
     private int exchange_base = 0;
     private float exchange_rate = 0;
     private int sorting_weight = 0;
@@ -29,20 +28,20 @@ public class Currency extends RealmObject {
     public Currency() {
     }
 
-    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int position){
+    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;
         this.iso_name_id = iso_name_id;
         this.symbol = symbol;
-        this.position = position;
+        this.pattern = pattern;
     }
 
-    public Currency(String iso_code_str, int iso_code_int, String custom_name, String symbol, int position){
+    public Currency(String iso_code_str, int iso_code_int, String custom_name, String symbol, int pattern){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;
         this.iso_name_id = 0;
         this.symbol = symbol;
-        this.position = position;
+        this.pattern = pattern;
         this.custom_name = custom_name;
     }
 
@@ -83,8 +82,8 @@ public class Currency extends RealmObject {
         this.sorting_weight = sorting_weight;
     }
 
-    public int getPosition() {
-        return position;
+    public int getPattern() {
+        return pattern;
     }
 
     public String getIso_code_str() {
@@ -110,7 +109,7 @@ public class Currency extends RealmObject {
                 ", iso_code_str='" + iso_code_str + '\'' +
                 ", iso_name_id=" + iso_name_id +
                 ", symbol='" + symbol + '\'' +
-                ", position=" + position +
+                ", pattern=" + pattern +
                 ", exchange_base=" + exchange_base +
                 ", exchange_rate=" + exchange_rate +
                 '}';
@@ -122,7 +121,7 @@ public class Currency extends RealmObject {
         plain.iso_name_id = iso_name_id;
         plain.iso_code_str = iso_code_str;
         plain.symbol = symbol;
-        plain.position = position;
+        plain.pattern = pattern;
         plain.exchange_base = exchange_base;
         plain.exchange_rate = exchange_rate;
         plain.sorting_weight= sorting_weight;
@@ -135,7 +134,7 @@ public class Currency extends RealmObject {
         public String iso_code_str;
         public int iso_name_id;
         public String symbol;
-        public int position;
+        public int pattern;
         public int exchange_base;
         public float exchange_rate;
         public int sorting_weight;
