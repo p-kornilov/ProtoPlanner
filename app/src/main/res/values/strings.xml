@@ -9,6 +9,9 @@
 
     <string name="currency_default">default currency</string>
 
+    <string name="currency_symbol_helper">Symbol(s) and/or unicode code point</string>
+    <string name="currency_symbol_helper_error">Error: Wrong unicode format</string>
+
     <string-array name="list_currency_pattern">
         <item>¤100.00</item>
         <item>¤ 100.00</item>

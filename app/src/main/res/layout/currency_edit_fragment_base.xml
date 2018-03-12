@@ -82,6 +82,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="@dimen/record_left_padding"
                 android:layout_marginStart="4dp"
+                app:hintEnabled="true"
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -94,13 +95,15 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:imeOptions="actionDone"
-                    android:hint="Symbol" />
+                    android:hint="Symbol"
+                    android:inputType="textNoSuggestions"/>
 
                 <TextView
+                    android:id="@+id/cef_symbol_helper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:text="Symbol(s) and/or unicode code point"
+                    android:text="@string/currency_symbol_helper"
                     android:theme="@style/HelperText" />
             </android.support.design.widget.TextInputLayout>
 

@@ -1,10 +1,17 @@
 package com.vividprojects.protoplanner.Interface.Fragments;
 
+import android.app.Service;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -26,7 +34,10 @@ import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Presenters.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
+import com.vividprojects.protoplanner.Utils.TextInputError;
 import com.vividprojects.protoplanner.Widgets.PrefixedEditText;
+
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -41,6 +52,8 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private EditText currency_name;
     private EditText currency_code;
     private EditText currency_symbol;
+    private TextInputLayout currency_symbol_layout;
+    private TextView currency_symbol_helper;
     private Spinner currency_pattern;
     private CheckBox currency_rate_check;
     private PrefixedEditText currency_rate;
@@ -50,6 +63,19 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+
+    private final TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            symbolEditFinish(currency_symbol.getText().toString());
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {}
+    };
 
 
     @Override
@@ -80,6 +106,8 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         currency_name = v.findViewById(R.id.cef_name);
         currency_code = v.findViewById(R.id.cef_code);
         currency_symbol = v.findViewById(R.id.cef_symbol);
+        currency_symbol_layout = v.findViewById(R.id.cef_symbol_layout);
+        currency_symbol_helper = v.findViewById(R.id.cef_symbol_helper);
         currency_pattern = v.findViewById(R.id.cef_pattern);
         currency_rate_check = v.findViewById(R.id.cef_manual_rate_check);
         currency_rate = v.findViewById(R.id.cef_currency_rate);
@@ -93,6 +121,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                     symbolEditFinish(currency_symbol.getText().toString());
                     return true;
                 }
+
                 return false;
             }
         });
@@ -122,7 +151,65 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     }
 
     private void symbolEditFinish(String text) {
-        model.setSymbol(PriceFormatter.collapseUnicodes(text));
+        String symbol;
+        try {
+            symbol = PriceFormatter.collapseUnicodes(text);
+        } catch (TextInputError error) {
+
+            currency_symbol.removeTextChangedListener(textWatcher);
+
+            String replacedWith = "<font color='#ff1744'>" + "\\" + error.getErrorPart() + "</font>";
+            String originalString = text;
+            String regexPattern = Pattern.quote(error.getErrorPart());
+
+            String modifiedString = originalString.replaceAll(regexPattern,replacedWith);
+            int cursor = currency_symbol.getSelectionStart();
+            currency_symbol.setText(Html.fromHtml(modifiedString));
+            currency_symbol.addTextChangedListener(textWatcher);
+            currency_symbol.setSelection(cursor);
+            currency_symbol_layout.setHintTextAppearance(R.style.HintError);
+
+            currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.textInputError));
+            currency_symbol_helper.setText(R.string.currency_symbol_helper_error);
+            //currency_symbol.setError("");
+            //currency_symbol.setCompoundDrawablesRelative(null,null, R.drawable.ic_check_circle_black_24dp,null);
+            currency_symbol.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0, R.drawable.ic_error_outline_red_24dp,0);
+
+/*            currency_symbol.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    currency_symbol.removeTextChangedListener(this);
+                    currency_symbol_layout.setHintTextAppearance(R.style.HintNormal);
+                    currency_symbol.setText(charSequence.toString());
+                    currency_symbol.setSelection(i+i2);
+
+                    currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.textInputNormal));
+                    currency_symbol_helper.setText(R.string.currency_symbol_helper);
+                    currency_symbol.setError(null);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {}
+            });*/
+
+            return;
+        }
+
+        currency_symbol_layout.setHintTextAppearance(R.style.HintNormal);
+        int cursor = currency_symbol.getSelectionStart();
+        currency_symbol.removeTextChangedListener(textWatcher);
+        currency_symbol.setText(currency_symbol.getText().toString());
+        currency_symbol.addTextChangedListener(textWatcher);
+        currency_symbol.setSelection(cursor);
+
+        currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.textInputNormal));
+        currency_symbol_helper.setText(R.string.currency_symbol_helper);
+        currency_symbol.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0, 0,0);
+
+        model.setSymbol(symbol);
     }
 
     @Override
@@ -146,6 +233,12 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                         currency_code.setText(currency.iso_code_str);
 
                         currency_symbol.setText(PriceFormatter.extendUnicodes(currency.symbol));
+
+                        currency_symbol.removeTextChangedListener(textWatcher);
+                        currency_symbol.addTextChangedListener(textWatcher);
+
+                        //currency_symbol.setError("Error");
+                        //currency_symbol.error
 
 //                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, PriceFormatter.createListValue(currency.symbol,100.00));
                     }

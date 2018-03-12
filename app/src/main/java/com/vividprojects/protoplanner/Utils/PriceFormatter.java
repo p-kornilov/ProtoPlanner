@@ -97,7 +97,7 @@ public class PriceFormatter {
         return convertedString.toString();
     }
 
-    public static String collapseUnicodes(String string) { //TODO Добавить проверку на корректность входа
+    public static String collapseUnicodes(String string) throws TextInputError {
         StringBuilder convertedString = new StringBuilder();
         char c;
         for (int i = 0; i < string.length();i++) {
@@ -105,11 +105,20 @@ public class PriceFormatter {
             if (c != '\\')
                 convertedString.append(c);
             else {
-                if (string.substring(i,i+3).toUpperCase().equals("\\U+")) {
-                    c = (char) Integer.parseInt(string.substring(i+3,i+7),16);
-                    i += 6;
-                    convertedString.append(c);
-                }
+                if (string.length() >= i+4 && string.substring(i,i+3).toUpperCase().equals("\\U+")) {
+                    if (string.length() >= i+7) {
+                        try {
+                            c = (char) Integer.parseInt(string.substring(i + 3, i + 7), 16);
+                        }
+                        catch (NumberFormatException e) {
+                            throw new TextInputError(string.substring(i,i+7));
+                        }
+                        i += 6;
+                        convertedString.append(c);
+                    } else
+                        throw new TextInputError(string.substring(i,string.length()));
+                } else
+                    throw new TextInputError("\\");
             }
         }
         return convertedString.toString();

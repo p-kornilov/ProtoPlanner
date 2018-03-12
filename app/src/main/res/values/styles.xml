@@ -49,4 +49,12 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="HintError">
+        <item name="android:textColor">@color/textInputError</item>
+    </style>
+
+    <style name="HintNormal">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
 </resources>
