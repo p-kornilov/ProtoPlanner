@@ -339,6 +339,23 @@ public class DataRepository {
         return currency;
     }
 
+    public LiveData<Currency.Plain> getBaseForCurrency(int iso_code) {
+        MutableLiveData<Currency.Plain> currency = new MutableLiveData<>();
+        Currency currencyF = localDataDB
+                .queryCurrency()
+                .iso_code_equalTo(iso_code)
+                .findFirst();
+        if (currencyF!=null) {
+            Currency currencyB = localDataDB
+                    .queryCurrency()
+                    .iso_code_equalTo(currencyF.getExchange_base())
+                    .findFirst();
+            if (currencyB != null)
+                currency.setValue(currencyB.getPlain());
+        }
+        return currency;
+    }
+
     public void deleteCurrency(int iso_code_int) {
         localDataDB.deleteCurrency(iso_code_int);
     }

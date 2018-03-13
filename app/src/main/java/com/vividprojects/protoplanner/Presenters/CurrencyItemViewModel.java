@@ -25,6 +25,7 @@ public class CurrencyItemViewModel extends ViewModel {
     final MutableLiveData<Bundle2<String,Integer>> symbol = new MutableLiveData<>();
 
     private final LiveData<Currency.Plain> currencyItem;
+    private final LiveData<Currency.Plain> baseItem;
 
     private DataRepository dataRepository;
 
@@ -38,6 +39,7 @@ public class CurrencyItemViewModel extends ViewModel {
         this.filter = new MutableLiveData<>();
 
         currencyItem = Transformations.switchMap(currencyIsoCode,input -> CurrencyItemViewModel.this.dataRepository.getCurrency(input));
+        baseItem = Transformations.switchMap(currencyIsoCode,input -> CurrencyItemViewModel.this.dataRepository.getBaseForCurrency(input));
 
         currencyItem.observeForever(currency->{
             if (currency != null) {
@@ -59,6 +61,10 @@ public class CurrencyItemViewModel extends ViewModel {
 
     public LiveData<Currency.Plain> getCurrency(){
         return currencyItem;
+    }
+
+    public LiveData<Currency.Plain> getBase(){
+        return baseItem;
     }
 
     public LiveData<Bundle2<String,Integer>> getSymbol(){

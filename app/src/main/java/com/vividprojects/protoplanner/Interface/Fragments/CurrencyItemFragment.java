@@ -4,8 +4,11 @@ import android.app.Service;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -57,7 +60,9 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private Spinner currency_pattern;
     private CheckBox currency_rate_check;
     private PrefixedEditText currency_rate;
+    private TextInputLayout currency_rate_layout;
     private PrefixedEditText base_rate;
+    private TextInputLayout base_rate_layout;
     private TextView currency_update_date;
 
 
@@ -112,6 +117,8 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         currency_rate_check = v.findViewById(R.id.cef_manual_rate_check);
         currency_rate = v.findViewById(R.id.cef_currency_rate);
         base_rate = v.findViewById(R.id.cef_base_rate);
+        currency_rate_layout = v.findViewById(R.id.cef_currency_rate_layout);
+        base_rate_layout = v.findViewById(R.id.cef_base_rate_layout);
         currency_update_date = v.findViewById(R.id.cef_currency_rate_date);
 
         currency_symbol.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -209,7 +216,27 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         currency_symbol_helper.setText(R.string.currency_symbol_helper);
         currency_symbol.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0, 0,0);
 
+        forceRippleAnimation(currency_pattern);
+
         model.setSymbol(symbol);
+    }
+
+    protected void forceRippleAnimation(View view)
+    {
+        Drawable background = view.getBackground();
+        if(Build.VERSION.SDK_INT >= 21 && background instanceof RippleDrawable)
+        {
+            final RippleDrawable rippleDrawable = (RippleDrawable) background;
+            rippleDrawable.setState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled});
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable()
+            {
+                @Override public void run()
+                {
+                    rippleDrawable.setState(new int[]{});
+                }
+            }, 100);
+        }
     }
 
     @Override
@@ -226,10 +253,16 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
                 model.getCurrency().observe(this,currency->{
                     if (currency != null) {
-                        if (currency.custom_name != null)
+                        if (currency.custom_name != null) {
                             currency_name.setText(currency.custom_name);
-                        else
-                            currency_name.setText(getContext().getResources().getString(currency.iso_name_id));
+                            currency_rate_layout.setHint(currency.custom_name + " (" + currency.iso_code_str + ")");
+                        }
+                        else {
+                            String name = getContext().getResources().getString(currency.iso_name_id);
+                            currency_name.setText(name);
+                            currency_rate_layout.setHint(name + " (" + currency.iso_code_str + ")");
+                        }
+
                         currency_code.setText(currency.iso_code_str);
 
                         currency_symbol.setText(PriceFormatter.extendUnicodes(currency.symbol));
@@ -237,12 +270,23 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                         currency_symbol.removeTextChangedListener(textWatcher);
                         currency_symbol.addTextChangedListener(textWatcher);
 
+
                         //currency_symbol.setError("Error");
                         //currency_symbol.error
 
 //                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, PriceFormatter.createListValue(currency.symbol,100.00));
                     }
 
+                });
+
+                model.getBase().observe(this,base->{
+                    if (base != null) {
+                        if (base.custom_name != null)
+                            base_rate_layout.setHint(base.custom_name + " (" + base.iso_code_str + ")");
+                        else {
+                            base_rate_layout.setHint(getContext().getResources().getString(base.iso_name_id) + " (" + base.iso_code_str + ")");
+                        }
+                    }
                 });
 
                 model.getSymbol().observe(this,bundle->{
