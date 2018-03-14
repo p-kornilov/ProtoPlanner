@@ -9,7 +9,7 @@
 
     <string name="currency_default">default currency</string>
 
-    <string name="currency_symbol_helper">Symbol(s) and/or unicode code point</string>
+    <string name="currency_symbol_helper">Symbol(s) and/or unicode code point like \\U+1234</string>
     <string name="currency_symbol_helper_error">Error: Wrong unicode format, must be like \\U+1234</string>
 
     <string-array name="list_currency_pattern">

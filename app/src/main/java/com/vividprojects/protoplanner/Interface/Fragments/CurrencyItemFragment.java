@@ -1,6 +1,5 @@
 package com.vividprojects.protoplanner.Interface.Fragments;
 
-import android.app.Service;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -24,10 +23,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -72,7 +71,28 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     ViewModelProvider.Factory viewModelFactory;
 
     private final TextWatcher textWatcher = new TextWatcher() {
+        private String text;
 
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            int ff = 2;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            String charSequenceS = charSequence.toString();
+            if (text == null)
+                text = charSequenceS;
+            if (!charSequenceS.equals(text)) {
+                text = charSequenceS;
+                symbolCheck(charSequenceS);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            int i = 1;
+        }
     };
 
 
@@ -115,26 +135,6 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         currency_update_date = v.findViewById(R.id.cef_currency_rate_date);
         pattern_button = v.findViewById(R.id.cef_pattern_button);
 
-        currency_symbol.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    symbolEditFinish(currency_symbol.getText().toString());
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
-        currency_symbol.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) {
-                    symbolEditFinish(currency_symbol.getText().toString());
-                }
-            }
-        });
 
         currency_pattern.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -155,10 +155,17 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
             }
         });
 
+        currency_rate_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+               // model.set
+            }
+        });
+
         return v;
     }
 
-    private void symbolEditFinish(String text) {
+    private void symbolCheck(String text) {
         String symbol;
         try {
             symbol = PriceFormatter.collapseUnicodes(text);
@@ -179,29 +186,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
             currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.textInputError));
             currency_symbol_helper.setText(R.string.currency_symbol_helper_error);
-            //currency_symbol.setError("");
-            //currency_symbol.setCompoundDrawablesRelative(null,null, R.drawable.ic_check_circle_black_24dp,null);
             currency_symbol.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0, R.drawable.ic_error_outline_red_24dp,0);
-
-/*            currency_symbol.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    currency_symbol.removeTextChangedListener(this);
-                    currency_symbol_layout.setHintTextAppearance(R.style.HintNormal);
-                    currency_symbol.setText(charSequence.toString());
-                    currency_symbol.setSelection(i+i2);
-
-                    currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.textInputNormal));
-                    currency_symbol_helper.setText(R.string.currency_symbol_helper);
-                    currency_symbol.setError(null);
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {}
-            });*/
 
             return;
         }
@@ -213,7 +198,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         currency_symbol.addTextChangedListener(textWatcher);
         currency_symbol.setSelection(cursor);
 
-        currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.textInputNormal));
+        currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.helperText));
         currency_symbol_helper.setText(R.string.currency_symbol_helper);
         currency_symbol.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0, 0,0);
 
@@ -265,17 +250,12 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                         }
 
                         currency_code.setText(currency.iso_code_str);
-
-                        currency_symbol.setText(PriceFormatter.extendUnicodes(currency.symbol));
+                        currency_symbol.setText(currency.symbol);
 
                         currency_symbol.removeTextChangedListener(textWatcher);
                         currency_symbol.addTextChangedListener(textWatcher);
 
-
-                        //currency_symbol.setError("Error");
-                        //currency_symbol.error
-
-//                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, PriceFormatter.createListValue(currency.symbol,100.00));
+                        currency_rate_check.setChecked(currency.auto_update);
                     }
 
                 });

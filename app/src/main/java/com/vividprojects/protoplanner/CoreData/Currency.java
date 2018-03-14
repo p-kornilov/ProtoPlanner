@@ -24,25 +24,28 @@ public class Currency extends RealmObject {
     private float exchange_rate = 0;
     private int sorting_weight = 0;
     private String custom_name;
+    private boolean auto_update = false;
 
     public Currency() {
     }
 
-    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern){
+    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern, boolean auto_update){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;
         this.iso_name_id = iso_name_id;
         this.symbol = symbol;
         this.pattern = pattern;
+        this.auto_update = auto_update;
     }
 
-    public Currency(String iso_code_str, int iso_code_int, String custom_name, String symbol, int pattern){
+    public Currency(String iso_code_str, int iso_code_int, String custom_name, String symbol, int pattern, boolean auto_update){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;
         this.iso_name_id = 0;
         this.symbol = symbol;
         this.pattern = pattern;
         this.custom_name = custom_name;
+        this.auto_update = auto_update;
     }
 
     public void setExchange_rate(float exchange_rate) {
@@ -102,6 +105,14 @@ public class Currency extends RealmObject {
         return symbol;
     }
 
+    public boolean isAuto_update() {
+        return auto_update;
+    }
+
+    public void setAuto_update(boolean auto_update) {
+        this.auto_update = auto_update;
+    }
+
     @Override
     public String toString() {
         return "Currency{" +
@@ -112,6 +123,7 @@ public class Currency extends RealmObject {
                 ", pattern=" + pattern +
                 ", exchange_base=" + exchange_base +
                 ", exchange_rate=" + exchange_rate +
+                ", auto_update=" + auto_update +
                 '}';
     }
 
@@ -126,6 +138,7 @@ public class Currency extends RealmObject {
         plain.exchange_rate = exchange_rate;
         plain.sorting_weight= sorting_weight;
         plain.custom_name = custom_name;
+        plain.auto_update = auto_update;
         return plain;
     }
 
@@ -139,6 +152,7 @@ public class Currency extends RealmObject {
         public float exchange_rate;
         public int sorting_weight;
         public String custom_name;
+        public boolean auto_update;
     }
 
 }

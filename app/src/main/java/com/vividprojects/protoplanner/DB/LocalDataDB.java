@@ -60,29 +60,29 @@ public class LocalDataDB {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Currency c = new Currency("RUB",643,R.string.RUB,contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER_SPACE);
+                Currency c = new Currency("RUB",643,R.string.RUB,contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER_SPACE,true);
                 realm.insertOrUpdate(c);
                 Log.d("Test", "+++++++++++++++++++++++ "+c);
-                c = new Currency("USD",840,R.string.USD,contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE);
+                c = new Currency("USD",840,R.string.USD,contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE,true);
                 c.setSorting_weight(10);
                 realm.insertOrUpdate(c);
-                c = new Currency("EUR",978,R.string.EUR,contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE);
+                c = new Currency("EUR",978,R.string.EUR,contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE,false);
                 c.setSorting_weight(10);
                 realm.insertOrUpdate(c);
-                c = new Currency("XAF",950,R.string.XAF,contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN);
+                c = new Currency("XAF",950,R.string.XAF,contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN,false);
                 realm.insertOrUpdate(c);
-                c = new Currency("ANG",532,R.string.ANG,contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE_SPACE);
+                c = new Currency("ANG",532,R.string.ANG,contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE_SPACE,false);
                 realm.insertOrUpdate(c);
-                c = new Currency("RUB",1,"Test 1",contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER_SPACE);
+                c = new Currency("RUB",1,"Test 1",contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER_SPACE,false);
                 realm.insertOrUpdate(c);
                 Log.d("Test", "+++++++++++++++++++++++ "+c);
-                c = new Currency("USD",2,"Test 2",contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE);
+                c = new Currency("USD",2,"Test 2",contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE,false);
                 realm.insertOrUpdate(c);
-                c = new Currency("EUR",3,"Test 3",contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE);
+                c = new Currency("EUR",3,"Test 3",contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE,false);
                 realm.insertOrUpdate(c);
-                c = new Currency("XAF",4,"Test 4",contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN);
+                c = new Currency("XAF",4,"Test 4",contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN,false);
                 realm.insertOrUpdate(c);
-                c = new Currency("ANG",5,"Test 5",contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE);
+                c = new Currency("ANG",5,"Test 5",contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE,false);
                 realm.insertOrUpdate(c);
             }
         });
