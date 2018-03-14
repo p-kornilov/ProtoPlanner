@@ -137,6 +137,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cef_pattern_helper" />
 
+            <ImageButton
+                android:id="@+id/cef_pattern_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:cropToPadding="false"
+                android:padding="0dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@id/cef_pattern"
+                app:layout_constraintTop_toTopOf="@id/cef_pattern"
+                app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
+
             <View
                 android:id="@+id/divider2"
                 android:layout_width="match_parent"

@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -64,22 +65,14 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private PrefixedEditText base_rate;
     private TextInputLayout base_rate_layout;
     private TextView currency_update_date;
+    private ImageButton pattern_button;
 
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
     private final TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            symbolEditFinish(currency_symbol.getText().toString());
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {}
     };
 
 
@@ -120,6 +113,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         currency_rate_layout = v.findViewById(R.id.cef_currency_rate_layout);
         base_rate_layout = v.findViewById(R.id.cef_base_rate_layout);
         currency_update_date = v.findViewById(R.id.cef_currency_rate_date);
+        pattern_button = v.findViewById(R.id.cef_pattern_button);
 
         currency_symbol.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -151,6 +145,13 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        pattern_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currency_pattern.performClick();
             }
         });
 
