@@ -1,241 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="currency" type="com.vividprojects.protoplanner.CoreData.Currency.Plain"/>
+    </data>
     <LinearLayout
-        android:layout_width="0px"
-        android:layout_height="0px"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
-
-    <ScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="0px"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/cef_name_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/record_left_padding"
-                android:layout_marginStart="@dimen/record_left_padding"
-                android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <EditText
-                    android:id="@+id/cef_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="Name" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/cef_code_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/record_left_padding"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
-
-                app:layout_constraintEnd_toStartOf="@+id/cef_symbol_layout"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cef_name_layout">
-
-                <EditText
-                    android:id="@+id/cef_code"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="Code" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="3 capital letters"
-                    android:theme="@style/HelperText" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/cef_symbol_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="@dimen/record_left_padding"
-                android:layout_marginStart="4dp"
-                app:hintEnabled="true"
-
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/cef_code_layout"
-                app:layout_constraintTop_toBottomOf="@id/cef_name_layout">
-
-                <EditText
-                    android:id="@+id/cef_symbol"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:imeOptions="actionDone"
-                    android:hint="Symbol"
-                    android:inputType="textNoSuggestions"/>
-
-                <TextView
-                    android:id="@+id/cef_symbol_helper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="@string/currency_symbol_helper"
-                    android:theme="@style/HelperText" />
-            </android.support.design.widget.TextInputLayout>
-
-            <TextView
-                android:id="@+id/cef_pattern_helper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/roboto"
-                android:text="Pattern"
-                android:textColor="@color/helperText"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cef_symbol_layout" />
-
-            <Spinner
-                android:id="@+id/cef_pattern"
-                android:layout_width="0dp"
-                android:layout_height="28dp"
-                android:layout_marginEnd="@dimen/record_left_padding"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="2dp"
-                android:gravity="center_vertical"
-                android:layout_weight="1"
-                android:entries="@array/list_currency_pattern"
-                android:textSize="20sp"
-                android:background="?android:attr/selectableItemBackground"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cef_pattern_helper" />
-
-            <ImageButton
-                android:id="@+id/cef_pattern_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:cropToPadding="false"
-                android:padding="0dp"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="@id/cef_pattern"
-                app:layout_constraintTop_toTopOf="@id/cef_pattern"
-                app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
-
-            <View
-                android:id="@+id/divider2"
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="0dp"
-                android:background="#6b000000"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cef_pattern" />
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="0px"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
 
-            <CheckBox
-                android:id="@+id/cef_manual_rate_check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/record_left_padding"
-                android:layout_marginTop="32dp"
-                android:checked="true"
-                android:text="Auto update exchange rate"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/divider2" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/cef_currency_rate_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/record_left_padding"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/cef_rate_eq"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cef_manual_rate_check">
-
-                <com.vividprojects.protoplanner.Widgets.PrefixedEditText
-                    android:id="@+id/cef_currency_rate"
-                    android:layout_width="match_parent"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/cef_name_layout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Current"
-                    android:enabled="false"/>
-                <TextView
-                    android:id="@+id/cef_currency_rate_date"
-                    android:layout_width="match_parent"
+                    android:layout_marginEnd="@dimen/record_left_padding"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <EditText
+                        android:id="@+id/cef_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="Name"
+                        android:text="@{currency.custom_name ?? context.getResources().getString(currency.iso_name_id)}"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/cef_code_layout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="4dp"
+
+                    app:layout_constraintEnd_toStartOf="@+id/cef_symbol_layout"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cef_name_layout">
+
+                    <EditText
+                        android:id="@+id/cef_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="Code" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="3 capital letters"
+                        android:theme="@style/HelperText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/cef_symbol_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="@dimen/record_left_padding"
                     android:layout_marginStart="4dp"
-                    android:text="Updated 11.11.11"
-                    android:theme="@style/HelperText" />
-            </android.support.design.widget.TextInputLayout>
+                    app:hintEnabled="true"
 
-            <ImageView
-                android:id="@+id/cef_rate_eq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/ic_exchange_grey_24dp"
-                app:layout_constraintBottom_toBottomOf="@id/cef_currency_rate_layout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/cef_currency_rate_layout"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/cef_code_layout"
+                    app:layout_constraintTop_toBottomOf="@id/cef_name_layout">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/cef_base_rate_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/cef_rate_eq"
-                app:layout_constraintTop_toBottomOf="@id/cef_manual_rate_check">
+                    <EditText
+                        android:id="@+id/cef_symbol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:imeOptions="actionDone"
+                        android:hint="Symbol"
+                        android:inputType="textNoSuggestions"/>
 
-                <com.vividprojects.protoplanner.Widgets.PrefixedEditText
-                    android:id="@+id/cef_base_rate"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/cef_symbol_helper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/currency_symbol_helper"
+                        android:theme="@style/HelperText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/cef_pattern_helper"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1.00"
-                    android:hint="Base"
-                    android:focusable="false"
-                    android:enabled="false"/>
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="Pattern"
+                    android:textColor="@color/helperText"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cef_symbol_layout" />
 
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
-</LinearLayout>
+                <Spinner
+                    android:id="@+id/cef_pattern"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="@dimen/record_left_padding"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:entries="@array/list_currency_pattern"
+                    android:textSize="20sp"
+                    android:background="?android:attr/selectableItemBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cef_pattern_helper" />
+
+                <ImageButton
+                    android:id="@+id/cef_pattern_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:cropToPadding="false"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@id/cef_pattern"
+                    app:layout_constraintTop_toTopOf="@id/cef_pattern"
+                    app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="0dp"
+                    android:background="#6b000000"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cef_pattern" />
+
+
+                <CheckBox
+                    android:id="@+id/cef_manual_rate_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="32dp"
+                    android:checked="true"
+                    android:text="Auto update exchange rate"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/divider2" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/cef_currency_rate_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/cef_rate_eq"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cef_manual_rate_check">
+
+                    <com.vividprojects.protoplanner.Widgets.PrefixedEditText
+                        android:id="@+id/cef_currency_rate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Current"
+                        android:enabled="false"/>
+                    <TextView
+                        android:id="@+id/cef_currency_rate_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="Updated 11.11.11"
+                        android:theme="@style/HelperText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/cef_rate_eq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/ic_exchange_grey_24dp"
+                    app:layout_constraintBottom_toBottomOf="@id/cef_currency_rate_layout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/cef_currency_rate_layout"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/cef_base_rate_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/cef_rate_eq"
+                    app:layout_constraintTop_toBottomOf="@id/cef_manual_rate_check">
+
+                    <com.vividprojects.protoplanner.Widgets.PrefixedEditText
+                        android:id="@+id/cef_base_rate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1.00"
+                        android:hint="Base"
+                        android:focusable="false"
+                        android:enabled="false"/>
+                </android.support.design.widget.TextInputLayout>
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

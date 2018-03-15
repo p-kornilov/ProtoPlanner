@@ -39,6 +39,7 @@ import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 import com.vividprojects.protoplanner.Widgets.PrefixedEditText;
+import com.vividprojects.protoplanner.databinding.CurrencyEditFragmentBinding;
 
 import java.util.regex.Pattern;
 
@@ -65,6 +66,9 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private TextInputLayout base_rate_layout;
     private TextView currency_update_date;
     private ImageButton pattern_button;
+
+
+    private CurrencyEditFragmentBinding binding;
 
 
     @Inject
@@ -113,7 +117,10 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                              Bundle savedInstanceState) {
 
         Log.d("Test", "onCreateView - RootListFragment");
-        View v = (View) inflater.inflate(R.layout.currency_edit_fragment, container, false);
+        //View v = (View) inflater.inflate(R.layout.currency_edit_fragment, container, false);
+
+        binding = CurrencyEditFragmentBinding.inflate(inflater);
+        View v = binding.getRoot();
 
 /*
         PrefixedEditText baseEdit = v.findViewById(R.id.cef_base_rate);
@@ -236,6 +243,8 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
             if (iso_code > 0) {
                 model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyItemViewModel.class);
                 model.setIsoCode(iso_code);
+
+                binding.setCurrency(model.getCurrency());
 
                 model.getCurrency().observe(this,currency->{
                     if (currency != null) {
