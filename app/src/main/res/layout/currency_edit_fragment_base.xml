@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="currency" type="com.vividprojects.protoplanner.CoreData.Currency.Plain"/>
+        <variable name="currencyName" type="String"/>
+        <variable name="currencyCode" type="String"/>
+        <variable name="symbolChecker" type="com.vividprojects.protoplanner.Utils.SymbolChecker"/>
     </data>
     <LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -48,7 +49,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:hint="Name"
-                        android:text="@{currency.custom_name ?? context.getResources().getString(currency.iso_name_id)}"/>
+                        android:text="@{currencyName}"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -70,7 +71,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:hint="Code" />
+                        android:hint="Code"
+                        android:text="@{currencyCode}"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -101,7 +103,8 @@
                         android:singleLine="true"
                         android:imeOptions="actionDone"
                         android:hint="Symbol"
-                        android:inputType="textNoSuggestions"/>
+                        android:inputType="textNoSuggestions"
+                        android:text="@{symbolChecker.symbol}"/>
 
                     <TextView
                         android:id="@+id/cef_symbol_helper"

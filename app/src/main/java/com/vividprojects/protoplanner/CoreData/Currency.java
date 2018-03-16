@@ -1,5 +1,7 @@
 package com.vividprojects.protoplanner.CoreData;
 
+import android.databinding.BaseObservable;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 

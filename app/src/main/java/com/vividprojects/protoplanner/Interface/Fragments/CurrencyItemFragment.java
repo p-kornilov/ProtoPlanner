@@ -37,6 +37,7 @@ import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Presenters.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
+import com.vividprojects.protoplanner.Utils.SymbolChecker;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 import com.vividprojects.protoplanner.Widgets.PrefixedEditText;
 import com.vividprojects.protoplanner.databinding.CurrencyEditFragmentBinding;
@@ -53,9 +54,9 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private boolean fabVisible = true;
     private CurrencyItemViewModel model;
 
-    private EditText currency_name;
-    private EditText currency_code;
-    private EditText currency_symbol;
+  //  private EditText currency_name;
+  //  private EditText currency_code;
+  //  private EditText currency_symbol;
     private TextInputLayout currency_symbol_layout;
     private TextView currency_symbol_helper;
     private Spinner currency_pattern;
@@ -67,6 +68,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private TextView currency_update_date;
     private ImageButton pattern_button;
 
+    private SymbolChecker symbolChecker = new SymbolChecker();
 
     private CurrencyEditFragmentBinding binding;
 
@@ -85,12 +87,15 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             String charSequenceS = charSequence.toString();
+            charSequence = "AAA";
+/*
             if (text == null)
                 text = charSequenceS;
             if (!charSequenceS.equals(text)) {
                 text = charSequenceS;
                 symbolCheck(charSequenceS);
             }
+*/
         }
 
         @Override
@@ -128,9 +133,9 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         PrefixedEditText currentEdit = v.findViewById(R.id.cef_currency_rate);
         baseEdit.setPrefix("F");
 */
-        currency_name = v.findViewById(R.id.cef_name);
-        currency_code = v.findViewById(R.id.cef_code);
-        currency_symbol = v.findViewById(R.id.cef_symbol);
+    //    currency_name = v.findViewById(R.id.cef_name);
+    //    currency_code = v.findViewById(R.id.cef_code);
+    //    currency_symbol = v.findViewById(R.id.cef_symbol);
         currency_symbol_layout = v.findViewById(R.id.cef_symbol_layout);
         currency_symbol_helper = v.findViewById(R.id.cef_symbol_helper);
         currency_pattern = v.findViewById(R.id.cef_pattern);
@@ -173,7 +178,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     }
 
     private void symbolCheck(String text) {
-        String symbol;
+/*        String symbol;
         try {
             symbol = PriceFormatter.collapseUnicodes(text);
         } catch (TextInputError error) {
@@ -211,7 +216,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
         forceRippleAnimation(currency_pattern);
 
-        model.setSymbol(symbol);
+        model.setSymbol(symbol);*/
     }
 
     protected void forceRippleAnimation(View view)
@@ -244,25 +249,31 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                 model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyItemViewModel.class);
                 model.setIsoCode(iso_code);
 
-                binding.setCurrency(model.getCurrency());
+                binding.setSymbolChecker(symbolChecker);
 
                 model.getCurrency().observe(this,currency->{
                     if (currency != null) {
                         if (currency.custom_name != null) {
-                            currency_name.setText(currency.custom_name);
+                        //    currency_name.setText(currency.custom_name);
+                            binding.setCurrencyName(currency.custom_name);
                             currency_rate_layout.setHint(currency.custom_name + " (" + currency.iso_code_str + ")");
                         }
                         else {
                             String name = getContext().getResources().getString(currency.iso_name_id);
-                            currency_name.setText(name);
+                            //currency_name.setText(name);
+                            binding.setCurrencyName(name);
                             currency_rate_layout.setHint(name + " (" + currency.iso_code_str + ")");
                         }
 
-                        currency_code.setText(currency.iso_code_str);
-                        currency_symbol.setText(currency.symbol);
+                        //currency_code.setText(currency.iso_code_str);
+                        binding.setCurrencyCode(currency.iso_code_str);
+
+                        symbolChecker.setSymbol(currency.symbol);
+
+/*                        currency_symbol.setText(currency.symbol);
 
                         currency_symbol.removeTextChangedListener(textWatcher);
-                        currency_symbol.addTextChangedListener(textWatcher);
+                        currency_symbol.addTextChangedListener(textWatcher);*/
 
                         currency_rate_check.setChecked(currency.auto_update);
                     }
@@ -332,7 +343,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     public static CurrencyItemFragment create(int iso_code) {
         CurrencyItemFragment currencyItemFragment = new CurrencyItemFragment();
         Bundle args = new Bundle();
-        args.putInt(NavigationController.CURRENCY_ID,iso_code);
+        args.putInt(NavigationController.CURRENCY_ID, iso_code);
         currencyItemFragment.setArguments(args);
         return currencyItemFragment;
     }
