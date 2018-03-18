@@ -1,24 +1,15 @@
-package com.vividprojects.protoplanner.Presenters;
+package com.vividprojects.protoplanner.ViewModels;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
-import android.os.Environment;
-import android.transition.Transition;
-import android.util.Log;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BaseTarget;
 import com.vividprojects.protoplanner.CoreData.Filter;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Resource;
-import com.vividprojects.protoplanner.DB.SDFileManager;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Images.FullTarget;
-import com.vividprojects.protoplanner.Images.GlideApp;
 
-import java.io.File;
 import java.util.List;
 import java.util.Objects;
 

@@ -1,29 +1,19 @@
 package com.vividprojects.protoplanner.Adapters;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.GlideApp;
-import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
-import com.vividprojects.protoplanner.Widgets.Chip;
-import com.vividprojects.protoplanner.Widgets.ChipsLayout;
-import com.vividprojects.protoplanner.Widgets.HorizontalImages;
 
 import java.io.File;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * Created by Smile on 27.10.2017.

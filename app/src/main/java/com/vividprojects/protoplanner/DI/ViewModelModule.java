@@ -3,13 +3,13 @@ package com.vividprojects.protoplanner.DI;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
-import com.vividprojects.protoplanner.Presenters.BlockListViewModel;
-import com.vividprojects.protoplanner.Presenters.CurrencyItemViewModel;
-import com.vividprojects.protoplanner.Presenters.CurrencyListViewModel;
-import com.vividprojects.protoplanner.Presenters.ImageViewViewModel;
-import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
-import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
-import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
+import com.vividprojects.protoplanner.ViewModels.BlockListViewModel;
+import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
+import com.vividprojects.protoplanner.ViewModels.ImageViewViewModel;
+import com.vividprojects.protoplanner.ViewModels.LabelsViewModel;
+import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.RecordListViewModel;
 import com.vividprojects.protoplanner.ViewModel.PPViewModelFactory;
 
 import dagger.Binds;

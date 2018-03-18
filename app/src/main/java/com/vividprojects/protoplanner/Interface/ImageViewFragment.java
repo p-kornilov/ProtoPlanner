@@ -5,23 +5,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Images.GlideApp;
-import com.vividprojects.protoplanner.Presenters.ImageViewViewModel;
-import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
+import com.vividprojects.protoplanner.ViewModels.ImageViewViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Widgets.ZoomImageView;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 

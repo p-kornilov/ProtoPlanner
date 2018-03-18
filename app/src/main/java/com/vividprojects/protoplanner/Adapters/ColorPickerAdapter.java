@@ -1,22 +1,15 @@
 package com.vividprojects.protoplanner.Adapters;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
-import com.vividprojects.protoplanner.Images.GlideApp;
-import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.Display;
-import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.Widgets.Pallet;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

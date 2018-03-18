@@ -1,11 +1,7 @@
 package com.vividprojects.protoplanner.Interface;
 
-import android.app.Activity;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -17,17 +13,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BaseTarget;
-import com.vividprojects.protoplanner.CoreData.Block;
-import com.vividprojects.protoplanner.DB.SDFileManager;
 import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.Images.FullTarget;
 import com.vividprojects.protoplanner.Images.GlideApp;
-import com.vividprojects.protoplanner.Images.PPGlideModule;
-import com.vividprojects.protoplanner.PPApplication;
-import com.vividprojects.protoplanner.Presenters.BlockListViewModel;
+import com.vividprojects.protoplanner.ViewModels.BlockListViewModel;
 import com.vividprojects.protoplanner.R;
 
 import java.io.File;

@@ -1,20 +1,16 @@
-package com.vividprojects.protoplanner.Presenters;
+package com.vividprojects.protoplanner.ViewModels;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
-import android.content.Context;
-import android.provider.ContactsContract;
 
 import com.vividprojects.protoplanner.CoreData.Filter;
-import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 
 
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Utils.AbsentLiveData;
 
 import java.util.List;
 import java.util.Objects;

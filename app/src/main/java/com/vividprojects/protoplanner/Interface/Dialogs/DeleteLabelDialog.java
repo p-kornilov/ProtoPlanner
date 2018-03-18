@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
+import com.vividprojects.protoplanner.ViewModels.LabelsViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 

@@ -1,14 +1,10 @@
 package com.vividprojects.protoplanner.Interface;
 
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,22 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.Adapters.RecordListAdapter;
-import com.vividprojects.protoplanner.CoreData.Filter;
-import com.vividprojects.protoplanner.CoreData.Label;
-import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.MainActivity;
-import com.vividprojects.protoplanner.Presenters.RecordListViewModel;
+import com.vividprojects.protoplanner.ViewModels.RecordListViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.TMP.TestRecyclerAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by Smile on 19.10.2017.

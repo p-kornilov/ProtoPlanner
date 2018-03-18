@@ -1,26 +1,18 @@
 package com.vividprojects.protoplanner.Interface.Dialogs;
 
 import android.app.Dialog;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.vividprojects.protoplanner.Adapters.ColorPickerAdapter;
-import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
 import com.vividprojects.protoplanner.R;
-
-import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
 

@@ -1,15 +1,12 @@
-package com.vividprojects.protoplanner.Presenters;
+package com.vividprojects.protoplanner.ViewModels;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.vividprojects.protoplanner.CoreData.Currency;
-import com.vividprojects.protoplanner.CoreData.Exchange;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Utils.Bundle2;
 
 import java.util.List;
 import java.util.Objects;

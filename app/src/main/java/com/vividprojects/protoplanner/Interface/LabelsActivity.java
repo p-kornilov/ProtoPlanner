@@ -23,11 +23,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 
 import com.vividprojects.protoplanner.Interface.Dialogs.CreateLabelDialog;
 import com.vividprojects.protoplanner.Interface.Dialogs.DeleteLabelDialog;
-import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
+import com.vividprojects.protoplanner.ViewModels.LabelsViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Display;
 import com.vividprojects.protoplanner.Utils.Settings;

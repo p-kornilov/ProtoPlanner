@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.vividprojects.protoplanner.Adapters.ColorPickerAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.Presenters.LabelsViewModel;
+import com.vividprojects.protoplanner.ViewModels.LabelsViewModel;
 import com.vividprojects.protoplanner.R;
 
 import javax.inject.Inject;

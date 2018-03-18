@@ -1,15 +1,15 @@
-package com.vividprojects.protoplanner.Presenters;
+package com.vividprojects.protoplanner.ViewModels;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
+import com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Utils.Bundle2;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -24,10 +24,12 @@ public class CurrencyItemViewModel extends ViewModel {
     final MutableLiveData<Integer> currencyIsoCode = new MutableLiveData<>();
     final MutableLiveData<Bundle2<String,Integer>> symbol = new MutableLiveData<>();
 
-    private final LiveData<Currency.Plain> currencyItem;
-    private final LiveData<Currency.Plain> baseItem;
+    private final LiveData<Currency.Plain> currency;
+    private final LiveData<Currency.Plain> base;
 
     private DataRepository dataRepository;
+
+    private CurrencyItemBindingModel bindingModel = new CurrencyItemBindingModel();
 
     @Inject
     public CurrencyItemViewModel(DataRepository dataRepository) {
@@ -38,10 +40,10 @@ public class CurrencyItemViewModel extends ViewModel {
 
         this.filter = new MutableLiveData<>();
 
-        currencyItem = Transformations.switchMap(currencyIsoCode,input -> CurrencyItemViewModel.this.dataRepository.getCurrency(input));
-        baseItem = Transformations.switchMap(currencyIsoCode,input -> CurrencyItemViewModel.this.dataRepository.getBaseForCurrency(input));
+        currency = Transformations.switchMap(currencyIsoCode, input -> CurrencyItemViewModel.this.dataRepository.getCurrency(input));
+        base = Transformations.switchMap(currencyIsoCode, input -> CurrencyItemViewModel.this.dataRepository.getBaseForCurrency(input));
 
-        currencyItem.observeForever(currency->{
+        currency.observeForever(currency->{
             if (currency != null) {
                 Bundle2<String, Integer> bundle = new Bundle2<>();
                 bundle.first = currency.symbol;
@@ -60,11 +62,11 @@ public class CurrencyItemViewModel extends ViewModel {
     }
 
     public LiveData<Currency.Plain> getCurrency(){
-        return currencyItem;
+        return currency;
     }
 
     public LiveData<Currency.Plain> getBase(){
-        return baseItem;
+        return base;
     }
 
     public LiveData<Bundle2<String,Integer>> getSymbol(){
@@ -99,5 +101,9 @@ public class CurrencyItemViewModel extends ViewModel {
         bundle.second = pattern;
 
         symbol.setValue(bundle);
+    }
+
+    public CurrencyItemBindingModel getBindingModel() {
+        return bindingModel;
     }
 }

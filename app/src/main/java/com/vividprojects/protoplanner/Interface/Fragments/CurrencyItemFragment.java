@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.Interface.Fragments;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
@@ -10,19 +11,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -32,17 +29,15 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel;
+import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Presenters.CurrencyItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
-import com.vividprojects.protoplanner.Utils.SymbolChecker;
-import com.vividprojects.protoplanner.Utils.TextInputError;
-import com.vividprojects.protoplanner.Widgets.PrefixedEditText;
+import com.vividprojects.protoplanner.databinding.CurrencyEditFragmentBaseBinding;
 import com.vividprojects.protoplanner.databinding.CurrencyEditFragmentBinding;
-
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -61,49 +56,18 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private TextView currency_symbol_helper;
     private Spinner currency_pattern;
     private CheckBox currency_rate_check;
-    private PrefixedEditText currency_rate;
+    private EditText currency_rate;
     private TextInputLayout currency_rate_layout;
-    private PrefixedEditText base_rate;
+    private EditText base_rate;
     private TextInputLayout base_rate_layout;
     private TextView currency_update_date;
     private ImageButton pattern_button;
-
-    private SymbolChecker symbolChecker = new SymbolChecker();
 
     private CurrencyEditFragmentBinding binding;
 
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
-
-    private final TextWatcher textWatcher = new TextWatcher() {
-        private String text;
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            int ff = 2;
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            String charSequenceS = charSequence.toString();
-            charSequence = "AAA";
-/*
-            if (text == null)
-                text = charSequenceS;
-            if (!charSequenceS.equals(text)) {
-                text = charSequenceS;
-                symbolCheck(charSequenceS);
-            }
-*/
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            int i = 1;
-        }
-    };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -177,66 +141,6 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         return v;
     }
 
-    private void symbolCheck(String text) {
-/*        String symbol;
-        try {
-            symbol = PriceFormatter.collapseUnicodes(text);
-        } catch (TextInputError error) {
-
-            currency_symbol.removeTextChangedListener(textWatcher);
-
-            String replacedWith = "<font color='#ff1744'>" + "\\" + error.getErrorPart() + "</font>";
-            String originalString = text;
-            String regexPattern = Pattern.quote(error.getErrorPart());
-
-            String modifiedString = originalString.replaceAll(regexPattern,replacedWith);
-            int cursor = currency_symbol.getSelectionStart();
-            currency_symbol.setText(Html.fromHtml(modifiedString));
-            currency_symbol.addTextChangedListener(textWatcher);
-            currency_symbol.setSelection(cursor);
-            currency_symbol_layout.setHintTextAppearance(R.style.HintError);
-
-            currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.textInputError));
-            currency_symbol_helper.setText(R.string.currency_symbol_helper_error);
-            currency_symbol.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0, R.drawable.ic_error_outline_red_24dp,0);
-
-            return;
-        }
-
-        currency_symbol_layout.setHintTextAppearance(R.style.HintNormal);
-        int cursor = currency_symbol.getSelectionStart();
-        currency_symbol.removeTextChangedListener(textWatcher);
-        currency_symbol.setText(currency_symbol.getText().toString());
-        currency_symbol.addTextChangedListener(textWatcher);
-        currency_symbol.setSelection(cursor);
-
-        currency_symbol_helper.setTextColor(ContextCompat.getColor(getContext(), R.color.helperText));
-        currency_symbol_helper.setText(R.string.currency_symbol_helper);
-        currency_symbol.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0, 0,0);
-
-        forceRippleAnimation(currency_pattern);
-
-        model.setSymbol(symbol);*/
-    }
-
-    protected void forceRippleAnimation(View view)
-    {
-        Drawable background = view.getBackground();
-        if(Build.VERSION.SDK_INT >= 21 && background instanceof RippleDrawable)
-        {
-            final RippleDrawable rippleDrawable = (RippleDrawable) background;
-            rippleDrawable.setState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled});
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable()
-            {
-                @Override public void run()
-                {
-                    rippleDrawable.setState(new int[]{});
-                }
-            }, 100);
-        }
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -249,7 +153,9 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                 model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyItemViewModel.class);
                 model.setIsoCode(iso_code);
 
-                binding.setSymbolChecker(symbolChecker);
+                CurrencyItemBindingModel bindingModel = model.getBindingModel();
+
+                binding.setSymbolModel(bindingModel);
 
                 model.getCurrency().observe(this,currency->{
                     if (currency != null) {
@@ -265,15 +171,9 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                             currency_rate_layout.setHint(name + " (" + currency.iso_code_str + ")");
                         }
 
-                        //currency_code.setText(currency.iso_code_str);
                         binding.setCurrencyCode(currency.iso_code_str);
 
-                        symbolChecker.setSymbol(currency.symbol);
-
-/*                        currency_symbol.setText(currency.symbol);
-
-                        currency_symbol.removeTextChangedListener(textWatcher);
-                        currency_symbol.addTextChangedListener(textWatcher);*/
+                        bindingModel.setSymbol(currency.symbol);
 
                         currency_rate_check.setChecked(currency.auto_update);
                     }
@@ -295,7 +195,8 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, R.id.spinner_item, PriceFormatter.createListValue(bundle.first, 100.00));
                         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown);
                         currency_pattern.setAdapter(spinnerAdapter);
-                        currency_pattern.setSelection(bundle.second);
+
+                        bindingModel.setPattern(bundle.second);
                     }
                 });
             }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="currencyName" type="String"/>
         <variable name="currencyCode" type="String"/>
-        <variable name="symbolChecker" type="com.vividprojects.protoplanner.Utils.SymbolChecker"/>
+        <variable name="symbolModel" type="com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel"/>
+        <import type="com.vividprojects.protoplanner.R"/>
     </data>
     <LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -89,6 +91,8 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="@dimen/record_left_padding"
                     android:layout_marginStart="4dp"
+                    app:hintTextAppearance="@{symbolModel.status ? R.style.HintNormal : R.style.HintError}"
+
                     app:hintEnabled="true"
 
                     app:layout_constraintEnd_toEndOf="parent"
@@ -104,15 +108,20 @@
                         android:imeOptions="actionDone"
                         android:hint="Symbol"
                         android:inputType="textNoSuggestions"
-                        android:text="@{symbolChecker.symbol}"/>
+                        android:text="@={symbolModel.symbol}"
+                        android:onTextChanged="@{()->symbolModel.onTextChanged(cefPattern)}"
+
+                        android:drawableEnd="@{symbolModel.status ? null : @drawable/ic_error_outline_red_24dp}"/>
 
                     <TextView
                         android:id="@+id/cef_symbol_helper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="@string/currency_symbol_helper"
-                        android:theme="@style/HelperText" />
+                        android:text="@{symbolModel.status ?  @string/currency_symbol_helper : @string/currency_symbol_helper_error}"
+                        tools:text="@string/currency_symbol_helper"
+                        android:theme="@style/HelperText"
+                        android:textColor="@{symbolModel.status ? @color/textHelper : @color/textInputError}"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
@@ -123,7 +132,7 @@
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/roboto"
                     android:text="Pattern"
-                    android:textColor="@color/helperText"
+                    android:textColor="@color/textHelper"
                     android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cef_symbol_layout" />
@@ -139,6 +148,7 @@
                     android:layout_weight="1"
                     android:entries="@array/list_currency_pattern"
                     android:textSize="20sp"
+                    android:selectedItemPosition="@={symbolModel.pattern}"
                     android:background="?android:attr/selectableItemBackground"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -193,7 +203,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cef_manual_rate_check">
 
-                    <com.vividprojects.protoplanner.Widgets.PrefixedEditText
+                    <EditText
                         android:id="@+id/cef_currency_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -233,7 +243,7 @@
                     app:layout_constraintStart_toEndOf="@+id/cef_rate_eq"
                     app:layout_constraintTop_toBottomOf="@id/cef_manual_rate_check">
 
-                    <com.vividprojects.protoplanner.Widgets.PrefixedEditText
+                    <EditText
                         android:id="@+id/cef_base_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

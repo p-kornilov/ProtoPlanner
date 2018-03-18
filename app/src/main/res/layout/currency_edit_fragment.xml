@@ -5,7 +5,7 @@
     <data>
         <variable name="currencyName" type="String"/>
         <variable name="currencyCode" type="String"/>
-        <variable name="symbolChecker" type="com.vividprojects.protoplanner.Utils.SymbolChecker"/>
+        <variable name="symbolModel" type="com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel"/>
     </data>
 
     <LinearLayout
@@ -15,7 +15,7 @@
         <include layout="@layout/currency_edit_fragment_base"
             bind:currencyName="@{currencyName}"
             bind:currencyCode="@{currencyCode}"
-            bind:symbolChecker="@{symbolChecker}"/>
+            bind:symbolModel="@{symbolModel}"/>
 
     </LinearLayout>
 </layout>

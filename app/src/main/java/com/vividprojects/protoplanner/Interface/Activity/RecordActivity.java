@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
-import com.vividprojects.protoplanner.Presenters.RecordItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
 
