@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.content.Context;
 
 import com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
@@ -20,21 +21,20 @@ import javax.inject.Inject;
 
 public class CurrencyItemViewModel extends ViewModel {
 
-    final MutableLiveData<String> filter;
-    final MutableLiveData<Integer> currencyIsoCode = new MutableLiveData<>();
-    final MutableLiveData<Bundle2<String,Integer>> symbol = new MutableLiveData<>();
+    private final MutableLiveData<String> filter;
+    private final MutableLiveData<Integer> currencyIsoCode = new MutableLiveData<>();
 
     private final LiveData<Currency.Plain> currency;
     private final LiveData<Currency.Plain> base;
 
     private DataRepository dataRepository;
 
-    private CurrencyItemBindingModel bindingModel = new CurrencyItemBindingModel();
+    private CurrencyItemBindingModel bindingModel;
 
     @Inject
-    public CurrencyItemViewModel(DataRepository dataRepository) {
-        //super();
-        //list = new MutableLiveData<>();
+    public CurrencyItemViewModel(DataRepository dataRepository, Context context) {
+
+        bindingModel = new CurrencyItemBindingModel(context);
 
         this.dataRepository = dataRepository;
 
@@ -42,15 +42,6 @@ public class CurrencyItemViewModel extends ViewModel {
 
         currency = Transformations.switchMap(currencyIsoCode, input -> CurrencyItemViewModel.this.dataRepository.getCurrency(input));
         base = Transformations.switchMap(currencyIsoCode, input -> CurrencyItemViewModel.this.dataRepository.getBaseForCurrency(input));
-
-        currency.observeForever(currency->{
-            if (currency != null) {
-                Bundle2<String, Integer> bundle = new Bundle2<>();
-                bundle.first = currency.symbol;
-                bundle.second = currency.pattern;
-                symbol.setValue(bundle);
-            }
-        });
 
     }
 
@@ -69,38 +60,12 @@ public class CurrencyItemViewModel extends ViewModel {
         return base;
     }
 
-    public LiveData<Bundle2<String,Integer>> getSymbol(){
-        return symbol;
-    }
-
     public void deleteCurrency(int iso_code_int) {
         dataRepository.deleteCurrency(iso_code_int);
     }
 
     public void setDefaultCurrency(int iso_code_int) {
         dataRepository.setDefaultCurrency(iso_code_int);
-    }
-
-    public void setSymbol(String newSymbol) {
-        if (symbol.getValue() == null || Objects.equals(symbol.getValue().first, newSymbol)) {
-            return;
-        }
-        Bundle2<String, Integer> bundle = new Bundle2<>();
-        bundle.first = newSymbol;
-        bundle.second = symbol.getValue().second;
-
-        symbol.setValue(bundle);
-    }
-
-    public void setPattern(int pattern) {
-        if (symbol.getValue() == null || symbol.getValue().second == pattern) {
-            return;
-        }
-        Bundle2<String, Integer> bundle = new Bundle2<>();
-        bundle.first = symbol.getValue().first;
-        bundle.second = pattern;
-
-        symbol.setValue(bundle);
     }
 
     public CurrencyItemBindingModel getBindingModel() {

@@ -2,8 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="currencyName" type="String"/>
-        <variable name="currencyCode" type="String"/>
         <variable name="symbolModel" type="com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel"/>
         <import type="com.vividprojects.protoplanner.R"/>
     </data>
@@ -51,7 +49,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:hint="Name"
-                        android:text="@{currencyName}"/>
+                        android:text="@={symbolModel.currencyName}"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -74,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:hint="Code"
-                        android:text="@{currencyCode}"/>
+                        android:text="@{symbolModel.currencyCode}"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -146,13 +144,13 @@
                     android:layout_marginTop="2dp"
                     android:gravity="center_vertical"
                     android:layout_weight="1"
-                    android:entries="@array/list_currency_pattern"
+                    android:entries="@{symbolModel.patternEntries}"
                     android:textSize="20sp"
                     android:background="?android:attr/selectableItemBackground"
                     android:selectedItemPosition="@={symbolModel.pattern}"
-                    app:adapterItem="@{R.layout.spinner_item}"
-                    app:adapterDropItem="@{R.layout.spinner_item_dropdown}"
-                    app:textViewId="@{R.id.spinner_item}"
+                    app:adapterItem="@{@layout/spinner_item}"
+                    app:adapterDropItem="@{@layout/spinner_item_dropdown}"
+                    app:textViewId="@{@id/spinner_item}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cef_pattern_helper" />
@@ -210,8 +208,10 @@
                         android:id="@+id/cef_currency_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Current"
-                        android:enabled="false"/>
+                        android:singleLine="true"
+                        android:hint="@{symbolModel.currencyRateHint}"
+                        android:enabled="false"
+                        tools:hint="Name (CODE)"/>
                     <TextView
                         android:id="@+id/cef_currency_rate_date"
                         android:layout_width="match_parent"

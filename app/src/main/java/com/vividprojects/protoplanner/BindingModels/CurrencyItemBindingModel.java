@@ -1,5 +1,6 @@
 package com.vividprojects.protoplanner.BindingModels;
 
+import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
@@ -16,6 +17,8 @@ import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 
+import java.util.List;
+
 /**
  * Created by Smile on 18.03.2018.
  */
@@ -28,8 +31,19 @@ import com.vividprojects.protoplanner.Utils.TextInputError;
 
 public class CurrencyItemBindingModel extends BaseObservable {
     private String symbol;
+    private String collapsedSymbol;
     private boolean status = true;
     private int pattern;
+    private List<String> pattern_entries;
+    private String currencyCode;
+    private int currencyNameId;
+    private String currencyCustomName;
+
+    private Context context;
+
+    public CurrencyItemBindingModel(Context context) {
+        this.context = context;
+    }
 
     public void onTextChanged(Spinner spinner) {
 
@@ -58,6 +72,40 @@ public class CurrencyItemBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.symbol);
         status = symbolCheck();
         notifyPropertyChanged(BR.status);
+
+        if (status)
+            setPatternEntries(PriceFormatter.createListValue(collapsedSymbol, 100.00));
+    }
+
+    @Bindable
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    @Bindable
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+        notifyPropertyChanged(BR.currencyCode);
+    }
+
+    public void setCurrencyNameId(int currencyNameId) {
+        this.currencyNameId = currencyNameId;
+    }
+
+    @Bindable
+    public String getCurrencyName() {
+        return currencyCustomName != null ? currencyCustomName : context.getResources().getString(currencyNameId);
+    }
+
+    @Bindable
+    public void setCurrencyName(String name) {
+        currencyCustomName = name;
+        notifyPropertyChanged(BR.currencyName);
+        notifyPropertyChanged(BR.currencyRateHint);
+    }
+
+    public void setCurrencyCustomName(String currencyCustomName) {
+        this.currencyCustomName = currencyCustomName;
     }
 
     @Bindable
@@ -76,9 +124,25 @@ public class CurrencyItemBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.pattern);
     }
 
+    @Bindable
+    public void setPatternEntries(List<String> list) {
+        pattern_entries = list;
+        notifyPropertyChanged(BR.patternEntries);
+    }
+
+    @Bindable
+    public List<String> getPatternEntries() {
+        return pattern_entries;
+    }
+
+    @Bindable
+    public String getCurrencyRateHint() {
+        return currencyCustomName != null ? currencyCustomName + " (" + currencyCode + ")" : context.getResources().getString(currencyNameId)  + " (" + currencyCode + ")";
+    }
+
     private boolean symbolCheck() {
         try {
-            PriceFormatter.collapseUnicodes(symbol);
+            collapsedSymbol = PriceFormatter.collapseUnicodes(symbol);
         } catch (TextInputError error) {
             return false;
         }

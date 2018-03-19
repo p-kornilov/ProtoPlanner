@@ -3,8 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="currencyName" type="String"/>
-        <variable name="currencyCode" type="String"/>
         <variable name="symbolModel" type="com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel"/>
     </data>
 
@@ -13,8 +11,6 @@
         android:layout_height="match_parent">
 
         <include layout="@layout/currency_edit_fragment_base"
-            bind:currencyName="@{currencyName}"
-            bind:currencyCode="@{currencyCode}"
             bind:symbolModel="@{symbolModel}"/>
 
     </LinearLayout>

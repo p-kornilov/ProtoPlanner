@@ -111,19 +111,6 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         currency_update_date = v.findViewById(R.id.cef_currency_rate_date);
         pattern_button = v.findViewById(R.id.cef_pattern_button);
 
-
-        currency_pattern.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                model.setPattern(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
         pattern_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,20 +147,21 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                 model.getCurrency().observe(this,currency->{
                     if (currency != null) {
                         if (currency.custom_name != null) {
-                        //    currency_name.setText(currency.custom_name);
-                            binding.setCurrencyName(currency.custom_name);
-                            currency_rate_layout.setHint(currency.custom_name + " (" + currency.iso_code_str + ")");
+                        //    binding.setCurrencyName(currency.custom_name);
+                        //    currency_rate_layout.setHint(currency.custom_name + " (" + currency.iso_code_str + ")");
                         }
                         else {
                             String name = getContext().getResources().getString(currency.iso_name_id);
-                            //currency_name.setText(name);
-                            binding.setCurrencyName(name);
-                            currency_rate_layout.setHint(name + " (" + currency.iso_code_str + ")");
+                        //    binding.setCurrencyName(name);
+                        //    currency_rate_layout.setHint(name + " (" + currency.iso_code_str + ")");
                         }
 
-                        binding.setCurrencyCode(currency.iso_code_str);
+                        bindingModel.setCurrencyCode(currency.iso_code_str);
+                        bindingModel.setCurrencyCustomName(currency.custom_name);
+                        bindingModel.setCurrencyNameId(currency.iso_name_id);
 
                         bindingModel.setSymbol(currency.symbol);
+                        bindingModel.setPattern(currency.pattern);
 
                         currency_rate_check.setChecked(currency.auto_update);
                     }
@@ -187,16 +175,6 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                         else {
                             base_rate_layout.setHint(getContext().getResources().getString(base.iso_name_id) + " (" + base.iso_code_str + ")");
                         }
-                    }
-                });
-
-                model.getSymbol().observe(this,bundle->{
-                    if (bundle != null) {
-/*                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, R.id.spinner_item, PriceFormatter.createListValue(bundle.first, 100.00));
-                        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown);
-                        currency_pattern.setAdapter(spinnerAdapter);*/
-
-                        bindingModel.setPattern(bundle.second);
                     }
                 });
             }
