@@ -2,12 +2,14 @@ package com.vividprojects.protoplanner.BindingModels;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
 import android.databinding.BindingMethod;
 import android.databinding.BindingMethods;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Handler;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.BR;
@@ -81,6 +83,15 @@ public class CurrencyItemBindingModel extends BaseObservable {
             return false;
         }
         return true;
+    }
+
+    @BindingAdapter({"app:adapterItem","app:adapterDropItem","app:textViewId"})
+    public static void bindAdapter(Spinner spinner, int adapterItem, int adapterDropItem, int textViewId) {
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(spinner.getContext(), adapterItem, textViewId, PriceFormatter.createListValue("T", 100.00));
+        spinnerAdapter.setDropDownViewResource(adapterDropItem);
+        int p = spinner.getSelectedItemPosition();
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(p);
     }
 
 };

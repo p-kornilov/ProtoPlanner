@@ -148,8 +148,11 @@
                     android:layout_weight="1"
                     android:entries="@array/list_currency_pattern"
                     android:textSize="20sp"
-                    android:selectedItemPosition="@={symbolModel.pattern}"
                     android:background="?android:attr/selectableItemBackground"
+                    android:selectedItemPosition="@={symbolModel.pattern}"
+                    app:adapterItem="@{R.layout.spinner_item}"
+                    app:adapterDropItem="@{R.layout.spinner_item_dropdown}"
+                    app:textViewId="@{R.id.spinner_item}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cef_pattern_helper" />

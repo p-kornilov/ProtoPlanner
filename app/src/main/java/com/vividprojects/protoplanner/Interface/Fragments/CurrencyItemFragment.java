@@ -192,9 +192,9 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
                 model.getSymbol().observe(this,bundle->{
                     if (bundle != null) {
-                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, R.id.spinner_item, PriceFormatter.createListValue(bundle.first, 100.00));
+/*                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, R.id.spinner_item, PriceFormatter.createListValue(bundle.first, 100.00));
                         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown);
-                        currency_pattern.setAdapter(spinnerAdapter);
+                        currency_pattern.setAdapter(spinnerAdapter);*/
 
                         bindingModel.setPattern(bundle.second);
                     }
