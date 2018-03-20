@@ -17,17 +17,12 @@ import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
  * Created by Smile on 18.03.2018.
  */
-
-/*@BindingMethods({
-        @BindingMethod(type = "Integer",
-                attribute = "android:selectedItemPosition",
-                method = "setSelection"),
-})*/
 
 public class CurrencyItemBindingModel extends BaseObservable {
     private String symbol;
@@ -38,6 +33,10 @@ public class CurrencyItemBindingModel extends BaseObservable {
     private String currencyCode;
     private int currencyNameId;
     private String currencyCustomName;
+    private float exchangeRate;
+    private boolean autoUpdate;
+    private String baseNameHint;
+    private boolean isBase;
 
     private Context context;
 
@@ -138,6 +137,64 @@ public class CurrencyItemBindingModel extends BaseObservable {
     @Bindable
     public String getCurrencyRateHint() {
         return currencyCustomName != null ? currencyCustomName + " (" + currencyCode + ")" : context.getResources().getString(currencyNameId)  + " (" + currencyCode + ")";
+    }
+
+    public float getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(float exchangeRate) {
+        this.exchangeRate = exchangeRate;
+        notifyPropertyChanged(BR.exchangeRateS);
+    }
+
+    @Bindable
+    public String getExchangeRateS() {
+        DecimalFormat formatter = new DecimalFormat("0.000000");
+        return formatter.format(exchangeRate);
+    }
+
+    @Bindable
+    public void setExchangeRateS(String exchangeRate) {
+        this.exchangeRate = Float.parseFloat(exchangeRate);
+        notifyPropertyChanged(BR.exchangeRateS);
+    }
+
+    @Bindable
+    public String getBaseRateS() {
+        DecimalFormat formatter = new DecimalFormat("0.000000");
+        return formatter.format(1.00);
+    }
+
+    @Bindable
+    public boolean getAutoUpdate() {
+        return autoUpdate;
+    }
+
+    @Bindable
+    public void setAutoUpdate(boolean autoUpdate) {
+        this.autoUpdate = autoUpdate;
+        notifyPropertyChanged(BR.autoUpdate);
+    }
+
+    public void setBaseNameHint(String customName, String code, int nameId) {
+        baseNameHint = customName != null ? customName + " (" + code + ")" : context.getResources().getString(nameId)  + " (" + code + ")";
+        notifyPropertyChanged(BR.baseNameHint);
+    }
+
+    @Bindable
+    public String getBaseNameHint() {
+        return baseNameHint;
+    }
+
+    @Bindable
+    public boolean getIsBase() {
+        return isBase;
+    }
+
+    public void setIsBase(boolean base) {
+        isBase = base;
+        notifyPropertyChanged(BR.isBase);
     }
 
     private boolean symbolCheck() {

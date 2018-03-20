@@ -3,16 +3,8 @@ package com.vividprojects.protoplanner.Interface.Fragments;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,23 +12,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel;
-import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.PriceFormatter;
-import com.vividprojects.protoplanner.databinding.CurrencyEditFragmentBaseBinding;
 import com.vividprojects.protoplanner.databinding.CurrencyEditFragmentBinding;
 
 import javax.inject.Inject;
@@ -46,25 +27,9 @@ import javax.inject.Inject;
  */
 
 public class CurrencyItemFragment extends Fragment implements Injectable {
-    private boolean fabVisible = true;
     private CurrencyItemViewModel model;
 
-  //  private EditText currency_name;
-  //  private EditText currency_code;
-  //  private EditText currency_symbol;
-    private TextInputLayout currency_symbol_layout;
-    private TextView currency_symbol_helper;
-    private Spinner currency_pattern;
-    private CheckBox currency_rate_check;
-    private EditText currency_rate;
-    private TextInputLayout currency_rate_layout;
-    private EditText base_rate;
-    private TextInputLayout base_rate_layout;
-    private TextView currency_update_date;
-    private ImageButton pattern_button;
-
     private CurrencyEditFragmentBinding binding;
-
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -86,46 +51,9 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                              Bundle savedInstanceState) {
 
         Log.d("Test", "onCreateView - RootListFragment");
-        //View v = (View) inflater.inflate(R.layout.currency_edit_fragment, container, false);
 
         binding = CurrencyEditFragmentBinding.inflate(inflater);
-        View v = binding.getRoot();
-
-/*
-        PrefixedEditText baseEdit = v.findViewById(R.id.cef_base_rate);
-        baseEdit.setPrefix("$");
-        PrefixedEditText currentEdit = v.findViewById(R.id.cef_currency_rate);
-        baseEdit.setPrefix("F");
-*/
-    //    currency_name = v.findViewById(R.id.cef_name);
-    //    currency_code = v.findViewById(R.id.cef_code);
-    //    currency_symbol = v.findViewById(R.id.cef_symbol);
-        currency_symbol_layout = v.findViewById(R.id.cef_symbol_layout);
-        currency_symbol_helper = v.findViewById(R.id.cef_symbol_helper);
-        currency_pattern = v.findViewById(R.id.cef_pattern);
-        currency_rate_check = v.findViewById(R.id.cef_manual_rate_check);
-        currency_rate = v.findViewById(R.id.cef_currency_rate);
-        base_rate = v.findViewById(R.id.cef_base_rate);
-        currency_rate_layout = v.findViewById(R.id.cef_currency_rate_layout);
-        base_rate_layout = v.findViewById(R.id.cef_base_rate_layout);
-        currency_update_date = v.findViewById(R.id.cef_currency_rate_date);
-        pattern_button = v.findViewById(R.id.cef_pattern_button);
-
-        pattern_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currency_pattern.performClick();
-            }
-        });
-
-        currency_rate_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-               // model.set
-            }
-        });
-
-        return v;
+        return binding.getRoot();
     }
 
     @Override
@@ -144,63 +72,28 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
                 binding.setSymbolModel(bindingModel);
 
+
                 model.getCurrency().observe(this,currency->{
                     if (currency != null) {
-                        if (currency.custom_name != null) {
-                        //    binding.setCurrencyName(currency.custom_name);
-                        //    currency_rate_layout.setHint(currency.custom_name + " (" + currency.iso_code_str + ")");
-                        }
-                        else {
-                            String name = getContext().getResources().getString(currency.iso_name_id);
-                        //    binding.setCurrencyName(name);
-                        //    currency_rate_layout.setHint(name + " (" + currency.iso_code_str + ")");
-                        }
-
                         bindingModel.setCurrencyCode(currency.iso_code_str);
                         bindingModel.setCurrencyCustomName(currency.custom_name);
                         bindingModel.setCurrencyNameId(currency.iso_name_id);
-
                         bindingModel.setSymbol(currency.symbol);
                         bindingModel.setPattern(currency.pattern);
-
-                        currency_rate_check.setChecked(currency.auto_update);
+                        bindingModel.setExchangeRate(currency.exchange_rate);
+                        bindingModel.setAutoUpdate(currency.auto_update);
+                        bindingModel.setIsBase(currency.iso_code_int == currency.exchange_base);
                     }
 
                 });
 
                 model.getBase().observe(this,base->{
                     if (base != null) {
-                        if (base.custom_name != null)
-                            base_rate_layout.setHint(base.custom_name + " (" + base.iso_code_str + ")");
-                        else {
-                            base_rate_layout.setHint(getContext().getResources().getString(base.iso_name_id) + " (" + base.iso_code_str + ")");
-                        }
+                        bindingModel.setBaseNameHint(base.custom_name,base.iso_code_str,base.iso_name_id);
                     }
                 });
             }
         }
-
-
-
-
-/*        if (args != null && args.containsKey("FILTER")){  // TODO Сделать восстановление состояния фильтра и ожет быть чего другого
-        //    model.setFilter();
-            model.setFilter(args.getStringArrayList("FILTER"));
-        } else {
-            model.setFilter(null);
-        }*/
-
-//        model.setFilter("");
-
-
-
-/*
-        model.getList().observe(this,list -> {
-            if (list != null)
-//                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
-                currencyListAdapter.setData(list);
-        });
-*/
     }
 
     @Override

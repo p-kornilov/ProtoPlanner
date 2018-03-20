@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="symbolModel" type="com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel"/>
+        <variable name="viewModel" type="com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel"/>
         <import type="com.vividprojects.protoplanner.R"/>
+        <import type="android.view.View"/>
     </data>
     <LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -164,6 +166,7 @@
                     android:cropToPadding="false"
                     android:padding="0dp"
                     android:visibility="visible"
+                    android:onClick="@{()->cefPattern.performClick()}"
                     app:layout_constraintEnd_toEndOf="@id/cef_pattern"
                     app:layout_constraintTop_toTopOf="@id/cef_pattern"
                     app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
@@ -188,8 +191,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/record_left_padding"
                     android:layout_marginTop="32dp"
-                    android:checked="true"
+                    android:checked="@={symbolModel.autoUpdate}"
                     android:text="Auto update exchange rate"
+                    android:enabled="@{!symbolModel.isBase}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/divider2" />
 
@@ -199,6 +203,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/record_left_padding"
                     android:layout_marginTop="8dp"
+                    android:hint="@{symbolModel.currencyRateHint}"
                     app:layout_constraintEnd_toStartOf="@+id/cef_rate_eq"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -209,8 +214,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:hint="@{symbolModel.currencyRateHint}"
-                        android:enabled="false"
+                        android:enabled="@{!symbolModel.autoUpdate}"
+                        android:text="@{symbolModel.exchangeRateS}"
                         tools:hint="Name (CODE)"/>
                     <TextView
                         android:id="@+id/cef_currency_rate_date"
@@ -218,7 +223,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:text="Updated 11.11.11"
-                        android:theme="@style/HelperText" />
+                        android:theme="@style/HelperText"
+                        android:visibility="@{symbolModel.autoUpdate ? View.VISIBLE : View.GONE}"
+                        tools:text="Updated 11.11.11"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <ImageView
@@ -241,6 +248,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:hint="@{symbolModel.baseNameHint}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/cef_rate_eq"
@@ -250,8 +258,7 @@
                         android:id="@+id/cef_base_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1.00"
-                        android:hint="Base"
+                        android:text="@{symbolModel.baseRateS}"
                         android:focusable="false"
                         android:enabled="false"/>
                 </android.support.design.widget.TextInputLayout>
