@@ -20,29 +20,20 @@ import javax.inject.Inject;
  */
 
 public class CurrencyItemViewModel extends ViewModel {
-
-    private final MutableLiveData<String> filter;
     private final MutableLiveData<Integer> currencyIsoCode = new MutableLiveData<>();
-
+    private final MutableLiveData<Integer> onSaveId = new MutableLiveData<>();
     private final LiveData<Currency.Plain> currency;
-    private final LiveData<Currency.Plain> base;
 
     private DataRepository dataRepository;
-
     private CurrencyItemBindingModel bindingModel;
 
     @Inject
     public CurrencyItemViewModel(DataRepository dataRepository, Context context) {
 
         bindingModel = new CurrencyItemBindingModel(context);
-
         this.dataRepository = dataRepository;
 
-        this.filter = new MutableLiveData<>();
-
         currency = Transformations.switchMap(currencyIsoCode, input -> CurrencyItemViewModel.this.dataRepository.getCurrency(input));
-        base = Transformations.switchMap(currencyIsoCode, input -> CurrencyItemViewModel.this.dataRepository.getBaseForCurrency(input));
-
     }
 
     public void setIsoCode(int iso_code) {
@@ -57,18 +48,19 @@ public class CurrencyItemViewModel extends ViewModel {
     }
 
     public LiveData<Currency.Plain> getBase(){
-        return base;
-    }
-
-    public void deleteCurrency(int iso_code_int) {
-        dataRepository.deleteCurrency(iso_code_int);
-    }
-
-    public void setDefaultCurrency(int iso_code_int) {
-        dataRepository.setDefaultCurrency(iso_code_int);
+        return dataRepository.getCurrencyBase();
     }
 
     public CurrencyItemBindingModel getBindingModel() {
         return bindingModel;
+    }
+
+    public LiveData<Integer> getOnSaveId() {
+        return onSaveId;
+    }
+
+    public void save(){
+        onSaveId.setValue(dataRepository.saveCurrency(bindingModel.getCurrency()));
+        return;
     }
 }

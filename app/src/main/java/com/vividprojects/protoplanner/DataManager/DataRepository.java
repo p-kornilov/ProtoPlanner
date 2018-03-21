@@ -339,6 +339,22 @@ public class DataRepository {
         return currency;
     }
 
+    public LiveData<Currency.Plain> getCurrencyBase() {
+        MutableLiveData<Currency.Plain> currency = new MutableLiveData<>();
+        Currency currencyF = localDataDB
+                .queryCurrency()
+                .getBase();
+        if (currencyF!=null) {
+            currency.setValue(currencyF.getPlain());
+        }
+        return currency;
+    }
+
+    public int saveCurrency(Currency.Plain currency) {
+        return localDataDB.saveCurrency(currency);
+    }
+
+
     public LiveData<Currency.Plain> getBaseForCurrency(int iso_code) {
         MutableLiveData<Currency.Plain> currency = new MutableLiveData<>();
         Currency currencyF = localDataDB

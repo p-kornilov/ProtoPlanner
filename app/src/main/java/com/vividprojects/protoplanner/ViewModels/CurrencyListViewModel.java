@@ -52,6 +52,10 @@ public class CurrencyListViewModel extends ViewModel {
         return listCurrency;
     }
 
+    public LiveData<Currency.Plain> getBase() {
+        return dataRepository.getCurrencyBase();
+    }
+
     public void deleteCurrency(int iso_code_int) {
         dataRepository.deleteCurrency(iso_code_int);
     }

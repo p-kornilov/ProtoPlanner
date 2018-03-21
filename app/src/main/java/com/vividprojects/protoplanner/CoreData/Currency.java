@@ -2,6 +2,8 @@ package com.vividprojects.protoplanner.CoreData;
 
 import android.databinding.BaseObservable;
 
+import com.vividprojects.protoplanner.Utils.PriceFormatter;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -17,16 +19,17 @@ public class Currency extends RealmObject {
     public static final int AFTER_SPACE = 4;
 
     @PrimaryKey
-    private int iso_code_int;
+    private int iso_code_int = -1;
     private String iso_code_str;
-    private int iso_name_id;
-    private String symbol;
-    private int pattern;
+    private int iso_name_id = 0;
+    private String symbol = "¤";
+    private int pattern = 0;
     private int exchange_base = 0;
     private float exchange_rate = 0;
     private int sorting_weight = 0;
     private String custom_name;
     private boolean auto_update = false;
+    private boolean isBase = false;
 
     public Currency() {
     }
@@ -48,6 +51,28 @@ public class Currency extends RealmObject {
         this.pattern = pattern;
         this.custom_name = custom_name;
         this.auto_update = auto_update;
+    }
+
+    public Currency(Currency.Plain plain) {
+        iso_code_int = plain.iso_code_int;
+        iso_name_id = 0;
+        iso_code_str = plain.iso_code_str;
+        symbol = PriceFormatter.collapseUnicodes(plain.symbol);
+        pattern = plain.pattern;
+        exchange_base = plain.exchange_base;
+        exchange_rate = plain.exchange_rate;
+        sorting_weight = 0;
+        custom_name = plain.custom_name;
+        auto_update = plain.auto_update;
+        isBase = plain.isBase;
+    }
+
+    public void setIsBase(boolean b) {
+        isBase = b;
+    }
+
+    public boolean isBase() {
+        return isBase;
     }
 
     public void setExchange_rate(float exchange_rate) {
@@ -126,7 +151,21 @@ public class Currency extends RealmObject {
                 ", exchange_base=" + exchange_base +
                 ", exchange_rate=" + exchange_rate +
                 ", auto_update=" + auto_update +
+                ", is base=" + isBase +
                 '}';
+    }
+
+    public void update(Currency.Plain plain) {
+        iso_name_id = plain.iso_name_id;
+        iso_code_str = plain.iso_code_str;
+        symbol = PriceFormatter.collapseUnicodes(plain.symbol);
+        pattern = plain.pattern;
+        exchange_base = plain.exchange_base;
+        exchange_rate = plain.exchange_rate;
+        sorting_weight = plain.sorting_weight;
+        custom_name = plain.custom_name;
+        auto_update = plain.auto_update;
+        isBase = plain.isBase;
     }
 
     public Plain getPlain() {
@@ -141,6 +180,7 @@ public class Currency extends RealmObject {
         plain.sorting_weight= sorting_weight;
         plain.custom_name = custom_name;
         plain.auto_update = auto_update;
+        plain.isBase = isBase;
         return plain;
     }
 
@@ -155,6 +195,7 @@ public class Currency extends RealmObject {
         public int sorting_weight;
         public String custom_name;
         public boolean auto_update;
+        public boolean isBase;
     }
 
 }

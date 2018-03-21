@@ -11,9 +11,11 @@ import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.BR;
+import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 
@@ -25,22 +27,22 @@ import java.util.List;
  */
 
 public class CurrencyItemBindingModel extends BaseObservable {
-    private String symbol;
-    private String collapsedSymbol;
     private boolean status = true;
-    private int pattern;
+    private boolean checkCode = true;
+    private String collapsedSymbol;
     private List<String> pattern_entries;
-    private String currencyCode;
-    private int currencyNameId;
-    private String currencyCustomName;
-    private float exchangeRate;
-    private boolean autoUpdate;
-    private String baseNameHint;
-    private boolean isBase;
+    private boolean onCodeChange = false;
+
+    private Currency.Plain currency;
+    private Currency.Plain base;
 
     private Context context;
 
     public CurrencyItemBindingModel(Context context) {
+        currency = (new Currency()).getPlain();
+/*        collapsedSymbol = PriceFormatter.collapseUnicodes(currency.symbol);
+        setPatternEntries(PriceFormatter.createListValue(collapsedSymbol, 100.00));*/
+        base = (new Currency()).getPlain();
         this.context = context;
     }
 
@@ -60,14 +62,49 @@ public class CurrencyItemBindingModel extends BaseObservable {
         }
     }
 
-    @Bindable
+    public void onCodeChanged(EditText editText) {
+        if (!onCodeChange) {
+            onCodeChange = true;
+            int pos = editText.getSelectionStart();
+            if (pos > 3) pos = 3;
+            String text = editText.getText().toString();
+            int maxLen = text.length() > 3 ? 3 : text.length();
+            editText.setText(text.toUpperCase().substring(0,maxLen));
+            editText.setSelection(pos);
+        }
+        onCodeChange = false;
+    }
+
+    public void setCurrency(Currency.Plain currency) {
+        this.currency = currency;
+        setPatternEntries(PriceFormatter.createListValue(currency.symbol, 100.00));
+        notifyPropertyChanged(BR.currencyCode);
+        notifyPropertyChanged(BR.currencyName);
+        notifyPropertyChanged(BR.symbol);
+        notifyPropertyChanged(BR.pattern);
+       // notifyPropertyChanged(BR.patternEntries);
+        notifyPropertyChanged(BR.exchangeRateS);
+        notifyPropertyChanged(BR.autoUpdate);
+        notifyPropertyChanged(BR.currencyRateHint);
+        notifyPropertyChanged(BR.isBase);
+    }
+
+    public void setBase(Currency.Plain currency) {
+        this.base = currency;
+        notifyPropertyChanged(BR.baseNameHint);
+    }
+
+    public Currency.Plain getCurrency() {
+        return currency;
+    }
+
     public String getSymbol() {
-        return symbol;
+        return currency.symbol;
     }
 
     @Bindable
     public void setSymbol(String symbol) {
-        this.symbol = symbol;
+        currency.symbol = symbol;
         notifyPropertyChanged(BR.symbol);
         status = symbolCheck();
         notifyPropertyChanged(BR.status);
@@ -78,33 +115,49 @@ public class CurrencyItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getCurrencyCode() {
-        return currencyCode;
+        return currency.iso_code_str;
     }
 
     @Bindable
     public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
-        notifyPropertyChanged(BR.currencyCode);
-    }
+        currency.iso_code_str = currencyCode;
+        checkCode = currencyCode.length() == 3;
 
-    public void setCurrencyNameId(int currencyNameId) {
-        this.currencyNameId = currencyNameId;
+       // notifyPropertyChanged(BR.currencyCode);
+        notifyPropertyChanged(BR.currencyRateHint);
+        notifyPropertyChanged(BR.checkCode);
     }
 
     @Bindable
+    public boolean getCheckCode() {
+        return checkCode;
+    }
+
+   /* public void setCurrencyNameId(int currencyNameId) {
+        this.currencyNameId = currencyNameId;
+    }*/
+
+    @Bindable
     public String getCurrencyName() {
-        return currencyCustomName != null ? currencyCustomName : context.getResources().getString(currencyNameId);
+        if (currency.custom_name != null)
+            return currency.custom_name;
+        else if (currency.iso_name_id != 0)
+            return context.getResources().getString(currency.iso_name_id);
+        else
+            return null;
+        //return currency.custom_name != null ? currency.custom_name : context.getResources().getString(currency.iso_name_id);
     }
 
     @Bindable
     public void setCurrencyName(String name) {
-        currencyCustomName = name;
+        currency.custom_name = name;
         notifyPropertyChanged(BR.currencyName);
         notifyPropertyChanged(BR.currencyRateHint);
     }
 
+    @Bindable
     public void setCurrencyCustomName(String currencyCustomName) {
-        this.currencyCustomName = currencyCustomName;
+        currency.custom_name = currencyCustomName;
     }
 
     @Bindable
@@ -114,16 +167,15 @@ public class CurrencyItemBindingModel extends BaseObservable {
 
     @Bindable
     public int getPattern() {
-        return pattern;
+        return currency.pattern;
     }
 
     @Bindable
     public void setPattern(int pattern) {
-        this.pattern = pattern;
+        currency.pattern = pattern;
         notifyPropertyChanged(BR.pattern);
     }
 
-    @Bindable
     public void setPatternEntries(List<String> list) {
         pattern_entries = list;
         notifyPropertyChanged(BR.patternEntries);
@@ -136,28 +188,25 @@ public class CurrencyItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getCurrencyRateHint() {
-        return currencyCustomName != null ? currencyCustomName + " (" + currencyCode + ")" : context.getResources().getString(currencyNameId)  + " (" + currencyCode + ")";
-    }
-
-    public float getExchangeRate() {
-        return exchangeRate;
-    }
-
-    public void setExchangeRate(float exchangeRate) {
-        this.exchangeRate = exchangeRate;
-        notifyPropertyChanged(BR.exchangeRateS);
+        if (currency.custom_name != null)
+            return currency.custom_name + " (" + currency.iso_code_str + ")";
+        else if (currency.iso_name_id != 0)
+            return context.getResources().getString(currency.iso_name_id)  + " (" + currency.iso_code_str + ")";
+        else
+            return null;
+        //return currency.custom_name != null ? currency.custom_name + " (" + currency.iso_code_str + ")" : context.getResources().getString(currency.iso_name_id)  + " (" + currency.iso_code_str + ")";
     }
 
     @Bindable
     public String getExchangeRateS() {
         DecimalFormat formatter = new DecimalFormat("0.000000");
-        return formatter.format(exchangeRate);
+        return formatter.format(currency.exchange_rate);
     }
 
     @Bindable
     public void setExchangeRateS(String exchangeRate) {
-        this.exchangeRate = Float.parseFloat(exchangeRate);
-        notifyPropertyChanged(BR.exchangeRateS);
+        currency.exchange_rate = Float.parseFloat(exchangeRate);
+    //    notifyPropertyChanged(BR.exchangeRateS);
     }
 
     @Bindable
@@ -168,38 +217,34 @@ public class CurrencyItemBindingModel extends BaseObservable {
 
     @Bindable
     public boolean getAutoUpdate() {
-        return autoUpdate;
+        return currency.auto_update;
     }
 
     @Bindable
     public void setAutoUpdate(boolean autoUpdate) {
-        this.autoUpdate = autoUpdate;
+        currency.auto_update = autoUpdate;
         notifyPropertyChanged(BR.autoUpdate);
-    }
-
-    public void setBaseNameHint(String customName, String code, int nameId) {
-        baseNameHint = customName != null ? customName + " (" + code + ")" : context.getResources().getString(nameId)  + " (" + code + ")";
-        notifyPropertyChanged(BR.baseNameHint);
     }
 
     @Bindable
     public String getBaseNameHint() {
-        return baseNameHint;
+        if (base.custom_name != null)
+            return base.custom_name + " (" + base.iso_code_str + ")";
+        else if (base.iso_name_id != 0)
+            return context.getResources().getString(base.iso_name_id)  + " (" + base.iso_code_str + ")";
+        else
+            return null;
+        //return base.custom_name != null ? base.custom_name + " (" + base.iso_code_str + ")" : context.getResources().getString(base.iso_name_id)  + " (" + base.iso_code_str + ")";
     }
 
     @Bindable
     public boolean getIsBase() {
-        return isBase;
-    }
-
-    public void setIsBase(boolean base) {
-        isBase = base;
-        notifyPropertyChanged(BR.isBase);
+        return currency.isBase;
     }
 
     private boolean symbolCheck() {
         try {
-            collapsedSymbol = PriceFormatter.collapseUnicodes(symbol);
+            collapsedSymbol = PriceFormatter.collapseUnicodes(currency.symbol);
         } catch (TextInputError error) {
             return false;
         }

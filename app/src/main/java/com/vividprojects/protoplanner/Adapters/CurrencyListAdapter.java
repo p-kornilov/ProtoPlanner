@@ -53,21 +53,41 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         this.layoutManager = layoutManager;
     }
 
+    public void refresh(int id) {
+        for (Currency.Plain c : this.data) {
+            if (c.iso_code_int == id) {
+                notifyItemChanged(data.indexOf(c));
+                return;
+            }
+        }
+    }
+
     public void setData(List<Currency.Plain> data) {
         this.data = data;
         names.clear();
+        int code = base != null ? base.iso_code_int : 0;
         for (Currency.Plain c : this.data) {
             if (c.custom_name != null)
                 names.put(c.iso_code_int,c.custom_name);
             else
                 names.put(c.iso_code_int,context.getResources().getString(c.iso_name_id));
-            if (c.iso_code_int == c.exchange_base)
+            if (code != 0 && c.iso_code_int == code)
                 base = c;
         }
 
         sortList();
 
         this.filtered_data = this.data;
+    }
+
+    public void setBase(Currency.Plain base) {
+        if (data != null) {
+            for (Currency.Plain c : data)
+                if (c.iso_code_int == base.iso_code_int)
+                    this.base = c;
+            sortList();
+        } else
+            this.base = base;
     }
 
     private void sortList() {
@@ -145,7 +165,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
         holder.currency_name.setText(names.get(obj.iso_code_int));
         holder.currency_code.setText(obj.iso_code_str);
-        if (obj.iso_code_int == obj.exchange_base) {
+        if (obj.iso_code_int == base.iso_code_int) {
             holder.currency_example.setText(PriceFormatter.createValue(obj, 1*obj.exchange_rate));
             holder.currency_base.setText("");
             holder.currency_default.setVisibility(View.VISIBLE);

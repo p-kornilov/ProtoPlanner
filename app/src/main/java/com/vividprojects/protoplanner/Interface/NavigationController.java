@@ -22,6 +22,8 @@ public class NavigationController {
     public final static int CURRENCY_LIST = 1;
     public final static int CURRENCY_ITEM = 2;
 
+    public final static int REQUEST_CODE_CURRENCY = 100;
+
     public final static String ACTIVITY_TYPE = "ACTIVITY_TYPE";
 
     public final static String CURRENCY_ID = "CURRENCY_ID";
@@ -136,6 +138,15 @@ public class NavigationController {
         intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
         intent.putExtra(CURRENCY_ID,iso_code);
         context.startActivity(intent);
+    }
+
+    public static void openCurrencyForResult(int iso_code, Fragment context) {
+
+        Intent intent;
+        intent = new Intent(context.getActivity(), ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
+        intent.putExtra(CURRENCY_ID,iso_code);
+        context.startActivityForResult(intent,REQUEST_CODE_CURRENCY);
     }
 
     public void openSettings() {

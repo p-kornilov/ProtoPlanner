@@ -61,6 +61,7 @@
                     android:layout_marginStart="@dimen/record_left_padding"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="4dp"
+                    app:hintTextAppearance="@{symbolModel.checkCode ? R.style.HintNormal : R.style.HintError}"
 
                     app:layout_constraintEnd_toStartOf="@+id/cef_symbol_layout"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -72,16 +73,21 @@
                         android:id="@+id/cef_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:hint="Code"
-                        android:text="@{symbolModel.currencyCode}"/>
+                        android:singleLine="true"
+                        android:inputType="textNoSuggestions"
+                        android:text="@={symbolModel.currencyCode}"
+                        android:onTextChanged="@{()->symbolModel.onCodeChanged(cefCode)}"
+                        android:textAllCaps="true"
+                        android:drawableEnd="@{symbolModel.checkCode ? null : @drawable/ic_error_outline_red_24dp}"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:text="3 capital letters"
-                        android:theme="@style/HelperText" />
+                        android:theme="@style/HelperText"
+                        android:textColor="@{symbolModel.checkCode ? @color/textHelper : @color/textInputError}"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -213,10 +219,11 @@
                         android:id="@+id/cef_currency_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="@{!symbolModel.autoUpdate &amp;&amp; !symbolModel.isBase}"
+                        android:inputType="numberDecimal"
                         android:singleLine="true"
-                        android:enabled="@{!symbolModel.autoUpdate}"
-                        android:text="@{symbolModel.exchangeRateS}"
-                        tools:hint="Name (CODE)"/>
+                        android:text="@={symbolModel.exchangeRateS}"
+                        tools:hint="Name (CODE)" />
                     <TextView
                         android:id="@+id/cef_currency_rate_date"
                         android:layout_width="match_parent"

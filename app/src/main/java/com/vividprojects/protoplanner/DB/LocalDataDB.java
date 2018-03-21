@@ -15,6 +15,7 @@ import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Bundle1;
 import com.vividprojects.protoplanner.Widgets.Pallet;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by p.kornilov on 25.12.2017.
@@ -205,10 +207,13 @@ public class LocalDataDB {
 
                 for (Currency cur : crc) {
                     if (cur.getIso_code_int() == 643) {
-                        cur.setExchange_rate(1, 643);
+                        //cur.setExchange_rate(1, 643);
+                        cur.setExchange_rate(1);
+                        cur.setIsBase(true);
                         realm.insertOrUpdate(cur);
                     } else {
-                        cur.setExchange_rate(ExchangeRates.getTestRate(), 643);
+                        //cur.setExchange_rate(ExchangeRates.getTestRate(), 643);
+                        cur.setExchange_rate(ExchangeRates.getTestRate());
                         realm.insertOrUpdate(cur);
                     }
                 }
@@ -334,12 +339,13 @@ public class LocalDataDB {
                 RealmResults<Currency> cs = realm.where(Currency.class).findAll();
                 if (cs != null && c != null) {
                     //Currency base = c;
-                    for (Currency ci : cs) {
-                        ci.setExchange_base(c.getIso_code_int());
-                        if (ci != c)
-                            ci.setExchange_rate(ci.getExchange_rate()/c.getExchange_rate());
-                    }
+                    for (Currency ci : cs)
+                        if (ci != c) {
+                            ci.setExchange_rate(ci.getExchange_rate() / c.getExchange_rate());
+                            ci.setIsBase(false);
+                        }
                     c.setExchange_rate(1);
+                    c.setIsBase(true);
                 }
             }
         });
@@ -367,6 +373,34 @@ public class LocalDataDB {
                     r.setLebels(labels);
             }
         });
+    }
+
+    public int saveCurrency(Currency.Plain currency) {
+        final Bundle1<Integer> id = new Bundle1<>();
+        id.item = -1;
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                if (currency.iso_code_int > 0) {
+                    Currency c = realm.where(Currency.class).equalTo("iso_code_int", currency.iso_code_int).findFirst();
+                    if (c != null) {
+                        c.update(currency);
+                        id.item = currency.iso_code_int;
+                    }
+                } else {
+                    RealmResults<Currency> c = realm.where(Currency.class).greaterThan("iso_code_int", 1000).findAll();
+                    int lastId = 1001;
+                    if (c != null && c.size() > 0) {
+                        Currency cc = c.sort("iso_code_int", Sort.DESCENDING).first();
+                        lastId = cc.getIso_code_int()+1;
+                    }
+                    currency.iso_code_int = lastId;
+                    id.item = lastId;
+                    realm.insertOrUpdate(new Currency(currency));
+                }
+            }
+        });
+        return id.item;
     }
 
     public QueryRecords queryRecords() {
@@ -489,6 +523,10 @@ public class LocalDataDB {
         public QueryCurrency iso_code_equalTo(int iso_code) {
             query = query.equalTo("iso_code_int",iso_code);
             return this;
+        }
+
+        public Currency getBase() {
+            return query.equalTo("isBase",true).findFirst();
         }
 
         public QueryCurrency iso_code_equalTo(String iso_code) {

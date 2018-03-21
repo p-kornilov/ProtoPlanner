@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.Interface.Fragments;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -26,6 +27,8 @@ import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.R;
 
 import javax.inject.Inject;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Smile on 19.10.2017.
@@ -115,6 +118,11 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
                 currencyListAdapter.setData(list);
         });
+        model.getBase().observe(this,base -> {
+            if (base != null)
+//                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
+                currencyListAdapter.setBase(base);
+        });
     }
 
     @Override
@@ -174,6 +182,23 @@ public class CurrencyListFragment extends Fragment implements Injectable {
         return true;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case NavigationController.REQUEST_CODE_CURRENCY:
+                if (resultCode == RESULT_OK && data != null) {
+                    int id = data.getIntExtra("ID",-1);
+                    currencyListAdapter.refresh(id);
+                }
+                return;
+        }
+    }
+
+
+    public void onFabClick() {
+        NavigationController.openCurrencyForResult(-1, this);
+    }
+
     public void deleteCurrency(int iso_code_int) {
         model.deleteCurrency(iso_code_int);
     }
@@ -183,7 +208,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
     }
 
     public void editItem(int iso_code_int) {
-        navigationController.openCurrency(iso_code_int);
+        NavigationController.openCurrencyForResult(iso_code_int,this);
     }
 
     public static CurrencyListFragment create() {

@@ -3,8 +3,10 @@ package com.vividprojects.protoplanner.Interface.Fragments;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +32,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private CurrencyItemViewModel model;
 
     private CurrencyEditFragmentBinding binding;
+    private CurrencyItemBindingModel bindingModel;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -64,35 +67,24 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
         if (args != null && args.containsKey(NavigationController.CURRENCY_ID)){
             int iso_code = args.getInt(NavigationController.CURRENCY_ID);
-            if (iso_code > 0) {
+           // if (iso_code > 0) {
                 model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyItemViewModel.class);
                 model.setIsoCode(iso_code);
 
-                CurrencyItemBindingModel bindingModel = model.getBindingModel();
+                bindingModel = model.getBindingModel();
 
                 binding.setSymbolModel(bindingModel);
 
-
                 model.getCurrency().observe(this,currency->{
-                    if (currency != null) {
-                        bindingModel.setCurrencyCode(currency.iso_code_str);
-                        bindingModel.setCurrencyCustomName(currency.custom_name);
-                        bindingModel.setCurrencyNameId(currency.iso_name_id);
-                        bindingModel.setSymbol(currency.symbol);
-                        bindingModel.setPattern(currency.pattern);
-                        bindingModel.setExchangeRate(currency.exchange_rate);
-                        bindingModel.setAutoUpdate(currency.auto_update);
-                        bindingModel.setIsBase(currency.iso_code_int == currency.exchange_base);
-                    }
-
+                    if (currency != null)
+                        bindingModel.setCurrency(currency);
                 });
 
                 model.getBase().observe(this,base->{
-                    if (base != null) {
-                        bindingModel.setBaseNameHint(base.custom_name,base.iso_code_str,base.iso_name_id);
-                    }
+                    if (base != null)
+                        bindingModel.setBase(base);
                 });
-            }
+          //  }
         }
     }
 
@@ -107,6 +99,35 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
         switch (id) {
             case R.id.item_check:
+                boolean error = false;
+                String errorText = "";
+                if (!bindingModel.getCheckCode() || bindingModel.getCurrencyCode() == null) {
+                    errorText = "Please, correct the code. It must be 3 characters long.";
+                    error = true;
+                }
+                if (!bindingModel.getStatus()) {
+                    errorText = "Please, correct the symbol. Wrong unicode format.";
+                    error = true;
+                }
+                if (bindingModel.getCurrencyName() == null) {
+                    errorText = "Please, correct the name. Can't be empty.";
+                    error = true;
+                }
+                if (error) {
+                    AlertDialog alert = new AlertDialog.Builder(getContext()).create();
+                    alert.setTitle("Oops...");
+                    alert.setMessage(errorText);
+                    alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Close",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alert.show();
+                    break;
+                }
+                model.save();
+              //  getActivity().finish();
                 break;
         }
         return true;

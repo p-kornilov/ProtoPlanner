@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.Interface.Activity;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
@@ -63,14 +65,15 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
         switch (activityType) {
             case NavigationController.CURRENCY_LIST:
                 getSupportActionBar().setTitle("Currency list");
-                fragment = CurrencyListFragment.create();
+                final CurrencyListFragment fragmentS = CurrencyListFragment.create();
+                fragment = fragmentS;
                 obtainViewModel(CurrencyListViewModel.class);
 
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                        fragmentS.onFabClick();
+                        //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
                 });
                 break;
@@ -79,8 +82,16 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
 
                 int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
                 fragment = CurrencyItemFragment.create(iso_code);
-                obtainViewModel(CurrencyItemViewModel.class);
+                CurrencyItemViewModel model = obtainViewModel(CurrencyItemViewModel.class);
 
+                model.getOnSaveId().observe(this,id->{
+                    if (id != null) {
+                        Intent intent = new Intent();
+                        intent.putExtra("ID", id.intValue());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
                 fab.setVisibility(View.GONE);
                 break;
         }
