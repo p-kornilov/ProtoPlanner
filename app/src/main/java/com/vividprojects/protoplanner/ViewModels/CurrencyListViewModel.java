@@ -25,6 +25,10 @@ public class CurrencyListViewModel extends ViewModel {
 
     private DataRepository dataRepository;
 
+    final private MutableLiveData<Integer> refreshId = new MutableLiveData<>();
+
+    final private LiveData<Currency.Plain> refreshCurrency;
+
     @Inject
     public CurrencyListViewModel(DataRepository dataRepository) {
         //super();
@@ -38,6 +42,10 @@ public class CurrencyListViewModel extends ViewModel {
             return CurrencyListViewModel.this.dataRepository.getCurrencies();
         });
 
+        refreshCurrency = Transformations.switchMap(refreshId,input -> {
+            return CurrencyListViewModel.this.dataRepository.getCurrency(input);
+        });
+
     }
 
     public void setFilter(String ids) {
@@ -47,9 +55,17 @@ public class CurrencyListViewModel extends ViewModel {
         filter.setValue(ids);
     }
 
+    public void refresh(int id) {
+        refreshId.setValue(id);
+    }
+
     public LiveData<List<Currency.Plain>> getList(){
 
         return listCurrency;
+    }
+
+    public LiveData<Currency.Plain> getRefreshCurrency() {
+        return refreshCurrency;
     }
 
     public LiveData<Currency.Plain> getBase() {

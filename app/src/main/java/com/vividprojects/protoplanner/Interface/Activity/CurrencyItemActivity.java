@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class ContainerActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class CurrencyItemActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -42,9 +42,6 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-
-    private FloatingActionButton fab;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,47 +51,27 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        int activityType = getIntent().getIntExtra(NavigationController.ACTIVITY_TYPE,0);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = null;
 
-        switch (activityType) {
-            case NavigationController.CURRENCY_LIST:
-                getSupportActionBar().setTitle("Currency list");
-                final CurrencyListFragment fragmentS = CurrencyListFragment.create();
-                fragment = fragmentS;
-                obtainViewModel(CurrencyListViewModel.class);
+        getSupportActionBar().setTitle("Currency");
 
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        fragmentS.onFabClick();
-                        //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                });
-                break;
-            case NavigationController.CURRENCY_ITEM:
-                getSupportActionBar().setTitle("Currency");
+        int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
+        fragment = CurrencyItemFragment.create(iso_code);
+        CurrencyItemViewModel model = obtainViewModel(CurrencyItemViewModel.class);
 
-                int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
-                fragment = CurrencyItemFragment.create(iso_code);
-                CurrencyItemViewModel model = obtainViewModel(CurrencyItemViewModel.class);
-
-                model.getOnSaveId().observe(this,id->{
-                    if (id != null) {
-                        Intent intent = new Intent();
-                        intent.putExtra("ID", id.intValue());
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                });
-                fab.setVisibility(View.GONE);
-                break;
-        }
+        model.getOnSaveId().observe(this,id->{
+            if (id != null) {
+                Intent intent = new Intent();
+                intent.putExtra("ID", id.intValue());
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
 
         if (fragment != null)
             fragmentTransaction.replace(R.id.container_container, fragment);
@@ -102,15 +79,6 @@ public class ContainerActivity extends AppCompatActivity implements HasSupportFr
 
 
     }
-
-    public void hideFab() {
-        fab.hide();
-    }
-
-    public void showFab() {
-        fab.show();
-    }
-
 
 
 /*    @Override

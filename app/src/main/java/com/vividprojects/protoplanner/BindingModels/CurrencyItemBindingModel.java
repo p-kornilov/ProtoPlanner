@@ -205,8 +205,7 @@ public class CurrencyItemBindingModel extends BaseObservable {
 
     @Bindable
     public void setExchangeRateS(String exchangeRate) {
-        currency.exchange_rate = Float.parseFloat(exchangeRate);
-    //    notifyPropertyChanged(BR.exchangeRateS);
+        currency.exchange_rate = Float.parseFloat(exchangeRate.replace(',', '.'));
     }
 
     @Bindable

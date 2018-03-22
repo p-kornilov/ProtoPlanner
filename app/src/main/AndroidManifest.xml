@@ -79,8 +79,18 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Interface.Activity.ContainerActivity"
-            android:label="Container"
+            android:name=".Interface.Activity.CurrencyItemActivity"
+            android:label="CurrencyItem"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Interface.Activity.CurrencyListActivity" />
+        </activity>
+        <activity
+            android:name=".Interface.Activity.CurrencyListActivity"
+            android:label="CurrencyList"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

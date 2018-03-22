@@ -53,13 +53,25 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         this.layoutManager = layoutManager;
     }
 
-    public void refresh(int id) {
+    public void refresh(Currency.Plain currencyRefresh) {
+        String currencyName = currencyRefresh.custom_name != null ? currencyRefresh.custom_name : context.getResources().getString(currencyRefresh.iso_name_id);
+        String currencyNameUp = currencyName.toUpperCase();
+        int posInsert = 0;
         for (Currency.Plain c : this.data) {
-            if (c.iso_code_int == id) {
-                notifyItemChanged(data.indexOf(c));
+            if (c.iso_code_int == currencyRefresh.iso_code_int) {
+                int pos = data.indexOf(c);
+                data.remove(pos);
+                data.add(pos,currencyRefresh);
+                names.put(currencyRefresh.iso_code_int,currencyName);
+                notifyItemChanged(pos);
                 return;
             }
+            if (c.sorting_weight > 0 || c == base || currencyNameUp.compareTo(names.get(c.iso_code_int).toUpperCase()) > 0 )
+                posInsert++;
         }
+        data.add(posInsert,currencyRefresh);
+        names.put(currencyRefresh.iso_code_int,currencyName);
+        notifyItemInserted(posInsert);
     }
 
     public void setData(List<Currency.Plain> data) {

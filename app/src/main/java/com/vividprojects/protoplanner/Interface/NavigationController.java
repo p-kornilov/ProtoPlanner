@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 
-import com.vividprojects.protoplanner.Interface.Activity.ContainerActivity;
+import com.vividprojects.protoplanner.Interface.Activity.CurrencyItemActivity;
+import com.vividprojects.protoplanner.Interface.Activity.CurrencyListActivity;
 import com.vividprojects.protoplanner.Interface.Activity.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.R;
@@ -119,11 +120,11 @@ public class NavigationController {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
-            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = new Intent(context, CurrencyListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
-            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent = new Intent(context, CurrencyListActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
-        intent.putExtra(ACTIVITY_TYPE,CURRENCY_LIST);
+       // intent.putExtra(ACTIVITY_TYPE,CURRENCY_LIST);
         context.startActivity(intent);
     }
 
@@ -131,9 +132,9 @@ public class NavigationController {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
-            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = new Intent(context, CurrencyItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
-            intent = new Intent(context, ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = new Intent(context, CurrencyItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
         intent.putExtra(CURRENCY_ID,iso_code);
@@ -143,7 +144,11 @@ public class NavigationController {
     public static void openCurrencyForResult(int iso_code, Fragment context) {
 
         Intent intent;
-        intent = new Intent(context.getActivity(), ContainerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context.getActivity(), CurrencyItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context.getActivity(), CurrencyItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
         intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
         intent.putExtra(CURRENCY_ID,iso_code);
         context.startActivityForResult(intent,REQUEST_CODE_CURRENCY);

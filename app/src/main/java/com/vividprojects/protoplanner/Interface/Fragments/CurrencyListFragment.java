@@ -21,7 +21,8 @@ import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.Adapters.CurrencyListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.Interface.Activity.ContainerActivity;
+import com.vividprojects.protoplanner.Interface.Activity.CurrencyItemActivity;
+import com.vividprojects.protoplanner.Interface.Activity.CurrencyListActivity;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.R;
@@ -76,10 +77,10 @@ public class CurrencyListFragment extends Fragment implements Injectable {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0 && fabVisible) {
-                    ((ContainerActivity) getActivity()).hideFab();
+                    ((CurrencyListActivity) getActivity()).hideFab();
                     fabVisible = false;
                 } else if (dy < 0 && !fabVisible) {
-                    ((ContainerActivity) getActivity()).showFab();
+                    ((CurrencyListActivity) getActivity()).showFab();
                     fabVisible = true;
                 }
             }
@@ -122,6 +123,12 @@ public class CurrencyListFragment extends Fragment implements Injectable {
             if (base != null)
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
                 currencyListAdapter.setBase(base);
+        });
+
+        model.getRefreshCurrency().observe(this,currency -> {
+            if (currency != null)
+//                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
+                currencyListAdapter.refresh(currency);
         });
     }
 
@@ -188,7 +195,8 @@ public class CurrencyListFragment extends Fragment implements Injectable {
             case NavigationController.REQUEST_CODE_CURRENCY:
                 if (resultCode == RESULT_OK && data != null) {
                     int id = data.getIntExtra("ID",-1);
-                    currencyListAdapter.refresh(id);
+                    model.refresh(id);
+                    //currencyListAdapter.refresh(id);
                 }
                 return;
         }
@@ -208,7 +216,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
     }
 
     public void editItem(int iso_code_int) {
-        NavigationController.openCurrencyForResult(iso_code_int,this);
+        NavigationController.openCurrencyForResult(iso_code_int,CurrencyListFragment.this);
     }
 
     public static CurrencyListFragment create() {
