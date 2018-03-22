@@ -1,7 +1,116 @@
 <resources>
-    <string name="RUB" translatable="false">Russian ruble</string>
+<!--    <string name="RUB" translatable="false">Russian ruble</string>
     <string name="USD" translatable="false">US Dollar</string>
     <string name="EUR" translatable="false">Euro</string>
     <string name="XAF" translatable="false">Franc</string>
+    <string name="ANG" translatable="false">Netherlands Antillean Guilder</string>-->
+    <string name="AED" translatable="false">UAE Dirham</string>
+    <string name="AFN" translatable="false">Afghani</string>
+    <string name="ALL" translatable="false">Lek</string>
+    <string name="AMD" translatable="false">Armenian Dram</string>
     <string name="ANG" translatable="false">Netherlands Antillean Guilder</string>
+    <string name="AOA" translatable="false">Kwanza</string>
+    <string name="ARS" translatable="false">Argentine Peso</string>
+    <string name="AUD" translatable="false">Australian Dollar</string>
+    <string name="AWG" translatable="false">Aruban Florin</string>
+    <string name="AZN" translatable="false">Azerbaijanian Manat</string>
+    <string name="BAM" translatable="false">Convertible Mark</string>
+    <string name="BBD" translatable="false">Barbados Dollar</string>
+    <string name="BDT" translatable="false">Taka</string>
+    <string name="BGN" translatable="false">Bulgarian Lev</string>
+    <string name="BHD" translatable="false">Bahraini Dinar</string>
+    <string name="BIF" translatable="false">Burundi Franc</string>
+    <string name="BMD" translatable="false">Bermudian Dollar</string>
+    <string name="BND" translatable="false">Brunei Dollar</string>
+    <string name="BRL" translatable="false">Brazilian Real</string>
+    <string name="BSD" translatable="false">Bahamian Dollar</string>
+    <string name="BTN" translatable="false">Ngultrum</string>
+    <string name="BWP" translatable="false">Pula</string>
+    <string name="BYN" translatable="false">Belarussian Ruble</string>
+    <string name="BZD" translatable="false">Belize Dollar</string>
+    <string name="CAD" translatable="false">Canadian Dollar</string>
+    <string name="CHF" translatable="false">Swiss Franc</string>
+    <string name="CLP" translatable="false">Chilean Peso</string>
+    <string name="CNY" translatable="false">Yuan Renminbi</string>
+    <string name="COP" translatable="false">Colombian Peso</string>
+    <string name="CRC" translatable="false">Costa Rican Colon</string>
+    <string name="CUP" translatable="false">Cuban Peso</string>
+    <string name="CVE" translatable="false">Cape Verde Escudo</string>
+    <string name="CZK" translatable="false">Czech Koruna</string>
+    <string name="DKK" translatable="false">Danish Krone</string>
+    <string name="DOP" translatable="false">Dominican Peso</string>
+    <string name="DZD" translatable="false">Algerian Dinar</string>
+    <string name="EGP" translatable="false">Egyptian Pound</string>
+    <string name="ERN" translatable="false">Nakfa</string>
+    <string name="ETB" translatable="false">Ethiopian Birr</string>
+    <string name="EUR" translatable="false">Euro</string>
+    <string name="FJD" translatable="false">Fiji Dollar</string>
+    <string name="FKP" translatable="false">Falkland Islands Pound</string>
+    <string name="GBP" translatable="false">Pound Sterling</string>
+    <string name="GEL" translatable="false">Lari</string>
+    <string name="GHS" translatable="false">Ghana Cedi</string>
+    <string name="GIP" translatable="false">Gibraltar Pound</string>
+    <string name="GMD" translatable="false">Dalasi</string>
+    <string name="GYD" translatable="false">Guyana Dollar</string>
+    <string name="HKD" translatable="false">Hong Kong Dollar</string>
+    <string name="HNL" translatable="false">Lempira</string>
+    <string name="HRK" translatable="false">Kuna</string>
+    <string name="HTG" translatable="false">Gourde</string>
+    <string name="HUF" translatable="false">Forint</string>
+    <string name="IDR" translatable="false">Rupiah</string>
+    <string name="ILS" translatable="false">New Israeli Sheqel</string>
+    <string name="INR" translatable="false">Indian Rupee</string>
+    <string name="IQD" translatable="false">Iraqi Dinar</string>
+    <string name="IRR" translatable="false">Iranian Rial</string>
+    <string name="ISK" translatable="false">Iceland Krona</string>
+    <string name="JMD" translatable="false">Jamaican Dollar</string>
+    <string name="JOD" translatable="false">Jordanian Dinar</string>
+    <string name="JPY" translatable="false">Yen</string>
+    <string name="KES" translatable="false">Kenyan Shilling</string>
+    <string name="KGS" translatable="false">Som</string>
+    <string name="KHR" translatable="false">Riel</string>
+    <string name="KPW" translatable="false">North Korean Won</string>
+    <string name="KRW" translatable="false">Won</string>
+    <string name="KYD" translatable="false">Cayman Islands Dollar</string>
+    <string name="KZT" translatable="false">Tenge</string>
+    <string name="LAK" translatable="false">Kip</string>
+    <string name="LBP" translatable="false">Lebanese Pound</string>
+    <string name="LKR" translatable="false">Sri Lanka Rupee</string>
+    <string name="LTL" translatable="false">Lithuanian Litas</string>
+    <string name="LYD" translatable="false">Libyan Dinar</string>
+    <string name="MAD" translatable="false">Moroccan Dirham</string>
+    <string name="MDL" translatable="false">Moldovan Leu</string>
+    <string name="MNT" translatable="false">Tugrik</string>
+    <string name="MOP" translatable="false">Pataca</string>
+    <string name="MUR" translatable="false">Mauritius Rupee</string>
+    <string name="MXN" translatable="false">Mexican Peso</string>
+    <string name="NAD" translatable="false">Namibia Dollar</string>
+    <string name="NGN" translatable="false">Naira</string>
+    <string name="NIO" translatable="false">Cordoba Oro</string>
+    <string name="NOK" translatable="false">Norwegian Krone</string>
+    <string name="NZD" translatable="false">New Zealand Dollar</string>
+    <string name="OMR" translatable="false">Rial Omani</string>
+    <string name="PHP" translatable="false">Philippine Peso</string>
+    <string name="PKR" translatable="false">Pakistan Rupee</string>
+    <string name="PLN" translatable="false">Zloty</string>
+    <string name="PYG" translatable="false">Guarani</string>
+    <string name="QAR" translatable="false">Qatari Rial</string>
+    <string name="RSD" translatable="false">Serbian Dinar</string>
+    <string name="RUB" translatable="false">Russian Ruble</string>
+    <string name="SAR" translatable="false">Saudi Riyal</string>
+    <string name="SBD" translatable="false">Solomon Islands Dollar</string>
+    <string name="SCR" translatable="false">Seychelles Rupee</string>
+    <string name="SEK" translatable="false">Swedish Krona</string>
+    <string name="SGD" translatable="false">Singapore Dollar</string>
+    <string name="THB" translatable="false">Baht</string>
+    <string name="TMT" translatable="false">Turkmenistan New Manat</string>
+    <string name="TRY" translatable="false">Turkish Lira</string>
+    <string name="TTD" translatable="false">Trinidad and Tobago Dollar</string>
+    <string name="TWD" translatable="false">New Taiwan Dollar</string>
+    <string name="TZS" translatable="false">Tanzanian Shilling</string>
+    <string name="UAH" translatable="false">Hryvnia</string>
+    <string name="USD" translatable="false">US Dollar</string>
+    <string name="UYU" translatable="false">Peso Uruguayo</string>
+    <string name="VND" translatable="false">Dong</string>
+
 </resources>

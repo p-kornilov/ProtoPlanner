@@ -34,6 +34,16 @@ public class Currency extends RealmObject {
     public Currency() {
     }
 
+    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern, boolean auto_update, int sorting_weight){
+        this.iso_code_str = iso_code_str;
+        this.iso_code_int = iso_code_int;
+        this.iso_name_id = iso_name_id;
+        this.symbol = symbol;
+        this.pattern = pattern;
+        this.auto_update = auto_update;
+        this.sorting_weight = sorting_weight;
+    }
+
     public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern, boolean auto_update){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;

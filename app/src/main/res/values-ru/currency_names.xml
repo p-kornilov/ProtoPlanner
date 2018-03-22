@@ -1,7 +1,117 @@
 <resources>
-    <string name="RUB" translatable="false">Рубль</string>
+<!--    <string name="RUB" translatable="false">Рубль</string>
     <string name="USD" translatable="false">Доллар</string>
     <string name="EUR" translatable="false">Евро</string>
     <string name="XAF" translatable="false">Франк</string>
+    <string name="ANG" translatable="false">Нидерландский антильский гульден</string>-->
+
+    <string name="AED" translatable="false">Дирхам (ОАЭ)</string>
+    <string name="AFN" translatable="false">Афгани</string>
+    <string name="ALL" translatable="false">Лек</string>
+    <string name="AMD" translatable="false">Армянский драм</string>
     <string name="ANG" translatable="false">Нидерландский антильский гульден</string>
+    <string name="AOA" translatable="false">Кванза</string>
+    <string name="ARS" translatable="false">Аргентинское песо</string>
+    <string name="AUD" translatable="false">Австралийский доллар</string>
+    <string name="AWG" translatable="false">Арубанский флорин</string>
+    <string name="AZN" translatable="false">Азербайджанский манат</string>
+    <string name="BAM" translatable="false">Конвертируемая марка</string>
+    <string name="BBD" translatable="false">Барбадосский доллар</string>
+    <string name="BDT" translatable="false">Така</string>
+    <string name="BGN" translatable="false">Болгарский лев</string>
+    <string name="BHD" translatable="false">Бахрейнский динар</string>
+    <string name="BIF" translatable="false">Бурундийский франк</string>
+    <string name="BMD" translatable="false">Бермудский доллар</string>
+    <string name="BND" translatable="false">Брунейский доллар</string>
+    <string name="BRL" translatable="false">Бразильский реал</string>
+    <string name="BSD" translatable="false">Багамский доллар</string>
+    <string name="BTN" translatable="false">Нгултрум</string>
+    <string name="BWP" translatable="false">Пула</string>
+    <string name="BYN" translatable="false">Белорусский рубль</string>
+    <string name="BZD" translatable="false">Белизский доллар</string>
+    <string name="CAD" translatable="false">Канадский доллар</string>
+    <string name="CHF" translatable="false">Швейцарский франк</string>
+    <string name="CLP" translatable="false">Чилийское песо</string>
+    <string name="CNY" translatable="false">Юань</string>
+    <string name="COP" translatable="false">Колумбийское песо</string>
+    <string name="CRC" translatable="false">Коста-риканский колон</string>
+    <string name="CUP" translatable="false">Кубинское песо</string>
+    <string name="CVE" translatable="false">Эскудо Кабо-Верде</string>
+    <string name="CZK" translatable="false">Чешская крона</string>
+    <string name="DKK" translatable="false">Датская крона</string>
+    <string name="DOP" translatable="false">Доминиканское песо</string>
+    <string name="DZD" translatable="false">Алжирский динар</string>
+    <string name="EGP" translatable="false">Египетский фунт</string>
+    <string name="ERN" translatable="false">Накфа</string>
+    <string name="ETB" translatable="false">Эфиопский быр</string>
+    <string name="EUR" translatable="false">Евро</string>
+    <string name="FJD" translatable="false">Доллар Фиджи</string>
+    <string name="FKP" translatable="false">Фунт Фолклендских островов</string>
+    <string name="GBP" translatable="false">Фунт стерлингов</string>
+    <string name="GEL" translatable="false">Лари</string>
+    <string name="GHS" translatable="false">Ганский седи</string>
+    <string name="GIP" translatable="false">Гибралтарский фунт</string>
+    <string name="GMD" translatable="false">Даласи</string>
+    <string name="GYD" translatable="false">Гайанский доллар</string>
+    <string name="HKD" translatable="false">Гонконгский доллар</string>
+    <string name="HNL" translatable="false">Лемпира</string>
+    <string name="HRK" translatable="false">Хорватская куна</string>
+    <string name="HTG" translatable="false">Гурд</string>
+    <string name="HUF" translatable="false">Форинт</string>
+    <string name="IDR" translatable="false">Рупия</string>
+    <string name="ILS" translatable="false">Новый израильский шекель</string>
+    <string name="INR" translatable="false">Индийская рупия</string>
+    <string name="IQD" translatable="false">Иракский динар</string>
+    <string name="IRR" translatable="false">Иранский риал</string>
+    <string name="ISK" translatable="false">Исландская крона</string>
+    <string name="JMD" translatable="false">Ямайский доллар</string>
+    <string name="JOD" translatable="false">Иорданский динар</string>
+    <string name="JPY" translatable="false">Иена</string>
+    <string name="KES" translatable="false">Кенийский шиллинг</string>
+    <string name="KGS" translatable="false">Сом</string>
+    <string name="KHR" translatable="false">Риель</string>
+    <string name="KPW" translatable="false">Северокорейская вона</string>
+    <string name="KRW" translatable="false">Вона</string>
+    <string name="KYD" translatable="false">Доллар Островов Кайман</string>
+    <string name="KZT" translatable="false">Тенге</string>
+    <string name="LAK" translatable="false">Кип</string>
+    <string name="LBP" translatable="false">Ливанский фунт</string>
+    <string name="LKR" translatable="false">Шри-ланкийская рупия</string>
+    <string name="LTL" translatable="false">Литовский лит</string>
+    <string name="LYD" translatable="false">Ливийский динар</string>
+    <string name="MAD" translatable="false">Марокканский дирхам</string>
+    <string name="MDL" translatable="false">Молдавский лей</string>
+    <string name="MNT" translatable="false">Тугрик</string>
+    <string name="MOP" translatable="false">Патака</string>
+    <string name="MUR" translatable="false">Маврикийская рупия</string>
+    <string name="MXN" translatable="false">Мексиканское песо</string>
+    <string name="NAD" translatable="false">Доллар Намибии</string>
+    <string name="NGN" translatable="false">Найра</string>
+    <string name="NIO" translatable="false">Золотая кордоба</string>
+    <string name="NOK" translatable="false">Норвежская крона</string>
+    <string name="NZD" translatable="false">Новозеландский доллар</string>
+    <string name="OMR" translatable="false">Оманский риал</string>
+    <string name="PHP" translatable="false">Филиппинское песо</string>
+    <string name="PKR" translatable="false">Пакистанская рупия</string>
+    <string name="PLN" translatable="false">Злотый</string>
+    <string name="PYG" translatable="false">Гуарани</string>
+    <string name="QAR" translatable="false">Катарский риал</string>
+    <string name="RSD" translatable="false">Сербский динар</string>
+    <string name="RUB" translatable="false">Российский рубль</string>
+    <string name="SAR" translatable="false">Саудовский риял</string>
+    <string name="SBD" translatable="false">Доллар Соломоновых Островов</string>
+    <string name="SCR" translatable="false">Сейшельская рупия</string>
+    <string name="SEK" translatable="false">Шведская крона</string>
+    <string name="SGD" translatable="false">Сингапурский доллар</string>
+    <string name="THB" translatable="false">Бат</string>
+    <string name="TMT" translatable="false">Новый туркменский манат</string>
+    <string name="TRY" translatable="false">Турецкая лира</string>
+    <string name="TTD" translatable="false">Доллар Тринидада и Тобаго</string>
+    <string name="TWD" translatable="false">Новый тайваньский доллар</string>
+    <string name="TZS" translatable="false">Танзанийский шиллинг</string>
+    <string name="UAH" translatable="false">Гривна</string>
+    <string name="USD" translatable="false">Доллар США</string>
+    <string name="UYU" translatable="false">Уругвайское песо</string>
+    <string name="VND" translatable="false">Донг</string>
+
 </resources>
