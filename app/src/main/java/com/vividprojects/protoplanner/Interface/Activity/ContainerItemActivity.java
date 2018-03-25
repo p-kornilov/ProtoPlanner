@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,21 +14,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
+import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
+import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
-import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
-import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 
 import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class CurrencyListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class ContainerItemActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -40,9 +42,6 @@ public class CurrencyListActivity extends AppCompatActivity implements HasSuppor
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-
-    private FloatingActionButton fab;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,39 +51,33 @@ public class CurrencyListActivity extends AppCompatActivity implements HasSuppor
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment fragment = null;
 
-        getSupportActionBar().setTitle("Currency list");
-        final CurrencyListFragment fragment = CurrencyListFragment.create();
-        obtainViewModel(CurrencyListViewModel.class);
+        getSupportActionBar().setTitle("Currency");
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment.onFabClick(); //TODO Заменить на model
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
+        fragment = CurrencyItemFragment.create(iso_code);
+        CurrencyItemViewModel model = obtainViewModel(CurrencyItemViewModel.class);
+
+        model.getOnSaveId().observe(this,id->{
+            if (id != null) {
+                Intent intent = new Intent();
+                intent.putExtra("ID", id.intValue());
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
 
         if (fragment != null)
             fragmentTransaction.replace(R.id.container_container, fragment);
         fragmentTransaction.commit();
-    }
 
-    public void hideFab() {
-        fab.hide();
-    }
 
-    public void showFab() {
-        fab.show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

@@ -182,6 +182,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         } else if (id == R.id.nav_manage) {
 
         }*/
+        } else if (id == R.id.nav_measure) {
+            navigationController.openMeasures();
         } else if (id == R.id.nav_settings) {
             navigationController.openSettings();
 

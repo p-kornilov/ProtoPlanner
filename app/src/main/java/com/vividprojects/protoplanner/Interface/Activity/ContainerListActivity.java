@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,22 +13,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
+import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
-import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
+import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
+import com.vividprojects.protoplanner.ViewModels.MeasureListViewModel;
 
 import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class CurrencyItemActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class ContainerListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -42,6 +42,10 @@ public class CurrencyItemActivity extends AppCompatActivity implements HasSuppor
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
+    private int activityType;
+
+    private FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,33 +55,51 @@ public class CurrencyItemActivity extends AppCompatActivity implements HasSuppor
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        activityType = getIntent().getIntExtra(NavigationController.ACTIVITY_TYPE, NavigationController.CURRENCY_LIST);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = null;
 
-        getSupportActionBar().setTitle("Currency");
+        switch (activityType) {
+            case NavigationController.CURRENCY_LIST:
+                getSupportActionBar().setTitle("Currency list");
+                fragment = CurrencyListFragment.create();
+                obtainViewModel(CurrencyListViewModel.class);
+                break;
+            case NavigationController.MEASURE_LIST:
+                getSupportActionBar().setTitle("Measure list");
+                fragment = MeasureListFragment.create();
+                obtainViewModel(MeasureListViewModel.class);
+                break;
+        }
 
-        int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
-        fragment = CurrencyItemFragment.create(iso_code);
-        CurrencyItemViewModel model = obtainViewModel(CurrencyItemViewModel.class);
-
-        model.getOnSaveId().observe(this,id->{
-            if (id != null) {
-                Intent intent = new Intent();
-                intent.putExtra("ID", id.intValue());
-                setResult(RESULT_OK, intent);
-                finish();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //fragment.onFabClick(); //TODO Заменить на model
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
         if (fragment != null)
             fragmentTransaction.replace(R.id.container_container, fragment);
         fragmentTransaction.commit();
+    }
 
+    public void hideFab() {
+        fab.hide();
+    }
 
+    public void showFab() {
+        fab.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

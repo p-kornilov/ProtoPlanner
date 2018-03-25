@@ -60,7 +60,7 @@
     <string name="pref_general_selected_sort_title">Selected labels first</string>
     <!--
         android:summary="@string/pref_general_selected_sort_summary"
-        android:title="@string/pref_general_selected_sort_title" />
+        andrnameitle="@string/pref_general_selected_sort_title" />
     -->
 
 

@@ -19,12 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.vividprojects.protoplanner.Adapters.CurrencyListAdapter;
+import com.vividprojects.protoplanner.Adapters.MeasureListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;
 import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
+import com.vividprojects.protoplanner.ViewModels.MeasureListViewModel;
 
 import javax.inject.Inject;
 
@@ -34,11 +35,11 @@ import static android.app.Activity.RESULT_OK;
  * Created by Smile on 19.10.2017.
  */
 
-public class CurrencyListFragment extends Fragment implements Injectable {
+public class MeasureListFragment extends Fragment implements Injectable {
     private RecyclerView recycler;
     private boolean fabVisible = true;
-    private CurrencyListAdapter currencyListAdapter;
-    private CurrencyListViewModel model;
+    private MeasureListAdapter measureListAdapter;
+    private MeasureListViewModel model;
     private RecyclerView.LayoutManager layoutManager;
 
     @Inject
@@ -94,7 +95,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
  //       recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyListViewModel.class);
+        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(MeasureListViewModel.class);
 
         Bundle args = getArguments();
 
@@ -109,25 +110,20 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
         layoutManager = new LinearLayoutManager(getContext());
         recycler.setLayoutManager(layoutManager);
-        currencyListAdapter = new CurrencyListAdapter(this,(LinearLayoutManager)layoutManager);
-        recycler.setAdapter(currencyListAdapter);
+        measureListAdapter = new MeasureListAdapter(this,(LinearLayoutManager)layoutManager);
+        recycler.setAdapter(measureListAdapter);
 
 
         model.getList().observe(this,list -> {
             if (list != null)
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
-                currencyListAdapter.setData(list);
-        });
-        model.getBase().observe(this,base -> {
-            if (base != null)
-//                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
-                currencyListAdapter.setBase(base);
+                measureListAdapter.setData(list);
         });
 
-        model.getRefreshCurrency().observe(this,currency -> {
-            if (currency != null)
+        model.getRefreshMeasure().observe(this,measure -> {
+            if (measure != null)
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
-                currencyListAdapter.refresh(currency);
+                measureListAdapter.refresh(measure);
         });
     }
 
@@ -151,11 +147,11 @@ public class CurrencyListFragment extends Fragment implements Injectable {
                     adapter.filter("");
                     listView.clearTextFilter();
 */
-                    currencyListAdapter.setFilter(filter);
+                    measureListAdapter.setFilter(filter);
                     Log.d("Test","Entered - Empty");
                 } else {
                     Log.d("Test","Entered - " + filter);
-                    currencyListAdapter.setFilter(filter);
+                    measureListAdapter.setFilter(filter);
 /*
                     adapter.filter(newText);
 */
@@ -195,7 +191,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
                 if (resultCode == RESULT_OK && data != null) {
                     int id = data.getIntExtra("ID",-1);
                     model.refresh(id);
-                    //currencyListAdapter.refresh(id);
+                    //measureListAdapter.refresh(id);
                 }
                 return;
         }
@@ -206,21 +202,21 @@ public class CurrencyListFragment extends Fragment implements Injectable {
         NavigationController.openCurrencyForResult(-1, this);
     }
 
-    public void deleteCurrency(int iso_code_int) {
-        model.deleteCurrency(iso_code_int);
+    public void deleteMeasure(int hash) {
+        model.deleteMeasure(hash);
     }
 
-    public void setDefaultCurrency(int iso_code_int) {
-        model.setDefaultCurrency(iso_code_int);
+    public void setDefaultMeasure(int hash) {
+        model.setDefaultMeasure(hash);
     }
 
     public void editItem(int iso_code_int) {
-        NavigationController.openCurrencyForResult(iso_code_int,CurrencyListFragment.this);
+        NavigationController.openCurrencyForResult(iso_code_int,MeasureListFragment.this);
     }
 
-    public static CurrencyListFragment create() {
-        CurrencyListFragment currencyListFragment = new CurrencyListFragment();
-        return currencyListFragment;
+    public static MeasureListFragment create() {
+        MeasureListFragment measureListFragment = new MeasureListFragment();
+        return measureListFragment;
     }
 
 

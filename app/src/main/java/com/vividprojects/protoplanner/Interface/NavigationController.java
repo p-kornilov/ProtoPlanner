@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 
-import com.vividprojects.protoplanner.Interface.Activity.CurrencyItemActivity;
-import com.vividprojects.protoplanner.Interface.Activity.CurrencyListActivity;
+import com.vividprojects.protoplanner.Interface.Activity.ContainerItemActivity;
+import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;
 import com.vividprojects.protoplanner.Interface.Activity.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.R;
@@ -22,6 +22,8 @@ import javax.inject.Singleton;
 public class NavigationController {
     public final static int CURRENCY_LIST = 1;
     public final static int CURRENCY_ITEM = 2;
+    public final static int MEASURE_LIST = 3;
+    public final static int MEASURE_ITEM = 4;
 
     public final static int REQUEST_CODE_CURRENCY = 100;
 
@@ -120,11 +122,23 @@ public class NavigationController {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
-            intent = new Intent(context, CurrencyListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = new Intent(context, ContainerListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
-            intent = new Intent(context, CurrencyListActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent = new Intent(context, ContainerListActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
-       // intent.putExtra(ACTIVITY_TYPE,CURRENCY_LIST);
+        intent.putExtra(ACTIVITY_TYPE,CURRENCY_LIST);
+        context.startActivity(intent);
+    }
+
+    public void openMeasures() {
+
+        Intent intent;
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context, ContainerListActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context, ContainerListActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        intent.putExtra(ACTIVITY_TYPE,MEASURE_LIST);
         context.startActivity(intent);
     }
 
@@ -132,9 +146,9 @@ public class NavigationController {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
-            intent = new Intent(context, CurrencyItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = new Intent(context, ContainerItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
-            intent = new Intent(context, CurrencyItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = new Intent(context, ContainerItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
         intent.putExtra(CURRENCY_ID,iso_code);
@@ -145,9 +159,9 @@ public class NavigationController {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
-            intent = new Intent(context.getActivity(), CurrencyItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = new Intent(context.getActivity(), ContainerItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
-            intent = new Intent(context.getActivity(), CurrencyItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent = new Intent(context.getActivity(), ContainerItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
         intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
         intent.putExtra(CURRENCY_ID,iso_code);

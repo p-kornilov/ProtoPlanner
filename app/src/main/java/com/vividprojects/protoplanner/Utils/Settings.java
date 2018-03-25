@@ -25,4 +25,10 @@ public class Settings {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPref.getBoolean("general_selected_sort", true);
     }
+
+    public static int getMeasureSystem(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getInt("generalMeasureSystem", 0);
+    }
+
 }

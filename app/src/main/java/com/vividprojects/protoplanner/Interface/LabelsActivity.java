@@ -79,7 +79,7 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 b.putString("NAME",currentLongPressedChip.getTitle());
                 b.putString("ID",currentLongPressedChip.getChipId());
                 dialog.setArguments(b);
-             //   dialog.setData(currentLongPressedChip.getTitle());
+             //   dialog.setData(currentLongPressedChip.getName());
                 dialog.show(getSupportFragmentManager(),"Create Label");
                 return true;
             case R.id.al_delete:
@@ -88,7 +88,7 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                 db.putInt("COLOR",currentLongPressedChip.getColor());
                 db.putString("NAME",currentLongPressedChip.getTitle());
                 ddialog.setArguments(db);
-                //   dialog.setData(currentLongPressedChip.getTitle());
+                //   dialog.setData(currentLongPressedChip.getName());
                 ddialog.show(getSupportFragmentManager(),"Delete Label");
 /*
                 chipsAvailable.deleteChip(model.getCurrentLabel());

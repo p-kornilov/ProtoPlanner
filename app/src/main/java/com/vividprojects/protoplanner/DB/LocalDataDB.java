@@ -11,6 +11,7 @@ import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Exchange;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
+import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
@@ -62,33 +63,6 @@ public class LocalDataDB {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-/*
-                Currency c = new Currency("RUB",643,R.string.RUB,contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER_SPACE,true);
-                realm.insertOrUpdate(c);
-                Log.d("Test", "+++++++++++++++++++++++ "+c);
-                c = new Currency("USD",840,R.string.USD,contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE,true);
-                c.setSorting_weight(10);
-                realm.insertOrUpdate(c);
-                c = new Currency("EUR",978,R.string.EUR,contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE,false);
-                c.setSorting_weight(10);
-                realm.insertOrUpdate(c);
-                c = new Currency("XAF",950,R.string.XAF,contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN,false);
-                realm.insertOrUpdate(c);
-                c = new Currency("ANG",532,R.string.ANG,contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE_SPACE,false);
-                realm.insertOrUpdate(c);
-                c = new Currency("RUB",1,"Test 1",contetx.getResources().getString(R.string.RUB_symbol),Currency.AFTER_SPACE,false);
-                realm.insertOrUpdate(c);
-                Log.d("Test", "+++++++++++++++++++++++ "+c);
-                c = new Currency("USD",2,"Test 2",contetx.getResources().getString(R.string.USD_symbol),Currency.BEFORE,false);
-                realm.insertOrUpdate(c);
-                c = new Currency("EUR",3,"Test 3",contetx.getResources().getString(R.string.EUR_symbol),Currency.BEFORE,false);
-                realm.insertOrUpdate(c);
-                c = new Currency("XAF",4,"Test 4",contetx.getResources().getString(R.string.XAF_symbol),Currency.WITHIN,false);
-                realm.insertOrUpdate(c);
-                c = new Currency("ANG",5,"Test 5",contetx.getResources().getString(R.string.ANG_symbol),Currency.BEFORE,false);
-                realm.insertOrUpdate(c);
-*/
-
                 realm.insertOrUpdate(new Currency("AED",784,R.string.AED,contetx.getResources().getString(R.string.AED_symbol),3,false,0));
                 realm.insertOrUpdate(new Currency("AFN",971,R.string.AFN,contetx.getResources().getString(R.string.AFN_symbol),0,false,0));
                 realm.insertOrUpdate(new Currency("ALL",8,R.string.ALL,contetx.getResources().getString(R.string.ALL_symbol),4,false,0));
@@ -197,13 +171,67 @@ public class LocalDataDB {
                 realm.insertOrUpdate(new Currency("USD",840,R.string.USD,contetx.getResources().getString(R.string.USD_symbol),1,false,10));
                 realm.insertOrUpdate(new Currency("UYU",858,R.string.UYU,contetx.getResources().getString(R.string.UYU_symbol),1,false,0));
                 realm.insertOrUpdate(new Currency("VND",704,R.string.VND,contetx.getResources().getString(R.string.VND_symbol),4,false,0));
-
-
-
-
-
             }
         });
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_1,Measure_.MEASURE_UNIT,R.string.Measure_SHS_1,Measure_.SYSTEM_METRIC,Measure_.PATTERN_ENTIRE,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_2,Measure_.MEASURE_UNIT,R.string.Measure_SHS_2,Measure_.SYSTEM_METRIC,Measure_.PATTERN_ENTIRE,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_3,Measure_.MEASURE_UNIT,R.string.Measure_SHS_3,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_ENTIRE,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_4,Measure_.MEASURE_MASS,R.string.Measure_SHS_4,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_5,Measure_.MEASURE_MASS,R.string.Measure_SHS_5,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_6,Measure_.MEASURE_MASS,R.string.Measure_SHS_6,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_7,Measure_.MEASURE_MASS,R.string.Measure_SHS_7,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_8,Measure_.MEASURE_MASS,R.string.Measure_SHS_8,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_9,Measure_.MEASURE_MASS,R.string.Measure_SHS_9,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_10,Measure_.MEASURE_MASS,R.string.Measure_SHS_10,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_11,Measure_.MEASURE_MASS,R.string.Measure_SHS_11,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_12,Measure_.MEASURE_MASS,R.string.Measure_SHS_12,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_13,Measure_.MEASURE_MASS,R.string.Measure_SHS_13,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_14,Measure_.MEASURE_MASS,R.string.Measure_SHS_14,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_15,Measure_.MEASURE_MASS,R.string.Measure_SHS_15,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_16,Measure_.MEASURE_LENGTH,R.string.Measure_SHS_16,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_17,Measure_.MEASURE_LENGTH,R.string.Measure_SHS_17,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_18,Measure_.MEASURE_LENGTH,R.string.Measure_SHS_18,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_19,Measure_.MEASURE_LENGTH,R.string.Measure_SHS_19,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_20,Measure_.MEASURE_LENGTH,R.string.Measure_SHS_20,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_21,Measure_.MEASURE_LENGTH,R.string.Measure_SHS_21,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_22,Measure_.MEASURE_LENGTH,R.string.Measure_SHS_22,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_23,Measure_.MEASURE_LENGTH,R.string.Measure_SHS_23,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_24,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_24,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_25,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_25,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_26,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_26,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_27,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_27,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_28,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_28,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_29,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_29,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_30,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_30,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_31,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_31,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_32,Measure_.MEASURE_SQUARE,R.string.Measure_SHS_32,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_33,Measure_.MEASURE_VOLUME,R.string.Measure_SHS_33,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_34,Measure_.MEASURE_VOLUME,R.string.Measure_SHS_34,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_35,Measure_.MEASURE_VOLUME,R.string.Measure_SHS_35,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_36,Measure_.MEASURE_VOLUME,R.string.Measure_SHS_36,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_37,Measure_.MEASURE_VOLUME,R.string.Measure_SHS_37,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_38,Measure_.MEASURE_VOLUME,R.string.Measure_SHS_38,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_39,Measure_.MEASURE_VOLUME,R.string.Measure_SHS_39,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_40,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_40,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_41,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_41,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_42,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_42,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_43,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_43,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_44,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_44,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_45,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_45,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_46,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_46,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_47,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_47,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_48,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_48,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_49,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_49,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_50,Measure_.MEASURE_LIQUIDDRY,R.string.Measure_SHS_50,Measure_.SYSTEM_METRIC,Measure_.PATTERN_FRACTIONAL,true));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_51,Measure_.MEASURE_MASS,R.string.Measure_SHS_51,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+                realm.insertOrUpdate(new Measure_(R.string.Measure_SHN_52,Measure_.MEASURE_MASS,R.string.Measure_SHS_52,Measure_.SYSTEM_BRITAIN,Measure_.PATTERN_FRACTIONAL,false));
+            }
+        });
+
 
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -385,7 +413,7 @@ public class LocalDataDB {
 
         RealmResults<Measure> ms = realm.where(Measure.class).findAll();
         for (Measure m : ms) {
-            measures += m.getTitle() + ";";
+            measures += m.getName() + ";";
         }
 
         measures = measures.substring(0,measures.length()-1)+"]";
@@ -396,7 +424,7 @@ public class LocalDataDB {
 
         RealmResults<Variant> vs = realm.where(Variant.class).findAll();
         for (Variant v : vs) {
-            Log.d("Test", v.getTitle());
+            Log.d("Test", v.getName());
         }
 */
         Log.d("Test", "------------------------------ Labels:");
@@ -519,17 +547,9 @@ public class LocalDataDB {
         return id.item;
     }
 
+    //---------------- Records --------------------------------------------------------------
     public QueryRecords queryRecords() {
         return new QueryRecords();
-    }
-    public QueryVariants queryVariants() {
-        return new QueryVariants();
-    }
-    public QueryLabels queryLabels() {
-        return new QueryLabels();
-    }
-    public QueryCurrency queryCurrency() {
-        return new QueryCurrency();
     }
 
     public class QueryRecords {
@@ -579,6 +599,11 @@ public class LocalDataDB {
         }
     }
 
+    //---------------- Variants -------------------------------------------------------------
+    public QueryVariants queryVariants() {
+        return new QueryVariants();
+    }
+
     public class QueryVariants {
         RealmQuery<Variant> query;
 
@@ -604,6 +629,11 @@ public class LocalDataDB {
         }
     }
 
+    //---------------- Labels ---------------------------------------------------------------
+    public QueryLabels queryLabels() {
+        return new QueryLabels();
+    }
+
     public class QueryLabels {
         RealmQuery<Label> query;
 
@@ -627,6 +657,11 @@ public class LocalDataDB {
             Label rr = query.findFirst();
             return rr;
         }
+    }
+
+    //---------------- Currency -------------------------------------------------------------
+    public QueryCurrency queryCurrency() {
+        return new QueryCurrency();
     }
 
     public class QueryCurrency {
@@ -663,4 +698,86 @@ public class LocalDataDB {
         }
     }
 
+    //---------------- Measure --------------------------------------------------------------
+    public QueryMeasure queryMeasure() {
+        return new QueryMeasure();
+    }
+
+    public class QueryMeasure {
+        RealmQuery<Measure_> query;
+
+        public QueryMeasure () {
+            query = realm.where(Measure_.class);
+        }
+
+        public QueryMeasure hashEqualTo(int hash) {
+            query = query.equalTo("hash",hash);
+            return this;
+        }
+
+        public QueryMeasure systemEqualTo(int system) {
+            query = query.equalTo("system",system);
+            return this;
+        }
+
+        public List<Measure_> findAll() {
+            RealmResults<Measure_> rr = query.findAll();
+            ArrayList<Measure_> al = new ArrayList<>();
+            al.addAll(rr);
+            return al;
+        }
+
+        public Measure_ findFirst() {
+            return query.findFirst();
+        }
+    }
+
+    public int saveMeasure(Measure_.Plain measure) {
+        final Bundle1<Integer> id = new Bundle1<>();
+        id.item = -1;
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Measure_ m = new Measure_(measure);
+                id.item = m.getHash();
+                realm.insertOrUpdate(m);
+            }
+        });
+        return id.item;
+    }
+
+    public void deleteMeasure(int hash) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Measure_ m = realm.where(Measure_.class).equalTo("hash",hash).findFirst();
+                if (m != null)
+                    m.deleteFromRealm();
+            }
+        });
+    }
+
+    public void setDefaultMeasure(int hash) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Measure_ m = realm.where(Measure_.class).equalTo("hash",hash).findFirst();
+                if (m != null) {
+                    RealmResults<Measure_> ms = realm.where(Measure_.class)
+                            .beginGroup()
+                            .equalTo("system",m.getSystem())
+                            .and()
+                            .equalTo("measure",m.getMeasure())
+                            .endGroup()
+                            .findAll();
+                    if (ms != null && ms.size() > 0)
+                        for (Measure_ mm : ms)
+                            if (mm.getHash() == m.getHash())
+                                mm.setDef(true);
+                            else
+                                mm.setDef(false);
+                }
+            }
+        });
+    }
 }

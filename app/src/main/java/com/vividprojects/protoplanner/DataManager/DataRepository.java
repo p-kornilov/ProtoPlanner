@@ -31,6 +31,7 @@ import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.Target;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
+import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.DB.LocalDataDB;
@@ -312,6 +313,7 @@ public class DataRepository {
         return labels;
     }
 
+    //---------------- Currency --------------------------------------------------------------
     public LiveData<List<Currency.Plain>> getCurrencies() {
         MutableLiveData<List<Currency.Plain>> currencies = new MutableLiveData<>();
         List<Currency> curL = localDataDB
@@ -355,23 +357,6 @@ public class DataRepository {
     }
 
 
-    public LiveData<Currency.Plain> getBaseForCurrency(int iso_code) {
-        MutableLiveData<Currency.Plain> currency = new MutableLiveData<>();
-        Currency currencyF = localDataDB
-                .queryCurrency()
-                .iso_code_equalTo(iso_code)
-                .findFirst();
-        if (currencyF!=null) {
-            Currency currencyB = localDataDB
-                    .queryCurrency()
-                    .iso_code_equalTo(currencyF.getExchange_base())
-                    .findFirst();
-            if (currencyB != null)
-                currency.setValue(currencyB.getPlain());
-        }
-        return currency;
-    }
-
     public void deleteCurrency(int iso_code_int) {
         localDataDB.deleteCurrency(iso_code_int);
     }
@@ -379,6 +364,49 @@ public class DataRepository {
     public void setDefaultCurrency(int iso_code_int) {
         localDataDB.setDefaultCurrency(iso_code_int);
     }
+    //---------------------------------------------------------------------------------------
+
+    //---------------- Measure --------------------------------------------------------------
+    public LiveData<List<Measure_.Plain>> getMeasures(int system) {
+        MutableLiveData<List<Measure_.Plain>> measures = new MutableLiveData<>();
+        List<Measure_> mL = localDataDB
+                .queryMeasure()
+                .systemEqualTo(system)
+                .findAll();
+        if (mL!=null) {
+            ArrayList<Measure_.Plain> ms = new ArrayList<>();
+            for (Measure_ m : mL) {
+                ms.add(m.getPlain());
+            }
+            measures.setValue(ms);
+        }
+        return measures;
+    }
+
+    public LiveData<Measure_.Plain> getMeasure(int hash) {
+        MutableLiveData<Measure_.Plain> measure = new MutableLiveData<>();
+        Measure_ mF = localDataDB
+                .queryMeasure()
+                .hashEqualTo(hash)
+                .findFirst();
+        if (mF!=null) {
+            measure.setValue(mF.getPlain());
+        }
+        return measure;
+    }
+
+    public int saveMeasure(Measure_.Plain measure) {
+        return localDataDB.saveMeasure(measure);
+    }
+
+    public void deleteMeasure(int hash) {
+        localDataDB.deleteMeasure(hash);
+    }
+
+    public void setDefaultMeasure(int hash) {
+        localDataDB.setDefaultMeasure(hash);
+    }
+    //---------------------------------------------------------------------------------------
 
     public void saveLabelsForRecord(String recordItemId,String[] ids) {
         localDataDB.saveLabelsForRecord(recordItemId,ids);

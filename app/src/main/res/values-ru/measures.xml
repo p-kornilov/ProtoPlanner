@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Measures names -->
+    <string name="Measure_SHN_1" translatable="false">Количество</string>
+    <string name="Measure_SHN_2" translatable="false">Количество</string>
+    <string name="Measure_SHN_3" translatable="false">Количество</string>
+    <string name="Measure_SHN_4" translatable="false">Килограмм</string>
+    <string name="Measure_SHN_5" translatable="false">Грамм</string>
+    <string name="Measure_SHN_6" translatable="false">Карат</string>
+    <string name="Measure_SHN_7" translatable="false">Тонна</string>
+    <string name="Measure_SHN_8" translatable="false">Центнер</string>
+    <string name="Measure_SHN_9" translatable="false">Доля</string>
+    <string name="Measure_SHN_10" translatable="false">Драхма</string>
+    <string name="Measure_SHN_11" translatable="false">Унция</string>
+    <string name="Measure_SHN_12" translatable="false">Фунт</string>
+    <string name="Measure_SHN_13" translatable="false">Aнглийский центнер</string>
+    <string name="Measure_SHN_14" translatable="false">Короткая тонна</string>
+    <string name="Measure_SHN_15" translatable="false">Длинная тонна</string>
+    <string name="Measure_SHN_16" translatable="false">Миллиметр</string>
+    <string name="Measure_SHN_17" translatable="false">Сантиметер</string>
+    <string name="Measure_SHN_18" translatable="false">Дециметр</string>
+    <string name="Measure_SHN_19" translatable="false">Метр</string>
+    <string name="Measure_SHN_20" translatable="false">Дюйм</string>
+    <string name="Measure_SHN_21" translatable="false">Фут</string>
+    <string name="Measure_SHN_22" translatable="false">Ярд</string>
+    <string name="Measure_SHN_23" translatable="false">Род</string>
+    <string name="Measure_SHN_24" translatable="false">Квадратный миллиметр</string>
+    <string name="Measure_SHN_25" translatable="false">Квадратный сантиметр</string>
+    <string name="Measure_SHN_26" translatable="false">Квадратный дециметр</string>
+    <string name="Measure_SHN_27" translatable="false">Квадратный метр</string>
+    <string name="Measure_SHN_28" translatable="false">Квадратный дюйм</string>
+    <string name="Measure_SHN_29" translatable="false">Квадратный фут</string>
+    <string name="Measure_SHN_30" translatable="false">Квадратный ярд</string>
+    <string name="Measure_SHN_31" translatable="false">Квадратный род</string>
+    <string name="Measure_SHN_32" translatable="false">Акр</string>
+    <string name="Measure_SHN_33" translatable="false">Кубический миллиметр</string>
+    <string name="Measure_SHN_34" translatable="false">Кубический сантиметер</string>
+    <string name="Measure_SHN_35" translatable="false">Кубический дециметр</string>
+    <string name="Measure_SHN_36" translatable="false">Кубический метр</string>
+    <string name="Measure_SHN_37" translatable="false">Кубический дюйм</string>
+    <string name="Measure_SHN_38" translatable="false">Кубический фут</string>
+    <string name="Measure_SHN_39" translatable="false">Кубический ярд</string>
+    <string name="Measure_SHN_40" translatable="false">Миним</string>
+    <string name="Measure_SHN_41" translatable="false">Жидкая драхма</string>
+    <string name="Measure_SHN_42" translatable="false">Жидкая унция</string>
+    <string name="Measure_SHN_43" translatable="false">Гил</string>
+    <string name="Measure_SHN_44" translatable="false">Пинта</string>
+    <string name="Measure_SHN_45" translatable="false">Кварта</string>
+    <string name="Measure_SHN_46" translatable="false">Галлон</string>
+    <string name="Measure_SHN_47" translatable="false">Пек</string>
+    <string name="Measure_SHN_48" translatable="false">Бушель</string>
+    <string name="Measure_SHN_49" translatable="false">Баррель</string>
+    <string name="Measure_SHN_50" translatable="false">Литр</string>
+    <string name="Measure_SHN_51" translatable="false">Карат</string>
+    <string name="Measure_SHN_52" translatable="false">Гросс</string>
+
+    <!-- Measures symbols -->
+    <string name="Measure_SHS_1" translatable="false">шт</string>
+    <string name="Measure_SHS_2" translatable="false">ед</string>
+    <string name="Measure_SHS_3" translatable="false">шт</string>
+    <string name="Measure_SHS_4" translatable="false">кг</string>
+    <string name="Measure_SHS_5" translatable="false">г</string>
+    <string name="Measure_SHS_6" translatable="false">кар</string>
+    <string name="Measure_SHS_7" translatable="false">т</string>
+    <string name="Measure_SHS_8" translatable="false">ц</string>
+    <string name="Measure_SHS_16" translatable="false">мм</string>
+    <string name="Measure_SHS_17" translatable="false">см</string>
+    <string name="Measure_SHS_18" translatable="false">дм</string>
+    <string name="Measure_SHS_19" translatable="false">м</string>
+    <string name="Measure_SHS_24" translatable="false">мм<sup>2</sup></string>
+    <string name="Measure_SHS_25" translatable="false">см<sup>2</sup></string>
+    <string name="Measure_SHS_26" translatable="false">дм<sup>2</sup></string>
+    <string name="Measure_SHS_27" translatable="false">м<sup>2</sup></string>
+    <string name="Measure_SHS_33" translatable="false">мм<sup>3</sup></string>
+    <string name="Measure_SHS_34" translatable="false">см<sup>3</sup></string>
+    <string name="Measure_SHS_35" translatable="false">дм<sup>3</sup></string>
+    <string name="Measure_SHS_36" translatable="false">м<sup>3</sup></string>
+    <string name="Measure_SHS_50" translatable="false">л</string>
+    <string name="Measure_SHS_51" translatable="false">кар</string>
+
+</resources>

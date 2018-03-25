@@ -1,7 +1,7 @@
 package com.vividprojects.protoplanner.DI;
 
-import com.vividprojects.protoplanner.Interface.Activity.CurrencyItemActivity;
-import com.vividprojects.protoplanner.Interface.Activity.CurrencyListActivity;
+import com.vividprojects.protoplanner.Interface.Activity.ContainerItemActivity;
+import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;
 import com.vividprojects.protoplanner.Interface.ImageViewActivity;
 import com.vividprojects.protoplanner.Interface.LabelsActivity;
 import com.vividprojects.protoplanner.Interface.Activity.RecordActivity;
@@ -29,8 +29,8 @@ public abstract class ActivityModule {
     abstract LabelsActivity contributeLabelsActivity();
 
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
-    abstract CurrencyItemActivity contributeCurrencyItemActivity();
+    abstract ContainerItemActivity contributeContainerItemActivity();
 
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
-    abstract CurrencyListActivity contributeCurrencyListActivity();
+    abstract ContainerListActivity contributeContainerListActivity();
 }

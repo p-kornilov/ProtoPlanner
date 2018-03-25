@@ -4,12 +4,12 @@
         android:defaultValue="true"
         android:key="general_selected_sort"
         android:summary="@string/pref_general_selected_sort_summary"
-        android:title="@string/pref_general_selected_sort_title" />
+        android:name="@string/pref_general_selected_sort_title" />
 
     <EditTextPreference
         android:defaultValue="true"
         android:key="sss"
-        android:title="Test title"
+        android:name="Test name"
         android:summary="Test summary" />
 
 </PreferenceScreen>

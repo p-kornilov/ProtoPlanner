@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Measures names -->
+    <string name="Measure_SHN_1" translatable="false">Quantity</string>
+    <string name="Measure_SHN_2" translatable="false">Quantity</string>
+    <string name="Measure_SHN_3" translatable="false">Quantity</string>
+    <string name="Measure_SHN_4" translatable="false">Kilogram</string>
+    <string name="Measure_SHN_5" translatable="false">Gram</string>
+    <string name="Measure_SHN_6" translatable="false">Сarat</string>
+    <string name="Measure_SHN_7" translatable="false">Ton</string>
+    <string name="Measure_SHN_8" translatable="false">Centner</string>
+    <string name="Measure_SHN_9" translatable="false">Grain</string>
+    <string name="Measure_SHN_10" translatable="false">Dram</string>
+    <string name="Measure_SHN_11" translatable="false">Ounce</string>
+    <string name="Measure_SHN_12" translatable="false">Pound</string>
+    <string name="Measure_SHN_13" translatable="false">Hundredweight</string>
+    <string name="Measure_SHN_14" translatable="false">Short ton</string>
+    <string name="Measure_SHN_15" translatable="false">Long ton</string>
+    <string name="Measure_SHN_16" translatable="false">Millimeter</string>
+    <string name="Measure_SHN_17" translatable="false">Centimeter</string>
+    <string name="Measure_SHN_18" translatable="false">Decimeter</string>
+    <string name="Measure_SHN_19" translatable="false">Meter</string>
+    <string name="Measure_SHN_20" translatable="false">Inch</string>
+    <string name="Measure_SHN_21" translatable="false">Foot</string>
+    <string name="Measure_SHN_22" translatable="false">Yard</string>
+    <string name="Measure_SHN_23" translatable="false">Rod</string>
+    <string name="Measure_SHN_24" translatable="false">Square millimeter</string>
+    <string name="Measure_SHN_25" translatable="false">Square centimeter</string>
+    <string name="Measure_SHN_26" translatable="false">Square decimeter</string>
+    <string name="Measure_SHN_27" translatable="false">Square meter</string>
+    <string name="Measure_SHN_28" translatable="false">Square inch</string>
+    <string name="Measure_SHN_29" translatable="false">Square foot</string>
+    <string name="Measure_SHN_30" translatable="false">Square yard</string>
+    <string name="Measure_SHN_31" translatable="false">Square rod</string>
+    <string name="Measure_SHN_32" translatable="false">Acre</string>
+    <string name="Measure_SHN_33" translatable="false">Cubic millimeter</string>
+    <string name="Measure_SHN_34" translatable="false">Cubic centimeter</string>
+    <string name="Measure_SHN_35" translatable="false">Cubic decimeter</string>
+    <string name="Measure_SHN_36" translatable="false">Cubic meter</string>
+    <string name="Measure_SHN_37" translatable="false">Cubic inch</string>
+    <string name="Measure_SHN_38" translatable="false">Cubic foot</string>
+    <string name="Measure_SHN_39" translatable="false">Cubic yard</string>
+    <string name="Measure_SHN_40" translatable="false">Minim</string>
+    <string name="Measure_SHN_41" translatable="false">Fluid dram</string>
+    <string name="Measure_SHN_42" translatable="false">Fluid ounce</string>
+    <string name="Measure_SHN_43" translatable="false">Gill</string>
+    <string name="Measure_SHN_44" translatable="false">Pint</string>
+    <string name="Measure_SHN_45" translatable="false">Quart</string>
+    <string name="Measure_SHN_46" translatable="false">Gallon</string>
+    <string name="Measure_SHN_47" translatable="false">Peck</string>
+    <string name="Measure_SHN_48" translatable="false">Bushel</string>
+    <string name="Measure_SHN_49" translatable="false">Barrel</string>
+    <string name="Measure_SHN_50" translatable="false">Liter</string>
+    <string name="Measure_SHN_51" translatable="false">Karat</string>
+    <string name="Measure_SHN_52" translatable="false">Gross</string>
+
+    <!-- Measures symbols -->
+    <string name="Measure_SHS_1" translatable="false">pcs</string>
+    <string name="Measure_SHS_2" translatable="false">unit</string>
+    <string name="Measure_SHS_3" translatable="false">pcs</string>
+    <string name="Measure_SHS_4" translatable="false">kg</string>
+    <string name="Measure_SHS_5" translatable="false">g</string>
+    <string name="Measure_SHS_6" translatable="false">ct</string>
+    <string name="Measure_SHS_7" translatable="false">tn</string>
+    <string name="Measure_SHS_8" translatable="false">centner</string>
+    <string name="Measure_SHS_9" translatable="false">gr</string>
+    <string name="Measure_SHS_10" translatable="false">dr</string>
+    <string name="Measure_SHS_11" translatable="false">oz</string>
+    <string name="Measure_SHS_12" translatable="false">lb</string>
+    <string name="Measure_SHS_13" translatable="false">cwt</string>
+    <string name="Measure_SHS_14" translatable="false">sh.tn</string>
+    <string name="Measure_SHS_15" translatable="false">tn</string>
+    <string name="Measure_SHS_16" translatable="false">mm</string>
+    <string name="Measure_SHS_17" translatable="false">cm</string>
+    <string name="Measure_SHS_18" translatable="false">dm</string>
+    <string name="Measure_SHS_19" translatable="false">m</string>
+    <string name="Measure_SHS_20" translatable="false">in</string>
+    <string name="Measure_SHS_21" translatable="false">ft</string>
+    <string name="Measure_SHS_22" translatable="false">yd</string>
+    <string name="Measure_SHS_23" translatable="false">rd</string>
+    <string name="Measure_SHS_24" translatable="false">mm\u00b2</string>
+    <string name="Measure_SHS_25" translatable="false">cm\u00b2</string>
+    <string name="Measure_SHS_26" translatable="false">dm\u00b2</string>
+    <string name="Measure_SHS_27" translatable="false">m\u00b2</string>
+    <string name="Measure_SHS_28" translatable="false">in\u00b2</string>
+    <string name="Measure_SHS_29" translatable="false">ft\u00b2</string>
+    <string name="Measure_SHS_30" translatable="false">yd\u00b2</string>
+    <string name="Measure_SHS_31" translatable="false">rd\u00b2</string>
+    <string name="Measure_SHS_32" translatable="false">acre</string>
+    <string name="Measure_SHS_33" translatable="false">mm\u00b3</string>
+    <string name="Measure_SHS_34" translatable="false">cm\u00b3</string>
+    <string name="Measure_SHS_35" translatable="false">dm\u00b3</string>
+    <string name="Measure_SHS_36" translatable="false">m\u00b3</string>
+    <string name="Measure_SHS_37" translatable="false">in\u00b3</string>
+    <string name="Measure_SHS_38" translatable="false">ft\u00b3</string>
+    <string name="Measure_SHS_39" translatable="false">y\u00b3</string>
+    <string name="Measure_SHS_40" translatable="false">min</string>
+    <string name="Measure_SHS_41" translatable="false">fl dr</string>
+    <string name="Measure_SHS_42" translatable="false">fl oz</string>
+    <string name="Measure_SHS_43" translatable="false">gi</string>
+    <string name="Measure_SHS_44" translatable="false">pt</string>
+    <string name="Measure_SHS_45" translatable="false">qt</string>
+    <string name="Measure_SHS_46" translatable="false">gal</string>
+    <string name="Measure_SHS_47" translatable="false">pk</string>
+    <string name="Measure_SHS_48" translatable="false">bu</string>
+    <string name="Measure_SHS_49" translatable="false">bbl</string>
+    <string name="Measure_SHS_50" translatable="false">l</string>
+    <string name="Measure_SHS_51" translatable="false">k</string>
+    <string name="Measure_SHS_52" translatable="false">gro</string>
+</resources>
