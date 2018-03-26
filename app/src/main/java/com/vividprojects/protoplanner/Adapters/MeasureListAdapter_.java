@@ -1,5 +1,8 @@
 package com.vividprojects.protoplanner.Adapters;
 
+import android.content.Context;
+
+import com.vividprojects.protoplanner.BindingModels.MeasureItemListBindingModel;
 import com.vividprojects.protoplanner.CoreData.Measure_;
 
 import java.util.List;
@@ -12,8 +15,10 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
     private final int layoutId;
     private List<Measure_.Plain> data;
     private List<Measure_.Plain> filtered_data;
+    private Context context;
 
-    public MeasureListAdapter_(int layoutId) {
+    public MeasureListAdapter_(int layoutId, Context context) {
+        this.context = context;
         this.layoutId = layoutId;
     }
 
@@ -27,8 +32,11 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
 
     @Override
     public Object getObjForPosition(int position) {
-        if (data != null)
-            return data.get(position);
+        if (data != null) {
+            MeasureItemListBindingModel model = new MeasureItemListBindingModel(context);
+            model.setMeasure(data.get(position));
+            return model;
+        }
         else
             return null;
     }
