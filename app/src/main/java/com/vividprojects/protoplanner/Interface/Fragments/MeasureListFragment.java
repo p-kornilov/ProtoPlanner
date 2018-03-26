@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.Adapters.MeasureListAdapter;
+import com.vividprojects.protoplanner.Adapters.MeasureListAdapter_;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;
 import com.vividprojects.protoplanner.Interface.NavigationController;
@@ -38,7 +39,7 @@ import static android.app.Activity.RESULT_OK;
 public class MeasureListFragment extends Fragment implements Injectable {
     private RecyclerView recycler;
     private boolean fabVisible = true;
-    private MeasureListAdapter measureListAdapter;
+    private MeasureListAdapter_ measureListAdapter;
     private MeasureListViewModel model;
     private RecyclerView.LayoutManager layoutManager;
 
@@ -110,7 +111,8 @@ public class MeasureListFragment extends Fragment implements Injectable {
 
         layoutManager = new LinearLayoutManager(getContext());
         recycler.setLayoutManager(layoutManager);
-        measureListAdapter = new MeasureListAdapter(this,(LinearLayoutManager)layoutManager);
+        //measureListAdapter = new MeasureListAdapter(this,(LinearLayoutManager)layoutManager);
+        measureListAdapter = new MeasureListAdapter_(R.layout.measure_item);
         recycler.setAdapter(measureListAdapter);
 
 
@@ -121,9 +123,9 @@ public class MeasureListFragment extends Fragment implements Injectable {
         });
 
         model.getRefreshMeasure().observe(this,measure -> {
-            if (measure != null)
+            if (measure != null) {};
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
-                measureListAdapter.refresh(measure);
+              //  measureListAdapter.refresh(measure);
         });
     }
 
@@ -147,11 +149,11 @@ public class MeasureListFragment extends Fragment implements Injectable {
                     adapter.filter("");
                     listView.clearTextFilter();
 */
-                    measureListAdapter.setFilter(filter);
+                   // measureListAdapter.setFilter(filter);
                     Log.d("Test","Entered - Empty");
                 } else {
                     Log.d("Test","Entered - " + filter);
-                    measureListAdapter.setFilter(filter);
+                   // measureListAdapter.setFilter(filter);
 /*
                     adapter.filter(newText);
 */
