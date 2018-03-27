@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,8 +72,10 @@ public class MeasureListFragment extends Fragment implements Injectable {
         View v = (View) inflater.inflate(R.layout.fragment_container_list, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler_list);
 
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-     //   recycler.addItemDecoration(mDividerItemDecoration);
+        setCardViewBackgroundToRecyclerView(recycler);
+
+/*        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        recycler.addItemDecoration(mDividerItemDecoration);*/
 
        // recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
 
@@ -88,6 +93,20 @@ public class MeasureListFragment extends Fragment implements Injectable {
         });
 
         return v;
+    }
+
+    private void setCardViewBackgroundToRecyclerView(RecyclerView recyclerView) {
+        CardView cardView = new CardView(getContext());
+        cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+        cardView.setUseCompatPadding(true);
+        cardView.setPreventCornerOverlap(false);
+        int cardShadow = (int) cardView.getCardElevation();
+        recyclerView.setPadding(cardView.getContentPaddingLeft() + cardShadow,
+                cardView.getContentPaddingTop() + cardShadow + 3,
+                cardView.getContentPaddingRight() + cardShadow,
+                cardView.getContentPaddingBottom() + cardShadow + 3);
+        ViewCompat.setElevation(recyclerView, cardView.getCardElevation());
+        recyclerView.setBackground(cardView.getBackground());
     }
 
     @Override

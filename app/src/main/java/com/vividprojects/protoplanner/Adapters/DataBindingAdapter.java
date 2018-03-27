@@ -32,7 +32,7 @@ public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindin
         Object obj = getObjForPosition(position);
         holder.bind(obj);
 
-        int listSize = getItemCount();
+/*        int listSize = getItemCount();
 
         int drawableResource;
         if (listSize == 1)
@@ -44,7 +44,7 @@ public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindin
         else
             drawableResource = R.drawable.list_item_background;
 
-        View v = holder.itemView.getRootView();
+        View v = holder.itemView;
 
         v.setBackground(ContextCompat.getDrawable(v.getContext(),drawableResource));
 
@@ -55,7 +55,7 @@ public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindin
         else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 v.setOutlineProvider(new ListOutline());
-        }
+        }*/
     }
 
     @Override
