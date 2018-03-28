@@ -8,13 +8,18 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 
@@ -58,5 +63,15 @@ public class MeasureItemListBindingModel extends BaseObservable {
     @Bindable
     public String getName() {
         return measure.name != null ? measure.name : context.getResources().getString(measure.nameId);
+    }
+
+    @BindingAdapter({"app:mybackground"})
+    public static void bindAdapter(View view, int mybackground) {
+/*        view.setBackground(ContextCompat.getDrawable(view.getContext(),mybackground));
+
+        ViewCompat.setElevation(view,view.getResources().getDimension(R.dimen.cardElevation));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            view.setOutlineProvider(new ListOutline());*/
     }
 };

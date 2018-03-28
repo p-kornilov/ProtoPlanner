@@ -72,7 +72,7 @@ public class MeasureListFragment extends Fragment implements Injectable {
         View v = (View) inflater.inflate(R.layout.fragment_container_list, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler_list);
 
-        setCardViewBackgroundToRecyclerView(recycler);
+      //  setCardViewBackgroundToRecyclerView(recycler);
 
 /*        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         recycler.addItemDecoration(mDividerItemDecoration);*/
