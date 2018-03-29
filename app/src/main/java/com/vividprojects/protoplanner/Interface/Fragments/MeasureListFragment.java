@@ -131,7 +131,7 @@ public class MeasureListFragment extends Fragment implements Injectable {
         layoutManager = new LinearLayoutManager(getContext());
         recycler.setLayoutManager(layoutManager);
         //measureListAdapter = new MeasureListAdapter(this,(LinearLayoutManager)layoutManager);
-        measureListAdapter = new MeasureListAdapter_(R.layout.measure_item,getContext());
+        measureListAdapter = new MeasureListAdapter_(R.layout.measure_item,R.layout.measure_item_header,getContext());
         recycler.setAdapter(measureListAdapter);
 
 

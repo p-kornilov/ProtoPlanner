@@ -1,9 +1,11 @@
 package com.vividprojects.protoplanner.Adapters;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.Outline;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -22,6 +24,22 @@ import com.vividprojects.protoplanner.R;
 
 
 public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindingViewHolder> {
+    private Drawable itemBackgroundSingle;
+    private Drawable itemBackgroundTop;
+    private Drawable itemBackgroundBottom;
+    private Drawable itemBackground;
+    private float elevation;
+    private ListOutline listOutline;
+
+
+    public void setBackgrounds(Context context, int single, int top, int bottom, int background) {
+        elevation = context.getResources().getDimension(R.dimen.cardElevation);
+        itemBackgroundSingle = ContextCompat.getDrawable(context,single);
+        itemBackgroundTop = ContextCompat.getDrawable(context,top);
+        itemBackgroundBottom = ContextCompat.getDrawable(context,bottom);
+        itemBackground = ContextCompat.getDrawable(context,background);
+        listOutline = new ListOutline(context);
+    }
 
     public DataBindingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -34,21 +52,21 @@ public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindin
         holder.bind(obj);
 
         View v = holder.itemView;
-        ViewCompat.setElevation(v,v.getResources().getDimension(R.dimen.cardElevation));
+        ViewCompat.setElevation(v,elevation);
 
         int listSize = getItemCount();
 
-        int drawableResource;
+        Drawable drawableResource;
         if (listSize == 1)
-            drawableResource = R.drawable.list_item_background_single;
+            drawableResource = itemBackgroundSingle;
         else if (position == 0)
-            drawableResource = R.drawable.list_item_background_top;
+            drawableResource = itemBackgroundTop;
         else if (position == listSize - 1)
-            drawableResource = R.drawable.list_item_background_bottom;
+            drawableResource = itemBackgroundBottom;
         else
-            drawableResource = R.drawable.list_item_background;
+            drawableResource = itemBackground;
 
-        v.setBackground(ContextCompat.getDrawable(v.getContext(),drawableResource));
+        v.setBackground(drawableResource);
 
         if (listSize == 1 || position==0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -56,7 +74,7 @@ public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindin
         }
         else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                v.setOutlineProvider(new ListOutline());
+                v.setOutlineProvider(listOutline);
         }
     }
 

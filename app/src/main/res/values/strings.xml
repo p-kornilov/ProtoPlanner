@@ -20,6 +20,14 @@
         <item>100.00 ¤</item>
     </string-array>
 
+    <!-- Measure types -->
+    <string name="measure_unit">Amount</string>
+    <string name="measure_mass">Weight</string>
+    <string name="measure_length">Length</string>
+    <string name="measure_square">Square</string>
+    <string name="measure_volume">Volume</string>
+    <string name="measure_liquiddry">Liquid &amp; Dry</string>
+
     <!-- Data & sync settings -->
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">

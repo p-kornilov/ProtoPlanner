@@ -163,6 +163,14 @@ public class Measure_ extends RealmObject{
         return result;
     }
 
+    public Plain createHeader(int measure, int nameResource) {
+        Plain plain = new Plain();
+        plain.nameId = nameResource;
+        plain.measure = measure;
+        plain.header = true;
+        return plain;
+    }
+
     public Plain getPlain() {
         Plain plain = new Plain();
         plain.name = name;
@@ -187,6 +195,7 @@ public class Measure_ extends RealmObject{
         public int pattern;
         public boolean def;
         public int hash;
+        public boolean header = false;
     }
 }
 

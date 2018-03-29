@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="currency_default">основная валюта</string>
+
+    <!-- Measure types -->
+    <string name="measure_unit">Количество</string>
+    <string name="measure_mass">Масса</string>
+    <string name="measure_length">Длина</string>
+    <string name="measure_square">Площадь</string>
+    <string name="measure_volume">Объем</string>
+    <string name="measure_liquiddry">Жидкости и сыпучие вещества</string>
 </resources>

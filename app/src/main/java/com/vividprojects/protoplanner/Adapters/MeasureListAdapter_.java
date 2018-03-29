@@ -4,8 +4,13 @@ import android.content.Context;
 
 import com.vividprojects.protoplanner.BindingModels.MeasureItemListBindingModel;
 import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by p.kornilov on 26.03.2018.
@@ -13,13 +18,30 @@ import java.util.List;
 
 public class MeasureListAdapter_ extends DataBindingAdapter {
     private final int layoutId;
+    private final int headerId;
     private List<Measure_.Plain> data;
-    private List<Measure_.Plain> filtered_data;
+    private List<Measure_.Plain> filtered_data = new ArrayList<>();
     private Context context;
+    private Map<Integer,Integer> measureGroups = new HashMap<>();
+    private Map<Integer,String> names = new HashMap<>();
+    private Map<Integer,String> symbols = new HashMap<>();
 
-    public MeasureListAdapter_(int layoutId, Context context) {
+    public MeasureListAdapter_(int layoutId, int headerId, Context context) {
         this.context = context;
         this.layoutId = layoutId;
+        this.headerId = headerId;
+        setBackgrounds(context,
+                R.drawable.list_item_background_single,
+                R.drawable.list_item_background_top,
+                R.drawable.list_item_background_bottom,
+                R.drawable.list_item_background);
+
+        measureGroups.put(Measure_.MEASURE_UNIT,-1);
+        measureGroups.put(Measure_.MEASURE_LENGTH,-1);
+        measureGroups.put(Measure_.MEASURE_SQUARE,-1);
+        measureGroups.put(Measure_.MEASURE_MASS,-1);
+        measureGroups.put(Measure_.MEASURE_LIQUIDDRY,-1);
+        measureGroups.put(Measure_.MEASURE_VOLUME,-1);
     }
 
     @Override
@@ -43,11 +65,52 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
 
     @Override
     protected int getLayoutIdForPosition(int position) {
-        return layoutId;
+        if (filtered_data.get(position).header)
+            return headerId;
+        else
+            return layoutId;
     }
 
     public void setData(List<Measure_.Plain> data) {
         this.data = data;
+        Measure_ helper = new Measure_();
+        data.add(helper.createHeader(Measure_.MEASURE_UNIT,R.string.measure_unit));
+        data.add(helper.createHeader(Measure_.MEASURE_MASS,R.string.measure_mass));
+        data.add(helper.createHeader(Measure_.MEASURE_LENGTH,R.string.measure_length));
+        data.add(helper.createHeader(Measure_.MEASURE_SQUARE,R.string.measure_square));
+        data.add(helper.createHeader(Measure_.MEASURE_VOLUME,R.string.measure_volume));
+        data.add(helper.createHeader(Measure_.MEASURE_LIQUIDDRY,R.string.measure_liquiddry));
+        this.filtered_data.clear();
+
+        names.clear();
+        symbols.clear();
+        for (Measure_.Plain m : this.data) {
+            names.put(m.hash, m.name != null ? m.name : context.getResources().getString(m.nameId));
+//            symbols.put(m.hash, m.symbol != null ? m.symbol : context.getResources().getString(m.symbolId));
+        }
+
+        sortList();
         this.filtered_data = this.data;
+    }
+
+    private void sortList() {
+        Measure_.Plain[] holder_list = new Measure_.Plain[this.data.size()];
+        this.data.toArray(holder_list);
+
+        Arrays.sort(holder_list,(x, y)->{
+            if (x.measure == y.measure) {
+                if (x.header)
+                    return -99;
+                if (y.header)
+                    return 99;
+                if (x.def)
+                    return 50;
+                return names.get(x.hash).toLowerCase().compareTo(names.get(y.hash).toLowerCase());
+            } else
+                return (x.measure - y.measure) * 100;
+        });
+
+        this.data.clear();
+        this.data.addAll(Arrays.asList(holder_list));
     }
 }
