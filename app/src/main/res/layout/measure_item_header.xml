@@ -14,26 +14,21 @@
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
         android:clickable="true"
-        android:focusable="true">
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5" />
+        android:focusable="true"
+        android:background="@{obj.background}">
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             bind:layout_constraintBottom_toBottomOf="parent"
             bind:layout_constraintStart_toStartOf="parent"
             bind:layout_constraintTop_toTopOf="parent"
-            bind:srcCompat="@drawable/ic_count_white_24dp" />
+            bind:srcVector="@{obj.measure}"
+            tools:srcCompat="@drawable/measure_ld"/>
 
         <TextView
             android:id="@+id/measure_name"

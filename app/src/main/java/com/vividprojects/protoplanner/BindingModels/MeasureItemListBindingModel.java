@@ -5,34 +5,19 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageView;
 
-import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.BR;
-import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.PriceFormatter;
-import com.vividprojects.protoplanner.Utils.TextInputError;
 
-import java.text.DecimalFormat;
-import java.util.List;
 
 /**
  * Created by Smile on 18.03.2018.
  */
 
 public class MeasureItemListBindingModel extends BaseObservable {
-    private String name;
-    private String symbol;
+    private Drawable background;
 
     private Measure_.Plain measure;
 
@@ -49,11 +34,15 @@ public class MeasureItemListBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.symbol);
     }
 
-/*
-    public Currency.Plain getCurrency() {
-        return currency;
+    public void setBackground(Drawable background) {
+        this.background = background;
     }
-*/
+
+
+    @Bindable
+    public Drawable getBackground() {
+        return background;
+    }
 
     @Bindable
     public String getSymbol() {
@@ -65,13 +54,37 @@ public class MeasureItemListBindingModel extends BaseObservable {
         return measure.name != null ? measure.name : context.getResources().getString(measure.nameId);
     }
 
-    @BindingAdapter({"app:mybackground"})
-    public static void bindAdapter(View view, int mybackground) {
-/*        view.setBackground(ContextCompat.getDrawable(view.getContext(),mybackground));
+    @Bindable
+    public int getMeasure() {
+        return measure.measure;
+    }
 
-        ViewCompat.setElevation(view,view.getResources().getDimension(R.dimen.cardElevation));
+    @BindingAdapter("bind:srcVector")
+    public static void setSrcVector(ImageView view, int measure) {
+        int image = R.drawable.measure_numeric;
+        switch (measure) {
+            case Measure_.MEASURE_UNIT:
+                image = R.drawable.measure_numeric;
+                break;
+            case Measure_.MEASURE_MASS:
+                image = R.drawable.measure_mass;
+                break;
+            case Measure_.MEASURE_LENGTH:
+                image = R.drawable.measure_length;
+                break;
+            case Measure_.MEASURE_SQUARE:
+                image = R.drawable.measure_square;
+                break;
+            case Measure_.MEASURE_VOLUME:
+                image = R.drawable.measure_volume;
+                break;
+            case Measure_.MEASURE_LIQUIDDRY:
+                image = R.drawable.measure_ld;
+        }
+        view.setImageResource(image);
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            view.setOutlineProvider(new ListOutline());*/
+    public void onMClicked() {
+        String n = "";
     }
 };

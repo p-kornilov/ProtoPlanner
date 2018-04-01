@@ -95,20 +95,6 @@ public class MeasureListFragment extends Fragment implements Injectable {
         return v;
     }
 
-    private void setCardViewBackgroundToRecyclerView(RecyclerView recyclerView) {
-        CardView cardView = new CardView(getContext());
-        cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
-        cardView.setUseCompatPadding(true);
-        cardView.setPreventCornerOverlap(false);
-        int cardShadow = (int) cardView.getCardElevation();
-        recyclerView.setPadding(cardView.getContentPaddingLeft() + cardShadow,
-                cardView.getContentPaddingTop() + cardShadow + 3,
-                cardView.getContentPaddingRight() + cardShadow,
-                cardView.getContentPaddingBottom() + cardShadow + 3);
-        ViewCompat.setElevation(recyclerView, cardView.getCardElevation());
-        recyclerView.setBackground(cardView.getBackground());
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

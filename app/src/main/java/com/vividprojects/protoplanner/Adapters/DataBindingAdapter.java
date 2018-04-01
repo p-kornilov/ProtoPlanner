@@ -24,21 +24,11 @@ import com.vividprojects.protoplanner.R;
 
 
 public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindingViewHolder> {
-    private Drawable itemBackgroundSingle;
-    private Drawable itemBackgroundTop;
-    private Drawable itemBackgroundBottom;
-    private Drawable itemBackground;
     private float elevation;
-    private ListOutline listOutline;
 
 
-    public void setBackgrounds(Context context, int single, int top, int bottom, int background) {
+    public void setBackgrounds(Context context) {
         elevation = context.getResources().getDimension(R.dimen.cardElevation);
-        itemBackgroundSingle = ContextCompat.getDrawable(context,single);
-        itemBackgroundTop = ContextCompat.getDrawable(context,top);
-        itemBackgroundBottom = ContextCompat.getDrawable(context,bottom);
-        itemBackground = ContextCompat.getDrawable(context,background);
-        listOutline = new ListOutline(context);
     }
 
     public DataBindingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,29 +43,6 @@ public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindin
 
         View v = holder.itemView;
         ViewCompat.setElevation(v,elevation);
-
-        int listSize = getItemCount();
-
-        Drawable drawableResource;
-        if (listSize == 1)
-            drawableResource = itemBackgroundSingle;
-        else if (position == 0)
-            drawableResource = itemBackgroundTop;
-        else if (position == listSize - 1)
-            drawableResource = itemBackgroundBottom;
-        else
-            drawableResource = itemBackground;
-
-        v.setBackground(drawableResource);
-
-        if (listSize == 1 || position==0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                v.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
-        }
-        else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                v.setOutlineProvider(listOutline);
-        }
     }
 
     @Override

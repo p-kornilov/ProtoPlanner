@@ -1,6 +1,10 @@
 package com.vividprojects.protoplanner.Adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.view.ViewOutlineProvider;
 
 import com.vividprojects.protoplanner.BindingModels.MeasureItemListBindingModel;
 import com.vividprojects.protoplanner.CoreData.Measure_;
@@ -24,17 +28,17 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
     private Context context;
     private Map<Integer,Integer> measureGroups = new HashMap<>();
     private Map<Integer,String> names = new HashMap<>();
-    private Map<Integer,String> symbols = new HashMap<>();
+
+    private Drawable itemBackgroundSingle;
+    private Drawable itemBackgroundTop;
+    private Drawable itemBackgroundBottom;
+    private Drawable itemBackground;
 
     public MeasureListAdapter_(int layoutId, int headerId, Context context) {
         this.context = context;
         this.layoutId = layoutId;
         this.headerId = headerId;
-        setBackgrounds(context,
-                R.drawable.list_item_background_single,
-                R.drawable.list_item_background_top,
-                R.drawable.list_item_background_bottom,
-                R.drawable.list_item_background);
+        setBackgrounds(context);
 
         measureGroups.put(Measure_.MEASURE_UNIT,-1);
         measureGroups.put(Measure_.MEASURE_LENGTH,-1);
@@ -42,6 +46,11 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
         measureGroups.put(Measure_.MEASURE_MASS,-1);
         measureGroups.put(Measure_.MEASURE_LIQUIDDRY,-1);
         measureGroups.put(Measure_.MEASURE_VOLUME,-1);
+
+        itemBackgroundSingle = ContextCompat.getDrawable(context, R.drawable.list_item_background_single);
+        itemBackgroundTop = ContextCompat.getDrawable(context, R.drawable.list_item_background_top);
+        itemBackgroundBottom = ContextCompat.getDrawable(context, R.drawable.list_item_background_bottom);
+        itemBackground = ContextCompat.getDrawable(context, R.drawable.list_item_background);
     }
 
     @Override
@@ -57,6 +66,26 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
         if (data != null) {
             MeasureItemListBindingModel model = new MeasureItemListBindingModel(context);
             model.setMeasure(data.get(position));
+
+            int listSize = getItemCount();
+
+            Drawable drawableResource;
+            if (listSize == 1)
+                drawableResource = itemBackgroundSingle;
+            else if (position == 0)
+                drawableResource = itemBackgroundTop;
+            else if (position == listSize - 1)
+                drawableResource = itemBackgroundBottom;
+            else
+                drawableResource = itemBackground;
+
+            if (position < listSize - 1 && data.get(position+1).header)
+                drawableResource = itemBackgroundBottom;
+            if (data.get(position).header)
+                drawableResource = itemBackgroundTop;
+
+            model.setBackground(drawableResource);
+
             return model;
         }
         else
@@ -83,14 +112,14 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
         this.filtered_data.clear();
 
         names.clear();
-        symbols.clear();
         for (Measure_.Plain m : this.data) {
             names.put(m.hash, m.name != null ? m.name : context.getResources().getString(m.nameId));
-//            symbols.put(m.hash, m.symbol != null ? m.symbol : context.getResources().getString(m.symbolId));
         }
 
         sortList();
         this.filtered_data = this.data;
+
+        notifyDataSetChanged();
     }
 
     private void sortList() {
