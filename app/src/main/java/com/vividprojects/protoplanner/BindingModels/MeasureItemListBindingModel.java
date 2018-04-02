@@ -5,8 +5,12 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 
+import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.R;
@@ -23,6 +27,8 @@ public class MeasureItemListBindingModel extends BaseObservable {
 
     private Context context;
 
+    private int outlineType = 0;
+
     public MeasureItemListBindingModel(Context context) {
         measure = (new Measure_()).getPlain();
         this.context = context;
@@ -34,10 +40,18 @@ public class MeasureItemListBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.symbol);
     }
 
+    public void setOutlineType(int type) {
+        this.outlineType = type;
+    }
+
     public void setBackground(Drawable background) {
         this.background = background;
     }
 
+    @Bindable
+    public int getOutlineType() {
+        return outlineType;
+    }
 
     @Bindable
     public Drawable getBackground() {
@@ -57,6 +71,16 @@ public class MeasureItemListBindingModel extends BaseObservable {
     @Bindable
     public int getMeasure() {
         return measure.measure;
+    }
+
+    @BindingAdapter("bind:customOutline")
+    public static void setCustomOutline(View view, int type) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (type == 0)
+                view.setOutlineProvider(new ListOutline());
+            else
+                view.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
+        }
     }
 
     @BindingAdapter("bind:srcVector")

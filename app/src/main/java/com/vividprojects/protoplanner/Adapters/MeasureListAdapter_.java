@@ -69,13 +69,12 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
                 drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background_bottom);
             else
                 drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background);
-
-            /*if (position < listSize - 1 && data.get(position+1).header)
-                drawableResource = itemBackgroundBottom;
-            if (data.get(position).header)
-                drawableResource = itemBackgroundTop;*/
-
             model.setBackground(drawableResource);
+
+            if (listSize == 1 || position==0)
+                model.setOutlineType(1);
+            else
+                model.setOutlineType(0);
 
             return model;
         }

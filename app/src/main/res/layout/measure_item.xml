@@ -12,8 +12,10 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:clickable="true"
+            android:focusable="true"
             android:background="@{obj.background}"
-            android:onClick="@{()->obj.onMClicked()}">
+            android:onClick="@{()->obj.onMClicked()}"
+            bind:customOutline="@{obj.outlineType}">
 
             <TextView
                 android:id="@+id/measure_name"

@@ -15,7 +15,8 @@
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:focusable="true"
-        android:background="@{obj.background}">
+        android:background="@{obj.background}"
+        bind:customOutline="@{obj.outlineType}">
 
         <ImageView
             android:id="@+id/imageView4"
