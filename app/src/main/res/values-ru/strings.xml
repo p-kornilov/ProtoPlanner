@@ -9,4 +9,14 @@
     <string name="measure_square">Площадь</string>
     <string name="measure_volume">Объем</string>
     <string name="measure_liquiddry">Жидкости и сыпучие вещества</string>
+
+    <!-- Measure system list -->
+    <string-array name="measure_system_preference_entries">
+        <item>Метрическая</item>
+        <item>Британская</item>
+        <item>Китайская</item>
+        <item>Японская</item>
+        <item>Пользовательская</item>
+    </string-array>
+
 </resources>

@@ -154,11 +154,11 @@ public class MeasureListFragment extends Fragment implements Injectable {
                     adapter.filter("");
                     listView.clearTextFilter();
 */
-                   // measureListAdapter.setFilter(filter);
+                    measureListAdapter.setFilter(filter);
                     Log.d("Test","Entered - Empty");
                 } else {
                     Log.d("Test","Entered - " + filter);
-                   // measureListAdapter.setFilter(filter);
+                    measureListAdapter.setFilter(filter);
 /*
                     adapter.filter(newText);
 */

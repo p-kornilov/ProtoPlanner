@@ -28,7 +28,7 @@ public class Settings {
 
     public static int getMeasureSystem(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getInt("generalMeasureSystem", 0);
+        return Integer.parseInt(sharedPref.getString("measureSystem", "0"));
     }
 
 }

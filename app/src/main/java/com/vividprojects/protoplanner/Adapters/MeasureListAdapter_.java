@@ -28,6 +28,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
     private Context context;
     private Map<Integer,Integer> measureGroups = new HashMap<>();
     private Map<Integer,String> names = new HashMap<>();
+    private String filter = "";
 
     public MeasureListAdapter_(int layoutId, int headerId, Context context) {
         this.context = context;
@@ -46,26 +47,26 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
 
     @Override
     public int getItemCount() {
-        if (data != null)
-            return data.size();
+        if (filtered_data != null)
+            return filtered_data.size();
         else
             return 0;
     }
 
     @Override
     public Object getObjForPosition(int position) {
-        if (data != null) {
+        if (filtered_data != null) {
             MeasureItemListBindingModel model = new MeasureItemListBindingModel(context);
-            model.setMeasure(data.get(position));
+            model.setMeasure(filtered_data.get(position));
 
             int listSize = getItemCount();
 
             Drawable drawableResource;
             if (listSize == 1)
                 drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background_single);
-            else if (position == 0 || data.get(position).header)
+            else if (position == 0 || filtered_data.get(position).header)
                 drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background_top);
-            else if (position == listSize - 1 || (position < listSize - 1 && data.get(position+1).header))
+            else if (position == listSize - 1 || (position < listSize - 1 && filtered_data.get(position+1).header))
                 drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background_bottom);
             else
                 drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background);
@@ -106,15 +107,15 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
             names.put(m.hash, m.name != null ? m.name : context.getResources().getString(m.nameId));
         }
 
-        sortList();
         this.filtered_data = this.data;
+        sortList();
 
         notifyDataSetChanged();
     }
 
     private void sortList() {
-        Measure_.Plain[] holder_list = new Measure_.Plain[this.data.size()];
-        this.data.toArray(holder_list);
+        Measure_.Plain[] holder_list = new Measure_.Plain[this.filtered_data.size()];
+        this.filtered_data.toArray(holder_list);
 
         Arrays.sort(holder_list,(x, y)->{
             if (x.measure == y.measure) {
@@ -129,7 +130,30 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
                 return (x.measure - y.measure) * 100;
         });
 
-        this.data.clear();
-        this.data.addAll(Arrays.asList(holder_list));
+        this.filtered_data.clear();
+        this.filtered_data.addAll(Arrays.asList(holder_list));
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+        if (filter != null && filter.length()>0) {
+            filter = filter.toLowerCase();
+            filtered_data = new ArrayList<>();
+            for (Measure_.Plain m : data) {
+                if (names.get(m.hash).toLowerCase().contains(filter))
+                    filtered_data.add(m);
+            }
+            Measure_ helper = new Measure_();
+            filtered_data.add(helper.createHeader(Measure_.MEASURE_UNIT,R.string.measure_unit));
+            filtered_data.add(helper.createHeader(Measure_.MEASURE_MASS,R.string.measure_mass));
+            filtered_data.add(helper.createHeader(Measure_.MEASURE_LENGTH,R.string.measure_length));
+            filtered_data.add(helper.createHeader(Measure_.MEASURE_SQUARE,R.string.measure_square));
+            filtered_data.add(helper.createHeader(Measure_.MEASURE_VOLUME,R.string.measure_volume));
+            filtered_data.add(helper.createHeader(Measure_.MEASURE_LIQUIDDRY,R.string.measure_liquiddry));
+            sortList();
+            notifyDataSetChanged();
+        } else
+            filtered_data = data;
+            notifyDataSetChanged();
     }
 }
