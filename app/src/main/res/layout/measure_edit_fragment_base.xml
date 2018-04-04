@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="measureModel" type="com.vividprojects.protoplanner.BindingModels.MeasureItemBindingModel"/>
+    </data>
+    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="0px"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/mef_name_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/record_left_padding"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <EditText
+                        android:id="@+id/mef_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="Name"
+                        android:text="@={measureModel.measureName}"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/mef_symbol_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="@dimen/record_left_padding"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/mef_name_layout">
+
+                    <EditText
+                        android:id="@+id/mef_symbol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="Symbol"
+                        android:inputType="textNoSuggestions"
+                        android:text="@={measureModel.measureSymbol}"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/mef_pattern_helper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="Measure type"
+                    android:textColor="@color/textHelper"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/mef_symbol_layout" />
+
+                <Spinner
+                    android:id="@+id/mef_measure_type"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="@dimen/record_left_padding"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:entries="@array/measure_types"
+                    android:textSize="20sp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:selectedItemPosition="@={measureModel.measureMeasure}"
+                    app:adapterItem="@{@layout/spinner_item}"
+                    app:adapterDropItem="@{@layout/spinner_item_dropdown}"
+                    app:textViewId="@{@id/spinner_item}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/mef_pattern_helper" />
+
+                <ImageButton
+                    android:id="@+id/mef_measure_type_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:cropToPadding="false"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    android:onClick="@{()->mefMeasureType.performClick()}"
+                    app:layout_constraintEnd_toEndOf="@id/mef_measure_type"
+                    app:layout_constraintTop_toTopOf="@id/mef_measure_type"
+                    app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="0dp"
+                    android:background="#6b000000"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/mef_measure_type" />
+
+
+                <CheckBox
+                    android:id="@+id/mef_fractional"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="24dp"
+                    android:checked="@={measureModel.measureFractional}"
+                    android:text="Fractional"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/divider2" />
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

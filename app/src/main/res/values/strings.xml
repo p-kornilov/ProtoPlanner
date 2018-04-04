@@ -28,6 +28,15 @@
     <string name="measure_volume">Volume</string>
     <string name="measure_liquiddry">Liquid &amp; Dry</string>
 
+    <string-array name="measure_types">
+        <item>Amount</item>
+        <item>Weight</item>
+        <item>Length</item>
+        <item>Square</item>
+        <item>Volume</item>
+        <item>Liquid &amp; Dry</item>
+    </string-array>
+
     <!-- Data & sync settings -->
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">

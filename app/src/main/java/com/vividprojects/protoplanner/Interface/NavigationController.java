@@ -30,6 +30,7 @@ public class NavigationController {
     public final static String ACTIVITY_TYPE = "ACTIVITY_TYPE";
 
     public final static String CURRENCY_ID = "CURRENCY_ID";
+    public final static String MEASURE_HASH = "MEASURE_HASH";
 
     private Context context;
     private Activity currentActivity;
