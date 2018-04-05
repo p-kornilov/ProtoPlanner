@@ -27,7 +27,7 @@ public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindin
     private float elevation;
 
 
-    public void setBackgrounds(Context context) {
+    public void init(Context context) {
         elevation = context.getResources().getDimension(R.dimen.cardElevation);
     }
 

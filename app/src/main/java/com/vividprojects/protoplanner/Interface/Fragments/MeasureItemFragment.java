@@ -19,6 +19,7 @@ import com.vividprojects.protoplanner.BindingModels.MeasureItemBindingModel;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.ViewModels.MeasureItemViewModel;
 import com.vividprojects.protoplanner.databinding.MeasureEditFragmentBinding;
 
 import javax.inject.Inject;
@@ -66,24 +67,16 @@ public class MeasureItemFragment extends Fragment implements Injectable {
 
         if (args != null && args.containsKey(NavigationController.MEASURE_HASH)){
             int hash = args.getInt(NavigationController.MEASURE_HASH);
-           // if (iso_code > 0) {
                 model = ViewModelProviders.of(getActivity(),viewModelFactory).get(MeasureItemViewModel.class);
                 model.setHash(hash);
 
                 bindingModel = model.getBindingModel();
-
                 binding.setMeasureModel(bindingModel);
 
-                model.getCurrency().observe(this,currency->{
-                    if (currency != null)
-                        bindingModel.setCurrency(currency);
+                model.getMeasure().observe(this,measure->{
+                    if (measure != null)
+                        bindingModel.setMeasure(measure);
                 });
-
-                model.getBase().observe(this,base->{
-                    if (base != null)
-                        bindingModel.setBase(base);
-                });
-          //  }
         }
     }
 
@@ -100,18 +93,14 @@ public class MeasureItemFragment extends Fragment implements Injectable {
             case R.id.item_check:
                 boolean error = false;
                 String errorText = "";
-                if (!bindingModel.getCheckCode() || bindingModel.getCurrencyCode() == null) {
-                    errorText = "Please, correct the code. It must be 3 characters long.";
-                    error = true;
-                }
-                if (!bindingModel.getStatus()) {
-                    errorText = "Please, correct the symbol. Wrong unicode format.";
-                    error = true;
-                }
-                if (bindingModel.getCurrencyName() == null) {
+                if (bindingModel.getMeasureName() == null || bindingModel.getMeasureName().length()==0) {
                     errorText = "Please, correct the name. Can't be empty.";
                     error = true;
+                } else if (bindingModel.getMeasureSymbol() == null || bindingModel.getMeasureSymbol().length()==0) {
+                    errorText = "Please, correct the symbol. Can't be empty.";
+                    error = true;
                 }
+
                 if (error) {
                     AlertDialog alert = new AlertDialog.Builder(getContext()).create();
                     alert.setTitle("Oops...");

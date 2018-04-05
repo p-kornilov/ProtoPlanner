@@ -26,6 +26,7 @@ public class NavigationController {
     public final static int MEASURE_ITEM = 4;
 
     public final static int REQUEST_CODE_CURRENCY = 100;
+    public final static int REQUEST_CODE_MEASURE = 101;
 
     public final static String ACTIVITY_TYPE = "ACTIVITY_TYPE";
 
@@ -167,6 +168,19 @@ public class NavigationController {
         intent.putExtra(ACTIVITY_TYPE,CURRENCY_ITEM);
         intent.putExtra(CURRENCY_ID,iso_code);
         context.startActivityForResult(intent,REQUEST_CODE_CURRENCY);
+    }
+
+    public static void openMeasureForResult(int hash, Fragment context) {
+
+        Intent intent;
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context.getActivity(), ContainerItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context.getActivity(), ContainerItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        intent.putExtra(ACTIVITY_TYPE,MEASURE_ITEM);
+        intent.putExtra(MEASURE_HASH,hash);
+        context.startActivityForResult(intent,REQUEST_CODE_MEASURE);
     }
 
     public void openSettings() {

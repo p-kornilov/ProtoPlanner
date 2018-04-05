@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/currency_edit_fragment_base"
-            bind:symbolModel="@{symbolModel}"/>
+        <include layout="@layout/measure_edit_fragment_base"
+            bind:measureModel="@{measureModel}"/>
 
     </LinearLayout>
 </layout>

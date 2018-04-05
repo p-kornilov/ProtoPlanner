@@ -31,6 +31,10 @@ public class MeasureItemBindingModel extends BaseObservable {
         this.context = context;
     }
 
+    public Measure_.Plain getMeasure() {
+        return measure;
+    }
+
     public void setMeasure(Measure_.Plain measure) {
         this.measure = measure;
         notifyPropertyChanged(BR.name);

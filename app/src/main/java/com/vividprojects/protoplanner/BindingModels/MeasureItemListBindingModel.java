@@ -6,6 +6,9 @@ import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
@@ -13,6 +16,7 @@ import android.widget.ImageView;
 import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.R;
 
 
@@ -25,11 +29,11 @@ public class MeasureItemListBindingModel extends BaseObservable {
 
     private Measure_.Plain measure;
 
-    private Context context;
+    private MeasureListFragment context;
 
     private int outlineType = 0;
 
-    public MeasureItemListBindingModel(Context context) {
+    public MeasureItemListBindingModel(MeasureListFragment context) {
         measure = (new Measure_()).getPlain();
         this.context = context;
     }
@@ -110,5 +114,38 @@ public class MeasureItemListBindingModel extends BaseObservable {
 
     public void onMClicked() {
         String n = "";
+    }
+
+    public void onMenuClicked(View view) {
+        PopupMenu popup = new PopupMenu(view.getContext(), view);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.mce_edit:
+                        context.editItem(measure.hash);
+                        return true;
+                    case R.id.mce_default:
+                        setDefaultItem();
+                        return true;
+                    case R.id.mce_delete:
+                        deleteItem();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_currency_edit, popup.getMenu());
+        popup.show();
+    }
+
+    private void setDefaultItem() {
+
+    }
+
+    private void deleteItem() {
+
     }
 };

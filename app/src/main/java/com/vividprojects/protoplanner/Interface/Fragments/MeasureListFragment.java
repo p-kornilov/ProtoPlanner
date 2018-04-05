@@ -117,7 +117,7 @@ public class MeasureListFragment extends Fragment implements Injectable {
         layoutManager = new LinearLayoutManager(getContext());
         recycler.setLayoutManager(layoutManager);
         //measureListAdapter = new MeasureListAdapter(this,(LinearLayoutManager)layoutManager);
-        measureListAdapter = new MeasureListAdapter_(R.layout.measure_item,R.layout.measure_item_header,getContext());
+        measureListAdapter = new MeasureListAdapter_(R.layout.measure_item,R.layout.measure_item_header,this);
         recycler.setAdapter(measureListAdapter);
 
 
@@ -217,8 +217,8 @@ public class MeasureListFragment extends Fragment implements Injectable {
         model.setDefaultMeasure(hash);
     }
 
-    public void editItem(int iso_code_int) {
-        NavigationController.openCurrencyForResult(iso_code_int,MeasureListFragment.this);
+    public void editItem(int hash) {
+        NavigationController.openMeasureForResult(hash,MeasureListFragment.this);
     }
 
     public static MeasureListFragment create() {

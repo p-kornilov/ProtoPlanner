@@ -59,6 +59,7 @@
                 android:cropToPadding="false"
                 android:padding="12dp"
                 android:visibility="visible"
+                android:onClick="@{()->obj.onMenuClicked(measureEditButton)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

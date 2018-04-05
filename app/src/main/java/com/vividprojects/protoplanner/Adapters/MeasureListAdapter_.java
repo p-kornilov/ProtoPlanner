@@ -8,6 +8,7 @@ import android.view.ViewOutlineProvider;
 
 import com.vividprojects.protoplanner.BindingModels.MeasureItemListBindingModel;
 import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.R;
 
 import java.util.ArrayList;
@@ -25,16 +26,16 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
     private final int headerId;
     private List<Measure_.Plain> data;
     private List<Measure_.Plain> filtered_data = new ArrayList<>();
-    private Context context;
+    private MeasureListFragment context;
     private Map<Integer,Integer> measureGroups = new HashMap<>();
     private Map<Integer,String> names = new HashMap<>();
     private String filter = "";
 
-    public MeasureListAdapter_(int layoutId, int headerId, Context context) {
+    public MeasureListAdapter_(int layoutId, int headerId, MeasureListFragment context) {
         this.context = context;
         this.layoutId = layoutId;
         this.headerId = headerId;
-        setBackgrounds(context);
+        init(context.getContext());
 
         measureGroups.put(Measure_.MEASURE_UNIT,-1);
         measureGroups.put(Measure_.MEASURE_LENGTH,-1);
@@ -63,13 +64,13 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
 
             Drawable drawableResource;
             if (listSize == 1)
-                drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background_single);
+                drawableResource = ContextCompat.getDrawable(context.getContext(), R.drawable.list_item_background_single);
             else if (position == 0 || filtered_data.get(position).header)
-                drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background_top);
+                drawableResource = ContextCompat.getDrawable(context.getContext(), R.drawable.list_item_background_top);
             else if (position == listSize - 1 || (position < listSize - 1 && filtered_data.get(position+1).header))
-                drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background_bottom);
+                drawableResource = ContextCompat.getDrawable(context.getContext(), R.drawable.list_item_background_bottom);
             else
-                drawableResource = ContextCompat.getDrawable(context, R.drawable.list_item_background);
+                drawableResource = ContextCompat.getDrawable(context.getContext(), R.drawable.list_item_background);
             model.setBackground(drawableResource);
 
             if (listSize == 1 || position==0)
