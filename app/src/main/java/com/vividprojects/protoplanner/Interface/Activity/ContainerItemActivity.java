@@ -18,11 +18,13 @@ import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
+import com.vividprojects.protoplanner.Interface.Fragments.MeasureItemFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
+import com.vividprojects.protoplanner.ViewModels.MeasureItemViewModel;
 
 import javax.inject.Inject;
 
@@ -54,24 +56,44 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
+        int activityType = getIntent().getIntExtra(NavigationController.ACTIVITY_TYPE, NavigationController.CURRENCY_ITEM);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = null;
 
-        getSupportActionBar().setTitle("Currency");
+        switch (activityType) {
+            case NavigationController.CURRENCY_ITEM:
+                getSupportActionBar().setTitle("Currency");
+                int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
+                fragment = CurrencyItemFragment.create(iso_code);
+                CurrencyItemViewModel model_c = obtainViewModel(CurrencyItemViewModel.class);
 
-        int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
-        fragment = CurrencyItemFragment.create(iso_code);
-        CurrencyItemViewModel model = obtainViewModel(CurrencyItemViewModel.class);
+                model_c.getOnSaveId().observe(this,id->{
+                    if (id != null) {
+                        Intent intent = new Intent();
+                        intent.putExtra("ID", id.intValue());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+                break;
+            case NavigationController.MEASURE_ITEM:
+                getSupportActionBar().setTitle("Measure");
+                int hash = getIntent().getIntExtra(NavigationController.MEASURE_HASH,-1);
+                fragment = MeasureItemFragment.create(hash);
+                MeasureItemViewModel model_m = obtainViewModel(MeasureItemViewModel.class);
 
-        model.getOnSaveId().observe(this,id->{
-            if (id != null) {
-                Intent intent = new Intent();
-                intent.putExtra("ID", id.intValue());
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
+                model_m.getOnSaveHash().observe(this,hashm->{
+                    if (hashm != null) {
+                        Intent intent = new Intent();
+                        intent.putExtra("HASH", hashm.intValue());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+                break;
+        }
 
         if (fragment != null)
             fragmentTransaction.replace(R.id.container_container, fragment);

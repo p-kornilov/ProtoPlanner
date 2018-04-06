@@ -121,12 +121,12 @@ public class MeasureItemFragment extends Fragment implements Injectable {
         return true;
     }
 
-    public static MeasureItemFragment create(int iso_code) {
-        MeasureItemFragment currencyItemFragment = new MeasureItemFragment();
+    public static MeasureItemFragment create(int hash) {
+        MeasureItemFragment measureItemFragment = new MeasureItemFragment();
         Bundle args = new Bundle();
-        args.putInt(NavigationController.CURRENCY_ID, iso_code);
-        currencyItemFragment.setArguments(args);
-        return currencyItemFragment;
+        args.putInt(NavigationController.MEASURE_HASH, hash);
+        measureItemFragment.setArguments(args);
+        return measureItemFragment;
     }
 
 }

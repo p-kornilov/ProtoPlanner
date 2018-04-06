@@ -8,6 +8,7 @@ import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.ViewModels.ImageViewViewModel;
 import com.vividprojects.protoplanner.ViewModels.LabelsViewModel;
+import com.vividprojects.protoplanner.ViewModels.MeasureItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.MeasureListViewModel;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.RecordListViewModel;
@@ -63,6 +64,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MeasureListViewModel.class)
     abstract ViewModel bindMeasureListViewModel(MeasureListViewModel measureListViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MeasureItemViewModel.class)
+    abstract ViewModel bindMeasureViewModel(MeasureItemViewModel measureViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(PPViewModelFactory factory);

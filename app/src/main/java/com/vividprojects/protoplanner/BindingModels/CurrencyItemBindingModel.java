@@ -20,6 +20,7 @@ import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -252,7 +253,8 @@ public class CurrencyItemBindingModel extends BaseObservable {
 
     @BindingAdapter({"app:adapterItem","app:adapterDropItem","app:textViewId"})
     public static void bindAdapter(Spinner spinner, int adapterItem, int adapterDropItem, int textViewId) {
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(spinner.getContext(), adapterItem, textViewId, PriceFormatter.createListValue("T", 100.00));
+//        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(spinner.getContext(), adapterItem, textViewId, PriceFormatter.createListValue("T", 100.00));
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(spinner.getContext(), adapterItem, textViewId, new ArrayList<>());
         spinnerAdapter.setDropDownViewResource(adapterDropItem);
         int p = spinner.getSelectedItemPosition();
         spinner.setAdapter(spinnerAdapter);
