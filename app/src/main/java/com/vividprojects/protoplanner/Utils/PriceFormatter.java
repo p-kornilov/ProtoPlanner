@@ -37,14 +37,14 @@ public class PriceFormatter {
         }
     }
 
-    public static List<String> createListValue(String symbol, double value){
+    public static String[] createListValue(String symbol, double value){
         ArrayList<String> list = new ArrayList<>();
         list.add(createValue(symbol,value,Currency.BEFORE_SPACE));
         list.add(createValue(symbol,value,Currency.BEFORE));
         list.add(createValue(symbol,value,Currency.WITHIN));
         list.add(createValue(symbol,value,Currency.AFTER));
         list.add(createValue(symbol,value,Currency.AFTER_SPACE));
-        return list;
+        return list.toArray(new String[list.size()]);
     }
 
     public static String createPrice(Currency.Plain currency, double price, Measure.Plain measure){

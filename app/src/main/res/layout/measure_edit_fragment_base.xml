@@ -96,16 +96,19 @@
                     android:layout_marginTop="2dp"
                     android:gravity="center_vertical"
                     android:layout_weight="1"
-                    android:entries="@array/measure_types"
+                    app:adapterTextItems="@{@stringArray/measure_types}"
+                    app:adapterImageItems="@{@intArray/measures_images}"
                     android:textSize="20sp"
                     android:background="?android:attr/selectableItemBackground"
                     android:selectedItemPosition="@={measureModel.measureMeasure}"
-                    app:adapterItem="@{@layout/spinner_item}"
-                    app:adapterDropItem="@{@layout/spinner_item_dropdown}"
-                    app:textViewId="@{@id/spinner_item}"
+                    app:adapterImageItem="@{@layout/spinner_image_item}"
+                    app:adapterImageDropItem="@{@layout/spinner_image_item_dropdown}"
+                    app:adapterTextViewId="@{@id/spinner_item}"
+                    app:adapterImageViewId="@{@id/spinner_image}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/mef_pattern_helper" />
+
 
                 <ImageButton
                     android:id="@+id/mef_measure_type_button"

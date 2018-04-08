@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="measures_images">
+        <item>1</item>
+        <item>@drawable/measure_mass</item>
+        <item>@drawable/measure_length</item>
+        <item>@drawable/measure_square</item>
+        <item>@drawable/measure_volume</item>
+        <item>@drawable/measure_ld</item>
+    </array>
+</resources>

@@ -20,7 +20,6 @@ import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ public class CurrencyItemBindingModel extends BaseObservable {
     private boolean status = true;
     private boolean checkCode = true;
     private String collapsedSymbol;
-    private List<String> pattern_entries;
+    private String[] pattern_entries;
     private boolean onCodeChange = false;
 
     private Currency.Plain currency;
@@ -177,13 +176,13 @@ public class CurrencyItemBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.pattern);
     }
 
-    public void setPatternEntries(List<String> list) {
+    public void setPatternEntries(String[] list) {
         pattern_entries = list;
         notifyPropertyChanged(BR.patternEntries);
     }
 
     @Bindable
-    public List<String> getPatternEntries() {
+    public String[] getPatternEntries() {
         return pattern_entries;
     }
 
@@ -249,16 +248,6 @@ public class CurrencyItemBindingModel extends BaseObservable {
             return false;
         }
         return true;
-    }
-
-    @BindingAdapter({"app:adapterItem","app:adapterDropItem","app:textViewId"})
-    public static void bindAdapter(Spinner spinner, int adapterItem, int adapterDropItem, int textViewId) {
-//        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(spinner.getContext(), adapterItem, textViewId, PriceFormatter.createListValue("T", 100.00));
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(spinner.getContext(), adapterItem, textViewId, new ArrayList<>());
-        spinnerAdapter.setDropDownViewResource(adapterDropItem);
-        int p = spinner.getSelectedItemPosition();
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setSelection(p);
     }
 
 };
