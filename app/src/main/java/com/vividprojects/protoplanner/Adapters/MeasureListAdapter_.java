@@ -133,7 +133,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
                 if (y.header)
                     return 99;
                 if (x.def)
-                    return 50;
+                    return -50;
                 return names.get(x.hash).toLowerCase().compareTo(names.get(y.hash).toLowerCase());
             } else
                 return (x.measure - y.measure) * 100;
@@ -210,6 +210,31 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
 
     @Override
     public void itemDefault(int item) {
+        int dpos = 0;
+        Measure_.Plain d = null;
+        for (Measure_.Plain m : filtered_data) {
+            if (m.def)
+                dpos = filtered_data.indexOf(m);
+            if (m.hash == item) {
+                d = m;
+                break;
+            }
+        }
 
+        filtered_data.get(dpos).def = false;
+        int pos = filtered_data.indexOf(d);
+
+        filtered_data.add(dpos,filtered_data.remove(pos));
+        notifyItemMoved(pos,dpos);
+
+        for (int i = dpos+2; i < filtered_data.size(); i++)
+            if (filtered_data.get(i).measure == d.measure && !filtered_data.get(i).header) {
+                if (names.get(filtered_data.get(dpos+1).hash).toLowerCase().compareTo(names.get(filtered_data.get(i).hash).toLowerCase()) >= 0) {
+                    filtered_data.add(i,filtered_data.remove(dpos+1));
+                    notifyItemMoved(dpos+1,i);
+                    break;
+                }
+            } else
+                break;
     }
 }
