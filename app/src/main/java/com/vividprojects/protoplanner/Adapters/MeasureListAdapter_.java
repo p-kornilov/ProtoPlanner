@@ -1,16 +1,18 @@
 package com.vividprojects.protoplanner.Adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
-import android.view.ViewOutlineProvider;
+import android.support.v7.app.AlertDialog;
 
 import com.vividprojects.protoplanner.BindingModels.MeasureItemListBindingModel;
 import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.ItemActions;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,21 +23,23 @@ import java.util.Map;
  * Created by p.kornilov on 26.03.2018.
  */
 
-public class MeasureListAdapter_ extends DataBindingAdapter {
+public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActions {
     private final int layoutId;
     private final int headerId;
     private List<Measure_.Plain> data;
     private List<Measure_.Plain> filtered_data = new ArrayList<>();
-    private MeasureListFragment context;
+    private WeakReference<Context> context;
     private Map<Integer,Integer> measureGroups = new HashMap<>();
     private Map<Integer,String> names = new HashMap<>();
     private String filter = "";
+    private ItemActions master;
 
-    public MeasureListAdapter_(int layoutId, int headerId, MeasureListFragment context) {
-        this.context = context;
+    public MeasureListAdapter_(int layoutId, int headerId, Context context, ItemActions master) {
+        this.context = new WeakReference<>(context);
         this.layoutId = layoutId;
         this.headerId = headerId;
-        init(context.getContext());
+        this.master = master;
+        init(context);
 
         measureGroups.put(Measure_.MEASURE_UNIT,-1);
         measureGroups.put(Measure_.MEASURE_LENGTH,-1);
@@ -57,21 +61,24 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
     @Override
     public Object getObjForPosition(int position) {
         if (filtered_data != null) {
-            MeasureItemListBindingModel model = new MeasureItemListBindingModel(context);
+            MeasureItemListBindingModel model = new MeasureItemListBindingModel(context.get(),this);
             model.setMeasure(filtered_data.get(position));
 
             int listSize = getItemCount();
 
-            Drawable drawableResource;
-            if (listSize == 1)
-                drawableResource = ContextCompat.getDrawable(context.getContext(), R.drawable.list_item_background_single);
-            else if (position == 0 || filtered_data.get(position).header)
-                drawableResource = ContextCompat.getDrawable(context.getContext(), R.drawable.list_item_background_top);
-            else if (position == listSize - 1 || (position < listSize - 1 && filtered_data.get(position+1).header))
-                drawableResource = ContextCompat.getDrawable(context.getContext(), R.drawable.list_item_background_bottom);
-            else
-                drawableResource = ContextCompat.getDrawable(context.getContext(), R.drawable.list_item_background);
-            model.setBackground(drawableResource);
+            Context ctx = context.get();
+            if (ctx != null) {
+                Drawable drawableResource;
+                if (listSize == 1)
+                    drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_single);
+                else if (position == 0 || filtered_data.get(position).header)
+                    drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_top);
+                else if (position == listSize - 1 || (position < listSize - 1 && filtered_data.get(position + 1).header))
+                    drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_bottom);
+                else
+                    drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background);
+                model.setBackground(drawableResource);
+            }
 
             if (listSize == 1 || position==0)
                 model.setOutlineType(1);
@@ -104,9 +111,10 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
         this.filtered_data.clear();
 
         names.clear();
-        for (Measure_.Plain m : this.data) {
-            names.put(m.hash, m.name != null ? m.name : context.getResources().getString(m.nameId));
-        }
+        Context ctx = context.get();
+        if (ctx != null)
+            for (Measure_.Plain m : this.data)
+                names.put(m.hash, m.name != null ? m.name : ctx.getResources().getString(m.nameId));
 
         this.filtered_data = this.data;
         sortList();
@@ -156,5 +164,52 @@ public class MeasureListAdapter_ extends DataBindingAdapter {
         } else
             filtered_data = data;
             notifyDataSetChanged();
+    }
+
+    @Override
+    public void itemDelete(int item) {
+        AlertDialog alert = new AlertDialog.Builder(context.get()).create();
+        alert.setTitle("Delete");
+        alert.setMessage("Delete " + names.get(item) + "?");
+        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        int pos = 0;
+                        Measure_.Plain m = null;
+                        for (pos = 0; pos < filtered_data.size(); pos++)
+                            if (filtered_data.get(pos).hash == item) {
+                                m = filtered_data.get(pos);
+                                break;
+                            }
+                        data.remove(m);
+                        filtered_data.remove(m);
+                        master.itemDelete(item);
+                        notifyItemRemoved(pos);
+                        dialog.dismiss();
+                    }
+                });
+        alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog.dismiss();
+            }
+        });
+        alert.show();
+    }
+
+    @Override
+    public void itemEdit(int item) {
+        master.itemEdit(item);
+    }
+
+    @Override
+    public void itemDefault(int item) {
+
     }
 }

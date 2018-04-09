@@ -14,10 +14,12 @@ import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 
 import com.vividprojects.protoplanner.Adapters.ListOutline;
+import com.vividprojects.protoplanner.Adapters.MeasureListAdapter_;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.ItemActions;
 
 
 /**
@@ -29,13 +31,15 @@ public class MeasureItemListBindingModel extends BaseObservable {
 
     private Measure_.Plain measure;
 
-    private MeasureListFragment context;
+    private Context context;
+    private ItemActions listAdapter;
 
     private int outlineType = 0;
 
-    public MeasureItemListBindingModel(MeasureListFragment context) {
+    public MeasureItemListBindingModel(Context context, ItemActions listAdapter) {
         measure = (new Measure_()).getPlain();
         this.context = context;
+        this.listAdapter = listAdapter;
     }
 
     public void setMeasure(Measure_.Plain measure) {
@@ -77,41 +81,6 @@ public class MeasureItemListBindingModel extends BaseObservable {
         return measure.measure;
     }
 
-    @BindingAdapter("bind:customOutline")
-    public static void setCustomOutline(View view, int type) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (type == 0)
-                view.setOutlineProvider(new ListOutline());
-            else
-                view.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
-        }
-    }
-
-    @BindingAdapter("bind:srcVector")
-    public static void setSrcVector(ImageView view, int measure) {
-        int image = R.drawable.measure_numeric;
-        switch (measure) {
-            case Measure_.MEASURE_UNIT:
-                image = R.drawable.measure_numeric;
-                break;
-            case Measure_.MEASURE_MASS:
-                image = R.drawable.measure_mass;
-                break;
-            case Measure_.MEASURE_LENGTH:
-                image = R.drawable.measure_length;
-                break;
-            case Measure_.MEASURE_SQUARE:
-                image = R.drawable.measure_square;
-                break;
-            case Measure_.MEASURE_VOLUME:
-                image = R.drawable.measure_volume;
-                break;
-            case Measure_.MEASURE_LIQUIDDRY:
-                image = R.drawable.measure_ld;
-        }
-        view.setImageResource(image);
-    }
-
     public void onMClicked() {
         String n = "";
     }
@@ -123,13 +92,13 @@ public class MeasureItemListBindingModel extends BaseObservable {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.mce_edit:
-                        context.editItem(measure.hash);
+                        listAdapter.itemEdit(measure.hash);
                         return true;
                     case R.id.mce_default:
-                        setDefaultItem();
+                        listAdapter.itemDefault(measure.hash);
                         return true;
                     case R.id.mce_delete:
-                        deleteItem();
+                        listAdapter.itemDelete(measure.hash);
                         return true;
                     default:
                         return false;
@@ -139,13 +108,5 @@ public class MeasureItemListBindingModel extends BaseObservable {
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_currency_edit, popup.getMenu());
         popup.show();
-    }
-
-    private void setDefaultItem() {
-
-    }
-
-    private void deleteItem() {
-
     }
 };

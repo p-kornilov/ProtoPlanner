@@ -28,6 +28,7 @@ import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.ItemActions;
 import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.ViewModels.MeasureListViewModel;
 
@@ -39,7 +40,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Smile on 19.10.2017.
  */
 
-public class MeasureListFragment extends Fragment implements Injectable {
+public class MeasureListFragment extends Fragment implements Injectable, ItemActions {
     private RecyclerView recycler;
     private boolean fabVisible = true;
     private MeasureListAdapter_ measureListAdapter;
@@ -71,13 +72,6 @@ public class MeasureListFragment extends Fragment implements Injectable {
         Log.d("Test", "onCreateView - RootListFragment");
         View v = (View) inflater.inflate(R.layout.fragment_container_list, container, false);
         recycler = (RecyclerView) v.findViewById(R.id.recycler_list);
-
-      //  setCardViewBackgroundToRecyclerView(recycler);
-
-/*        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-        recycler.addItemDecoration(mDividerItemDecoration);*/
-
-       // recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
 
         recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -117,7 +111,7 @@ public class MeasureListFragment extends Fragment implements Injectable {
         layoutManager = new LinearLayoutManager(getContext());
         recycler.setLayoutManager(layoutManager);
         //measureListAdapter = new MeasureListAdapter(this,(LinearLayoutManager)layoutManager);
-        measureListAdapter = new MeasureListAdapter_(R.layout.measure_item,R.layout.measure_item_header,this);
+        measureListAdapter = new MeasureListAdapter_(R.layout.measure_item,R.layout.measure_item_header,this.getContext(),this);
         recycler.setAdapter(measureListAdapter);
 
 
@@ -204,21 +198,8 @@ public class MeasureListFragment extends Fragment implements Injectable {
         }
     }
 
-
     public void onFabClick() {
         NavigationController.openCurrencyForResult(-1, this);
-    }
-
-    public void deleteMeasure(int hash) {
-        model.deleteMeasure(hash);
-    }
-
-    public void setDefaultMeasure(int hash) {
-        model.setDefaultMeasure(hash);
-    }
-
-    public void editItem(int hash) {
-        NavigationController.openMeasureForResult(hash,MeasureListFragment.this);
     }
 
     public static MeasureListFragment create() {
@@ -226,5 +207,18 @@ public class MeasureListFragment extends Fragment implements Injectable {
         return measureListFragment;
     }
 
+    @Override
+    public void itemDelete(int item) {
+        model.deleteMeasure(item);
+    }
 
+    @Override
+    public void itemEdit(int item) {
+        NavigationController.openMeasureForResult(item,MeasureListFragment.this);
+    }
+
+    @Override
+    public void itemDefault(int item) {
+        model.setDefaultMeasure(item);
+    }
 }

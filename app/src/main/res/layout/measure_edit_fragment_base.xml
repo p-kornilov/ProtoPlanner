@@ -97,7 +97,7 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1"
                     app:adapterTextItems="@{@stringArray/measure_types}"
-                    app:adapterImageItems="@{@intArray/measures_images}"
+                    app:adapterImageItems="@{@typedArray/measures_images}"
                     android:textSize="20sp"
                     android:background="?android:attr/selectableItemBackground"
                     android:selectedItemPosition="@={measureModel.measureMeasure}"
