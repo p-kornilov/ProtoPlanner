@@ -95,7 +95,8 @@ public class MeasureItemListBindingModel extends BaseObservable {
                         listAdapter.itemEdit(measure.hash);
                         return true;
                     case R.id.mce_default:
-                        listAdapter.itemDefault(measure.hash);
+                        if (!measure.def)
+                            listAdapter.itemDefault(measure.hash);
                         return true;
                     case R.id.mce_delete:
                         listAdapter.itemDelete(measure.hash);

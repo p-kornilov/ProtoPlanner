@@ -129,11 +129,13 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
         Arrays.sort(holder_list,(x, y)->{
             if (x.measure == y.measure) {
                 if (x.header)
-                    return -99;
+                    return -10000;
                 if (y.header)
-                    return 99;
+                    return 10000;
                 if (x.def)
-                    return -50;
+                    return -1000;
+                if (y.def)
+                    return 1000;
                 return names.get(x.hash).toLowerCase().compareTo(names.get(y.hash).toLowerCase());
             } else
                 return (x.measure - y.measure) * 100;
@@ -221,6 +223,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
             }
         }
 
+        d.def = true;
         filtered_data.get(dpos).def = false;
         int pos = filtered_data.indexOf(d);
 
@@ -229,9 +232,12 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
 
         for (int i = dpos+2; i < filtered_data.size(); i++)
             if (filtered_data.get(i).measure == d.measure && !filtered_data.get(i).header) {
-                if (names.get(filtered_data.get(dpos+1).hash).toLowerCase().compareTo(names.get(filtered_data.get(i).hash).toLowerCase()) >= 0) {
-                    filtered_data.add(i,filtered_data.remove(dpos+1));
-                    notifyItemMoved(dpos+1,i);
+                if (names.get(filtered_data.get(dpos+1).hash).toLowerCase().compareTo(names.get(filtered_data.get(i).hash).toLowerCase()) < 0) {
+                    filtered_data.add(i-1,filtered_data.remove(dpos+1));
+                    notifyItemMoved(dpos+1,i-1);
+                    notifyItemChanged(dpos+1);
+                    notifyItemChanged(dpos+2);
+                    notifyItemChanged(i-1);
                     break;
                 }
             } else
