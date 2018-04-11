@@ -188,9 +188,9 @@ public class MeasureListFragment extends Fragment implements Injectable, ItemAct
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case NavigationController.REQUEST_CODE_CURRENCY:
+            case NavigationController.REQUEST_CODE_MEASURE:
                 if (resultCode == RESULT_OK && data != null) {
-                    int id = data.getIntExtra("ID",-1);
+                    int id = data.getIntExtra("HASH",-1);
                     model.refresh(id);
                     //measureListAdapter.refresh(id);
                 }

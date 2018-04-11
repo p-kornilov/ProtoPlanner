@@ -72,6 +72,35 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
             return layoutId;
     }
 
+    public void refresh(Measure_.Plain measure) {
+        String measureName = measure.name != null ? measure.name : context.get().getString(measure.nameId);
+        String measureNameUp = measureName.toUpperCase();
+        int posInsert = 0;
+        for (Measure_.Plain m : this.filtered_data) {
+            if (m.hash == measure.hash) {
+                int pos = filtered_data.indexOf(m);
+                data.remove(m);
+                filtered_data.remove(m);
+                models.remove(pos);
+                data.add(measure);
+                filtered_data.add(pos,measure);
+                models.add(pos,createModel(measure,pos));
+                names.put(measure.hash,measureName);
+                notifyItemChanged(pos);
+                return;
+            }
+            if (m.measure == measure.measure && measureNameUp.compareTo(names.get(m.hash).toUpperCase()) > 0 )
+                break;
+            else
+                posInsert++;
+        }
+        data.add(measure);
+        names.put(measure.hash,measureName);
+        filtered_data.add(posInsert,measure);
+        models.add(posInsert,createModel(measure,posInsert));
+        notifyItemInserted(posInsert);
+    }
+
     public void setData(List<Measure_.Plain> data) {
         this.data = data;
         Measure_ helper = new Measure_();
@@ -131,6 +160,15 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
 
             models.add(model);
         }
+    }
+
+    private MeasureItemListBindingModel createModel(Measure_.Plain measure, int position) {
+        MeasureItemListBindingModel model = new MeasureItemListBindingModel(context.get(),this);
+        Measure_.Plain m = measure;
+        model.setMeasure(m);
+        setBackground(model,position);
+
+        return model;
     }
 
     private void setBackground(MeasureItemListBindingModel model, int position) {
