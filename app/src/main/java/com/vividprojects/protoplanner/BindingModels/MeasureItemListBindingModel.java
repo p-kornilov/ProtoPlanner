@@ -108,6 +108,10 @@ public class MeasureItemListBindingModel extends BaseObservable {
         });
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_currency_edit, popup.getMenu());
+        if (measure.def) {
+            popup.getMenu().findItem(R.id.mce_default).setEnabled(false);
+            popup.getMenu().findItem(R.id.mce_delete).setEnabled(false);
+        }
         popup.show();
     }
 };

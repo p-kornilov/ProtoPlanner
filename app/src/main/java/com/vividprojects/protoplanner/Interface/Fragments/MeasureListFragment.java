@@ -124,7 +124,7 @@ public class MeasureListFragment extends Fragment implements Injectable, ItemAct
         model.getRefreshMeasure().observe(this,measure -> {
             if (measure != null) {};
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
-              //  measureListAdapter.refresh(measure);
+                measureListAdapter.refresh(measure);
         });
     }
 

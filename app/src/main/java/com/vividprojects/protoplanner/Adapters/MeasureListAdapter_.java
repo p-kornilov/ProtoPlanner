@@ -31,6 +31,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
     private WeakReference<Context> context;
     private Map<Integer,Integer> measureGroups = new HashMap<>();
     private Map<Integer,String> names = new HashMap<>();
+    private List<MeasureItemListBindingModel> models = new ArrayList<>();
     private String filter = "";
     private ItemActions master;
 
@@ -60,35 +61,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
 
     @Override
     public Object getObjForPosition(int position) {
-        if (filtered_data != null) {
-            MeasureItemListBindingModel model = new MeasureItemListBindingModel(context.get(),this);
-            model.setMeasure(filtered_data.get(position));
-
-            int listSize = getItemCount();
-
-            Context ctx = context.get();
-            if (ctx != null) {
-                Drawable drawableResource;
-                if (listSize == 1)
-                    drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_single);
-                else if (position == 0 || filtered_data.get(position).header)
-                    drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_top);
-                else if (position == listSize - 1 || (position < listSize - 1 && filtered_data.get(position + 1).header))
-                    drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_bottom);
-                else
-                    drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background);
-                model.setBackground(drawableResource);
-            }
-
-            if (listSize == 1 || position==0)
-                model.setOutlineType(1);
-            else
-                model.setOutlineType(0);
-
-            return model;
-        }
-        else
-            return null;
+        return models.get(position);
     }
 
     @Override
@@ -118,6 +91,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
 
         this.filtered_data = this.data;
         sortList();
+        createModels();
 
         notifyDataSetChanged();
     }
@@ -143,6 +117,47 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
 
         this.filtered_data.clear();
         this.filtered_data.addAll(Arrays.asList(holder_list));
+    }
+
+    private void createModels() {
+        models.clear();
+        for (int i = 0; i < filtered_data.size(); i++) {
+
+            MeasureItemListBindingModel model = new MeasureItemListBindingModel(context.get(),this);
+            Measure_.Plain m = filtered_data.get(i);
+            model.setMeasure(m);
+
+            setBackground(model,i);
+
+            models.add(model);
+        }
+    }
+
+    private void setBackground(MeasureItemListBindingModel model, int position) {
+        int listSize = getItemCount();
+
+        Context ctx = context.get();
+        if (ctx != null) {
+            Drawable drawableResource;
+            if (listSize == 1)
+                drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_single);
+            else if (position == 0 || filtered_data.get(position).header)
+                drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_top);
+            else if (position == listSize - 1 || (position < listSize - 1 && filtered_data.get(position + 1).header))
+                drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background_bottom);
+            else
+                drawableResource = ContextCompat.getDrawable(ctx, R.drawable.list_item_background);
+            model.setBackground(drawableResource);
+        }
+
+        if (listSize == 1 || position == 0)
+            model.setOutlineType(1);
+        else
+            model.setOutlineType(0);
+    }
+
+    private void setBackground(int position) {
+        setBackground(models.get(position),position);
     }
 
     public void setFilter(String filter) {
@@ -185,6 +200,8 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
                             }
                         data.remove(m);
                         filtered_data.remove(m);
+                        models.remove(pos);
+                        setBackground(pos-1);
                         master.itemDelete(item);
                         notifyItemRemoved(pos);
                         dialog.dismiss();
@@ -226,21 +243,35 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
         d.def = true;
         filtered_data.get(dpos).def = false;
         int pos = filtered_data.indexOf(d);
-
-        filtered_data.add(dpos,filtered_data.remove(pos));
-        notifyItemMoved(pos,dpos);
+        itemMove(pos,dpos);
 
         for (int i = dpos+2; i < filtered_data.size(); i++)
             if (filtered_data.get(i).measure == d.measure && !filtered_data.get(i).header) {
                 if (names.get(filtered_data.get(dpos+1).hash).toLowerCase().compareTo(names.get(filtered_data.get(i).hash).toLowerCase()) < 0) {
-                    filtered_data.add(i-1,filtered_data.remove(dpos+1));
-                    notifyItemMoved(dpos+1,i-1);
-                    notifyItemChanged(dpos+1);
-                    notifyItemChanged(dpos+2);
-                    notifyItemChanged(i-1);
+                    itemMove(dpos+1,i-1);
                     break;
                 }
             } else
                 break;
+
+        master.itemDefault(item);
+    }
+
+    private void itemMove(int from, int to) {
+        if (from > getItemCount() || to > getItemCount())
+            return;
+
+        filtered_data.add(to,filtered_data.remove(from));
+        models.add(to,models.remove(from));
+        if (to < from) {
+            setBackground(to);
+            setBackground(from);
+        } else {
+            setBackground(to);
+        }
+
+        notifyItemMoved(from,to);
+        notifyItemChanged(to);
+        notifyItemChanged(from);
     }
 }
