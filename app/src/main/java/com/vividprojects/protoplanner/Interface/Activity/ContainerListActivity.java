@@ -79,6 +79,13 @@ public class ContainerListActivity extends AppCompatActivity implements HasSuppo
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                switch (activityType) {
+                    case NavigationController.CURRENCY_LIST:
+                        модель
+                        break;
+                    case NavigationController.MEASURE_LIST:
+                        break;
+                }
                 //fragment.onFabClick(); //TODO Заменить на model
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }

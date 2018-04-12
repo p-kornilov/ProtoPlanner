@@ -89,9 +89,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
                 notifyItemChanged(pos);
                 return;
             }
-            if (m.measure == measure.measure && measureNameUp.compareTo(names.get(m.hash).toUpperCase()) > 0 )
-                break;
-            else
+            if (m.def || measure.measure > m.measure || (m.measure == measure.measure && measureNameUp.compareTo(names.get(m.hash).toUpperCase()) < 0))
                 posInsert++;
         }
         data.add(measure);

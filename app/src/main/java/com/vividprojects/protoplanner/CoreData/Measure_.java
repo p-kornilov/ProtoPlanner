@@ -1,6 +1,8 @@
 package com.vividprojects.protoplanner.CoreData;
 
 
+import java.util.UUID;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -64,6 +66,18 @@ public class Measure_ extends RealmObject{
         this.pattern = measure.pattern;
         this.def = measure.def;
         this.hash = hashCode();
+    }
+
+    public void update(Plain m) {
+        this.def = m.def;
+        this.name = m.name;
+        this.nameId = m.nameId;
+        this.measure = m.measure;
+        this.symbol = m.symbol;
+        this.symbolId = m.symbolId;
+        this.system = m.system;
+        this.pattern = m.pattern;
+       // this.hash = m.hash;
     }
 
     public boolean isDef() {
@@ -153,14 +167,15 @@ public class Measure_ extends RealmObject{
 
     @Override
     public int hashCode() {
-        int result = measure;
+/*        int result = measure;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + nameId;
         result = 31 * result + symbolId;
         result = 31 * result + (symbol != null ? symbol.hashCode() : 0);
         result = 31 * result + system;
         result = 31 * result + pattern;
-        return result;
+        return result;*/
+        return UUID.randomUUID().toString().hashCode();
     }
 
     public Plain createHeader(int measure, int nameResource) {

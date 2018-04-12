@@ -734,13 +734,21 @@ public class LocalDataDB {
 
     public int saveMeasure(Measure_.Plain measure) {
         final Bundle1<Integer> id = new Bundle1<>();
-        id.item = -1;
+        id.item = 0;
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Measure_ m = new Measure_(measure);
-                id.item = m.getHash();
-                realm.insertOrUpdate(m);
+                if (measure.hash != 0) {
+                    Measure_ m = realm.where(Measure_.class).equalTo("hash",measure.hash).findFirst();
+                    if (m != null) {
+                        m.update(measure);
+                        id.item = measure.hash;
+                    }
+                } else {
+                    Measure_ m = new Measure_(measure);
+                    id.item = m.getHash();
+                    realm.insertOrUpdate(m);
+                }
             }
         });
         return id.item;
