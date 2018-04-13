@@ -129,6 +129,10 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 //                recycler.setAdapter(new CurrencyListAdapter(list,getActivity()));
                 currencyListAdapter.refresh(currency);
         });
+
+        model.getOnNewTrigger().observe(this, o -> {
+            NavigationController.openCurrencyForResult(-1, this);
+        });
     }
 
     @Override
@@ -201,10 +205,6 @@ public class CurrencyListFragment extends Fragment implements Injectable {
         }
     }
 
-
-    public void onFabClick() {
-        NavigationController.openCurrencyForResult(-1, this);
-    }
 
     public void deleteCurrency(int iso_code_int) {
         model.deleteCurrency(iso_code_int);

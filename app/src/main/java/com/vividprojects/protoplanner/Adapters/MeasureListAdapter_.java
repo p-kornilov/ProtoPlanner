@@ -89,14 +89,18 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
                 notifyItemChanged(pos);
                 return;
             }
-            if (m.def || measure.measure > m.measure || (m.measure == measure.measure && measureNameUp.compareTo(names.get(m.hash).toUpperCase()) < 0))
+            if (measure.measure > m.measure || (m.measure == measure.measure && (m.header || m.def || measureNameUp.compareTo(names.get(m.hash).toUpperCase()) > 0)))
                 posInsert++;
+            if (m.measure > measure.measure)
+                break;
         }
         data.add(measure);
         names.put(measure.hash,measureName);
         filtered_data.add(posInsert,measure);
         models.add(posInsert,createModel(measure,posInsert));
+        setBackground(posInsert-1);
         notifyItemInserted(posInsert);
+        notifyItemChanged(posInsert-1);
     }
 
     public void setData(List<Measure_.Plain> data) {
@@ -108,7 +112,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
         data.add(helper.createHeader(Measure_.MEASURE_SQUARE,R.string.measure_square));
         data.add(helper.createHeader(Measure_.MEASURE_VOLUME,R.string.measure_volume));
         data.add(helper.createHeader(Measure_.MEASURE_LIQUIDDRY,R.string.measure_liquiddry));
-        this.filtered_data.clear();
+        //this.filtered_data.clear();
 
         names.clear();
         Context ctx = context.get();
@@ -116,7 +120,7 @@ public class MeasureListAdapter_ extends DataBindingAdapter implements ItemActio
             for (Measure_.Plain m : this.data)
                 names.put(m.hash, m.name != null ? m.name : ctx.getResources().getString(m.nameId));
 
-        this.filtered_data = this.data;
+        this.filtered_data = new ArrayList<>(this.data);
         sortList();
         createModels();
 

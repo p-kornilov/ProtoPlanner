@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Utils.ItemNew;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import javax.inject.Inject;
  * Created by Smile on 06.12.2017.
  */
 
-public class CurrencyListViewModel extends ViewModel {
+public class CurrencyListViewModel extends ViewModel implements ItemNew {
 
     final MutableLiveData<String> filter;
 
@@ -28,6 +29,7 @@ public class CurrencyListViewModel extends ViewModel {
     final private MutableLiveData<Integer> refreshId = new MutableLiveData<>();
 
     final private LiveData<Currency.Plain> refreshCurrency;
+    final private MutableLiveData<Integer> onNewTrigger = new MutableLiveData<>();
 
     @Inject
     public CurrencyListViewModel(DataRepository dataRepository) {
@@ -78,5 +80,14 @@ public class CurrencyListViewModel extends ViewModel {
 
     public void setDefaultCurrency(int iso_code_int) {
         dataRepository.setDefaultCurrency(iso_code_int);
+    }
+
+    public LiveData<Integer> getOnNewTrigger() {
+        return onNewTrigger;
+    }
+
+    @Override
+    public void itemNew() {
+        onNewTrigger.setValue(1);
     }
 }

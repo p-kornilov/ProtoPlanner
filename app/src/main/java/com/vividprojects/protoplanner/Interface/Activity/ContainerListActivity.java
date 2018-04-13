@@ -19,6 +19,8 @@ import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Bundle1;
+import com.vividprojects.protoplanner.Utils.ItemNew;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
 import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
@@ -63,31 +65,26 @@ public class ContainerListActivity extends AppCompatActivity implements HasSuppo
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = null;
 
+        final Bundle1<ItemNew> modelBundle = new Bundle1<>();
+
         switch (activityType) {
             case NavigationController.CURRENCY_LIST:
                 getSupportActionBar().setTitle("Currency list");
                 fragment = CurrencyListFragment.create();
-                obtainViewModel(CurrencyListViewModel.class);
+                modelBundle.item = obtainViewModel(CurrencyListViewModel.class);
                 break;
             case NavigationController.MEASURE_LIST:
                 getSupportActionBar().setTitle("Measure list");
                 fragment = MeasureListFragment.create();
-                obtainViewModel(MeasureListViewModel.class);
+                modelBundle.item = obtainViewModel(MeasureListViewModel.class);
                 break;
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (activityType) {
-                    case NavigationController.CURRENCY_LIST:
-                        модель
-                        break;
-                    case NavigationController.MEASURE_LIST:
-                        break;
-                }
-                //fragment.onFabClick(); //TODO Заменить на model
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                if (modelBundle.item != null)
+                    modelBundle.item.itemNew();
             }
         });
 

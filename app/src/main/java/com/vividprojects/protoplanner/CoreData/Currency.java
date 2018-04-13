@@ -194,7 +194,7 @@ public class Currency extends RealmObject {
         return plain;
     }
 
-    public class Plain {
+    public static class Plain {
         public int iso_code_int;
         public String iso_code_str;
         public int iso_name_id;

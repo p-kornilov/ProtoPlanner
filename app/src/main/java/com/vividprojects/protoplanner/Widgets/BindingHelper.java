@@ -19,6 +19,8 @@ import com.vividprojects.protoplanner.Utils.Bundle2;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class BindingHelper {
@@ -29,9 +31,13 @@ public class BindingHelper {
         if ((items == null || items.length == 0) && spinner.getAdapter() != null)
             for (int i = 0; i < spinner.getAdapter().getCount(); i++)
                 al.add((String) spinner.getItemAtPosition(i));
-        else
-            for (int i = 0; i < items.length; i++)
-                al.add(items[i]);
+        else if (items != null)
+            al.addAll(Arrays.asList(items));
+/*
+            for (String item : items)
+                al.add(item);
+*/
+
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(spinner.getContext(), adapterItem, textViewId, al);
         spinnerAdapter.setDropDownViewResource(adapterDropItem);

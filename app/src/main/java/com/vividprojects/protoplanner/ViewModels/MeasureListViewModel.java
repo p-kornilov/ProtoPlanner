@@ -9,6 +9,7 @@ import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Utils.Bundle2;
+import com.vividprojects.protoplanner.Utils.ItemNew;
 import com.vividprojects.protoplanner.Utils.Settings;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import javax.inject.Inject;
  * Created by Smile on 06.12.2017.
  */
 
-public class MeasureListViewModel extends ViewModel {
+public class MeasureListViewModel extends ViewModel implements ItemNew {
 
     final MutableLiveData<String> filter;
 
@@ -31,6 +32,8 @@ public class MeasureListViewModel extends ViewModel {
     final private MutableLiveData<Integer> refreshId = new MutableLiveData<>();
 
     final private LiveData<Measure_.Plain> refreshMeasure;
+
+    final private MutableLiveData<Integer> onNewTrigger = new MutableLiveData<>();
 
     @Inject
     public MeasureListViewModel(DataRepository dataRepository) {
@@ -73,5 +76,14 @@ public class MeasureListViewModel extends ViewModel {
 
     public void setDefaultMeasure(int hash) {
         dataRepository.setDefaultMeasure(hash);
+    }
+
+    public LiveData<Integer> getOnNewTrigger() {
+        return onNewTrigger;
+    }
+
+    @Override
+    public void itemNew() {
+        onNewTrigger.setValue(1);
     }
 }

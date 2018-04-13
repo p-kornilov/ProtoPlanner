@@ -28,14 +28,16 @@ public class Measure_ extends RealmObject{
     private int hash;
     private String name;
     private int nameId = 0;
-    private int measure;
+    private int measure = MEASURE_UNIT;
     private String symbol;
     private int symbolId = 0;
     private int system;
-    private int pattern;
-    private boolean def;
+    private int pattern = PATTERN_FRACTIONAL;
+    private boolean def = false;
 
     public Measure_() {
+        name = "";
+        symbol = "";
     }
 
     public Measure_(int nameId, int measure, int symbolId, int system, int pattern, boolean def) {
@@ -58,11 +60,11 @@ public class Measure_ extends RealmObject{
         this.hash = hashCode();
     }
 
-    public Measure_(Plain measure) {
+    public Measure_(Plain measure, int system) {
         this.name = measure.name;
         this.measure = measure.measure;
         this.symbol = measure.symbol;
-        this.system = measure.system;
+        this.system = system;
         this.pattern = measure.pattern;
         this.def = measure.def;
         this.hash = hashCode();
@@ -200,7 +202,7 @@ public class Measure_ extends RealmObject{
         return plain;
     }
 
-    public class Plain {
+    public static class Plain {
         public String name;
         public int nameId = 0;
         public int measure;
