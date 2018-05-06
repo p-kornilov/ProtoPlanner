@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="symbolModel" type="com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel"/>
@@ -8,7 +9,6 @@
         <import type="android.view.View"/>
     </data>
     <LinearLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -27,6 +27,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/guideline_center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -49,23 +56,21 @@
                         android:id="@+id/cef_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:hint="Name"
-                        android:text="@={symbolModel.currencyName}"/>
+                        android:singleLine="true"
+                        android:text="@={symbolModel.currencyName}" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/cef_code_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:layout_marginStart="@dimen/record_left_padding"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="4dp"
                     app:hintTextAppearance="@{symbolModel.checkCode ? R.style.HintNormal : R.style.HintError}"
 
-                    app:layout_constraintEnd_toStartOf="@+id/cef_symbol_layout"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintEnd_toStartOf="@id/guideline_center"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cef_name_layout">
 
@@ -73,51 +78,50 @@
                         android:id="@+id/cef_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableEnd="@{symbolModel.checkCode ? null : @drawable/ic_error_outline_red_24dp}"
                         android:hint="Code"
-                        android:singleLine="true"
                         android:inputType="textNoSuggestions"
-                        android:text="@={symbolModel.currencyCode}"
                         android:onTextChanged="@{()->symbolModel.onCodeChanged(cefCode)}"
-                        android:textAllCaps="true"
-                        android:drawableEnd="@{symbolModel.checkCode ? null : @drawable/ic_error_outline_red_24dp}"/>
+                        android:singleLine="true"
+                        android:text="@={symbolModel.currencyCode}"
+                        android:textAllCaps="true" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:text="3 capital letters"
-                        android:theme="@style/HelperText"
-                        android:textColor="@{symbolModel.checkCode ? @color/textHelper : @color/textInputError}"/>
+                        android:textColor="@{symbolModel.checkCode ? @color/textHelper : @color/textInputError}"
+                        android:theme="@style/HelperText" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/cef_symbol_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="@dimen/record_left_padding"
                     android:layout_marginStart="4dp"
-                    app:hintTextAppearance="@{symbolModel.status ? R.style.HintNormal : R.style.HintError}"
-
+                    android:layout_marginTop="16dp"
                     app:hintEnabled="true"
 
+                    app:hintTextAppearance="@{symbolModel.status ? R.style.HintNormal : R.style.HintError}"
+
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/cef_code_layout"
+                    app:layout_constraintStart_toEndOf="@id/guideline_center"
                     app:layout_constraintTop_toBottomOf="@id/cef_name_layout">
 
                     <EditText
                         android:id="@+id/cef_symbol"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:imeOptions="actionDone"
+                        android:drawableEnd="@{symbolModel.status ? null : @drawable/ic_error_outline_red_24dp}"
                         android:hint="Symbol"
+                        android:imeOptions="actionDone"
                         android:inputType="textNoSuggestions"
-                        android:text="@={symbolModel.symbol}"
                         android:onTextChanged="@{()->symbolModel.onTextChanged(cefPattern)}"
+                        android:singleLine="true"
 
-                        android:drawableEnd="@{symbolModel.status ? null : @drawable/ic_error_outline_red_24dp}"/>
+                        android:text="@={symbolModel.symbol}" />
 
                     <TextView
                         android:id="@+id/cef_symbol_helper"
@@ -125,22 +129,35 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:text="@{symbolModel.status ?  @string/currency_symbol_helper : @string/currency_symbol_helper_error}"
-                        tools:text="@string/currency_symbol_helper"
+                        android:textColor="@{symbolModel.status ? @color/textHelper : @color/textInputError}"
                         android:theme="@style/HelperText"
-                        android:textColor="@{symbolModel.status ? @color/textHelper : @color/textInputError}"/>
+                        tools:text="@string/currency_symbol_helper" />
                 </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/currency_flag"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="4dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/cef_pattern"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cef_pattern_helper"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_center"
+                    app:srcCompat="@drawable/flag_rub"
+                    tools:srcCompat="@drawable/flag_rub" />
 
                 <TextView
                     android:id="@+id/cef_pattern_helper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/roboto"
                     android:text="Pattern"
                     android:textColor="@color/textHelper"
                     android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/guideline_center"
                     app:layout_constraintTop_toBottomOf="@id/cef_symbol_layout" />
 
                 <Spinner
@@ -148,18 +165,18 @@
                     android:layout_width="0dp"
                     android:layout_height="28dp"
                     android:layout_marginEnd="@dimen/record_left_padding"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="2dp"
-                    android:gravity="center_vertical"
                     android:layout_weight="1"
-                    app:adapterTextItems="@{symbolModel.patternEntries}"
                     android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
                     android:selectedItemPosition="@={symbolModel.pattern}"
-                    app:adapterTextItem="@{@layout/spinner_item}"
                     app:adapterTextDropItem="@{@layout/spinner_item_dropdown}"
+                    app:adapterTextItem="@{@layout/spinner_item}"
+                    app:adapterTextItems="@{symbolModel.patternEntries}"
                     app:adapterTextViewId="@{@id/spinner_item}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/guideline_center"
                     app:layout_constraintTop_toBottomOf="@id/cef_pattern_helper" />
 
                 <ImageButton
@@ -169,24 +186,24 @@
                     android:layout_marginEnd="4dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:cropToPadding="false"
+                    android:onClick="@{()->cefPattern.performClick()}"
                     android:padding="0dp"
                     android:visibility="visible"
-                    android:onClick="@{()->cefPattern.performClick()}"
                     app:layout_constraintEnd_toEndOf="@id/cef_pattern"
                     app:layout_constraintTop_toTopOf="@id/cef_pattern"
                     app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
 
                 <View
                     android:id="@+id/divider2"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="0dp"
                     android:background="#6b000000"
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/guideline_center"
                     app:layout_constraintTop_toBottomOf="@id/cef_pattern" />
 
 
@@ -197,8 +214,8 @@
                     android:layout_marginStart="@dimen/record_left_padding"
                     android:layout_marginTop="32dp"
                     android:checked="@={symbolModel.autoUpdate}"
-                    android:text="Auto update exchange rate"
                     android:enabled="@{!symbolModel.isBase}"
+                    android:text="Auto update exchange rate"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/divider2" />
 
@@ -223,6 +240,7 @@
                         android:singleLine="true"
                         android:text="@={symbolModel.exchangeRateS}"
                         tools:hint="Name (CODE)" />
+
                     <TextView
                         android:id="@+id/cef_currency_rate_date"
                         android:layout_width="match_parent"
@@ -231,7 +249,7 @@
                         android:text="Updated 11.11.11"
                         android:theme="@style/HelperText"
                         android:visibility="@{symbolModel.autoUpdate ? View.VISIBLE : View.GONE}"
-                        tools:text="Updated 11.11.11"/>
+                        tools:text="Updated 11.11.11" />
                 </android.support.design.widget.TextInputLayout>
 
                 <ImageView
@@ -242,11 +260,11 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/ic_exchange_grey_24dp"
                     app:layout_constraintBottom_toBottomOf="@id/cef_currency_rate_layout"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/cef_currency_rate_layout"/>
+                    app:layout_constraintTop_toTopOf="@id/cef_currency_rate_layout"
+                    app:srcCompat="@drawable/ic_exchange_grey_24dp" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/cef_base_rate_layout"
@@ -264,9 +282,9 @@
                         android:id="@+id/cef_base_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{symbolModel.baseRateS}"
+                        android:enabled="false"
                         android:focusable="false"
-                        android:enabled="false"/>
+                        android:text="@{symbolModel.baseRateS}" />
                 </android.support.design.widget.TextInputLayout>
 
             </android.support.constraint.ConstraintLayout>

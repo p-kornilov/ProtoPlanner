@@ -18,9 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vividprojects.protoplanner.CoreData.Currency;
+import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
@@ -186,6 +188,15 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             holder.currency_base.setText(" = " + PriceFormatter.createValue(base, 1));
             holder.currency_default.setVisibility(View.GONE);
         }
+
+        if (obj.flag_file != null) {
+
+        } else {
+            GlideApp.with(holder.currency_flag)
+                    .load(obj.flag_id)
+                    .error(R.drawable.ic_error_outline_black_24dp)
+                    .into(holder.currency_flag);
+        }
     }
 
     @Override
@@ -200,6 +211,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         TextView currency_code;
         TextView currency_base;
         ImageButton edit_button;
+        ImageView currency_flag;
         public Currency.Plain currency_item;
         public View root;
         public int position;
@@ -213,6 +225,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             currency_default = view.findViewById(R.id.currency_default);
             currency_base = view.findViewById(R.id.currency_base);
             edit_button = view.findViewById(R.id.currency_edit_button);
+            currency_flag = view.findViewById(R.id.currency_flag);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -1,9 +1,4 @@
 <resources>
-<!--    <string name="RUB" translatable="false">Russian ruble</string>
-    <string name="USD" translatable="false">US Dollar</string>
-    <string name="EUR" translatable="false">Euro</string>
-    <string name="XAF" translatable="false">Franc</string>
-    <string name="ANG" translatable="false">Netherlands Antillean Guilder</string>-->
     <string name="AED" translatable="false">UAE Dirham</string>
     <string name="AFN" translatable="false">Afghani</string>
     <string name="ALL" translatable="false">Lek</string>
@@ -112,5 +107,4 @@
     <string name="USD" translatable="false">US Dollar</string>
     <string name="UYU" translatable="false">Peso Uruguayo</string>
     <string name="VND" translatable="false">Dong</string>
-
 </resources>

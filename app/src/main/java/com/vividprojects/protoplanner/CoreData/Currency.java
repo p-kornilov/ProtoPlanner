@@ -30,11 +30,13 @@ public class Currency extends RealmObject {
     private String custom_name;
     private boolean auto_update = false;
     private boolean isBase = false;
+    private int flag_id = 0;
+    private String flag_file;
 
     public Currency() {
     }
 
-    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern, boolean auto_update, int sorting_weight){
+    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern, boolean auto_update, int sorting_weight, int flag_id){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;
         this.iso_name_id = iso_name_id;
@@ -42,17 +44,19 @@ public class Currency extends RealmObject {
         this.pattern = pattern;
         this.auto_update = auto_update;
         this.sorting_weight = sorting_weight;
+        this.flag_id = flag_id;
     }
 
-    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern, boolean auto_update){
+/*    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern, boolean auto_update){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;
         this.iso_name_id = iso_name_id;
         this.symbol = symbol;
         this.pattern = pattern;
         this.auto_update = auto_update;
-    }
+    }*/
 
+/*
     public Currency(String iso_code_str, int iso_code_int, String custom_name, String symbol, int pattern, boolean auto_update){
         this.iso_code_str = iso_code_str;
         this.iso_code_int = iso_code_int;
@@ -62,6 +66,7 @@ public class Currency extends RealmObject {
         this.custom_name = custom_name;
         this.auto_update = auto_update;
     }
+*/
 
     public Currency(Currency.Plain plain) {
         iso_code_int = plain.iso_code_int;
@@ -162,6 +167,8 @@ public class Currency extends RealmObject {
                 ", exchange_rate=" + exchange_rate +
                 ", auto_update=" + auto_update +
                 ", is base=" + isBase +
+                ", flag id=" + flag_id +
+                ", flag file=" + flag_file +
                 '}';
     }
 
@@ -176,6 +183,8 @@ public class Currency extends RealmObject {
         custom_name = plain.custom_name;
         auto_update = plain.auto_update;
         isBase = plain.isBase;
+        flag_id = plain.flag_id;
+        flag_file = plain.flag_file;
     }
 
     public Plain getPlain() {
@@ -191,6 +200,8 @@ public class Currency extends RealmObject {
         plain.custom_name = custom_name;
         plain.auto_update = auto_update;
         plain.isBase = isBase;
+        plain.flag_id = flag_id;
+        plain.flag_file = flag_file;
         return plain;
     }
 
@@ -206,6 +217,8 @@ public class Currency extends RealmObject {
         public String custom_name;
         public boolean auto_update;
         public boolean isBase;
+        public int flag_id;
+        public String flag_file;
     }
 
 }
