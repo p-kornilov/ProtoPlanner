@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="symbolModel" type="com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel"/>
@@ -134,8 +135,8 @@
                         tools:text="@string/currency_symbol_helper" />
                 </android.support.design.widget.TextInputLayout>
 
-                <ImageView
-                    android:id="@+id/currency_flag"
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/currency_flag_layout"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="16dp"
@@ -144,8 +145,36 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/cef_pattern_helper"
                     app:layout_constraintEnd_toEndOf="@id/guideline_center"
-                    app:srcCompat="@drawable/flag_rub"
-                    tools:srcCompat="@drawable/flag_rub" />
+                    android:background="@drawable/flag_edit">
+
+                    <ImageView
+                        android:id="@+id/currency_flag"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:srcVectorFlag="@{symbolModel.flagResource}"
+                        tools:srcCompat="@drawable/flag_rub"
+                        android:visibility="@{symbolModel.flagVisible ? View.VISIBLE : View.GONE}"/>
+
+                    <ImageButton
+                        android:id="@+id/currency_add_flag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:cropToPadding="false"
+                        android:padding="12dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:srcCompat="@drawable/ic_add_to_photos_black_24dp"
+                        android:visibility="@{!symbolModel.flagVisible ? View.VISIBLE : View.GONE}"/>
+
+                </android.support.constraint.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/cef_pattern_helper"

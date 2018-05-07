@@ -16,7 +16,7 @@
 
 
     <ImageView
-        android:id="@+id/currency_flag"
+        android:id="@+id/currency_flag_layout"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

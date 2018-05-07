@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Handler;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -111,6 +112,16 @@ public class CurrencyItemBindingModel extends BaseObservable {
 
         if (status)
             setPatternEntries(PriceFormatter.createListValue(collapsedSymbol, 100.00));
+    }
+
+    @Bindable
+    public boolean getFlagVisible() {
+        return currency.flag_id != 0 || currency.flag_file != null;
+    }
+
+    @Bindable
+    public int getFlagResource() {
+        return currency.flag_id;
     }
 
     @Bindable

@@ -101,4 +101,10 @@ public class BindingHelper {
         }
         view.setImageResource(image);
     }
+
+    @BindingAdapter("bind:srcVectorFlag")
+    public static void setSrcVectorFlag(ImageView view, int flag) {
+        if (flag != 0)
+            view.setImageResource(flag);
+    }
 }

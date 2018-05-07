@@ -2,7 +2,6 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="obj" type="com.vividprojects.protoplanner.BindingModels.MeasureItemListBindingModel"/>
@@ -44,7 +43,6 @@
             bind:layout_constraintStart_toStartOf="parent"
             bind:layout_constraintTop_toTopOf="parent"
             tools:text="Name" />
-
 
     </android.support.constraint.ConstraintLayout>
 </layout>

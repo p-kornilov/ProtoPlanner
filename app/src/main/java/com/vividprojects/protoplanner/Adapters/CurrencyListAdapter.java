@@ -225,7 +225,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
             currency_default = view.findViewById(R.id.currency_default);
             currency_base = view.findViewById(R.id.currency_base);
             edit_button = view.findViewById(R.id.currency_edit_button);
-            currency_flag = view.findViewById(R.id.currency_flag);
+            currency_flag = view.findViewById(R.id.currency_flag_layout);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
