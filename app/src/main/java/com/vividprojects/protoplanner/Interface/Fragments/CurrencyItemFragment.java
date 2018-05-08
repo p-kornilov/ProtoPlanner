@@ -1,11 +1,16 @@
 package com.vividprojects.protoplanner.Interface.Fragments;
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,11 +29,16 @@ import com.vividprojects.protoplanner.databinding.CurrencyEditFragmentBinding;
 
 import javax.inject.Inject;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Smile on 19.10.2017.
  */
 
 public class CurrencyItemFragment extends Fragment implements Injectable {
+    private static final int REQUEST_IMAGE_GALLERY = 2;
+    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
+
     private CurrencyItemViewModel model;
 
     private CurrencyEditFragmentBinding binding;
@@ -36,6 +46,51 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+
+    private Runnable onNewImage = ()-> {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        } else {
+            Intent i = new Intent(
+                    Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+            startActivityForResult(i, REQUEST_IMAGE_GALLERY);
+        }
+
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_IMAGE_GALLERY:
+                if (resultCode == RESULT_OK && data != null) {
+//                    model.loadGalleryImage(data.getData());
+                }
+                return;
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +127,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
                 model.setIsoCode(iso_code);
 
                 bindingModel = model.getBindingModel();
+                bindingModel.setImageAction(onNewImage);
 
                 binding.setSymbolModel(bindingModel);
 

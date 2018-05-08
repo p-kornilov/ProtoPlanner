@@ -39,6 +39,17 @@ public class CurrencyItemBindingModel extends BaseObservable {
 
     private Context context;
 
+    private Runnable onNewImage;
+
+    public void setImageAction(Runnable action) {
+        onNewImage = action;
+    }
+
+    public void onImageClick() {
+        if (onNewImage != null)
+            onNewImage.run();
+    }
+
     public CurrencyItemBindingModel(Context context) {
         currency = (new Currency()).getPlain();
 /*        collapsedSymbol = PriceFormatter.collapseUnicodes(currency.symbol);
