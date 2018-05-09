@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
+import android.net.Uri;
 
 import com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
@@ -62,5 +63,9 @@ public class CurrencyItemViewModel extends ViewModel {
     public void save(){
         onSaveId.setValue(dataRepository.saveCurrency(bindingModel.getCurrency()));
         return;
+    }
+
+    public LiveData<String> loadGalleryImage(Uri fileName) {
+        return dataRepository.saveImageFromGallery(fileName);
     }
 }

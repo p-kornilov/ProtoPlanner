@@ -641,6 +641,33 @@ public class DataRepository {
         return thumb_name;
     }
 
+    public LiveData<String> saveImageFromGallery(Uri temp_name_uri) {
+        MutableLiveData<String> imageName = new MutableLiveData<>();
+
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+        Cursor cursor = context.getContentResolver().query(temp_name_uri,
+                filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String temp_name = cursor.getString(columnIndex);
+        cursor.close();
+
+        String file_name = UUID.randomUUID().toString();
+        String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
+
+        appExecutors.diskIO().execute(()-> {
+
+            boolean success = BitmapUtils.saveImage(context,BitmapFactory.decodeFile(temp_name),full_name,false);
+
+            if (success)
+                imageName.postValue(file_name);
+        });
+
+        return imageName;
+    }
+
 /*
     public String saveImageFromURL(String URL, ProgressBar bar) {
 

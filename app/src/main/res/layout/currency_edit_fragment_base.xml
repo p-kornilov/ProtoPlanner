@@ -151,7 +151,7 @@
                         android:id="@+id/currency_flag"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_margin="1dp"
+                        android:layout_margin="2dp"
                         android:onClick="@{()->symbolModel.onImageClick()}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
