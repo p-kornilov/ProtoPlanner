@@ -3,21 +3,14 @@ package com.vividprojects.protoplanner.BindingModels;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewOutlineProvider;
-import android.widget.ImageView;
 
-import com.vividprojects.protoplanner.Adapters.ListOutline;
-import com.vividprojects.protoplanner.Adapters.MeasureListAdapter_;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Measure_;
-import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.ItemActions;
 
@@ -68,12 +61,12 @@ public class MeasureItemListBindingModel extends BaseObservable {
 
     @Bindable
     public String getSymbol() {
-        return measure.symbol != null ? measure.symbol : context.getResources().getString(measure.symbolId);
+        return Measure_.Plain.getString(context,measure.symbol,measure.symbolId);
     }
 
     @Bindable
     public String getName() {
-        return measure.name != null ? measure.name : context.getResources().getString(measure.nameId);
+        return Measure_.Plain.getString(context,measure.name,measure.nameId);
     }
 
     @Bindable

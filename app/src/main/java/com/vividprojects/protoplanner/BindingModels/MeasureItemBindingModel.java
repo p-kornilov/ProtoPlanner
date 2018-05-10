@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.BR;
-import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.R;
 

@@ -8,7 +8,6 @@ import com.vividprojects.protoplanner.API.ExchangeRates;
 import com.vividprojects.protoplanner.CoreData.Block;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
-import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Measure_;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
@@ -235,7 +234,7 @@ public class LocalDataDB {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Measure temp = new Measure("шт.",Measure.ENTIRE);
+/*                Measure temp = new Measure("шт.",Measure.ENTIRE);
                 realm.insertOrUpdate(temp);
                 temp = new Measure("кг.",Measure.FRACTIONAL);
                 realm.insertOrUpdate(temp);
@@ -244,7 +243,7 @@ public class LocalDataDB {
                 temp = new Measure("кв.м.",Measure.FRACTIONAL);
                 realm.insertOrUpdate(temp);
                 temp = new Measure("л.",Measure.FRACTIONAL);
-                realm.insertOrUpdate(temp);
+                realm.insertOrUpdate(temp);*/
 
 /*                realm.insertOrUpdate(new Label("Red",1,"",null));
                 realm.insertOrUpdate(new Label("Blue",2,"",null));
@@ -256,8 +255,8 @@ public class LocalDataDB {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Measure m = realm.where(Measure.class).equalTo("title","шт.").findFirst();
-                Measure m1 = realm.where(Measure.class).equalTo("title","кг.").findFirst();
+                Measure_ m = realm.where(Measure_.class).equalTo("symbolId",R.string.Measure_SHS_1).findFirst();
+                Measure_ m1 = realm.where(Measure_.class).equalTo("symbolId",R.string.Measure_SHS_4).findFirst();
                 Currency cr = realm.where(Currency.class).equalTo("iso_code_str","RUB").findFirst();
                 Currency cf = realm.where(Currency.class).equalTo("iso_code_str","XAF").findFirst();
                 Currency cd = realm.where(Currency.class).equalTo("iso_code_str","USD").findFirst();

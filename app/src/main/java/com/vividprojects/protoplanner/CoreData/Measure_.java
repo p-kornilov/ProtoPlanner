@@ -1,6 +1,8 @@
 package com.vividprojects.protoplanner.CoreData;
 
 
+import android.content.Context;
+
 import java.util.UUID;
 
 import io.realm.RealmObject;
@@ -213,6 +215,10 @@ public class Measure_ extends RealmObject{
         public boolean def;
         public int hash;
         public boolean header = false;
+
+        public static String getString(Context context, String string, int stringId) {
+            return string != null ? string : context.getResources().getString(stringId);
+        }
     }
 }
 

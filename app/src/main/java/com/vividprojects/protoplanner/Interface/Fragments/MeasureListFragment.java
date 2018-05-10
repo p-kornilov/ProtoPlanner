@@ -6,10 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -22,13 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.vividprojects.protoplanner.Adapters.MeasureListAdapter_;
+import com.vividprojects.protoplanner.Adapters.MeasureListAdapter;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.ItemActions;
-import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.ViewModels.MeasureListViewModel;
 
 import javax.inject.Inject;
@@ -42,7 +37,7 @@ import static android.app.Activity.RESULT_OK;
 public class MeasureListFragment extends Fragment implements Injectable, ItemActions {
     private RecyclerView recycler;
     private boolean fabVisible = true;
-    private MeasureListAdapter_ measureListAdapter;
+    private MeasureListAdapter measureListAdapter;
     private MeasureListViewModel model;
     private RecyclerView.LayoutManager layoutManager;
 
@@ -109,8 +104,8 @@ public class MeasureListFragment extends Fragment implements Injectable, ItemAct
 
         layoutManager = new LinearLayoutManager(getContext());
         recycler.setLayoutManager(layoutManager);
-        //measureListAdapter = new MeasureListAdapter(this,(LinearLayoutManager)layoutManager);
-        measureListAdapter = new MeasureListAdapter_(R.layout.measure_item,R.layout.measure_item_header,this.getContext(),this);
+        //MeasureListAdapter = new MeasureListAdapter(this,(LinearLayoutManager)layoutManager);
+        measureListAdapter = new MeasureListAdapter(R.layout.measure_item,R.layout.measure_item_header,this.getContext(),this);
         recycler.setAdapter(measureListAdapter);
 
 
@@ -195,7 +190,7 @@ public class MeasureListFragment extends Fragment implements Injectable, ItemAct
                 if (resultCode == RESULT_OK && data != null) {
                     int id = data.getIntExtra("HASH",-1);
                     model.refresh(id);
-                    //measureListAdapter.refresh(id);
+                    //MeasureListAdapter.refresh(id);
                 }
                 return;
         }
