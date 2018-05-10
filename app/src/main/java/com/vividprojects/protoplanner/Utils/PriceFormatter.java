@@ -3,11 +3,10 @@ package com.vividprojects.protoplanner.Utils;
 import android.content.Context;
 
 import com.vividprojects.protoplanner.CoreData.Currency;
-import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.CoreData.Measure;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Helen on 04.01.2018.
@@ -49,24 +48,24 @@ public class PriceFormatter {
         return list.toArray(new String[list.size()]);
     }
 
-    public static String createPrice(Context context, Currency.Plain currency, double price, Measure_.Plain measure){
+    public static String createPrice(Context context, Currency.Plain currency, double price, Measure.Plain measure){
         DecimalFormat formatter = new DecimalFormat("0.00");
-        return formatter.format(price) + " " + currency.symbol + "/" + Measure_.Plain.getString(context,measure.symbol,measure.symbolId);
+        return formatter.format(price) + " " + currency.symbol + "/" + Measure.Plain.getString(context,measure.symbol,measure.symbolId);
         //String symbol = measure.symbol != null
         //return formatter.format(price) + " " + currency.symbol + "/" + measure.symbol;
     }
 
-    public static String createCount(Context context, double count, Measure_.Plain measure) {
+    public static String createCount(Context context, double count, Measure.Plain measure) {
         DecimalFormat formatter;
         switch (measure.pattern) {
-            case Measure_.PATTERN_ENTIRE:
+            case Measure.PATTERN_ENTIRE:
                 formatter = new DecimalFormat("0");
                 break;
-            case Measure_.PATTERN_FRACTIONAL:
+            case Measure.PATTERN_FRACTIONAL:
             default:
                 formatter = new DecimalFormat("0.00");
         }
-        return formatter.format(count) + " " + Measure_.Plain.getString(context,measure.symbol,measure.symbolId);
+        return formatter.format(count) + " " + Measure.Plain.getString(context,measure.symbol,measure.symbolId);
         //return formatter.format(count) + " " + measure.title;
     }
 

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.vividprojects.protoplanner.BR;
-import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.ItemActions;
 
@@ -22,7 +22,7 @@ import com.vividprojects.protoplanner.Utils.ItemActions;
 public class MeasureItemListBindingModel extends BaseObservable {
     private Drawable background;
 
-    private Measure_.Plain measure;
+    private Measure.Plain measure;
 
     private Context context;
     private ItemActions listAdapter;
@@ -30,12 +30,12 @@ public class MeasureItemListBindingModel extends BaseObservable {
     private int outlineType = 0;
 
     public MeasureItemListBindingModel(Context context, ItemActions listAdapter) {
-        measure = (new Measure_()).getPlain();
+        measure = (new Measure()).getPlain();
         this.context = context;
         this.listAdapter = listAdapter;
     }
 
-    public void setMeasure(Measure_.Plain measure) {
+    public void setMeasure(Measure.Plain measure) {
         this.measure = measure;
         notifyPropertyChanged(BR.name);
         notifyPropertyChanged(BR.symbol);
@@ -61,12 +61,12 @@ public class MeasureItemListBindingModel extends BaseObservable {
 
     @Bindable
     public String getSymbol() {
-        return Measure_.Plain.getString(context,measure.symbol,measure.symbolId);
+        return Measure.Plain.getString(context,measure.symbol,measure.symbolId);
     }
 
     @Bindable
     public String getName() {
-        return Measure_.Plain.getString(context,measure.name,measure.nameId);
+        return Measure.Plain.getString(context,measure.name,measure.nameId);
     }
 
     @Bindable

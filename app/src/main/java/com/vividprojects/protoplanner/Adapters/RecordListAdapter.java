@@ -73,7 +73,7 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.Vi
         //noinspection ConstantConditions
 //            holder.record_title.setText(obj.getId());
         holder.record_title.setText(obj.getMainVariant().getTitle());
-        holder.record_count.setText(PriceFormatter.createCount(obj.getMainVariant().getCount(),obj.getMainVariant().getMeasure().getPlain())); // TODO !!!Исправить!!!
+        holder.record_count.setText(PriceFormatter.createCount(context, obj.getMainVariant().getCount(),obj.getMainVariant().getMeasure().getPlain())); // TODO !!!Исправить!!!
        // holder.record_measure.setText(obj.getMainVariant().getMeasure().getName());
         holder.record_value.setText(PriceFormatter.createValue(obj.getMainVariant().getCurrency().getPlain(),obj.getMainVariant().getPrice()*obj.getMainVariant().getCount()));
 

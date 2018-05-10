@@ -1,37 +1,20 @@
 package com.vividprojects.protoplanner.DataManager;
 
-import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.ProgressBar;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.BaseTarget;
-import com.bumptech.glide.request.target.Target;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
-import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.DB.LocalDataDB;
@@ -40,36 +23,16 @@ import com.vividprojects.protoplanner.AppExecutors;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.DB.NetworkResponse;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
-import com.vividprojects.protoplanner.Images.FullTarget;
-import com.vividprojects.protoplanner.Images.GlideApp;
-import com.vividprojects.protoplanner.Images.ThumbnailTarget;
 import com.vividprojects.protoplanner.Network.NetworkLoader;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.RunnableParam;
-import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import okhttp3.Interceptor;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okio.Buffer;
-import okio.BufferedSource;
-import okio.ForwardingSource;
-import okio.Okio;
-import okio.Source;
 
 /**
  * Created by Smile on 05.12.2017.
@@ -374,15 +337,15 @@ public class DataRepository {
     //---------------------------------------------------------------------------------------
 
     //---------------- Measure --------------------------------------------------------------
-    public LiveData<List<Measure_.Plain>> getMeasures(int system) {
-        MutableLiveData<List<Measure_.Plain>> measures = new MutableLiveData<>();
-        List<Measure_> mL = localDataDB
+    public LiveData<List<Measure.Plain>> getMeasures(int system) {
+        MutableLiveData<List<Measure.Plain>> measures = new MutableLiveData<>();
+        List<Measure> mL = localDataDB
                 .queryMeasure()
                 .systemEqualTo(system)
                 .findAll();
         if (mL!=null) {
-            ArrayList<Measure_.Plain> ms = new ArrayList<>();
-            for (Measure_ m : mL) {
+            ArrayList<Measure.Plain> ms = new ArrayList<>();
+            for (Measure m : mL) {
                 ms.add(m.getPlain());
             }
             measures.setValue(ms);
@@ -390,9 +353,9 @@ public class DataRepository {
         return measures;
     }
 
-    public LiveData<Measure_.Plain> getMeasure(int hash) {
-        MutableLiveData<Measure_.Plain> measure = new MutableLiveData<>();
-        Measure_ mF = localDataDB
+    public LiveData<Measure.Plain> getMeasure(int hash) {
+        MutableLiveData<Measure.Plain> measure = new MutableLiveData<>();
+        Measure mF = localDataDB
                 .queryMeasure()
                 .hashEqualTo(hash)
                 .findFirst();
@@ -402,7 +365,7 @@ public class DataRepository {
         return measure;
     }
 
-    public int saveMeasure(Measure_.Plain measure) {
+    public int saveMeasure(Measure.Plain measure) {
         return localDataDB.saveMeasure(measure);
     }
 

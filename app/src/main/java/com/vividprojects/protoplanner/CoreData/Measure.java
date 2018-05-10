@@ -8,7 +8,7 @@ import java.util.UUID;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Measure_ extends RealmObject{
+public class Measure extends RealmObject{
     public static final int PATTERN_ENTIRE = 0;
     public static final int PATTERN_FRACTIONAL = 1;
 
@@ -37,12 +37,12 @@ public class Measure_ extends RealmObject{
     private int pattern = PATTERN_FRACTIONAL;
     private boolean def = false;
 
-    public Measure_() {
+    public Measure() {
         name = "";
         symbol = "";
     }
 
-    public Measure_(int nameId, int measure, int symbolId, int system, int pattern, boolean def) {
+    public Measure(int nameId, int measure, int symbolId, int system, int pattern, boolean def) {
         this.nameId = nameId;
         this.measure = measure;
         this.symbolId = symbolId;
@@ -52,7 +52,7 @@ public class Measure_ extends RealmObject{
         this.hash = hashCode();
     }
 
-    public Measure_(String name, int measure, String symbol, int system, int pattern, boolean def) {
+    public Measure(String name, int measure, String symbol, int system, int pattern, boolean def) {
         this.name = name;
         this.measure = measure;
         this.symbol = symbol;
@@ -62,7 +62,7 @@ public class Measure_ extends RealmObject{
         this.hash = hashCode();
     }
 
-    public Measure_(Plain measure, int system) {
+    public Measure(Plain measure, int system) {
         this.name = measure.name;
         this.measure = measure.measure;
         this.symbol = measure.symbol;
@@ -149,14 +149,14 @@ public class Measure_ extends RealmObject{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Measure_ measure_ = (Measure_) o;
+        Measure measure_ = (Measure) o;
 
         return hash == measure_.hash;
     }
 
     @Override
     public String toString() {
-        return "Measure_{" +
+        return "Measure{" +
                 "hash=" + hash +
                 ", name='" + name + '\'' +
                 ", nameId=" + nameId +

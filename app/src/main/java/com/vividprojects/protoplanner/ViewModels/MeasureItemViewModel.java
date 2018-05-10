@@ -6,10 +6,8 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
-import com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel;
 import com.vividprojects.protoplanner.BindingModels.MeasureItemBindingModel;
-import com.vividprojects.protoplanner.CoreData.Currency;
-import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 
 import java.util.Objects;
@@ -23,7 +21,7 @@ import javax.inject.Inject;
 public class MeasureItemViewModel extends ViewModel {
     private final MutableLiveData<Integer> hash = new MutableLiveData<>();
     private final MutableLiveData<Integer> onSaveHash = new MutableLiveData<>();
-    private final LiveData<Measure_.Plain> measure;
+    private final LiveData<Measure.Plain> measure;
 
     private DataRepository dataRepository;
     private MeasureItemBindingModel bindingModel;
@@ -44,7 +42,7 @@ public class MeasureItemViewModel extends ViewModel {
         hash.setValue(newHash);
     }
 
-    public LiveData<Measure_.Plain> getMeasure(){
+    public LiveData<Measure.Plain> getMeasure(){
         return measure;
     }
 

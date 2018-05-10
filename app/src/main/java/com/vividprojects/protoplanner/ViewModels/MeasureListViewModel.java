@@ -5,10 +5,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
-import com.vividprojects.protoplanner.CoreData.Currency;
-import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Utils.Bundle2;
 import com.vividprojects.protoplanner.Utils.ItemNew;
 import com.vividprojects.protoplanner.Utils.Settings;
 
@@ -25,13 +23,13 @@ public class MeasureListViewModel extends ViewModel implements ItemNew {
 
     final MutableLiveData<String> filter;
 
-    private final LiveData<List<Measure_.Plain>> list;
+    private final LiveData<List<Measure.Plain>> list;
 
     private DataRepository dataRepository;
 
     final private MutableLiveData<Integer> refreshId = new MutableLiveData<>();
 
-    final private LiveData<Measure_.Plain> refreshMeasure;
+    final private LiveData<Measure.Plain> refreshMeasure;
 
     final private MutableLiveData<Integer> onNewTrigger = new MutableLiveData<>();
 
@@ -61,12 +59,12 @@ public class MeasureListViewModel extends ViewModel implements ItemNew {
         refreshId.setValue(id);
     }
 
-    public LiveData<List<Measure_.Plain>> getList(){
+    public LiveData<List<Measure.Plain>> getList(){
 
         return list;
     }
 
-    public LiveData<Measure_.Plain> getRefreshMeasure() {
+    public LiveData<Measure.Plain> getRefreshMeasure() {
         return refreshMeasure;
     }
 

@@ -7,8 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import com.vividprojects.protoplanner.BindingModels.MeasureItemListBindingModel;
-import com.vividprojects.protoplanner.CoreData.Measure_;
-import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
+import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.ItemActions;
 
@@ -26,8 +25,8 @@ import java.util.Map;
 public class MeasureListAdapter extends DataBindingAdapter implements ItemActions {
     private final int layoutId;
     private final int headerId;
-    private List<Measure_.Plain> data;
-    private List<Measure_.Plain> filtered_data = new ArrayList<>();
+    private List<Measure.Plain> data;
+    private List<Measure.Plain> filtered_data = new ArrayList<>();
     private WeakReference<Context> context;
     private Map<Integer,Integer> measureGroups = new HashMap<>();
     private Map<Integer,String> names = new HashMap<>();
@@ -42,12 +41,12 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
         this.master = master;
         init(context);
 
-        measureGroups.put(Measure_.MEASURE_UNIT,-1);
-        measureGroups.put(Measure_.MEASURE_LENGTH,-1);
-        measureGroups.put(Measure_.MEASURE_SQUARE,-1);
-        measureGroups.put(Measure_.MEASURE_MASS,-1);
-        measureGroups.put(Measure_.MEASURE_LIQUIDDRY,-1);
-        measureGroups.put(Measure_.MEASURE_VOLUME,-1);
+        measureGroups.put(Measure.MEASURE_UNIT,-1);
+        measureGroups.put(Measure.MEASURE_LENGTH,-1);
+        measureGroups.put(Measure.MEASURE_SQUARE,-1);
+        measureGroups.put(Measure.MEASURE_MASS,-1);
+        measureGroups.put(Measure.MEASURE_LIQUIDDRY,-1);
+        measureGroups.put(Measure.MEASURE_VOLUME,-1);
 
     }
 
@@ -72,11 +71,11 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
             return layoutId;
     }
 
-    public void refresh(Measure_.Plain measure) {
+    public void refresh(Measure.Plain measure) {
         String measureName = measure.name != null ? measure.name : context.get().getString(measure.nameId);
         String measureNameUp = measureName.toUpperCase();
         int posInsert = 0;
-        for (Measure_.Plain m : this.filtered_data) {
+        for (Measure.Plain m : this.filtered_data) {
             if (m.hash == measure.hash) {
                 int pos = filtered_data.indexOf(m);
                 data.remove(m);
@@ -103,21 +102,21 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
         notifyItemChanged(posInsert-1);
     }
 
-    public void setData(List<Measure_.Plain> data) {
+    public void setData(List<Measure.Plain> data) {
         this.data = data;
-        Measure_ helper = new Measure_();
-        data.add(helper.createHeader(Measure_.MEASURE_UNIT,R.string.measure_unit));
-        data.add(helper.createHeader(Measure_.MEASURE_MASS,R.string.measure_mass));
-        data.add(helper.createHeader(Measure_.MEASURE_LENGTH,R.string.measure_length));
-        data.add(helper.createHeader(Measure_.MEASURE_SQUARE,R.string.measure_square));
-        data.add(helper.createHeader(Measure_.MEASURE_VOLUME,R.string.measure_volume));
-        data.add(helper.createHeader(Measure_.MEASURE_LIQUIDDRY,R.string.measure_liquiddry));
+        Measure helper = new Measure();
+        data.add(helper.createHeader(Measure.MEASURE_UNIT,R.string.measure_unit));
+        data.add(helper.createHeader(Measure.MEASURE_MASS,R.string.measure_mass));
+        data.add(helper.createHeader(Measure.MEASURE_LENGTH,R.string.measure_length));
+        data.add(helper.createHeader(Measure.MEASURE_SQUARE,R.string.measure_square));
+        data.add(helper.createHeader(Measure.MEASURE_VOLUME,R.string.measure_volume));
+        data.add(helper.createHeader(Measure.MEASURE_LIQUIDDRY,R.string.measure_liquiddry));
         //this.filtered_data.clear();
 
         names.clear();
         Context ctx = context.get();
         if (ctx != null)
-            for (Measure_.Plain m : this.data)
+            for (Measure.Plain m : this.data)
                 names.put(m.hash, m.name != null ? m.name : ctx.getResources().getString(m.nameId));
 
         this.filtered_data = new ArrayList<>(this.data);
@@ -128,7 +127,7 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
     }
 
     private void sortList() {
-        Measure_.Plain[] holder_list = new Measure_.Plain[this.filtered_data.size()];
+        Measure.Plain[] holder_list = new Measure.Plain[this.filtered_data.size()];
         this.filtered_data.toArray(holder_list);
 
         Arrays.sort(holder_list,(x, y)->{
@@ -155,7 +154,7 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
         for (int i = 0; i < filtered_data.size(); i++) {
 
             MeasureItemListBindingModel model = new MeasureItemListBindingModel(context.get(),this);
-            Measure_.Plain m = filtered_data.get(i);
+            Measure.Plain m = filtered_data.get(i);
             model.setMeasure(m);
 
             setBackground(model,i);
@@ -164,9 +163,9 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
         }
     }
 
-    private MeasureItemListBindingModel createModel(Measure_.Plain measure, int position) {
+    private MeasureItemListBindingModel createModel(Measure.Plain measure, int position) {
         MeasureItemListBindingModel model = new MeasureItemListBindingModel(context.get(),this);
-        Measure_.Plain m = measure;
+        Measure.Plain m = measure;
         model.setMeasure(m);
         setBackground(model,position);
 
@@ -205,17 +204,17 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
         if (filter != null && filter.length()>0) {
             filter = filter.toLowerCase();
             filtered_data = new ArrayList<>();
-            for (Measure_.Plain m : data) {
+            for (Measure.Plain m : data) {
                 if (names.get(m.hash).toLowerCase().contains(filter))
                     filtered_data.add(m);
             }
-            Measure_ helper = new Measure_();
-            filtered_data.add(helper.createHeader(Measure_.MEASURE_UNIT,R.string.measure_unit));
-            filtered_data.add(helper.createHeader(Measure_.MEASURE_MASS,R.string.measure_mass));
-            filtered_data.add(helper.createHeader(Measure_.MEASURE_LENGTH,R.string.measure_length));
-            filtered_data.add(helper.createHeader(Measure_.MEASURE_SQUARE,R.string.measure_square));
-            filtered_data.add(helper.createHeader(Measure_.MEASURE_VOLUME,R.string.measure_volume));
-            filtered_data.add(helper.createHeader(Measure_.MEASURE_LIQUIDDRY,R.string.measure_liquiddry));
+            Measure helper = new Measure();
+            filtered_data.add(helper.createHeader(Measure.MEASURE_UNIT,R.string.measure_unit));
+            filtered_data.add(helper.createHeader(Measure.MEASURE_MASS,R.string.measure_mass));
+            filtered_data.add(helper.createHeader(Measure.MEASURE_LENGTH,R.string.measure_length));
+            filtered_data.add(helper.createHeader(Measure.MEASURE_SQUARE,R.string.measure_square));
+            filtered_data.add(helper.createHeader(Measure.MEASURE_VOLUME,R.string.measure_volume));
+            filtered_data.add(helper.createHeader(Measure.MEASURE_LIQUIDDRY,R.string.measure_liquiddry));
             sortList();
             notifyDataSetChanged();
         } else
@@ -232,7 +231,7 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         int pos = 0;
-                        Measure_.Plain m = null;
+                        Measure.Plain m = null;
                         for (pos = 0; pos < filtered_data.size(); pos++)
                             if (filtered_data.get(pos).hash == item) {
                                 m = filtered_data.get(pos);
@@ -270,8 +269,8 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
     @Override
     public void itemDefault(int item) {
         int dpos = 0;
-        Measure_.Plain d = null;
-        for (Measure_.Plain m : filtered_data) {
+        Measure.Plain d = null;
+        for (Measure.Plain m : filtered_data) {
             if (m.def)
                 dpos = filtered_data.indexOf(m);
             if (m.hash == item) {

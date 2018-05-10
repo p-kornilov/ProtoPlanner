@@ -3,17 +3,9 @@ package com.vividprojects.protoplanner.BindingModels;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.databinding.BindingAdapter;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.view.View;
-import android.view.ViewOutlineProvider;
-import android.widget.ImageView;
 
-import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.BR;
-import com.vividprojects.protoplanner.CoreData.Measure_;
-import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.CoreData.Measure;
 
 
 /**
@@ -21,20 +13,20 @@ import com.vividprojects.protoplanner.R;
  */
 
 public class MeasureItemBindingModel extends BaseObservable {
-    private Measure_.Plain measure;
+    private Measure.Plain measure;
 
     private Context context;
 
     public MeasureItemBindingModel(Context context) {
-        measure = (new Measure_()).getPlain();
+        measure = (new Measure()).getPlain();
         this.context = context;
     }
 
-    public Measure_.Plain getMeasure() {
+    public Measure.Plain getMeasure() {
         return measure;
     }
 
-    public void setMeasure(Measure_.Plain measure) {
+    public void setMeasure(Measure.Plain measure) {
         this.measure = measure;
         notifyPropertyChanged(BR.name);
         notifyPropertyChanged(BR.symbol);
@@ -75,12 +67,12 @@ public class MeasureItemBindingModel extends BaseObservable {
 
     @Bindable
     public boolean getMeasureFractional() {
-        return measure.pattern == Measure_.PATTERN_FRACTIONAL;
+        return measure.pattern == Measure.PATTERN_FRACTIONAL;
     }
 
     @Bindable
     public void setMeasureFractional(boolean b) {
-        measure.pattern = b ? Measure_.PATTERN_FRACTIONAL : Measure_.PATTERN_ENTIRE;
+        measure.pattern = b ? Measure.PATTERN_FRACTIONAL : Measure.PATTERN_ENTIRE;
     }
 
 };

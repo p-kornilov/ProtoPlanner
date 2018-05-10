@@ -14,7 +14,7 @@ import io.realm.annotations.PrimaryKey;
 public class Variant extends RealmObject {
     @PrimaryKey
     private String title;
-    private Measure_ measure;
+    private Measure measure;
     private double count;
     private double price;
 //    private double value;
@@ -26,7 +26,7 @@ public class Variant extends RealmObject {
 
     public Variant() {};
 
-    public Variant(String title, Measure_ measure, double count, double price, String comment, Currency currency) {
+    public Variant(String title, Measure measure, double count, double price, String comment, Currency currency) {
         this.title = title;
         this.measure = measure;
         this.count = count;
@@ -62,12 +62,12 @@ public class Variant extends RealmObject {
         return title;
     }
 
-    public boolean setMeasure(Measure_ measure) {
+    public boolean setMeasure(Measure measure) {
         this.measure = measure;
         return true;
     }
 
-    public Measure_ getMeasure() { return measure; }
+    public Measure getMeasure() { return measure; }
 
     public void setCount(int count) {
         this.count = count;
@@ -154,7 +154,7 @@ public class Variant extends RealmObject {
 
     public class Plain {
         public String title;
-        public Measure_.Plain  measure;
+        public Measure.Plain  measure;
         public double count;
         public double price;
         public String comment;

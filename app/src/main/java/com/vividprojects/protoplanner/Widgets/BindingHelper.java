@@ -2,8 +2,6 @@ package com.vividprojects.protoplanner.Widgets;
 
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewOutlineProvider;
@@ -13,16 +11,13 @@ import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.Adapters.SpinnerImageAdapter;
-import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Bundle2;
-import com.vividprojects.protoplanner.Utils.PriceFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class BindingHelper {
     @BindingAdapter({"app:adapterTextItem","app:adapterTextDropItem","app:adapterTextViewId","app:adapterTextItems"})
@@ -82,22 +77,22 @@ public class BindingHelper {
     public static void setSrcVector(ImageView view, int measure) {
         int image = R.drawable.measure_numeric;
         switch (measure) {
-            case Measure_.MEASURE_UNIT:
+            case Measure.MEASURE_UNIT:
                 image = R.drawable.measure_numeric;
                 break;
-            case Measure_.MEASURE_MASS:
+            case Measure.MEASURE_MASS:
                 image = R.drawable.measure_mass;
                 break;
-            case Measure_.MEASURE_LENGTH:
+            case Measure.MEASURE_LENGTH:
                 image = R.drawable.measure_length;
                 break;
-            case Measure_.MEASURE_SQUARE:
+            case Measure.MEASURE_SQUARE:
                 image = R.drawable.measure_square;
                 break;
-            case Measure_.MEASURE_VOLUME:
+            case Measure.MEASURE_VOLUME:
                 image = R.drawable.measure_volume;
                 break;
-            case Measure_.MEASURE_LIQUIDDRY:
+            case Measure.MEASURE_LIQUIDDRY:
                 image = R.drawable.measure_ld;
         }
         view.setImageResource(image);
