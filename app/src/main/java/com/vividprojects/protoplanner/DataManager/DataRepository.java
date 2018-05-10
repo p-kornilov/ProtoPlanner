@@ -82,6 +82,9 @@ public class DataRepository {
     public static final int LOAD_DONE = 200;
     public static final int LOAD_ERROR = -1;
 
+    public static final String IMAGES_FULL = "/img_f_";
+    public static final String IMAGES_SMALL = "/img_s_";
+
     private Context context;
     private String imagesDirectory;
 
@@ -108,6 +111,10 @@ public class DataRepository {
         }
         imagesDirectory = storageDir.getAbsolutePath();
         Log.d("Test", "External Storage - " + imagesDirectory);*/
+    }
+
+    public String getImagesDirectory() {
+        return imagesDirectory;
     }
 
     public LiveData<Resource<List<Record>>> loadRecords(List<String> filter) {
@@ -655,7 +662,7 @@ public class DataRepository {
         cursor.close();
 
         String file_name = UUID.randomUUID().toString();
-        String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
+        String full_name = imagesDirectory + "/" + file_name + ".jpg";
 
         appExecutors.diskIO().execute(()-> {
 

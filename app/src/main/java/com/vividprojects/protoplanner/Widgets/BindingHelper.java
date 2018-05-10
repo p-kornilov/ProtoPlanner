@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.Adapters.SpinnerImageAdapter;
 import com.vividprojects.protoplanner.CoreData.Measure_;
+import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Bundle2;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
@@ -102,9 +103,18 @@ public class BindingHelper {
         view.setImageResource(image);
     }
 
-    @BindingAdapter("bind:srcVectorFlag")
-    public static void setSrcVectorFlag(ImageView view, int flag) {
+    @BindingAdapter("bind:srcVectorResource")
+    public static void setSrcVectorResource(ImageView view, int flag) {
         if (flag != 0)
             view.setImageResource(flag);
+    }
+
+    @BindingAdapter("bind:srcImage")
+    public static void setSrcImage(ImageView view, String image) {
+        if (image != null)
+            GlideApp.with(view)
+                    .load(image)
+                    .error(R.drawable.ic_error_outline_black_24dp)
+                    .into(view);
     }
 }

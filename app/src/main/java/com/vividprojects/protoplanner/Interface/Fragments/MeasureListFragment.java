@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.vividprojects.protoplanner.Adapters.MeasureListAdapter;
 import com.vividprojects.protoplanner.Adapters.MeasureListAdapter_;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;

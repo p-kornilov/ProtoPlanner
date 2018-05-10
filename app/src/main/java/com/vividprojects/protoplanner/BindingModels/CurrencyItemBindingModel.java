@@ -17,6 +17,8 @@ import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Currency;
+import com.vividprojects.protoplanner.Images.GlideApp;
+import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.TextInputError;
 
@@ -33,6 +35,7 @@ public class CurrencyItemBindingModel extends BaseObservable {
     private String collapsedSymbol;
     private String[] pattern_entries;
     private boolean onCodeChange = false;
+    private String imageDirectory;
 
     private Currency.Plain currency;
     private Currency.Plain base;
@@ -50,10 +53,15 @@ public class CurrencyItemBindingModel extends BaseObservable {
             onNewImage.run();
     }
 
-    public CurrencyItemBindingModel(Context context) {
+    public void setImage(String imageName) {
+        this.currency.flag_file = imageName;
+        this.currency.flag_id = 0;
+        notifyPropertyChanged(BR.flagImage);
+    }
+
+    public CurrencyItemBindingModel(Context context, String imagesDirectory) {
+        this.imageDirectory = imagesDirectory;
         currency = (new Currency()).getPlain();
-/*        collapsedSymbol = PriceFormatter.collapseUnicodes(currency.symbol);
-        setPatternEntries(PriceFormatter.createListValue(collapsedSymbol, 100.00));*/
         base = (new Currency()).getPlain();
         this.context = context;
     }
@@ -133,6 +141,11 @@ public class CurrencyItemBindingModel extends BaseObservable {
     @Bindable
     public int getFlagResource() {
         return currency.flag_id;
+    }
+
+    @Bindable
+    public String getFlagImage() {
+        return currency.flag_file == null || imageDirectory == null  ? null : imageDirectory + currency.flag_file + ".jpg";
     }
 
     @Bindable

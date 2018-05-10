@@ -157,7 +157,8 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:srcVectorFlag="@{symbolModel.flagResource}"
+                        app:srcVectorResource="@{symbolModel.flagResource}"
+                        app:srcImage="@{symbolModel.flagImage}"
                         tools:srcCompat="@drawable/flag_rub"
                         android:visibility="@{symbolModel.flagVisible ? View.VISIBLE : View.GONE}"/>
 

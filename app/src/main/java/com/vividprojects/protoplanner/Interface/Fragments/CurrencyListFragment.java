@@ -109,7 +109,7 @@ public class CurrencyListFragment extends Fragment implements Injectable {
 
         layoutManager = new LinearLayoutManager(getContext());
         recycler.setLayoutManager(layoutManager);
-        currencyListAdapter = new CurrencyListAdapter(this,(LinearLayoutManager)layoutManager);
+        currencyListAdapter = new CurrencyListAdapter(this,(LinearLayoutManager)layoutManager, model.getImagesDirectory());
         recycler.setAdapter(currencyListAdapter);
 
 

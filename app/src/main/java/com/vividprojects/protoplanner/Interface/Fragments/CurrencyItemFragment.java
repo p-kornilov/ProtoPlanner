@@ -87,7 +87,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
             case REQUEST_IMAGE_GALLERY:
                 if (resultCode == RESULT_OK && data != null) {
                     model.loadGalleryImage(data.getData()).observe(this, imageName->{
-                        bindingModel.setImage();
+                        bindingModel.setImage(imageName);
                     });
                 }
                 return;

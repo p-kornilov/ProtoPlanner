@@ -47,12 +47,14 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
     private CurrencyListFragment context;
     private String filter;
     private LinearLayoutManager layoutManager;
+    private String imagesDirectory;
 
-    public CurrencyListAdapter(CurrencyListFragment context, LinearLayoutManager layoutManager) {
+    public CurrencyListAdapter(CurrencyListFragment context, LinearLayoutManager layoutManager, String imagesDirectory) {
         filtered_data = new ArrayList<>();
         names = new HashMap<>();
         this.context = context;
         this.layoutManager = layoutManager;
+        this.imagesDirectory = imagesDirectory;
     }
 
     public void refresh(Currency.Plain currencyRefresh) {
@@ -190,7 +192,10 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
         }
 
         if (obj.flag_file != null) {
-
+            GlideApp.with(holder.currency_flag)
+                    .load(imagesDirectory + "/" + obj.flag_file + ".jpg")
+                    .error(R.drawable.ic_error_outline_black_24dp)
+                    .into(holder.currency_flag);
         } else {
             GlideApp.with(holder.currency_flag)
                     .load(obj.flag_id)

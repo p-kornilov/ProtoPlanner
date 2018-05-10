@@ -90,4 +90,8 @@ public class CurrencyListViewModel extends ViewModel implements ItemNew {
     public void itemNew() {
         onNewTrigger.setValue(1);
     }
+
+    public String getImagesDirectory() {
+        return dataRepository.getImagesDirectory();
+    }
 }

@@ -31,7 +31,8 @@ public class CurrencyItemViewModel extends ViewModel {
     @Inject
     public CurrencyItemViewModel(DataRepository dataRepository, Context context) {
 
-        bindingModel = new CurrencyItemBindingModel(context);
+        bindingModel = new CurrencyItemBindingModel(context, dataRepository.getImagesDirectory() + "/");
+
         this.dataRepository = dataRepository;
 
         currency = Transformations.switchMap(currencyIsoCode, input -> CurrencyItemViewModel.this.dataRepository.getCurrency(input));
