@@ -25,6 +25,7 @@ import com.vividprojects.protoplanner.DB.NetworkResponse;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Network.NetworkLoader;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Settings;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -351,6 +352,10 @@ public class DataRepository {
             measures.setValue(ms);
         }
         return measures;
+    }
+
+    public LiveData<List<Measure.Plain>> getMeasures() {
+        return getMeasures(Settings.getMeasureSystem(context));
     }
 
     public LiveData<Measure.Plain> getMeasure(int hash) {

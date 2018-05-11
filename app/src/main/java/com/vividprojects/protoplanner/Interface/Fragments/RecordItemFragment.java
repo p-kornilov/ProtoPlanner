@@ -150,7 +150,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
             edit_main_variant.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    EditVariantDialog editVariantDialog = new EditVariantDialog();
+                    EditVariantDialog editVariantDialog = EditVariantDialog.create();
                     editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_IMAGE_URL_LOAD);
                     editVariantDialog.show(getFragmentManager(), "Edit main variant");
                 }
@@ -416,7 +416,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
                         ((MainActivity) getActivity()).getSecondToolBar().setTitle(name);
                     }
                 });
-
 
                 model.getMainVariantItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {

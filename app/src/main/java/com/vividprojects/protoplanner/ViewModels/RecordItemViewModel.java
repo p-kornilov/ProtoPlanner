@@ -5,13 +5,16 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.content.Context;
 import android.net.Uri;
 
 import com.vividprojects.protoplanner.CoreData.Label;
+import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Utils.Settings;
 import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
 import java.util.List;
@@ -150,6 +153,10 @@ public class RecordItemViewModel extends ViewModel {
             return;
         }
         recordNameTrigger.setValue(name);
+    }
+
+    public LiveData<List<Measure.Plain>> getMeasures() {
+        return dataRepository.getMeasures();
     }
 
 
