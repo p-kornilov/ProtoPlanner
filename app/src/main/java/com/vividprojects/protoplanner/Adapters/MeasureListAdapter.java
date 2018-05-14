@@ -127,6 +127,9 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
     }
 
     private void sortList() {
+        this.filtered_data = Measure.Plain.sort(context.get(), this.filtered_data);
+
+/*
         Measure.Plain[] holder_list = new Measure.Plain[this.filtered_data.size()];
         this.filtered_data.toArray(holder_list);
 
@@ -147,6 +150,7 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
 
         this.filtered_data.clear();
         this.filtered_data.addAll(Arrays.asList(holder_list));
+*/
     }
 
     private void createModels() {

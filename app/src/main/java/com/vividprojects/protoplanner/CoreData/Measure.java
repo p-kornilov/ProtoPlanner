@@ -3,6 +3,11 @@ package com.vividprojects.protoplanner.CoreData;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import io.realm.RealmObject;
@@ -218,6 +223,32 @@ public class Measure extends RealmObject{
 
         public static String getString(Context context, String string, int stringId) {
             return string != null ? string : context.getResources().getString(stringId);
+        }
+
+        public static List<Plain> sort(Context context, List<Plain> list) {
+            Map<Integer,String> names = new HashMap<>();
+            for (Plain m : list)
+                names.put(m.hash,getString(context,m.name,m.nameId).toLowerCase());
+
+            Plain[] holder_list = new Plain[list.size()];
+            list.toArray(holder_list);
+
+            Arrays.sort(holder_list,(x, y)->{
+                if (x.measure == y.measure) {
+                    if (x.header)
+                        return -10000;
+                    if (y.header)
+                        return 10000;
+                    if (x.def)
+                        return -1000;
+                    if (y.def)
+                        return 1000;
+                    return names.get(x.hash).compareTo(names.get(y.hash));
+                } else
+                    return (x.measure - y.measure) * 100;
+            });
+
+            return new ArrayList<>(Arrays.asList(holder_list));
         }
     }
 }

@@ -123,7 +123,7 @@
                     android:onClick="@{()->mefMeasureType.performClick()}"
                     app:layout_constraintEnd_toEndOf="@id/mef_measure_type"
                     app:layout_constraintTop_toTopOf="@id/mef_measure_type"
-                    app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
+                    app:srcCompat="@drawable/ic_arrow_drop_down_gray_24dp" />
 
                 <View
                     android:id="@+id/divider2"

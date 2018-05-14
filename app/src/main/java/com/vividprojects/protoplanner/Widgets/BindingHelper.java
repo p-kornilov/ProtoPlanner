@@ -75,27 +75,7 @@ public class BindingHelper {
 
     @BindingAdapter("bind:srcVector")
     public static void setSrcVector(ImageView view, int measure) {
-        int image = R.drawable.measure_numeric;
-        switch (measure) {
-            case Measure.MEASURE_UNIT:
-                image = R.drawable.measure_numeric;
-                break;
-            case Measure.MEASURE_MASS:
-                image = R.drawable.measure_mass;
-                break;
-            case Measure.MEASURE_LENGTH:
-                image = R.drawable.measure_length;
-                break;
-            case Measure.MEASURE_SQUARE:
-                image = R.drawable.measure_square;
-                break;
-            case Measure.MEASURE_VOLUME:
-                image = R.drawable.measure_volume;
-                break;
-            case Measure.MEASURE_LIQUIDDRY:
-                image = R.drawable.measure_ld;
-        }
-        view.setImageResource(image);
+        view.setImageResource(getMeasureImageResource(measure));
     }
 
     @BindingAdapter("bind:srcVectorResource")
@@ -111,5 +91,24 @@ public class BindingHelper {
                     .load(image)
                     .error(R.drawable.ic_error_outline_black_24dp)
                     .into(view);
+    }
+
+    public static int getMeasureImageResource(int measure) {
+        switch (measure) {
+            case Measure.MEASURE_UNIT:
+                return R.drawable.measure_numeric;
+            case Measure.MEASURE_MASS:
+                return R.drawable.measure_mass;
+            case Measure.MEASURE_LENGTH:
+                return R.drawable.measure_length;
+            case Measure.MEASURE_SQUARE:
+                return R.drawable.measure_square;
+            case Measure.MEASURE_VOLUME:
+                return R.drawable.measure_volume;
+            case Measure.MEASURE_LIQUIDDRY:
+                return R.drawable.measure_ld;
+            default:
+                return R.drawable.measure_numeric;
+        }
     }
 }

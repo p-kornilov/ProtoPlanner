@@ -230,28 +230,6 @@ public class LocalDataDB {
             }
         });
 
-
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-/*                Measure temp = new Measure("шт.",Measure.ENTIRE);
-                realm.insertOrUpdate(temp);
-                temp = new Measure("кг.",Measure.FRACTIONAL);
-                realm.insertOrUpdate(temp);
-                temp = new Measure("м.",Measure.FRACTIONAL);
-                realm.insertOrUpdate(temp);
-                temp = new Measure("кв.м.",Measure.FRACTIONAL);
-                realm.insertOrUpdate(temp);
-                temp = new Measure("л.",Measure.FRACTIONAL);
-                realm.insertOrUpdate(temp);*/
-
-/*                realm.insertOrUpdate(new Label("Red",1,"",null));
-                realm.insertOrUpdate(new Label("Blue",2,"",null));
-                realm.insertOrUpdate(new Label("Green",3,"",null));
-                realm.insertOrUpdate(new Label("White",4,"",null));*/
-            }
-        });
-
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -260,10 +238,10 @@ public class LocalDataDB {
                 Currency cr = realm.where(Currency.class).equalTo("iso_code_str","RUB").findFirst();
                 Currency cf = realm.where(Currency.class).equalTo("iso_code_str","XAF").findFirst();
                 Currency cd = realm.where(Currency.class).equalTo("iso_code_str","USD").findFirst();
-                Variant v = new Variant("Торт",m,7,100, "Мой торт и ссылка http://test.com",cr);
+                Variant v = new Variant("Торт",m1,7,100, "Мой торт и ссылка http://test.com",cr);
                 Variant v2 = new Variant("Колбаса",m,3,50, "",cd);
                 Variant v3 = new Variant("Хлеб",m1,5.01,60, "",cf);
-                Variant v4 = new Variant("Фильтр для воды",m,5,60, "",cr);
+                Variant v4 = new Variant("Фильтр для воды",m1,5,60, "",cr);
                 v4.addUrl("https://test.com");
                 realm.insertOrUpdate(v);
                 realm.insertOrUpdate(v2);

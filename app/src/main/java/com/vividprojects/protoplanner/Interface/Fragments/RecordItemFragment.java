@@ -417,7 +417,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     }
                 });
 
-                model.getMainVariantItem().observe(this, resource -> {
+            model.getMainVariantItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
                     mvTitle.setText(resource.data.title);
                     mvCount.setText(PriceFormatter.createCount(this.getContext(), resource.data.count, resource.data.measure));

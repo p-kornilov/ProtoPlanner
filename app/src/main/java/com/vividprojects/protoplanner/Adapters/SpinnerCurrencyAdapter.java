@@ -12,15 +12,16 @@ import android.widget.TextView;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Bundle2;
+import com.vividprojects.protoplanner.Utils.Bundle3;
 
-public class SpinnerMeasureAdapter extends ArrayAdapter<Bundle2<Integer,String>> {
+public class SpinnerCurrencyAdapter extends ArrayAdapter<Bundle3<Integer,String,String>> {
     private LayoutInflater inflater;
     private int resourceId;
     private int resourceDropId;
     private int textViewId;
     private int imageViewId;
 
-    public SpinnerMeasureAdapter(Context context, Bundle2<Integer,String>[] list) {
+    public SpinnerCurrencyAdapter(Context context, Bundle3<Integer,String,String>[] list) {
         super(context, R.layout.spinner_measure_item, R.id.spinner_item,list);
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -34,7 +35,7 @@ public class SpinnerMeasureAdapter extends ArrayAdapter<Bundle2<Integer,String>>
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Bundle2<Integer,String> item = getItem(position);
+        Bundle3<Integer,String,String> item = getItem(position);
 
         if(convertView == null) {
             convertView = inflater.inflate(resourceId, parent, false);
@@ -52,10 +53,10 @@ public class SpinnerMeasureAdapter extends ArrayAdapter<Bundle2<Integer,String>>
             convertView = inflater.inflate(resourceDropId,parent, false);
         }
 
-        Bundle2<Integer,String> item = getItem(position);
+        Bundle3<Integer,String,String> item = getItem(position);
 
         TextView text = convertView.findViewById(textViewId);
-        text.setText(item.second);
+        text.setText(item.second + " (" + item.third + ")");
 
         ImageView image = convertView.findViewById(imageViewId);
         image.setImageResource(item.first);

@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.net.Uri;
 
+import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Record;
@@ -159,6 +160,12 @@ public class RecordItemViewModel extends ViewModel {
         return dataRepository.getMeasures();
     }
 
+    public LiveData<Measure.Plain> getMeasure(int hash) {
+        return dataRepository.getMeasure(hash);
+    }
 
+    public LiveData<List<Currency.Plain>> getCurrencies() {
+        return dataRepository.getCurrencies();
+    }
 
 }

@@ -223,7 +223,7 @@
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="@id/cef_pattern"
                     app:layout_constraintTop_toTopOf="@id/cef_pattern"
-                    app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
+                    app:srcCompat="@drawable/ic_arrow_drop_down_gray_24dp" />
 
                 <View
                     android:id="@+id/divider2"

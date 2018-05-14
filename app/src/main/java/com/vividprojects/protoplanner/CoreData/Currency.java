@@ -1,8 +1,15 @@
 package com.vividprojects.protoplanner.CoreData;
 
+import android.content.Context;
 import android.databinding.BaseObservable;
 
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -219,6 +226,28 @@ public class Currency extends RealmObject {
         public boolean isBase;
         public int flag_id;
         public String flag_file;
+
+        public static String getString(Context context, String string, int stringId) {
+            return string != null ? string : context.getResources().getString(stringId);
+        }
+
+        public static List<Plain> sort(Context context, List<Plain> list) {
+            Map<Integer,String> names = new HashMap<>();
+            for (Plain c : list)
+                names.put(c.iso_code_int,getString(context,c.custom_name,c.iso_name_id).toLowerCase());
+
+            Plain[] holder_list = new Plain[list.size()];
+            list.toArray(holder_list);
+
+            Arrays.sort(holder_list,(x, y)->{
+                if (x.sorting_weight == y.sorting_weight)
+                    return names.get(x.iso_code_int).compareTo(names.get(y.iso_code_int));
+                else
+                    return (y.sorting_weight - x.sorting_weight)*100;
+            });
+
+            return new ArrayList<>(Arrays.asList(holder_list));
+        }
     }
 
 }
