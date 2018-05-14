@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
+import com.vividprojects.protoplanner.Utils.ViewModelHelper;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
@@ -49,8 +50,7 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
 
         CollapsingToolbarLayout mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout1);
 
-//        model = ViewModelProviders.of(this, viewModelFactory).get(RecordItemViewModel.class);
-        model = obtainViewModel(RecordItemViewModel.class);
+        model = ViewModelHelper.obtainViewModel(RecordItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
         model.getRecordName().observe(this, name -> {
             if (name != null) {
                 mCollapsingToolbarLayout.setTitle(name);
@@ -63,19 +63,6 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         final RecordItemFragment fragment = RecordItemFragment.create(id);
         fragmentTransaction.replace(R.id.record_container, fragment);
         fragmentTransaction.commit();
-
-
-/*        FloatingActionButton fb = (FloatingActionButton) findViewById(R.id.activity_record_edit);
-        fb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (fragment.onRecordEdit())
-                    ((FloatingActionButton)view).setImageResource(R.drawable.ic_check_white_24dp);
-                else
-                    ((FloatingActionButton)view).setImageResource(R.drawable.ic_edit_white_24dp);
-            }
-        });*/
     }
 
     @Override

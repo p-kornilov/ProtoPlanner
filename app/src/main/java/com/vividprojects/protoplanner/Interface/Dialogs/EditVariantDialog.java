@@ -104,9 +104,12 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+/*
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("Title",titleET.getText().toString());
                         getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, resultIntent);
+*/
+                       // model.saveMainVariant
                         EditVariantDialog.this.getDialog().cancel();
                     }
                 })

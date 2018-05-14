@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
+import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
@@ -49,6 +50,7 @@ import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.Widgets.ChipsLayout;
+import com.vividprojects.protoplanner.databinding.RecordFragmentBinding;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,6 +109,9 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     private String recordName = "";
 
+    private RecordFragmentBinding binding;
+    private RecordItemBindingModel bindingModel;
+
     private RunnableParam<Integer> onImageSelect = (position)->{
         navigationController.openImageView(position,model.getMainVariantItem().getValue().data.title);
     };
@@ -136,9 +141,13 @@ public class RecordItemFragment extends Fragment implements Injectable {
         View v;
 
         if (empty) {
-            v = (View) inflater.inflate(R.layout.empty_item_fragment, container, false);
+            //v = (View) inflater.inflate(R.layout.empty_item_fragment, container, false);
+            return inflater.inflate(R.layout.empty_item_fragment, container, false);
         } else {
-            v = (View) inflater.inflate(R.layout.record_fragment, container, false);
+            //v = (View) inflater.inflate(R.layout.record_fragment, container, false);
+            binding = RecordFragmentBinding.inflate(inflater);
+            //return binding.getRoot();
+            v = binding.getRoot();  // TODO Сделать правильно (удалить v)
 
             shopsRecycler = v.findViewById(R.id.rf_shops_recycler);
             mvTitle = v.findViewById(R.id.alt_title);
@@ -232,7 +241,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
             commentSwitcher = (ViewSwitcher) v.findViewById(R.id.rf_comment_switcher);
             commentEdit = (EditText) v.findViewById(R.id.rf_comment_edit);
-            commentView = (TextView) v.findViewById(R.id.rf_comment_text);
+            commentView = (TextView) v.findViewById(R.id.rf_comment_text); начать с комментария
             commentEditButton = v.findViewById(R.id.rf_comment_edit_button);
 
             commentEditButton.setOnClickListener(new View.OnClickListener() {
@@ -390,6 +399,9 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
         if (!empty) {
             model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
+
+            bindingModel = model.getBindingModel();
+            binding.setRecordModel(bindingModel);
 
             Bundle args = getArguments();
 

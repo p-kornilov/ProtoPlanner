@@ -20,6 +20,7 @@ import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureItemFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
+import com.vividprojects.protoplanner.Utils.ViewModelHelper;
 import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
@@ -67,7 +68,7 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                 getSupportActionBar().setTitle("Currency");
                 int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
                 fragment = CurrencyItemFragment.create(iso_code);
-                CurrencyItemViewModel model_c = obtainViewModel(CurrencyItemViewModel.class);
+                CurrencyItemViewModel model_c = ViewModelHelper.obtainViewModel(CurrencyItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
 
                 model_c.getOnSaveId().observe(this,id->{
                     if (id != null) {
@@ -82,7 +83,7 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                 getSupportActionBar().setTitle("Measure");
                 int hash = getIntent().getIntExtra(NavigationController.MEASURE_HASH,-1);
                 fragment = MeasureItemFragment.create(hash);
-                MeasureItemViewModel model_m = obtainViewModel(MeasureItemViewModel.class);
+                MeasureItemViewModel model_m = ViewModelHelper.obtainViewModel(MeasureItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
 
                 model_m.getOnSaveHash().observe(this,hashm->{
                     if (hashm != null) {
@@ -100,42 +101,6 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
         fragmentTransaction.commit();
 
 
-    }
-
-
-/*    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }*/
-
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-*//*        if (id == R.id.action_settings) {
-            return true;
-        }*//*
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
-    private <T extends ViewModel> T obtainViewModel(Class<T> viewModelClass) {
-        ViewModelHolder<T> viewModelHolder = (ViewModelHolder<T>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
-        if (viewModelHolder != null && viewModelHolder.getViewModel() != null) {
-            return viewModelHolder.getViewModel();
-        } else {
-            T model = ViewModelProviders.of(this,viewModelFactory).get(viewModelClass);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            Fragment fff = ViewModelHolder.createContainer(model);
-            ft.add(fff,ViewModelHolder.TAG).commit();
-            return model;
-        }
     }
 
     @Override
