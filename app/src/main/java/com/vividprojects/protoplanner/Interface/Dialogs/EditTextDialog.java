@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -21,7 +20,6 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class EditTextDialog extends DialogFragment {
-    private RecyclerView recycler;
 
     private TextView editText;
     private TextInputLayout editTextLayout;

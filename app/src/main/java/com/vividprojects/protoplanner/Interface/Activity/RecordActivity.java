@@ -83,19 +83,6 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         //return super.onOptionsItemSelected(item);
     }
 
-    private <T extends ViewModel> T obtainViewModel(Class<T> viewModelClass) {
-        ViewModelHolder<T> viewModelHolder = (ViewModelHolder<T>)getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
-        if (viewModelHolder != null && viewModelHolder.getViewModel() != null) {
-            return viewModelHolder.getViewModel();
-        } else {
-            T model = ViewModelProviders.of(this,viewModelFactory).get(viewModelClass);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            Fragment fff = ViewModelHolder.createContainer(model);
-            ft.add(fff,ViewModelHolder.TAG).commit();
-            return model;
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

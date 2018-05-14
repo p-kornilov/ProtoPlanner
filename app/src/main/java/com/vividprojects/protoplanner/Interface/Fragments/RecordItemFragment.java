@@ -37,6 +37,7 @@ import android.widget.ViewSwitcher;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
+import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
@@ -83,8 +84,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private ChipsLayout labelsLayout;
 //    private Realm realm;
     private boolean inCommentEdit = false;
-    private ViewSwitcher commentSwitcher;
-    private EditText commentEdit;
     private TextView commentView;
     private RecyclerView shopsRecycler;
   //  private HorizontalImages images;
@@ -106,8 +105,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private boolean empty = false;
 
     private String mTempPhotoPath;
-
-    private String recordName = "";
 
     private RecordFragmentBinding binding;
     private RecordItemBindingModel bindingModel;
@@ -239,9 +236,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
             alternativesRecycler.setNestedScrollingEnabled(false);
             alternativesRecycler.setFocusable(false);
 
-            commentSwitcher = (ViewSwitcher) v.findViewById(R.id.rf_comment_switcher);
-            commentEdit = (EditText) v.findViewById(R.id.rf_comment_edit);
-            commentView = (TextView) v.findViewById(R.id.rf_comment_text); начать с комментария
+            commentView = (TextView) v.findViewById(R.id.rf_comment_text);
             commentEditButton = v.findViewById(R.id.rf_comment_edit_button);
 
             commentEditButton.setOnClickListener(new View.OnClickListener() {
@@ -279,11 +274,11 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 EditTextDialog editNameDialog = new EditTextDialog();
                 editNameDialog.setTargetFragment(this, REQUEST_EDIT_NAME);
                 Bundle b = new Bundle();
-                b.putString("TITLE","Edit note");
+                b.putString("TITLE","Edit record name");
                 b.putString("HINT","Name");
                 b.putString("POSITIVE","Save");
                 b.putString("NEGATIVE","Cancel");
-                b.putString("EDITTEXT",recordName);
+                b.putString("EDITTEXT",bindingModel.getRecordName());
                 editNameDialog.setArguments(b);
                 editNameDialog.show(getFragmentManager(), "Edit name");
                 break;
@@ -415,7 +410,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
             model.getRecordItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
                     commentView.setText(resource.data.comment);
-                    recordName = resource.data.name;
+                    //recordName = resource.data.name;
+                    bindingModel.setRecord(resource.data);
 
                     labelsLayout.setMode(ChipsLayout.MODE_NON_TOUCH);
                     labelsLayout.setData(resource.data.labels,null);
@@ -480,7 +476,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     }
 
     public boolean onRecordEdit(){
-        commentSwitcher.showNext();
+/*        commentSwitcher.showNext();
         //ImageButton im = (ImageButton) view;
         inCommentEdit = !inCommentEdit;
         if (inCommentEdit) {
@@ -494,7 +490,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
             commentView.requestFocus();
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-        }
+        }*/
         return inCommentEdit;
     }
 
