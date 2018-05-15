@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="recordModel" type="com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel"/>
+        <import type="com.vividprojects.protoplanner.Widgets.ChipsLayout"/>
     </data>
     <ScrollView
         android:layout_width="match_parent"
@@ -110,6 +112,7 @@
                     android:background="@null"
                     android:cropToPadding="false"
                     android:padding="12dp"
+                    android:onClick="@{()->recordModel.onLabelsEditClick()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider1"
                     app:srcCompat="@drawable/ic_add_check_black_24dp" />
@@ -135,6 +138,9 @@
                     android:paddingEnd="8dp"
                     android:paddingStart="8dp"
                     android:paddingTop="8dp"
+                    bind:labelsLayoutMode="@{ChipsLayout.MODE_NON_TOUCH}"
+                    bind:labelsLayoutData="@{recordModel.recordLabels}"
+                    bind:labelsLayoutDataSelected="@{null}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"

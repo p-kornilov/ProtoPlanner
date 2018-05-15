@@ -11,6 +11,7 @@ import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.Adapters.SpinnerImageAdapter;
+import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.R;
@@ -91,6 +92,19 @@ public class BindingHelper {
                     .load(image)
                     .error(R.drawable.ic_error_outline_black_24dp)
                     .into(view);
+    }
+
+    @BindingAdapter("bind:labelsLayoutMode")
+    public static void setLabelsLayoutMode(ChipsLayout layout, int mode) {
+        if (layout != null)
+            layout.setMode(mode);
+    }
+
+    @BindingAdapter({"bind:labelsLayoutData","bind:labelsLayoutDataSelected"})
+    public static void setLabelsLayoutData(ChipsLayout layout, Label.Plain[] labels, String[] selected) {
+        if (layout != null) {
+            layout.setData(Arrays.asList(labels), selected);
+        }
     }
 
     public static int getMeasureImageResource(int measure) {

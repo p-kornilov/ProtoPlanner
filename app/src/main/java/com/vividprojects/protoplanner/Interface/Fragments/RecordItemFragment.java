@@ -3,7 +3,6 @@ package com.vividprojects.protoplanner.Interface.Fragments;
 import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,15 +28,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
-import com.vividprojects.protoplanner.CoreData.Record;
+import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
@@ -50,7 +46,6 @@ import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
-import com.vividprojects.protoplanner.Widgets.ChipsLayout;
 import com.vividprojects.protoplanner.databinding.RecordFragmentBinding;
 
 import java.io.File;
@@ -82,9 +77,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     @Inject
     NavigationController navigationController;
 
-    private ChipsLayout labelsLayout;
     private RecyclerView shopsRecycler;
-  //  private HorizontalImages images;
     private RecyclerView alternativesRecycler;
     private TextView mvTitle;
     private TextView mvPrice;
@@ -92,11 +85,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private TextView mvCount;
     private RecyclerView imagesRecycler;
     private ImageButton add_image;
-    private ImageButton set_labels;
     private ImageButton edit_main_variant;
-    private ImageButton commentEditButton;
     private HorizontalImagesListAdapter imagesListAdapter;
-   // private TextView mvCurrency1;
     private TextView mvCurrency2;
     private RecordItemViewModel model;
     private PopupMenu loadImagePopup;
@@ -122,6 +112,16 @@ public class RecordItemFragment extends Fragment implements Injectable {
         b.putString("EDITTEXT",bindingModel.getRecordComment());
         editNameDialog.setArguments(b);
         editNameDialog.show(getFragmentManager(), "Edit comment");
+    };
+
+    private Runnable onLabelsEditClick = () -> {
+        Label.Plain[] labels = bindingModel.getRecordLabels();
+        int size = labels.length;
+        String[] ids = new String[size];
+        for (int i = 0; i < size; i++)
+            ids[i] = labels[i].id;
+
+        NavigationController.openLabelsForResult(ids,this, REQUEST_LABELS_SET);
     };
 
     @Override
@@ -179,8 +179,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
             shopsRecycler.setNestedScrollingEnabled(false);
             shopsRecycler.setFocusable(false);
 
-            labelsLayout = v.findViewById(R.id.chipLayout);
-
             imagesRecycler = (RecyclerView) v.findViewById(R.id.ai_images);
             RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             imagesRecycler.setLayoutManager(layoutManager3);
@@ -227,15 +225,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     MenuInflater inflater = popup.getMenuInflater();
                     inflater.inflate(R.menu.menu_load_image, popup.getMenu());
                     popup.show();
-                }
-            });
-
-            set_labels = v.findViewById(R.id.rf_set_tags);
-            set_labels.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int i = 1;
-                    NavigationController.openLabelsForResult(labelsLayout.getAllLabels(),RecordItemFragment.this,REQUEST_LABELS_SET);
                 }
             });
 
@@ -410,6 +399,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
             bindingModel = model.getBindingModel();
             bindingModel.setOnCommentEditClick(onCommentEditClick);
+            bindingModel.setOnLabelsEditClick(onLabelsEditClick);
             binding.setRecordModel(bindingModel);
 
             Bundle args = getArguments();
@@ -424,9 +414,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
             model.getRecordItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
                     bindingModel.setRecord(resource.data);
-
-                    labelsLayout.setMode(ChipsLayout.MODE_NON_TOUCH);
-                    labelsLayout.setData(resource.data.labels,null);
                 }
             });
 

@@ -4,6 +4,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import com.vividprojects.protoplanner.BR;
+import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
 
@@ -16,6 +17,7 @@ public class RecordItemBindingModel extends BaseObservable {
     private List<Variant.Plain> listVariant;
 
     private WeakReference<Runnable> onCommentEditClick;
+    private WeakReference<Runnable> onLabelsEditClick;
 
     @Bindable
     public String getRecordName(){
@@ -27,6 +29,11 @@ public class RecordItemBindingModel extends BaseObservable {
         return record.comment;
     }
 
+    @Bindable
+    public Label.Plain[] getRecordLabels() {
+        return record.labels.toArray(new Label.Plain[record.labels.size()]);
+    }
+
     public String getRecordId() {
         return record.id;
     }
@@ -35,6 +42,7 @@ public class RecordItemBindingModel extends BaseObservable {
         this.record = record;
         notifyPropertyChanged(BR.recordName);
         notifyPropertyChanged(BR.recordComment);
+        notifyPropertyChanged(BR.recordLabels);
         //...
     }
 
@@ -47,8 +55,17 @@ public class RecordItemBindingModel extends BaseObservable {
         this.onCommentEditClick = new WeakReference<>(func);
     }
 
+    public void setOnLabelsEditClick(Runnable func) {
+        this.onLabelsEditClick = new WeakReference<>(func);
+    }
+
     public void onCommentEditClick() {
         if (onCommentEditClick != null && onCommentEditClick.get() != null)
             onCommentEditClick.get().run();
+    }
+
+    public void onLabelsEditClick() {
+        if (onLabelsEditClick != null && onLabelsEditClick.get() != null)
+            onLabelsEditClick.get().run();
     }
 }
