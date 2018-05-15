@@ -73,6 +73,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private static final int REQUEST_IMAGE_URL_LOAD = 3;
     private static final int REQUEST_LABELS_SET = 4;
     private static final int REQUEST_EDIT_NAME = 5;
+    private static final int REQUEST_EDIT_COMMENT = 6;
     private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
 
     @Inject
@@ -82,9 +83,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
     NavigationController navigationController;
 
     private ChipsLayout labelsLayout;
-//    private Realm realm;
-    private boolean inCommentEdit = false;
-    private TextView commentView;
     private RecyclerView shopsRecycler;
   //  private HorizontalImages images;
     private RecyclerView alternativesRecycler;
@@ -111,6 +109,19 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     private RunnableParam<Integer> onImageSelect = (position)->{
         navigationController.openImageView(position,model.getMainVariantItem().getValue().data.title);
+    };
+
+    private Runnable onCommentEditClick = () -> {
+        EditTextDialog editNameDialog = new EditTextDialog();
+        editNameDialog.setTargetFragment(this, REQUEST_EDIT_COMMENT);
+        Bundle b = new Bundle();
+        b.putString("TITLE","Edit");
+        b.putString("HINT","Comment");
+        b.putString("POSITIVE","Save");
+        b.putString("NEGATIVE","Cancel");
+        b.putString("EDITTEXT",bindingModel.getRecordComment());
+        editNameDialog.setArguments(b);
+        editNameDialog.show(getFragmentManager(), "Edit comment");
     };
 
     @Override
@@ -224,7 +235,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 @Override
                 public void onClick(View view) {
                     int i = 1;
-                    navigationController.openLabelsForResult(labelsLayout.getAllLabels(),RecordItemFragment.this,REQUEST_LABELS_SET);
+                    NavigationController.openLabelsForResult(labelsLayout.getAllLabels(),RecordItemFragment.this,REQUEST_LABELS_SET);
                 }
             });
 
@@ -236,15 +247,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
             alternativesRecycler.setNestedScrollingEnabled(false);
             alternativesRecycler.setFocusable(false);
 
-            commentView = (TextView) v.findViewById(R.id.rf_comment_text);
-            commentEditButton = v.findViewById(R.id.rf_comment_edit_button);
-
-            commentEditButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onRecordEdit();
-                }
-            });
         };
 
         return v;
@@ -383,6 +385,17 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     model.setRecordName(data.getStringExtra("EDITTEXT"));
                 }
                 return;
+            case REQUEST_EDIT_COMMENT:
+                if (resultCode == RESULT_OK && data != null) {
+                    String comment = data.getStringExtra("EDITTEXT");
+                    model.setComment(comment);
+                    bindingModel.setRecordComment(comment);
+                    // Другой вариант
+                    //model.setComment(comment).observe(this, c -> {
+                    //    bindingModel.setRecordComment(comment);
+                    //});
+                }
+                return;
         }
     }
 
@@ -396,6 +409,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
             model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
             bindingModel = model.getBindingModel();
+            bindingModel.setOnCommentEditClick(onCommentEditClick);
             binding.setRecordModel(bindingModel);
 
             Bundle args = getArguments();
@@ -409,8 +423,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
             model.getRecordItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
-                    commentView.setText(resource.data.comment);
-                    //recordName = resource.data.name;
                     bindingModel.setRecord(resource.data);
 
                     labelsLayout.setMode(ChipsLayout.MODE_NON_TOUCH);
@@ -473,25 +485,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 }
             });
         }
-    }
-
-    public boolean onRecordEdit(){
-/*        commentSwitcher.showNext();
-        //ImageButton im = (ImageButton) view;
-        inCommentEdit = !inCommentEdit;
-        if (inCommentEdit) {
-            commentEditButton.setImageResource(R.drawable.ic_check_black_24dp);
-            commentEdit.setText(commentView.getText());
-            commentEdit.setSelection(commentEdit.getText().length());
-            commentEdit.requestFocus();
-        } else {
-            commentEditButton.setImageResource(R.drawable.ic_edit_gray_24dp);
-            commentView.setText(commentEdit.getText());
-            commentView.requestFocus();
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-        }*/
-        return inCommentEdit;
     }
 
     public static RecordItemFragment create(String id) {

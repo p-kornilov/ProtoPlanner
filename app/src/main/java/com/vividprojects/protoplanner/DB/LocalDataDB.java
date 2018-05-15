@@ -384,6 +384,20 @@ public class LocalDataDB {
         return name;
     }
 
+    public String setRecordComment(String id, String comment) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Record record = realm.where(Record.class).equalTo("id",id).findFirst();
+                if (record != null) {
+                    record.setComment(comment);
+                    realm.insertOrUpdate(record);
+                }
+            }
+        });
+        return comment;
+    }
+
     public void showDB(){
         /*        String measures = "[";
 

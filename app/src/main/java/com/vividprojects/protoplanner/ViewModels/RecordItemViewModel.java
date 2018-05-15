@@ -176,4 +176,8 @@ public class RecordItemViewModel extends ViewModel {
         return bindingModel;
     }
 
+    public LiveData<String> setComment(String comment) {
+        return dataRepository.setRecordComment(bindingModel.getRecordId(),comment);
+    }
+
 }

@@ -49,6 +49,7 @@
                     android:cropToPadding="false"
                     android:padding="12dp"
                     android:visibility="visible"
+                    android:onClick="@{()->recordModel.onCommentEditClick()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_edit_gray_24dp" />
@@ -62,7 +63,7 @@
                         android:fontFamily="@font/roboto"
                         android:linksClickable="true"
                         android:singleLine="false"
-                        android:text="@{recordModel.commentName}"
+                        android:text="@{recordModel.recordComment}"
                         tools:text="Комментарий"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"

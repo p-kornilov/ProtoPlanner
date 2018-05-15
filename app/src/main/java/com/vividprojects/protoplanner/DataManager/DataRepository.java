@@ -244,6 +244,12 @@ public class DataRepository {
         return recordName;
     }
 
+    public LiveData<String> setRecordComment(String id, String name) {
+        MutableLiveData<String> recordComment = new MutableLiveData<>();
+        recordComment.setValue(localDataDB.setRecordComment(id,name));
+        return recordComment;
+    }
+
     public LiveData<List<Label.Plain>> getLabels(MutableLiveData<List<Label.Plain>> labels) {
         List<Label> labelsL = localDataDB
                 .queryLabels()
