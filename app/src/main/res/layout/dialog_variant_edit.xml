@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <variable name="variantModel" type="com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel"/>
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -35,6 +36,7 @@
                 android:id="@+id/ved_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@={variantModel.variantName}"
                 android:hint="Name" />
 
         </android.support.design.widget.TextInputLayout>
@@ -54,6 +56,7 @@
                 android:id="@+id/ved_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@={variantModel.variantPrice}"
                 android:hint="Price" />
 
         </android.support.design.widget.TextInputLayout>
@@ -110,6 +113,7 @@
                 android:id="@+id/ved_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@={variantModel.variantCount}"
                 android:hint="Count" />
 
         </android.support.design.widget.TextInputLayout>

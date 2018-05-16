@@ -15,6 +15,7 @@ import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.Adapters.SpinnerCurrencyAdapter;
 import com.vividprojects.protoplanner.Adapters.SpinnerMeasureAdapter;
+import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.DI.Injectable;
@@ -23,6 +24,7 @@ import com.vividprojects.protoplanner.Utils.Bundle2;
 import com.vividprojects.protoplanner.Utils.Bundle3;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.Widgets.BindingHelper;
+import com.vividprojects.protoplanner.databinding.DialogVariantEditBinding;
 
 import java.util.List;
 
@@ -46,20 +48,22 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
     private Spinner currenciesSpinner;
 
     private RecordItemViewModel model;
+    private VariantItemBindingModel bindingModelVariant;
+    private DialogVariantEditBinding binding;
 
     private int selectedMeasure = 0;
     private int selectedCurrency = -1;
     private List<Measure.Plain> measuresList;
     private List<Currency.Plain> currenciesList;
-    //private Bundle2<Integer,String>[] measuresList;
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.dialog_variant_edit, null);
+
+        binding = DialogVariantEditBinding.inflate(inflater);
+        View v = binding.getRoot();
 
         titleET = v.findViewById(R.id.ved_name);
         priceET = v.findViewById(R.id.ved_price);
@@ -70,11 +74,14 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
 
         model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
+        bindingModelVariant = model.getBindingModelVariant();
+        binding.setVariantModel(bindingModelVariant);
+
         model.getMainVariantItem().observe(this, resource -> {
                     if (resource != null && resource.data != null) {
-                        titleET.setText(resource.data.title);
+/*                        titleET.setText(resource.data.title);
                         priceET.setText(String.valueOf(resource.data.price));
-                        countET.setText(String.valueOf(resource.data.count));
+                        countET.setText(String.valueOf(resource.data.count));*/
                         selectedMeasure = resource.data.measure.hash;
                         selectedCurrency = resource.data.currency.iso_code_int;
                         selectMeasure();
@@ -128,8 +135,8 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
         try {
             price = Double.parseDouble(priceET.getText().toString());
         } catch (NumberFormatException e) {
-            error = true;
-            сделать databinding для диалога, сделать проверку типов и индикацию ошибки, сделать сохранение
+         /*   error = true;
+            сделать databinding для диалога, сделать проверку типов и индикацию ошибки, сделать сохранение*/
         }
     }
 

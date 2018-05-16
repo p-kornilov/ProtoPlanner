@@ -15,6 +15,8 @@ import java.util.List;
 
 public class VariantItemBindingModel extends BaseObservable {
     private Variant.Plain variant;
+    private String price;
+    private String count;
 
     private WeakReference<Runnable> onEditClick;
     private WeakReference<Context> context;
@@ -29,27 +31,56 @@ public class VariantItemBindingModel extends BaseObservable {
     }
 
     @Bindable
-    public String getVariantValue() {
+    public void setVariantName(String name) {
+        variant.title = name;
+    }
+
+    @Bindable
+    public String getVariantValueDecor() {
         return PriceFormatter.createValue(variant.currency, variant.price * variant.count);
     }
 
     @Bindable
     public String getVariantPrice() {
-        return PriceFormatter.createPrice(context.get(), variant.currency, variant.price, variant.measure);
+        return String.valueOf(variant.price);
     }
 
     @Bindable
     public String getVariantCount() {
+        return String.valueOf(variant.count);
+    }
+
+    @Bindable
+    public void setVariantPrice(String price) {
+        this.price = price;
+    }
+
+    @Bindable
+    public void setVariantCount(String count) {
+        this.count = count;
+    }
+
+    @Bindable
+    public String getVariantPriceDecor() {
+        return PriceFormatter.createPrice(context.get(), variant.currency, variant.price, variant.measure);
+    }
+
+    @Bindable
+    public String getVariantCountDecor() {
         return PriceFormatter.createCount(context.get(), variant.count, variant.measure);
     }
 
 
     public void setVariant(Variant.Plain variant) {
         this.variant = variant;
+        this.price = String.valueOf(variant.price);
+        this.count = String.valueOf(variant.count);
         notifyPropertyChanged(BR.variantName);
+        notifyPropertyChanged(BR.variantCountDecor);
+        notifyPropertyChanged(BR.variantPriceDecor);
         notifyPropertyChanged(BR.variantCount);
         notifyPropertyChanged(BR.variantPrice);
-        notifyPropertyChanged(BR.variantValue);
+        notifyPropertyChanged(BR.variantValueDecor);
 
         //...
     }
