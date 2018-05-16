@@ -5,6 +5,7 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="recordModel" type="com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel"/>
+        <variable name="variantModel" type="com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel"/>
         <import type="com.vividprojects.protoplanner.Widgets.ChipsLayout"/>
     </data>
     <ScrollView
@@ -162,7 +163,8 @@
 
             <include
                 layout="@layout/alternative_item"
-                android:id="@+id/alter_layout" />
+                android:id="@+id/alter_layout"
+                bind:variantModel="@{variantModel}"/>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"

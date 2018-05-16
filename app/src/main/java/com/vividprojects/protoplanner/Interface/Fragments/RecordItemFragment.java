@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
+import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
@@ -69,6 +70,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private static final int REQUEST_LABELS_SET = 4;
     private static final int REQUEST_EDIT_NAME = 5;
     private static final int REQUEST_EDIT_COMMENT = 6;
+    private static final int REQUEST_EDIT_VARIANT = 7;
     private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
 
     @Inject
@@ -79,13 +81,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     private RecyclerView shopsRecycler;
     private RecyclerView alternativesRecycler;
-    private TextView mvTitle;
-    private TextView mvPrice;
-    private TextView mvValue;
-    private TextView mvCount;
     private RecyclerView imagesRecycler;
     private ImageButton add_image;
-    private ImageButton edit_main_variant;
     private HorizontalImagesListAdapter imagesListAdapter;
     private TextView mvCurrency2;
     private RecordItemViewModel model;
@@ -95,7 +92,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private String mTempPhotoPath;
 
     private RecordFragmentBinding binding;
-    private RecordItemBindingModel bindingModel;
+    private RecordItemBindingModel bindingModelRecord;
+    private VariantItemBindingModel bindingModelVariant;
 
     private RunnableParam<Integer> onImageSelect = (position)->{
         navigationController.openImageView(position,model.getMainVariantItem().getValue().data.title);
@@ -109,19 +107,25 @@ public class RecordItemFragment extends Fragment implements Injectable {
         b.putString("HINT","Comment");
         b.putString("POSITIVE","Save");
         b.putString("NEGATIVE","Cancel");
-        b.putString("EDITTEXT",bindingModel.getRecordComment());
+        b.putString("EDITTEXT", bindingModelRecord.getRecordComment());
         editNameDialog.setArguments(b);
         editNameDialog.show(getFragmentManager(), "Edit comment");
     };
 
     private Runnable onLabelsEditClick = () -> {
-        Label.Plain[] labels = bindingModel.getRecordLabels();
+        Label.Plain[] labels = bindingModelRecord.getRecordLabels();
         int size = labels.length;
         String[] ids = new String[size];
         for (int i = 0; i < size; i++)
             ids[i] = labels[i].id;
 
         NavigationController.openLabelsForResult(ids,this, REQUEST_LABELS_SET);
+    };
+
+    private Runnable onVariantEditClick = () -> {
+        EditVariantDialog editVariantDialog = EditVariantDialog.create();
+        editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
+        editVariantDialog.show(getFragmentManager(), "Edit main variant");
     };
 
     @Override
@@ -158,20 +162,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
             v = binding.getRoot();  // TODO Сделать правильно (удалить v)
 
             shopsRecycler = v.findViewById(R.id.rf_shops_recycler);
-            mvTitle = v.findViewById(R.id.alt_title);
-            mvPrice = v.findViewById(R.id.alt_price);
-            mvValue = v.findViewById(R.id.alt_value);
-            mvCount = v.findViewById(R.id.alt_count);
-
-            edit_main_variant = v.findViewById(R.id.rf_variant_edit_button);
-            edit_main_variant.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    EditVariantDialog editVariantDialog = EditVariantDialog.create();
-                    editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_IMAGE_URL_LOAD);
-                    editVariantDialog.show(getFragmentManager(), "Edit main variant");
-                }
-            });
 
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             layoutManager.setAutoMeasureEnabled(true);
@@ -269,7 +259,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 b.putString("HINT","Name");
                 b.putString("POSITIVE","Save");
                 b.putString("NEGATIVE","Cancel");
-                b.putString("EDITTEXT",bindingModel.getRecordName());
+                b.putString("EDITTEXT", bindingModelRecord.getRecordName());
                 editNameDialog.setArguments(b);
                 editNameDialog.show(getFragmentManager(), "Edit name");
                 break;
@@ -378,10 +368,21 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 if (resultCode == RESULT_OK && data != null) {
                     String comment = data.getStringExtra("EDITTEXT");
                     model.setComment(comment);
-                    bindingModel.setRecordComment(comment);
+                    bindingModelRecord.setRecordComment(comment);
                     // Другой вариант
                     //model.setComment(comment).observe(this, c -> {
-                    //    bindingModel.setRecordComment(comment);
+                    //    bindingModelRecord.setRecordComment(comment);
+                    //});
+                }
+                return;
+            case REQUEST_EDIT_VARIANT:
+                if (resultCode == RESULT_OK && data != null) {
+                    String comment = data.getStringExtra("EDITTEXT");
+                    model.setComment(comment);
+                    bindingModelRecord.setRecordComment(comment);
+                    // Другой вариант
+                    //model.setComment(comment).observe(this, c -> {
+                    //    bindingModelRecord.setRecordComment(comment);
                     //});
                 }
                 return;
@@ -397,10 +398,14 @@ public class RecordItemFragment extends Fragment implements Injectable {
         if (!empty) {
             model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
-            bindingModel = model.getBindingModel();
-            bindingModel.setOnCommentEditClick(onCommentEditClick);
-            bindingModel.setOnLabelsEditClick(onLabelsEditClick);
-            binding.setRecordModel(bindingModel);
+            bindingModelRecord = model.getBindingModelRecord();
+            bindingModelRecord.setOnCommentEditClick(onCommentEditClick);
+            bindingModelRecord.setOnLabelsEditClick(onLabelsEditClick);
+            binding.setRecordModel(bindingModelRecord);
+
+            bindingModelVariant = model.getBindingModelVariant();
+            bindingModelVariant.setOnEditClick(onVariantEditClick);
+            binding.setVariantModel(bindingModelVariant);
 
             Bundle args = getArguments();
 
@@ -413,7 +418,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
             model.getRecordItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
-                    bindingModel.setRecord(resource.data);
+                    bindingModelRecord.setRecord(resource.data);
                 }
             });
 
@@ -426,10 +431,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
             model.getMainVariantItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
-                    mvTitle.setText(resource.data.title);
-                    mvCount.setText(PriceFormatter.createCount(this.getContext(), resource.data.count, resource.data.measure));
-                    mvValue.setText(PriceFormatter.createValue(resource.data.currency, resource.data.price * resource.data.count));
-                    mvPrice.setText(PriceFormatter.createPrice(this.getContext(), resource.data.currency, resource.data.price, resource.data.measure));
+                    bindingModelVariant.setVariant(resource.data);
+
                     imagesListAdapter.setData(resource.data.small_images);
                 }
             });

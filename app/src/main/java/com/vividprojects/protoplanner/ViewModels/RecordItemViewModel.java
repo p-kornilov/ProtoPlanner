@@ -5,10 +5,10 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
-import android.content.Context;
 import android.net.Uri;
 
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
+import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
@@ -16,7 +16,6 @@ import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Utils.Settings;
 import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
 import java.util.List;
@@ -38,7 +37,8 @@ public class RecordItemViewModel extends ViewModel {
     private final MediatorLiveData<String> recordName;
 
     private DataRepository dataRepository;
-    private RecordItemBindingModel bindingModel;
+    private RecordItemBindingModel bindingModelRecord;
+    private VariantItemBindingModel bindingModelVariant;
 
     private final SingleLiveEvent<Integer> loadProgress;
 
@@ -53,7 +53,8 @@ public class RecordItemViewModel extends ViewModel {
         recordItemId = new MutableLiveData<>();
         recordNameTrigger = new MutableLiveData<>();
 
-        bindingModel = new RecordItemBindingModel();
+        bindingModelRecord = new RecordItemBindingModel();
+        bindingModelVariant = new VariantItemBindingModel(dataRepository.getContext());
 
         recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
             return RecordItemViewModel.this.dataRepository.setRecordName(recordItemId.getValue(),name);
@@ -172,12 +173,15 @@ public class RecordItemViewModel extends ViewModel {
         return dataRepository.getCurrencies();
     }
 
-    public RecordItemBindingModel getBindingModel() {
-        return bindingModel;
+    public RecordItemBindingModel getBindingModelRecord() {
+        return bindingModelRecord;
+    }
+    public VariantItemBindingModel getBindingModelVariant() {
+        return bindingModelVariant;
     }
 
     public LiveData<String> setComment(String comment) {
-        return dataRepository.setRecordComment(bindingModel.getRecordId(),comment);
+        return dataRepository.setRecordComment(bindingModelRecord.getRecordId(),comment);
     }
 
 }

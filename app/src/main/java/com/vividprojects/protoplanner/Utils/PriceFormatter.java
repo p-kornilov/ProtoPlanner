@@ -127,4 +127,13 @@ public class PriceFormatter {
         }
         return convertedString.toString();
     }
+
+/*    public static double getPrice(String string) throws TextInputError {
+        double d = 0;
+        try {
+            d = Double.parseDouble(string);
+        } catch (NumberFormatException e) {
+
+        }
+    }*/
 }

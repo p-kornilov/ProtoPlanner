@@ -110,6 +110,7 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
                         getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, resultIntent);
 */
                        // model.saveMainVariant
+                        saveVariant();
                         EditVariantDialog.this.getDialog().cancel();
                     }
                 })
@@ -119,6 +120,17 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
                     }
                 });
         return builder.create();
+    }
+
+    private void saveVariant() {
+        String name = titleET.getText().toString();
+        double price;
+        try {
+            price = Double.parseDouble(priceET.getText().toString());
+        } catch (NumberFormatException e) {
+            error = true;
+            сделать databinding для диалога, сделать проверку типов и индикацию ошибки, сделать сохранение
+        }
     }
 
     private void selectMeasure() {
