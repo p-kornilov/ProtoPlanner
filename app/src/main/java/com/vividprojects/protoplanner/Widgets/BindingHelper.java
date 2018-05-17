@@ -10,12 +10,15 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.Adapters.ListOutline;
+import com.vividprojects.protoplanner.Adapters.SpinnerCurrencyAdapter;
 import com.vividprojects.protoplanner.Adapters.SpinnerImageAdapter;
+import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Bundle2;
+import com.vividprojects.protoplanner.Utils.Bundle3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +65,24 @@ public class BindingHelper {
         int p = spinner.getSelectedItemPosition();
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(p);
+    }
+
+    @BindingAdapter({"bind:adapterSpinnerCurrencyItem","bind:adapterSpinnerCurrencyList"})
+    public static void bindCurrencySpinnerAdapter(Spinner spinner, Currency.Plain adapterItem, Currency.Plain[] adapterList) {
+        if (adapterItem == null || adapterList == null || adapterList.length == 0)
+            return;
+
+        int size = adapterList.length;
+        Bundle3<Integer,String,String>[] al = new Bundle3[size];
+        for (int i = 0; i < size; i++) {
+            Bundle3<Integer,String,String> b = new Bundle3<>();
+            b.first = adapterList[i].flag_id;
+            b.second = adapterList[i].symbol;
+            b.third = adapterList[i].iso_code_str;
+            al[i] = b;
+        }
+        SpinnerCurrencyAdapter spinnerAdapter = new SpinnerCurrencyAdapter(spinner.getContext(), al);
+        spinner.setAdapter(spinnerAdapter);
     }
 
     @BindingAdapter("bind:customOutline")

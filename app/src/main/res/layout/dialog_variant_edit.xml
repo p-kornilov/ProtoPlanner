@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="variantModel" type="com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel"/>
+        <variable name="variantEditModel" type="com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel"/>
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
                 android:id="@+id/ved_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={variantModel.variantName}"
+                android:text="@={variantEditModel.variantEditName}"
                 android:hint="Name" />
 
         </android.support.design.widget.TextInputLayout>
@@ -56,7 +57,7 @@
                 android:id="@+id/ved_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={variantModel.variantPrice}"
+                android:text="@={variantEditModel.variantEditPrice}"
                 android:hint="Price" />
 
         </android.support.design.widget.TextInputLayout>
@@ -70,6 +71,8 @@
             android:layout_marginTop="27dp"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
+            bind:adapterSpinnerCurrencyItem="@{variantEditModel.variantEditCurrency}"
+            bind:adapterSpinnerCurrencyList="@{variantEditModel.variantEditCurrencyList}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ved_guideline"
             app:layout_constraintTop_toBottomOf="@+id/ved_name_layout" />
@@ -113,7 +116,7 @@
                 android:id="@+id/ved_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={variantModel.variantCount}"
+                android:text="@={variantEditModel.variantEditCount}"
                 android:hint="Count" />
 
         </android.support.design.widget.TextInputLayout>

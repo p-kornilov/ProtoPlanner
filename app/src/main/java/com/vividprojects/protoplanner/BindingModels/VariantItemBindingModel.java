@@ -17,6 +17,7 @@ public class VariantItemBindingModel extends BaseObservable {
     private Variant.Plain variant;
     private String price;
     private String count;
+    private String name;
 
     private WeakReference<Runnable> onEditClick;
     private WeakReference<Context> context;
@@ -73,6 +74,7 @@ public class VariantItemBindingModel extends BaseObservable {
 
     public void setVariant(Variant.Plain variant) {
         this.variant = variant;
+        this.name = variant.title;
         this.price = String.valueOf(variant.price);
         this.count = String.valueOf(variant.count);
         notifyPropertyChanged(BR.variantName);

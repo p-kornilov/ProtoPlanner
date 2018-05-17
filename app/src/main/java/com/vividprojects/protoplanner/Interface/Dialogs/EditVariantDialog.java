@@ -15,6 +15,7 @@ import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.Adapters.SpinnerCurrencyAdapter;
 import com.vividprojects.protoplanner.Adapters.SpinnerMeasureAdapter;
+import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Measure;
@@ -48,7 +49,7 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
     private Spinner currenciesSpinner;
 
     private RecordItemViewModel model;
-    private VariantItemBindingModel bindingModelVariant;
+    private VariantEditBindingModel bindingModelVariantEdit;
     private DialogVariantEditBinding binding;
 
     private int selectedMeasure = 0;
@@ -74,14 +75,13 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
 
         model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
-        bindingModelVariant = model.getBindingModelVariant();
-        binding.setVariantModel(bindingModelVariant);
+        bindingModelVariantEdit = model.getBindingModelVariantEdit();
+        binding.setVariantEditModel(bindingModelVariantEdit);
 
         model.getMainVariantItem().observe(this, resource -> {
                     if (resource != null && resource.data != null) {
-/*                        titleET.setText(resource.data.title);
-                        priceET.setText(String.valueOf(resource.data.price));
-                        countET.setText(String.valueOf(resource.data.count));*/
+                        bindingModelVariantEdit.setVariant(resource.data);
+
                         selectedMeasure = resource.data.measure.hash;
                         selectedCurrency = resource.data.currency.iso_code_int;
                         selectMeasure();
@@ -100,8 +100,9 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
         model.getCurrencies().observe(this, currencies -> {
             if (currencies != null) {
                 currenciesList = Currency.Plain.sort(getContext(), currencies);
-                setupCurrenciesSpinner();
-                selectCurrency();
+                bindingModelVariantEdit.setVariantEditCurrencyList(currenciesList.toArray(new Currency.Plain[currenciesList.size()]));
+                //setupCurrenciesSpinner();
+                //selectCurrency();
             }
         });
 
@@ -184,21 +185,6 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
         }
         SpinnerMeasureAdapter spinnerAdapter = new SpinnerMeasureAdapter(getContext(), al);
         measuresSpinner.setAdapter(spinnerAdapter);
-    }
-
-    private void setupCurrenciesSpinner() {
-        int i = 0;
-        Bundle3<Integer,String,String>[] al = new Bundle3[currenciesList.size()];
-        for (Currency.Plain c : currenciesList) {
-            Bundle3<Integer,String,String> b = new Bundle3<>();
-            b.first = c.flag_id;
-            b.second = c.symbol;
-            b.third = c.iso_code_str;
-            al[i] = b;
-            i++;
-        }
-        SpinnerCurrencyAdapter spinnerAdapter = new SpinnerCurrencyAdapter(getContext(), al);
-        currenciesSpinner.setAdapter(spinnerAdapter);
     }
 
     public static EditVariantDialog create() {

@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModel;
 import android.net.Uri;
 
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
+import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
@@ -39,6 +40,7 @@ public class RecordItemViewModel extends ViewModel {
     private DataRepository dataRepository;
     private RecordItemBindingModel bindingModelRecord;
     private VariantItemBindingModel bindingModelVariant;
+    private VariantEditBindingModel bindingModelVariantEdit;
 
     private final SingleLiveEvent<Integer> loadProgress;
 
@@ -55,6 +57,7 @@ public class RecordItemViewModel extends ViewModel {
 
         bindingModelRecord = new RecordItemBindingModel();
         bindingModelVariant = new VariantItemBindingModel(dataRepository.getContext());
+        bindingModelVariantEdit = new VariantEditBindingModel(dataRepository.getContext());
 
         recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
             return RecordItemViewModel.this.dataRepository.setRecordName(recordItemId.getValue(),name);
@@ -178,6 +181,9 @@ public class RecordItemViewModel extends ViewModel {
     }
     public VariantItemBindingModel getBindingModelVariant() {
         return bindingModelVariant;
+    }
+    public VariantEditBindingModel getBindingModelVariantEdit() {
+        return bindingModelVariantEdit;
     }
 
     public LiveData<String> setComment(String comment) {
