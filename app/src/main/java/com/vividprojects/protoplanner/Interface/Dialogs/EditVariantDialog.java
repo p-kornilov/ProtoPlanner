@@ -42,20 +42,9 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    private EditText titleET;
-    private EditText priceET;
-    private EditText countET;
-    private Spinner measuresSpinner;
-    private Spinner currenciesSpinner;
-
     private RecordItemViewModel model;
     private VariantEditBindingModel bindingModelVariantEdit;
     private DialogVariantEditBinding binding;
-
-    private int selectedMeasure = 0;
-    private int selectedCurrency = -1;
-    private List<Measure.Plain> measuresList;
-    private List<Currency.Plain> currenciesList;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -64,49 +53,13 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         binding = DialogVariantEditBinding.inflate(inflater);
-        View v = binding.getRoot();
-
-        titleET = v.findViewById(R.id.ved_name);
-        priceET = v.findViewById(R.id.ved_price);
-        countET = v.findViewById(R.id.ved_count);
-        measuresSpinner = v.findViewById(R.id.ved_measure);
-        currenciesSpinner = v.findViewById(R.id.ved_currency);
-
 
         model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
         bindingModelVariantEdit = model.getBindingModelVariantEdit();
         binding.setVariantEditModel(bindingModelVariantEdit);
 
-        model.getMainVariantItem().observe(this, resource -> {
-                    if (resource != null && resource.data != null) {
-                        bindingModelVariantEdit.setVariant(resource.data);
-
-                        selectedMeasure = resource.data.measure.hash;
-                        selectedCurrency = resource.data.currency.iso_code_int;
-                        selectMeasure();
-                      //  measuresSpinner.setSelection(resource.data.measure.hash);
-                    }
-                });
-
-        model.getMeasures().observe(this, measures -> {
-            if (measures != null) {
-                measuresList = Measure.Plain.sort(getContext(), measures);
-                setupMeasuresSpinner();
-                selectMeasure();
-            }
-        });
-
-        model.getCurrencies().observe(this, currencies -> {
-            if (currencies != null) {
-                currenciesList = Currency.Plain.sort(getContext(), currencies);
-                bindingModelVariantEdit.setVariantEditCurrencyList(currenciesList.toArray(new Currency.Plain[currenciesList.size()]));
-                //setupCurrenciesSpinner();
-                //selectCurrency();
-            }
-        });
-
-        builder.setView(v)
+        builder.setView(binding.getRoot())
                 .setTitle("Basic variant")
                 // Add action buttons
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -124,67 +77,41 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        EditVariantDialog.this.getDialog().cancel();
+                        //EditVariantDialog.this.getDialog().cancel();
                     }
                 });
         return builder.create();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        model.getMainVariantItem().observe(this, resource -> {
+            if (resource != null && resource.data != null)
+                bindingModelVariantEdit.setVariant(resource.data);
+        });
+
+        model.getMeasures().observe(this, measures -> {
+            if (measures != null)
+                bindingModelVariantEdit.setVariantEditMeasureList(Measure.Plain.sort(getContext(), measures));
+        });
+
+        model.getCurrencies().observe(this, currencies -> {
+            if (currencies != null)
+                bindingModelVariantEdit.setVariantEditCurrencyList(Currency.Plain.sort(getContext(), currencies));
+        });
+
+    }
+
     private void saveVariant() {
-        String name = titleET.getText().toString();
+/*        String name = titleET.getText().toString();
         double price;
         try {
             price = Double.parseDouble(priceET.getText().toString());
         } catch (NumberFormatException e) {
-         /*   error = true;
-            сделать databinding для диалога, сделать проверку типов и индикацию ошибки, сделать сохранение*/
-        }
-    }
-
-    private void selectMeasure() {
-        if (selectedMeasure != 0 && measuresList != null) {
-            for (int i = 0; i < measuresList.size(); i++)
-                if (measuresList.get(i).hash == selectedMeasure) {
-                    measuresSpinner.setSelection(i);
-                    return;
-                }
-            model.getMeasure(selectedMeasure).observe(this, measure ->{
-                if (measure != null) {
-                    measuresList.add(measure);
-                    measuresList = Measure.Plain.sort(getContext(), measuresList);
-                    setupMeasuresSpinner();
-                    for (int i = 0; i < measuresList.size(); i++)
-                        if (measuresList.get(i).hash == selectedMeasure) {
-                            measuresSpinner.setSelection(i);
-                            return;
-                        }
-                }
-            });
-        }
-    }
-
-    private void selectCurrency() {
-        if (selectedCurrency != -1 && currenciesList != null) {
-            for (int i = 0; i < currenciesList.size(); i++)
-                if (currenciesList.get(i).iso_code_int == selectedCurrency) {
-                    currenciesSpinner.setSelection(i);
-                    return;
-                }
-        }
-    }
-
-    private void setupMeasuresSpinner() {
-        int i = 0;
-        Bundle2<Integer,String>[] al = new Bundle2[measuresList.size()];
-        for (Measure.Plain m : measuresList) {
-            Bundle2<Integer,String> b = new Bundle2<>();
-            b.first = BindingHelper.getMeasureImageResource(m.measure);
-            b.second = Measure.Plain.getString(getContext(),m.symbol,m.symbolId);
-            al[i] = b;
-            i++;
-        }
-        SpinnerMeasureAdapter spinnerAdapter = new SpinnerMeasureAdapter(getContext(), al);
-        measuresSpinner.setAdapter(spinnerAdapter);
+         *//*   error = true;
+            сделать databinding для диалога, сделать проверку типов и индикацию ошибки, сделать сохранение*//*
+        }*/
     }
 
     public static EditVariantDialog create() {

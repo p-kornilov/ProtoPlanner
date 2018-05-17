@@ -2,6 +2,7 @@ package com.vividprojects.protoplanner.CoreData;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -11,6 +11,7 @@ import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class VariantEditBindingModel extends BaseObservable {
     private String price;
@@ -18,7 +19,10 @@ public class VariantEditBindingModel extends BaseObservable {
     private String name;
     private Currency.Plain currency;
     private Measure.Plain measure;
-    private Currency.Plain[] currencyList;
+    private List<Currency.Plain> currencyList;
+    private List<Measure.Plain> measureList;
+    private int currencyCursor = 0;
+    private int measureCursor = 0;
 
     private WeakReference<Context> context;
 
@@ -62,15 +66,39 @@ public class VariantEditBindingModel extends BaseObservable {
     }
 
     @Bindable
-    public Currency.Plain[] getVariantEditCurrencyList() {
+    public List<Currency.Plain> getVariantEditCurrencyList() {
         return currencyList;
     }
 
-    public void setVariantEditCurrencyList(Currency.Plain[] currencyList) {
+    @Bindable
+    public void setCurrencyCursor(int cursor) {
+        currencyCursor = cursor;
+    }
+
+    public void setVariantEditCurrencyList(List<Currency.Plain> currencyList) {
         this.currencyList = currencyList;
         notifyPropertyChanged(BR.variantEditCurrencyList);
     }
 
+    @Bindable
+    public Measure.Plain getVariantEditMeasure() {
+        return measure;
+    }
+
+    @Bindable
+    public List<Measure.Plain> getVariantEditMeasureList() {
+        return measureList;
+    }
+
+    @Bindable
+    public void setMeasureCursor(int cursor) {
+        measureCursor = cursor;
+    }
+
+    public void setVariantEditMeasureList(List<Measure.Plain> measureList) {
+        this.measureList = measureList;
+        notifyPropertyChanged(BR.variantEditMeasureList);
+    }
 
     public void setVariant(Variant.Plain variant) {
         this.name = variant.title;

@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import com.vividprojects.protoplanner.Adapters.ListOutline;
 import com.vividprojects.protoplanner.Adapters.SpinnerCurrencyAdapter;
 import com.vividprojects.protoplanner.Adapters.SpinnerImageAdapter;
+import com.vividprojects.protoplanner.Adapters.SpinnerMeasureAdapter;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
@@ -22,6 +23,7 @@ import com.vividprojects.protoplanner.Utils.Bundle3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class BindingHelper {
     @BindingAdapter({"app:adapterTextItem","app:adapterTextDropItem","app:adapterTextViewId","app:adapterTextItems"})
@@ -68,21 +70,67 @@ public class BindingHelper {
     }
 
     @BindingAdapter({"bind:adapterSpinnerCurrencyItem","bind:adapterSpinnerCurrencyList"})
-    public static void bindCurrencySpinnerAdapter(Spinner spinner, Currency.Plain adapterItem, Currency.Plain[] adapterList) {
-        if (adapterItem == null || adapterList == null || adapterList.length == 0)
+    public static void bindCurrencySpinnerAdapter(Spinner spinner, Currency.Plain adapterItem, List<Currency.Plain> adapterList) {
+        if (adapterItem == null || adapterList == null || adapterList.size() == 0)
             return;
 
-        int size = adapterList.length;
-        Bundle3<Integer,String,String>[] al = new Bundle3[size];
-        for (int i = 0; i < size; i++) {
+        Bundle3<Integer,String,String>[] al = new Bundle3[adapterList.size()];
+        int i = 0;
+        int cursor = 0;
+        for (Currency.Plain c : adapterList) {
+            if (adapterItem.iso_code_int == c.iso_code_int)
+                cursor = i;
             Bundle3<Integer,String,String> b = new Bundle3<>();
-            b.first = adapterList[i].flag_id;
-            b.second = adapterList[i].symbol;
-            b.third = adapterList[i].iso_code_str;
+            b.first = c.flag_id;
+            b.second = c.symbol;
+            b.third = c.iso_code_str;
             al[i] = b;
+            i++;
         }
         SpinnerCurrencyAdapter spinnerAdapter = new SpinnerCurrencyAdapter(spinner.getContext(), al);
         spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(cursor);
+    }
+
+    @BindingAdapter({"bind:adapterSpinnerMeasureItem","bind:adapterSpinnerMeasureList"})
+    public static void bindMeasureSpinnerAdapter(Spinner spinner, Measure.Plain adapterItem, List<Measure.Plain> adapterList) {
+        if (adapterItem == null || adapterList == null || adapterList.size() == 0)
+            return;
+
+        int i = 0;
+        int cursor = -1;
+        Bundle2<Integer,String>[] al = new Bundle2[adapterList.size()];
+        for (Measure.Plain m : adapterList) {
+            if (adapterItem.hash == m.hash)
+                cursor = i;
+            Bundle2<Integer,String> b = new Bundle2<>();
+            b.first = BindingHelper.getMeasureImageResource(m.measure);
+            b.second = Measure.Plain.getString(spinner.getContext(),m.symbol,m.symbolId);
+            al[i] = b;
+            i++;
+        }
+
+        if (cursor == -1) {
+            adapterList.add(adapterItem);
+            adapterList = Measure.Plain.sort(spinner.getContext(),adapterList);
+            i = 0;
+            cursor = 0;
+            al = new Bundle2[adapterList.size()];
+            for (Measure.Plain m : adapterList) {
+                if (adapterItem.hash == m.hash)
+                    cursor = i;
+                Bundle2<Integer,String> b = new Bundle2<>();
+                b.first = BindingHelper.getMeasureImageResource(m.measure);
+                b.second = Measure.Plain.getString(spinner.getContext(),m.symbol,m.symbolId);
+                al[i] = b;
+                i++;
+            }
+
+        }
+
+        SpinnerMeasureAdapter spinnerAdapter = new SpinnerMeasureAdapter(spinner.getContext(), al);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(cursor);
     }
 
     @BindingAdapter("bind:customOutline")
