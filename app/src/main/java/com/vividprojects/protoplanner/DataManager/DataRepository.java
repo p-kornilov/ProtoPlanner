@@ -163,7 +163,7 @@ public class DataRepository {
                 MutableLiveData<Variant.Plain> ld = new MutableLiveData<>();
                 Variant.Plain variant = localDataDB
                         .queryVariants()
-                        .title_equalTo(id)
+                        .id_equalTo(id)
                         .findFirst()
                         .getPlain();
                 for (int i = 0;i<variant.small_images.size();i++) variant.small_images.set(i, imagesDirectory + "/img_s_" + variant.small_images.get(i) + ".jpg");
@@ -198,7 +198,7 @@ public class DataRepository {
                 MutableLiveData<List<String>> ld = new MutableLiveData<>();
                 Variant.Plain variant = localDataDB
                         .queryVariants()
-                        .title_equalTo(id)
+                        .id_equalTo(id)
                         .findFirst()
                         .getPlain();
                 for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + "/img_f_" + variant.full_images.get(i) + ".jpg");
@@ -218,7 +218,7 @@ public class DataRepository {
                 MutableLiveData<List<String>> ld = new MutableLiveData<>();
                 Variant.Plain variant = localDataDB
                         .queryVariants()
-                        .title_equalTo(id)
+                        .id_equalTo(id)
                         .findFirst()
                         .getPlain();
                 for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + "/img_f_" + variant.full_images.get(i) + ".jpg");

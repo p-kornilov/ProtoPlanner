@@ -3,6 +3,8 @@ package com.vividprojects.protoplanner.BindingModels;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.view.View;
+import android.widget.Spinner;
 
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Currency;
@@ -72,7 +74,18 @@ public class VariantEditBindingModel extends BaseObservable {
 
     @Bindable
     public void setCurrencyCursor(int cursor) {
+        currency = currencyList.get(cursor);
         currencyCursor = cursor;
+    }
+
+    @Bindable
+    public int getCurrencyCursor() {
+        return currencyCursor;
+    }
+
+    @Bindable
+    public int getMeasureCursor() {
+        return measureCursor;
     }
 
     public void setVariantEditCurrencyList(List<Currency.Plain> currencyList) {
@@ -92,12 +105,24 @@ public class VariantEditBindingModel extends BaseObservable {
 
     @Bindable
     public void setMeasureCursor(int cursor) {
+        measure = measureList.get(cursor);
         measureCursor = cursor;
     }
 
     public void setVariantEditMeasureList(List<Measure.Plain> measureList) {
         this.measureList = measureList;
+        checkMeasureList();
         notifyPropertyChanged(BR.variantEditMeasureList);
+    }
+
+    private void checkMeasureList() {
+        if (measure != null && measureList != null) {
+            for (Measure.Plain m : measureList)
+                if (m.hash == measure.hash)
+                    return;
+            measureList.add(measure);
+            measureList = Measure.Plain.sort(context.get(), measureList);
+        }
     }
 
     public void setVariant(Variant.Plain variant) {
@@ -106,6 +131,7 @@ public class VariantEditBindingModel extends BaseObservable {
         this.count = String.valueOf(variant.count);
         this.currency = variant.currency;
         this.measure = variant.measure;
+        checkMeasureList();
 
         notifyPropertyChanged(BR.variantEditName);
         notifyPropertyChanged(BR.variantEditCount);

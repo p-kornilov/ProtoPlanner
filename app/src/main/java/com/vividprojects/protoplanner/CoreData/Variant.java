@@ -5,6 +5,7 @@ import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 //import java.util.Objects;
 
 import io.realm.RealmList;
@@ -12,6 +13,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Variant extends RealmObject {
+    private String id = UUID.randomUUID().toString();
     @PrimaryKey
     private String title;
     private Measure measure;
@@ -25,6 +27,10 @@ public class Variant extends RealmObject {
     private Currency currency;
 
     public Variant() {};
+
+    public String getId() {
+        return id;
+    }
 
     public Variant(String title, Measure measure, double count, double price, String comment, Currency currency) {
         this.title = title;
@@ -131,11 +137,12 @@ public class Variant extends RealmObject {
 
         Variant other = (Variant) obj;
 
-        return Objects.equals(title,other.title) && Objects.equals(measure,other.measure) && count == other.count && price == other.price;
+        return id == other.id;
     }
 
     public Plain getPlain(){
         Plain plain = new Plain();
+        plain.id = id;
         plain.title = title;
         plain.measure = measure.getPlain();
         plain.count = count;
@@ -153,6 +160,7 @@ public class Variant extends RealmObject {
     }
 
     public class Plain {
+        public String id;
         public String title;
         public Measure.Plain  measure;
         public double count;

@@ -71,15 +71,11 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
                         getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, resultIntent);
 */
                        // model.saveMainVariant
-                        saveVariant();
-                        EditVariantDialog.this.getDialog().cancel();
+                   /*     model.
+                        saveVariant();*/
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //EditVariantDialog.this.getDialog().cancel();
-                    }
-                });
+                .setNegativeButton("Cancel", null);
         return builder.create();
     }
 

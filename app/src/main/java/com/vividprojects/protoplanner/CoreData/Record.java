@@ -181,10 +181,10 @@ public class Record extends RealmObject{
         Plain plain = new Plain();
         plain.id = id;
         plain.name = name;
-        plain.mainVariant = mainVariant.getTitle();
+        plain.mainVariant = mainVariant.getId();
         plain.variants = new ArrayList<>();
         for (Variant variant : variants) {
-            plain.variants.add(variant.getTitle());
+            plain.variants.add(variant.getId());
         }
         plain.labels = new ArrayList<>();
         for (Label label: labels) {

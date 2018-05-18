@@ -98,7 +98,7 @@ public class BindingHelper {
             return;
 
         int i = 0;
-        int cursor = -1;
+        int cursor = 0;
         Bundle2<Integer,String>[] al = new Bundle2[adapterList.size()];
         for (Measure.Plain m : adapterList) {
             if (adapterItem.hash == m.hash)
@@ -108,24 +108,6 @@ public class BindingHelper {
             b.second = Measure.Plain.getString(spinner.getContext(),m.symbol,m.symbolId);
             al[i] = b;
             i++;
-        }
-
-        if (cursor == -1) {
-            adapterList.add(adapterItem);
-            adapterList = Measure.Plain.sort(spinner.getContext(),adapterList);
-            i = 0;
-            cursor = 0;
-            al = new Bundle2[adapterList.size()];
-            for (Measure.Plain m : adapterList) {
-                if (adapterItem.hash == m.hash)
-                    cursor = i;
-                Bundle2<Integer,String> b = new Bundle2<>();
-                b.first = BindingHelper.getMeasureImageResource(m.measure);
-                b.second = Measure.Plain.getString(spinner.getContext(),m.symbol,m.symbolId);
-                al[i] = b;
-                i++;
-            }
-
         }
 
         SpinnerMeasureAdapter spinnerAdapter = new SpinnerMeasureAdapter(spinner.getContext(), al);

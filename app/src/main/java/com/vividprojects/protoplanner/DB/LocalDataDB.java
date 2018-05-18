@@ -490,7 +490,7 @@ public class LocalDataDB {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Variant v = realm.where(Variant.class).contains("title",variant).findFirst();
+                Variant v = realm.where(Variant.class).contains("id",variant).findFirst();
                 if (v != null)
                     v.addImage(image);
             }
@@ -555,7 +555,7 @@ public class LocalDataDB {
         }
 
         public QueryRecords mainVariant_equalTo(String title) {
-            query = query.equalTo("mainVariant.title",title);
+            query = query.equalTo("mainVariant.id",title);
             return this;
         }
 
@@ -601,8 +601,8 @@ public class LocalDataDB {
             query = realm.where(Variant.class);
         }
 
-        public QueryVariants title_equalTo(String title) {
-            query = query.equalTo("title",title);
+        public QueryVariants id_equalTo(String title) {
+            query = query.equalTo("id",title);
             return this;
         }
 
