@@ -180,6 +180,10 @@ public class DataRepository {
         }.asLiveData();
     }
 
+    public String saveVariant(String id, String name, double price, double count, int currency, int measure) {
+        return localDataDB.saveVariant(id, name, price, count, currency, measure);
+    }
+
     public LiveData<Resource<List<String>>> loadImagesForVariant(String id) {
         return new NetworkBoundResource<List<String>, List<String>>(appExecutors) {
             @Override

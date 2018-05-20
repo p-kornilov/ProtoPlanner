@@ -1,14 +1,32 @@
 package com.vividprojects.protoplanner.BindingModels;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 
+import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
+import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
+import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
+import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
+import com.vividprojects.protoplanner.Utils.RunnableParam;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -19,11 +37,25 @@ public class VariantItemBindingModel extends BaseObservable {
     private String count;
     private String name;
 
+    private HorizontalImagesListAdapter imagesListAdapter;
+    private int imagesScroll = 0;
+    private String loaded_image = "";
+
     private WeakReference<Runnable> onEditClick;
+    private WeakReference<RunnableParam<View>> onAddImageClick;
     private WeakReference<Context> context;
 
     public VariantItemBindingModel( Context context) {
         this.context = new WeakReference<>(context);
+    }
+
+    public void setImagesAdapter(RunnableParam onImageSelect) {
+        imagesListAdapter = new HorizontalImagesListAdapter(null, null, onImageSelect);
+    }
+
+    @Bindable
+    public RecyclerView.Adapter getVariantImagesAdapter() {
+        return imagesListAdapter;
     }
 
     @Bindable
@@ -71,12 +103,16 @@ public class VariantItemBindingModel extends BaseObservable {
         return PriceFormatter.createCount(context.get(), variant.count, variant.measure);
     }
 
+    public String getVariantId() {
+        return variant.id;
+    }
 
     public void setVariant(Variant.Plain variant) {
         this.variant = variant;
         this.name = variant.title;
         this.price = String.valueOf(variant.price);
         this.count = String.valueOf(variant.count);
+        imagesListAdapter.setData(variant.small_images);
         notifyPropertyChanged(BR.variantName);
         notifyPropertyChanged(BR.variantCountDecor);
         notifyPropertyChanged(BR.variantPriceDecor);
@@ -87,6 +123,56 @@ public class VariantItemBindingModel extends BaseObservable {
         //...
     }
 
+    public void initImageLoad() {
+        imagesScroll = imagesListAdapter.loadingInProgress(0);
+        notifyPropertyChanged(BR.variantImagesScrollTo);
+    }
+
+    @Bindable
+    public int getVariantImagesScrollTo() {
+        return imagesScroll;
+    }
+
+    public void setLoadProgress(int progress) {
+            if (progress>=0 && progress <=100) {
+                imagesListAdapter.loadingInProgress(progress);
+            }
+            if (progress == DataRepository.LOAD_ERROR) {
+                AlertDialog alert = new AlertDialog.Builder(context.get()).create();
+                alert.setTitle("Error");
+                alert.setMessage("Enable to load image");
+                alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                imagesListAdapter.loadingDone(false, "");
+                            }
+                        });
+                alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
+                        imagesListAdapter.loadingDone(false, "");
+                    }
+                });
+                alert.show();
+            }
+            if (progress == DataRepository.LOAD_DONE) {
+                imagesListAdapter.imageReady();
+                //imagesListAdapter.setData(resource.data.small_images);
+                // imagesRecycler.
+            }
+            if (progress == DataRepository.SAVE_TO_DB_DONE) {
+                imagesListAdapter.loadingDone(true, loaded_image);
+                //imagesListAdapter.setData(resource.data.small_images);
+                // imagesRecycler.
+            }
+    }
+
+    public void setLoadedImage(String image) {
+        loaded_image = image;
+    }
+
     public void setOnEditClick(Runnable func) {
         this.onEditClick = new WeakReference<>(func);
     }
@@ -94,6 +180,15 @@ public class VariantItemBindingModel extends BaseObservable {
     public void onEditClick() {
         if (onEditClick != null && onEditClick.get() != null)
             onEditClick.get().run();
+    }
+
+    public void setOnAddImageClick(RunnableParam<View> func) {
+        this.onAddImageClick = new WeakReference<>(func);
+    }
+
+    public void onAddImageClick(View view) {
+        if (onAddImageClick != null && onAddImageClick.get() != null)
+            onAddImageClick.get().run(view);
     }
 
 }

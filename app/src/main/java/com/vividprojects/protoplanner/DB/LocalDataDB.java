@@ -51,6 +51,7 @@ public class LocalDataDB {
     }
 
     public void initDB(){
+        int i = 1;
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -239,6 +240,7 @@ public class LocalDataDB {
                 Currency cf = realm.where(Currency.class).equalTo("iso_code_str","XAF").findFirst();
                 Currency cd = realm.where(Currency.class).equalTo("iso_code_str","USD").findFirst();
                 Variant v = new Variant("Торт",m1,7,100, "Мой торт и ссылка http://test.com",cr);
+                String s = v.toString();
                 Variant v2 = new Variant("Колбаса",m,3,50, "",cd);
                 Variant v3 = new Variant("Хлеб",m1,5.01,60, "",cf);
                 Variant v4 = new Variant("Фильтр для воды",m1,5,60, "",cr);
@@ -315,7 +317,7 @@ public class LocalDataDB {
 
                 realm.insertOrUpdate(new Block("Блокнот 1",Block.PRIORITY_OFF));
                 Block b = realm.where(Block.class).contains("name","Блокнот 1").findFirst();
-                b.addRecord(r);
+             //   b.addRecord(r);
 
             }
         });
@@ -617,6 +619,34 @@ public class LocalDataDB {
             Variant rr = query.findFirst();
             return rr;
         }
+    }
+
+    public String saveVariant(String id, String name, double price, double count, int currency, int measure) {
+        Currency c = realm.where(Currency.class).equalTo("iso_code_int", currency).findFirst();
+        Measure  m = realm.where(Measure.class ).equalTo("hash",         measure ).findFirst();
+        if (c == null || m == null)
+            return null;
+        final Bundle1<String> bid = new Bundle1<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Variant v = null;
+                if (id != null) {
+                    v = realm.where(Variant.class).equalTo("id", id).findFirst();
+                    if (v != null) {
+                        v.setTitle(name);
+                        v.setPrice(price);
+                        v.setCount(count);
+                        v.setCurrency(c);
+                        v.setMeasure(m);
+                    }
+                }
+                if (v == null)
+                    v = new Variant(name, m, count, price, "", c);
+                bid.item = v.getId();
+            }
+        });
+        return bid.item;
     }
 
     //---------------- Labels ---------------------------------------------------------------

@@ -39,7 +39,7 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
         this.layoutId = layoutId;
         this.headerId = headerId;
         this.master = master;
-        init(context);
+        init(context, DataBindingAdapter.TYPE_ELEVATED);
 
         measureGroups.put(Measure.MEASURE_UNIT,-1);
         measureGroups.put(Measure.MEASURE_LENGTH,-1);
@@ -128,29 +128,6 @@ public class MeasureListAdapter extends DataBindingAdapter implements ItemAction
 
     private void sortList() {
         this.filtered_data = Measure.Plain.sort(context.get(), this.filtered_data);
-
-/*
-        Measure.Plain[] holder_list = new Measure.Plain[this.filtered_data.size()];
-        this.filtered_data.toArray(holder_list);
-
-        Arrays.sort(holder_list,(x, y)->{
-            if (x.measure == y.measure) {
-                if (x.header)
-                    return -10000;
-                if (y.header)
-                    return 10000;
-                if (x.def)
-                    return -1000;
-                if (y.def)
-                    return 1000;
-                return names.get(x.hash).toLowerCase().compareTo(names.get(y.hash).toLowerCase());
-            } else
-                return (x.measure - y.measure) * 100;
-        });
-
-        this.filtered_data.clear();
-        this.filtered_data.addAll(Arrays.asList(holder_list));
-*/
     }
 
     private void createModels() {

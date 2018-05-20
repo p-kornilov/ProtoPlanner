@@ -157,6 +157,7 @@
             android:background="@null"
             android:cropToPadding="false"
             android:padding="12dp"
+            android:onClick="@{()->variantModel.onAddImageClick(rfAddImage)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider2"
             app:srcCompat="@drawable/ic_add_to_photos_black_24dp" />
@@ -169,6 +170,11 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="@dimen/record_left_padding"
                 android:layout_marginTop="8dp"
+                android:focusable="false"
+                android:nestedScrollingEnabled="false"
+                android:adapter="@{variantModel.variantImagesAdapter}"
+                bind:layoutManagerHorizontal="@{true}"
+                bind:scrollTo="@{variantModel.variantImagesScrollTo}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textView5">

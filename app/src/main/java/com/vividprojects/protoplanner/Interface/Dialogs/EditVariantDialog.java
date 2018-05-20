@@ -23,6 +23,7 @@ import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Bundle2;
 import com.vividprojects.protoplanner.Utils.Bundle3;
+import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.Widgets.BindingHelper;
 import com.vividprojects.protoplanner.databinding.DialogVariantEditBinding;
@@ -46,6 +47,16 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
     private VariantEditBindingModel bindingModelVariantEdit;
     private DialogVariantEditBinding binding;
 
+    private AlertDialog dialog;
+
+    private RunnableParam<Integer> enableCheck = (error) -> {
+        if (error == 1) {
+            dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+        } else {
+            dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(true);
+        }
+    };
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -57,34 +68,33 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
         model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
         bindingModelVariantEdit = model.getBindingModelVariantEdit();
+        bindingModelVariantEdit.setEnableCheck(enableCheck);
         binding.setVariantEditModel(bindingModelVariantEdit);
 
         builder.setView(binding.getRoot())
                 .setTitle("Basic variant")
-                // Add action buttons
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-/*
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra("Title",titleET.getText().toString());
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, resultIntent);
-*/
-                       // model.saveMainVariant
-                   /*     model.
-                        saveVariant();*/
+                        model.saveVariant(bindingModelVariantEdit.getId()
+                                ,bindingModelVariantEdit.getVariantEditName()
+                                ,bindingModelVariantEdit.getPriceNum()
+                                ,bindingModelVariantEdit.getCountNum()
+                                ,bindingModelVariantEdit.getVariantEditCurrency().iso_code_int
+                                ,bindingModelVariantEdit.getVariantEditMeasure().hash);
                     }
                 })
                 .setNegativeButton("Cancel", null);
-        return builder.create();
+        dialog = builder.create();
+        return dialog;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         model.getMainVariantItem().observe(this, resource -> {
-            if (resource != null && resource.data != null)
-                bindingModelVariantEdit.setVariant(resource.data);
+            if (resource != null)
+                bindingModelVariantEdit.setVariant(resource);
         });
 
         model.getMeasures().observe(this, measures -> {
@@ -97,17 +107,6 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
                 bindingModelVariantEdit.setVariantEditCurrencyList(Currency.Plain.sort(getContext(), currencies));
         });
 
-    }
-
-    private void saveVariant() {
-/*        String name = titleET.getText().toString();
-        double price;
-        try {
-            price = Double.parseDouble(priceET.getText().toString());
-        } catch (NumberFormatException e) {
-         *//*   error = true;
-            сделать databinding для диалога, сделать проверку типов и индикацию ошибки, сделать сохранение*//*
-        }*/
     }
 
     public static EditVariantDialog create() {

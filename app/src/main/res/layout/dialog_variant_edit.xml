@@ -4,6 +4,7 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="variantEditModel" type="com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel"/>
+        <import type="com.vividprojects.protoplanner.R"/>
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -49,6 +50,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            app:hintTextAppearance="@{variantEditModel.priceError ? R.style.HintError : R.style.HintNormal}"
             app:layout_constraintEnd_toStartOf="@id/ved_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ved_name_layout">
@@ -58,6 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@={variantEditModel.variantEditPrice}"
+                android:drawableEnd="@{variantEditModel.priceError ? @drawable/ic_error_outline_red_24dp : null}"
                 android:hint="Price" />
 
         </android.support.design.widget.TextInputLayout>
@@ -110,6 +113,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="20dp"
+            app:hintTextAppearance="@{variantEditModel.countError ? R.style.HintError : R.style.HintNormal}"
             app:layout_constraintEnd_toStartOf="@id/ved_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ved_price_layout">
@@ -119,6 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@={variantEditModel.variantEditCount}"
+                android:drawableEnd="@{variantEditModel.countError ? @drawable/ic_error_outline_red_24dp : null}"
                 android:hint="Count" />
 
         </android.support.design.widget.TextInputLayout>

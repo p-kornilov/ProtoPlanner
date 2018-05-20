@@ -81,12 +81,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     private RecyclerView shopsRecycler;
     private RecyclerView alternativesRecycler;
-    private RecyclerView imagesRecycler;
-    private ImageButton add_image;
-    private HorizontalImagesListAdapter imagesListAdapter;
-    private TextView mvCurrency2;
+  //  private ImageButton add_image;
     private RecordItemViewModel model;
-    private PopupMenu loadImagePopup;
     private boolean empty = false;
 
     private String mTempPhotoPath;
@@ -96,7 +92,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private VariantItemBindingModel bindingModelVariant;
 
     private RunnableParam<Integer> onImageSelect = (position)->{
-        navigationController.openImageView(position,model.getMainVariantItem().getValue().data.title);
+        navigationController.openImageView(position,bindingModelVariant.getVariantId());
     };
 
     private Runnable onCommentEditClick = () -> {
@@ -126,6 +122,41 @@ public class RecordItemFragment extends Fragment implements Injectable {
         EditVariantDialog editVariantDialog = EditVariantDialog.create();
         editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
         editVariantDialog.show(getFragmentManager(), "Edit main variant");
+    };
+
+    private RunnableParam<View> onAddImageClick = (view) -> {
+        PopupMenu popup = new PopupMenu(getContext(), view);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.mli_url:
+                        RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
+                        addImageURLDialog.setTargetFragment(RecordItemFragment.this, REQUEST_IMAGE_URL_LOAD);
+                        addImageURLDialog.show(getFragmentManager(), "Add_image_url");
+                        return true;
+                    case R.id.mli_gallery:
+                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                        } else {
+                            Intent i = new Intent(
+                                    Intent.ACTION_PICK,
+                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                            startActivityForResult(i, REQUEST_IMAGE_GALLERY);
+                        }
+                        return true;
+                    case R.id.mli_foto:
+                        launchCamera();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_load_image, popup.getMenu());
+        popup.show();
     };
 
     @Override
@@ -168,55 +199,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
             shopsRecycler.setLayoutManager(layoutManager);
             shopsRecycler.setNestedScrollingEnabled(false);
             shopsRecycler.setFocusable(false);
-
-            imagesRecycler = (RecyclerView) v.findViewById(R.id.ai_images);
-            RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            imagesRecycler.setLayoutManager(layoutManager3);
-            imagesRecycler.setNestedScrollingEnabled(false);
-            imagesRecycler.setFocusable(false);
-            imagesListAdapter = new HorizontalImagesListAdapter(null, null, onImageSelect);
-            imagesRecycler.setAdapter(imagesListAdapter);
-            ((SimpleItemAnimator) imagesRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
-
-
-            add_image = (ImageButton) v.findViewById(R.id.rf_add_image);
-            add_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    PopupMenu popup = new PopupMenu(getContext(), view);
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.mli_url:
-                                    RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
-                                    addImageURLDialog.setTargetFragment(RecordItemFragment.this, REQUEST_IMAGE_URL_LOAD);
-                                    addImageURLDialog.show(getFragmentManager(), "Add_image_url");
-                                    return true;
-                                case R.id.mli_gallery:
-                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                                    } else {
-                                        Intent i = new Intent(
-                                                Intent.ACTION_PICK,
-                                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                                        startActivityForResult(i, REQUEST_IMAGE_GALLERY);
-                                    }
-                                    return true;
-                                case R.id.mli_foto:
-                                    launchCamera();
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        }
-                    });
-                    MenuInflater inflater = popup.getMenuInflater();
-                    inflater.inflate(R.menu.menu_load_image, popup.getMenu());
-                    popup.show();
-                }
-            });
 
             alternativesRecycler = (RecyclerView) v.findViewById(R.id.rf_alternatives_recycler);
 
@@ -265,7 +247,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 break;
         }
         return true;
-        //return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -297,33 +278,18 @@ public class RecordItemFragment extends Fragment implements Injectable {
     }
 
     private void launchCamera() {
-
-        // Create the capture image intent
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // Create the temporary File where the photo should go
             File photoFile = null;
             try {
                 photoFile = BitmapUtils.createTempImageFile(getContext().getApplicationContext());
             } catch (IOException ex) {
-                // Error occurred while creating the File
                 ex.printStackTrace();
             }
-            // Continue only if the File was successfully created
             if (photoFile != null) {
-
-                // Get the path of the temporary file
                 mTempPhotoPath = photoFile.getAbsolutePath();
-
-                // Get the content URI for the image file
                 Uri photoURI = FileProvider.getUriForFile(getContext().getApplicationContext(),FILE_PROVIDER_AUTHORITY,photoFile);
-
-                // Add the URI so the camera can store the image
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-
-                // Launch the camera activity
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -334,7 +300,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
         switch (requestCode) {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
-                    imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+                    bindingModelVariant.initImageLoad();
                     model.loadCameraImage(mTempPhotoPath);
                 } else {
                     BitmapUtils.deleteImageFile(getContext().getApplicationContext(), mTempPhotoPath);
@@ -342,14 +308,14 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 return;
             case REQUEST_IMAGE_GALLERY:
                 if (resultCode == RESULT_OK && data != null) {
-                    imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+                    bindingModelVariant.initImageLoad();
                     model.loadGalleryImage(data.getData());
                 }
                 return;
             case REQUEST_IMAGE_URL_LOAD:
                 if (resultCode == RESULT_OK && data != null) {
                     String url = data.getExtras().get("URL").toString();
-                    imagesRecycler.scrollToPosition(imagesListAdapter.loadingInProgress(0));
+                    bindingModelVariant.initImageLoad();
                     model.loadImage(url);
                 }
                 return;
@@ -380,10 +346,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     String comment = data.getStringExtra("EDITTEXT");
                     model.setComment(comment);
                     bindingModelRecord.setRecordComment(comment);
-                    // Другой вариант
-                    //model.setComment(comment).observe(this, c -> {
-                    //    bindingModelRecord.setRecordComment(comment);
-                    //});
                 }
                 return;
         }
@@ -392,8 +354,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
-       // final RecordItemViewModel model = ViewModelProviders.of(getActivity(),viewModelFactory).get(RecordItemViewModel.class);
 
         if (!empty) {
             model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
@@ -405,6 +365,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
             bindingModelVariant = model.getBindingModelVariant();
             bindingModelVariant.setOnEditClick(onVariantEditClick);
+            bindingModelVariant.setImagesAdapter(onImageSelect);
+            bindingModelVariant.setOnAddImageClick(onAddImageClick);
             binding.setVariantModel(bindingModelVariant);
 
             Bundle args = getArguments();
@@ -417,62 +379,25 @@ public class RecordItemFragment extends Fragment implements Injectable {
             }
 
             model.getRecordItem().observe(this, resource -> {
-                if (resource != null && resource.data != null) {
+                if (resource != null && resource.data != null)
                     bindingModelRecord.setRecord(resource.data);
-                }
             });
 
             if (navigationController.isTablet())
                 model.getRecordName().observe(this, name -> {
-                    if (name != null) {
+                    if (name != null)
                         ((MainActivity) getActivity()).getSecondToolBar().setTitle(name);
-                    }
                 });
 
             model.getMainVariantItem().observe(this, resource -> {
-                if (resource != null && resource.data != null) {
-                    bindingModelVariant.setVariant(resource.data);
-
-                    imagesListAdapter.setData(resource.data.small_images);
+                if (resource != null ) {
+                    bindingModelVariant.setVariant(resource);
                 }
             });
 
             model.getLoadProgress().observe(this, (progress) -> {
-                if (progress != null) {
-                    if (progress>=0 && progress <=100) {
-                        imagesListAdapter.loadingInProgress(progress);
-                    }
-                    if (progress == DataRepository.LOAD_ERROR) {
-                        AlertDialog alert = new AlertDialog.Builder(getContext()).create();
-                        alert.setTitle("Error");
-                        alert.setMessage("Enable to load image");
-                        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        imagesListAdapter.loadingDone(false, "");
-                                    }
-                                });
-                        alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                dialog.dismiss();
-                                imagesListAdapter.loadingDone(false, "");
-                            }
-                        });
-                        alert.show();
-                    }
-                    if (progress == DataRepository.LOAD_DONE) {
-                        imagesListAdapter.imageReady();
-                        //imagesListAdapter.setData(resource.data.small_images);
-                        // imagesRecycler.
-                    }
-                    if (progress == DataRepository.SAVE_TO_DB_DONE) {
-                        imagesListAdapter.loadingDone(true, model.getLoadedImage());
-                        //imagesListAdapter.setData(resource.data.small_images);
-                        // imagesRecycler.
-                    }
-                }
+                if (progress != null)
+                    bindingModelVariant.setLoadProgress(progress);
             });
         }
     }

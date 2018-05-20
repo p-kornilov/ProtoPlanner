@@ -13,8 +13,8 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Variant extends RealmObject {
-    private String id = UUID.randomUUID().toString();
     @PrimaryKey
+    private String id = UUID.randomUUID().toString();
     private String title;
     private Measure measure;
     private double count;
@@ -37,28 +37,11 @@ public class Variant extends RealmObject {
         this.measure = measure;
         this.count = count;
         this.price = price;
-//        this.value = count*price;
         this.comment = comment;
         this.urls = new RealmList<>();
         this.currency = currency;
         this.images = new RealmList<>();
     }
-
-/*    public String getFormattedValue() {
-        return PriceFormatter.createValue(currency,price*count);
-    }
-
-    public String getFormattedPriceShort() {
-        return PriceFormatter.createValue(currency,price);
-    }
-
-    public String getFormattedPriceFull() {
-        return PriceFormatter.createPrice(currency,price,measure);
-    }
-
-    public String getFormattedCount() {
-        return PriceFormatter.createCount(count,measure);
-    }*/
 
     public Currency getCurrency() {
         return currency;
@@ -73,9 +56,17 @@ public class Variant extends RealmObject {
         return true;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
     public Measure getMeasure() { return measure; }
 
-    public void setCount(int count) {
+    public void setCount(double count) {
         this.count = count;
     }
 
@@ -109,7 +100,7 @@ public class Variant extends RealmObject {
 
 //    public List<String> getShops() { return urls; }
 
-    @Override
+/*    @Override
     public String toString() {
         String str= "Title: " + title + " (comment: " + comment + ")" + ", count: " + count + " " + measure.getSymbol() + ", for " + price + " each, with total value: " + PriceFormatter.createValue(currency.getPlain(),price*count) + "\n\tURLS:\n";
 
@@ -125,6 +116,22 @@ public class Variant extends RealmObject {
         }
 
         return str;
+    }*/
+
+    @Override
+    public String toString() {
+        return "Variant{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", measure=" + measure +
+                ", count=" + count +
+                ", price=" + price +
+                ", comment='" + comment + '\'' +
+                ", urls=" + urls +
+                ", images=" + images +
+                ", shops=" + shops +
+                ", currency=" + currency +
+                '}';
     }
 
     @Override

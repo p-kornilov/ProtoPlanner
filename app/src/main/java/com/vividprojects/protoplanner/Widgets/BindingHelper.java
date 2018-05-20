@@ -3,6 +3,8 @@ package com.vividprojects.protoplanner.Widgets;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
 import android.os.Build;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.ArrayAdapter;
@@ -156,6 +158,22 @@ public class BindingHelper {
         if (layout != null) {
             layout.setData(Arrays.asList(labels), selected);
         }
+    }
+
+    @BindingAdapter("bind:layoutManagerHorizontal")
+    public static void setLayoutManagerCustom(RecyclerView recycler, boolean orientation) {
+        if (orientation) {
+            RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager(recycler.getContext(), LinearLayoutManager.HORIZONTAL, false);
+            recycler.setLayoutManager(layoutManager3);
+        } else {
+            RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager(recycler.getContext());
+            recycler.setLayoutManager(layoutManager3);
+        }
+    }
+
+    @BindingAdapter("bind:scrollTo")
+    public static void setRecyclerScrollTo(RecyclerView recycler, int position) {
+        recycler.scrollToPosition(position);
     }
 
     public static int getMeasureImageResource(int measure) {

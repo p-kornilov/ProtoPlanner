@@ -190,7 +190,7 @@ public class Record extends RealmObject{
         for (Label label: labels) {
             plain.labels.add(label.getPlain());
         }
-        plain.block = block.getName();
+        //plain.block = block.getName();
         plain.comment = comment;
         return plain;
     }

@@ -24,11 +24,17 @@ import com.vividprojects.protoplanner.R;
 
 
 public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindingViewHolder> {
+    public static final int TYPE_FLAT = 0;
+    public static final int TYPE_ELEVATED = 1;
+
     private float elevation;
+    private boolean typeElevated = false;
 
 
-    public void init(Context context) {
+    public void init(Context context, int type) {
         elevation = context.getResources().getDimension(R.dimen.cardElevation);
+        if (type == TYPE_ELEVATED)
+            typeElevated = true;
     }
 
     public DataBindingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,8 +47,10 @@ public abstract class DataBindingAdapter extends RecyclerView.Adapter<DataBindin
         Object obj = getObjForPosition(position);
         holder.bind(obj);
 
-        View v = holder.itemView;
-        ViewCompat.setElevation(v,elevation);
+        if (typeElevated) {
+            View v = holder.itemView;
+            ViewCompat.setElevation(v,elevation);
+        }
     }
 
     @Override

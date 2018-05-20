@@ -3,9 +3,11 @@ package com.vividprojects.protoplanner.ViewModels;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
@@ -31,7 +33,8 @@ import javax.inject.Inject;
 public class RecordItemViewModel extends ViewModel {
     final MutableLiveData<String> recordItemId;
     private final LiveData<Resource<Record.Plain>> recordItem;
-    private final LiveData<Resource<Variant.Plain>> mainVariantItem;
+    private final LiveData<Resource<Variant.Plain>> mvItem;
+    private final MediatorLiveData<Variant.Plain> mainVariantItem;
     private final MutableLiveData<List<Label.Plain>> labels;
     private final MutableLiveData<String> recordNameTrigger;
     private final LiveData<String> recordNameChange;
@@ -43,8 +46,6 @@ public class RecordItemViewModel extends ViewModel {
     private VariantEditBindingModel bindingModelVariantEdit;
 
     private final SingleLiveEvent<Integer> loadProgress;
-
-    private String loaded_image = "";
 
     private boolean inImageLoading = false;
 
@@ -71,7 +72,7 @@ public class RecordItemViewModel extends ViewModel {
             }*/
             return RecordItemViewModel.this.dataRepository.loadRecord(input);
         });
-        mainVariantItem = Transformations.switchMap(recordItem, input -> {
+        mvItem = Transformations.switchMap(recordItem, input -> {
 /*            if (input.isEmpty()) {
                 return AbsentLiveData.create();
             } else {
@@ -81,6 +82,9 @@ public class RecordItemViewModel extends ViewModel {
                 return RecordItemViewModel.this.dataRepository.loadVariant(input.data.mainVariant);
             else return null;
         });
+
+        mainVariantItem = new MediatorLiveData<>();
+        mainVariantItem.addSource(mvItem, mv -> {mainVariantItem.setValue(mv.data);});
 
         recordName = new MediatorLiveData<>();
         recordName.addSource(recordNameChange,name->{recordName.setValue(name);});
@@ -107,7 +111,7 @@ public class RecordItemViewModel extends ViewModel {
         return recordName;
     }
 
-    public LiveData<Resource<Variant.Plain>> getMainVariantItem() {
+    public LiveData<Variant.Plain> getMainVariantItem() {
         return mainVariantItem;
     }
     public SingleLiveEvent<Integer> getLoadProgress() {return loadProgress;}
@@ -119,7 +123,7 @@ public class RecordItemViewModel extends ViewModel {
     public SingleLiveEvent<Integer> loadImage(String url) {
         if (!inImageLoading) {
             inImageLoading = true;
-            loaded_image = dataRepository.saveImageFromURLtoVariant(url, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
+            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromURLtoVariant(url, mainVariantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
         }
         return loadProgress;
     }
@@ -127,7 +131,7 @@ public class RecordItemViewModel extends ViewModel {
     public SingleLiveEvent<Integer> loadCameraImage(String tempFileName) {
         if (!inImageLoading) {
             inImageLoading = true;
-            loaded_image = dataRepository.saveImageFromCameratoVariant(tempFileName, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
+            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromCameratoVariant(tempFileName, mainVariantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
         }
         return loadProgress;
     }
@@ -135,17 +139,13 @@ public class RecordItemViewModel extends ViewModel {
     public SingleLiveEvent<Integer> loadGalleryImage(Uri fileName) {
         if (!inImageLoading) {
             inImageLoading = true;
-            loaded_image = dataRepository.saveImageFromGallerytoVariant(fileName, mainVariantItem.getValue().data.title, loadProgress,()->{inImageLoading=false;});
+            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromGallerytoVariant(fileName, mainVariantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
         }
         return loadProgress;
     }
 
     public boolean isInImageLoading() {
         return inImageLoading;
-    }
-
-    public String getLoadedImage() {
-        return loaded_image;
     }
 
     public LiveData<List<Label.Plain>> getLabels() {
@@ -188,6 +188,18 @@ public class RecordItemViewModel extends ViewModel {
 
     public LiveData<String> setComment(String comment) {
         return dataRepository.setRecordComment(bindingModelRecord.getRecordId(),comment);
+    }
+
+    public void saveVariant(String id, String name, double price, double count, int currency, int measure) {
+        String saveId = dataRepository.saveVariant(id, name, price, count, currency, measure);
+        LiveData<Resource<Variant.Plain>> currentVariant = dataRepository.loadVariant(saveId);
+        mainVariantItem.addSource(currentVariant, new Observer<Resource<Variant.Plain>>() {
+            @Override
+            public void onChanged(@Nullable Resource<Variant.Plain> variant) {
+                mainVariantItem.setValue(variant.data);
+                mainVariantItem.removeSource(currentVariant);
+            }
+        });
     }
 
 }
