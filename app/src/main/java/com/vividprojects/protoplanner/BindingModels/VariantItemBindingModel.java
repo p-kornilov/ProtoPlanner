@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
+import com.vividprojects.protoplanner.Adapters.ShopListAdapter;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
@@ -37,6 +38,8 @@ public class VariantItemBindingModel extends BaseObservable {
     private String count;
     private String name;
 
+    private ShopListAdapter shopListAdapter;
+
     private HorizontalImagesListAdapter imagesListAdapter;
     private int imagesScroll = 0;
     private String loaded_image = "";
@@ -47,6 +50,7 @@ public class VariantItemBindingModel extends BaseObservable {
 
     public VariantItemBindingModel( Context context) {
         this.context = new WeakReference<>(context);
+        this.shopListAdapter = new ShopListAdapter(context);
     }
 
     public void setImagesAdapter(RunnableParam onImageSelect) {
@@ -56,6 +60,11 @@ public class VariantItemBindingModel extends BaseObservable {
     @Bindable
     public RecyclerView.Adapter getVariantImagesAdapter() {
         return imagesListAdapter;
+    }
+
+    @Bindable
+    public RecyclerView.Adapter getVariantShopsAdapter() {
+        return shopListAdapter;
     }
 
     @Bindable
@@ -113,6 +122,7 @@ public class VariantItemBindingModel extends BaseObservable {
         this.price = String.valueOf(variant.price);
         this.count = String.valueOf(variant.count);
         imagesListAdapter.setData(variant.small_images);
+       // shopListAdapter.
         notifyPropertyChanged(BR.variantName);
         notifyPropertyChanged(BR.variantCountDecor);
         notifyPropertyChanged(BR.variantPriceDecor);

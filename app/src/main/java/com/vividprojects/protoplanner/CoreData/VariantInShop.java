@@ -81,7 +81,7 @@ public class VariantInShop extends RealmObject {
         plain.comment = comment;
         plain.price = price;
         if (variant != null && !variant.isEmpty())
-            plain.variant = variant.first().getId();
+            plain.variant = variant.first().getPlain();
         else
             plain.variant = null;
         return plain;
@@ -94,7 +94,7 @@ public class VariantInShop extends RealmObject {
         public String address;
         public String comment;
         public double price;
-        public String variant;
+        public Variant.Plain variant;
     }
 
 }
