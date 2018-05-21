@@ -162,7 +162,7 @@
                 android:background="@color/white">
 
             <include
-                layout="@layout/alternative_item"
+                layout="@layout/variant_full"
                 android:id="@+id/alter_layout"
                 bind:variantModel="@{variantModel}"/>
             </android.support.v7.widget.CardView>

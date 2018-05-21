@@ -1,5 +1,8 @@
 package com.vividprojects.protoplanner.CoreData;
 
+import java.util.List;
+import java.util.UUID;
+
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.LinkingObjects;
@@ -11,7 +14,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class VariantInShop extends RealmObject {
     @PrimaryKey
-    private int hash;
+    private String id = UUID.randomUUID().toString();
     private String title;
     private String url;
     private String address;
@@ -26,7 +29,6 @@ public class VariantInShop extends RealmObject {
         url = "";
         title = "";
         address = "";
-        hash = 0;
     }
 
     public VariantInShop(String title, String url, String address, String comment, double price) {
@@ -35,21 +37,10 @@ public class VariantInShop extends RealmObject {
         this.comment = comment;
         this.price = price;
         this.address = address;
-        hash = hashCode();
     }
 
-    @Override
-    public int hashCode() {
-        int result = 15;
-
-        result = 31*result + title.hashCode();
-        result = 31*result + url.hashCode();
-
-        return result;
-    }
-
-    public int getHash() {
-        return hash;
+    public String getId() {
+        return id;
     }
 
     public String getTitle() { return title;}
@@ -64,14 +55,12 @@ public class VariantInShop extends RealmObject {
 
     public void setTitle(String title) {
         this.title = title;
-//        hash = hashCode();
     }
 
     public void setAddress(String address) { this.address = address; }
 
     public void setURL(String url) {
         this.url = url;
-//        hash = hashCode();
     }
 
     public void setComment(String comment) { this.comment= comment; }
@@ -81,6 +70,31 @@ public class VariantInShop extends RealmObject {
     @Override
     public String toString() {
         return "" + title + " (" + url + "), Price: " + price;
+    }
+
+    public Plain getPlain() {
+        Plain plain = new Plain();
+        plain.id = id;
+        plain.title = title;
+        plain.url = url;
+        plain.address = address;
+        plain.comment = comment;
+        plain.price = price;
+        if (variant != null && !variant.isEmpty())
+            plain.variant = variant.first().getId();
+        else
+            plain.variant = null;
+        return plain;
+    }
+
+    public class Plain {
+        public String id;
+        public String title;
+        public String url;
+        public String address;
+        public String comment;
+        public double price;
+        public String variant;
     }
 
 }
