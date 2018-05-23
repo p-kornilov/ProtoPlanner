@@ -21,10 +21,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="FullScreenDialogStyle" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowIsFloating">false</item>
+    <style name="ToolBarStyle" parent="AppTheme.PopupOverlay">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

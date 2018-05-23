@@ -121,11 +121,11 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     private Runnable onVariantEditClick = () -> {
         EditVariantDialog editVariantDialog = EditVariantDialog.create();
-/*        editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
-        editVariantDialog.show(getFragmentManager(), "Edit main variant");*/
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
+        editVariantDialog.show(getFragmentManager(), "Edit main variant");
+/*        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.add(android.R.id.content, editVariantDialog).addToBackStack(null).commit();
+        transaction.add(android.R.id.content, editVariantDialog).addToBackStack(null).commit();*/
     };
 
     private RunnableParam<View> onAddImageClick = (view) -> {

@@ -68,7 +68,7 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        binding = DialogVariantEditBinding.inflate(inflater);
+  //      binding = DialogVariantEditBinding.inflate(inflater);
 
         View rootView = binding.getRoot();
 
@@ -81,7 +81,7 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
         setHasOptionsMenu(true);
         return rootView;
@@ -93,7 +93,7 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-      //  binding = DialogVariantEditBinding.inflate(inflater);
+        binding = DialogVariantEditBinding.inflate(inflater);
 
         model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
