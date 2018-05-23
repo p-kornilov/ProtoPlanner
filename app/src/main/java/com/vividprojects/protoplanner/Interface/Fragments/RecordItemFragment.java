@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -120,8 +121,11 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     private Runnable onVariantEditClick = () -> {
         EditVariantDialog editVariantDialog = EditVariantDialog.create();
-        editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
-        editVariantDialog.show(getFragmentManager(), "Edit main variant");
+/*        editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
+        editVariantDialog.show(getFragmentManager(), "Edit main variant");*/
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.add(android.R.id.content, editVariantDialog).addToBackStack(null).commit();
     };
 
     private RunnableParam<View> onAddImageClick = (view) -> {
@@ -192,13 +196,13 @@ public class RecordItemFragment extends Fragment implements Injectable {
             //return binding.getRoot();
             v = binding.getRoot();  // TODO Сделать правильно (удалить v)
 
-            shopsRecycler = v.findViewById(R.id.rf_shops_recycler);
+/*            shopsRecycler = v.findViewById(R.id.rf_shops_recycler);
 
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             layoutManager.setAutoMeasureEnabled(true);
             shopsRecycler.setLayoutManager(layoutManager);
             shopsRecycler.setNestedScrollingEnabled(false);
-            shopsRecycler.setFocusable(false);
+            shopsRecycler.setFocusable(false);*/
 
             alternativesRecycler = (RecyclerView) v.findViewById(R.id.rf_alternatives_recycler);
 

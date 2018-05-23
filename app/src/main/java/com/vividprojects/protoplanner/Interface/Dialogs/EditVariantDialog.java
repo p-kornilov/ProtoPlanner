@@ -7,9 +7,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -58,12 +66,34 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
     };
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        binding = DialogVariantEditBinding.inflate(inflater);
+
+        View rootView = binding.getRoot();
+
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.setTitle("Dialog title");
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+        }
+        setHasOptionsMenu(true);
+        return rootView;
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        binding = DialogVariantEditBinding.inflate(inflater);
+      //  binding = DialogVariantEditBinding.inflate(inflater);
 
         model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
@@ -86,13 +116,52 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
                 })
                 .setNegativeButton("Cancel", null);
         dialog = builder.create();
+
+        //-----------------------------
+        View rootV = binding.getRoot();
+        Toolbar toolbar = rootV.findViewById(R.id.toolbar);
+        toolbar.setTitle("Dialog title");
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+        }
+        setHasOptionsMenu(true);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //-----------------------------
         return dialog;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        getActivity().getMenuInflater().inflate(R.menu.menu_ak, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_save) {
+            // handle confirmation button click here
+            return true;
+        } else if (id == android.R.id.home) {
+            // handle close button click here
+            dismiss();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        model.getMainVariantItem().observe(this, resource -> {
+/*        model.getMainVariantItem().observe(this, resource -> {
             if (resource != null)
                 bindingModelVariantEdit.setVariant(resource);
         });
@@ -105,7 +174,7 @@ public class EditVariantDialog extends DialogFragment implements Injectable {
         model.getCurrencies().observe(this, currencies -> {
             if (currencies != null)
                 bindingModelVariantEdit.setVariantEditCurrencyList(Currency.Plain.sort(getContext(), currencies));
-        });
+        });*/
 
     }
 

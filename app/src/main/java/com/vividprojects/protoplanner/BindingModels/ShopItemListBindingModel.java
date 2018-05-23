@@ -57,6 +57,6 @@ public class ShopItemListBindingModel extends BaseObservable {
 
     @Bindable
     public String getShopPrice() {
-        return PriceFormatter.createPrice(context, shop.variant.currency, shop.price, shop.variant.measure);
+        return PriceFormatter.createPrice(context, shop.currency, shop.price, shop.measure);
     }
 }
