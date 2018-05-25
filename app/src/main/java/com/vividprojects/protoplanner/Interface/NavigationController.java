@@ -35,10 +35,12 @@ public class NavigationController {
 
     private Context context;
     private Activity currentActivity;
+    private boolean isTablet;
 
     @Inject
     public NavigationController(Context context) {
         this.context = context;
+        this.isTablet = context.getResources().getBoolean(R.bool.isTablet);
     }
 
     public void setCurrentActivity(Activity activity) {
@@ -212,7 +214,7 @@ public class NavigationController {
     }
 
     public boolean isTablet() {
-        return context.getResources().getBoolean(R.bool.isTablet);
+        return isTablet;
     }
 
     public static boolean isTablet(Context context) {

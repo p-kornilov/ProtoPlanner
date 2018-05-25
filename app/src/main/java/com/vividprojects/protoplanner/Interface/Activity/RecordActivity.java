@@ -66,31 +66,6 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-/*
-        switch (id) {
-            case R.id.ra_edit_name:
-                EditTextDialog editNameDialog = new EditTextDialog();
-              //  editNameDialog.setTargetFragment(this, REQUEST_EDIT_NAME);
-                //addImageURLDialog.show(getFragmentManager(), "Add_image_url");
-                break;
-        }
-        return true;
-*/
-        return false;
-        //return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.menu_record, menu);
-        return true;
-    }
-
-    @Override
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingAndroidInjector;
     }
