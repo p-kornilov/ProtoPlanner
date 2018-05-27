@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="variantEditModel" type="com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel"/>
+        <import type="com.vividprojects.protoplanner.R"/>
+    </data>
+
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:fitsSystemWindows="true">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/ved_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/ved_name_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <EditText
+                    android:id="@+id/ved_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={variantEditModel.variantEditName}"
+                    android:hint="Name" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/ved_price_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:hintTextAppearance="@{variantEditModel.priceError ? R.style.HintError : R.style.HintNormal}"
+                app:layout_constraintEnd_toStartOf="@id/ved_guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ved_name_layout">
+
+                <EditText
+                    android:id="@+id/ved_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={variantEditModel.variantEditPrice}"
+                    android:drawableEnd="@{variantEditModel.priceError ? @drawable/ic_error_outline_red_24dp : null}"
+                    android:hint="Price" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/ved_currency"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="27dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:selectedItemPosition="@={variantEditModel.currencyCursor}"
+                bind:adapterSpinnerCurrencyItem="@{variantEditModel.variantEditCurrency}"
+                bind:adapterSpinnerCurrencyList="@{variantEditModel.variantEditCurrencyList}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ved_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/ved_name_layout" />
+
+            <ImageButton
+                android:id="@+id/ved_currency_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:cropToPadding="false"
+                android:onClick="@{()->vedCurrency.performClick()}"
+                android:padding="0dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@id/ved_currency"
+                app:layout_constraintTop_toTopOf="@id/ved_currency"
+                app:srcCompat="@drawable/ic_arrow_drop_down_gray_24dp" />
+
+            <View
+                android:id="@+id/ved_divider1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#6b000000"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@id/ved_currency"
+                app:layout_constraintStart_toStartOf="@id/ved_currency"
+                app:layout_constraintTop_toBottomOf="@id/ved_currency" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/ved_count_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="20dp"
+                app:hintTextAppearance="@{variantEditModel.countError ? R.style.HintError : R.style.HintNormal}"
+                app:layout_constraintEnd_toStartOf="@id/ved_guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ved_price_layout">
+
+                <EditText
+                    android:id="@+id/ved_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={variantEditModel.variantEditCount}"
+                    android:drawableEnd="@{variantEditModel.countError ? @drawable/ic_error_outline_red_24dp : null}"
+                    android:hint="Count" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/ved_measure"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="27dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:selectedItemPosition="@={variantEditModel.measureCursor}"
+                bind:adapterSpinnerMeasureItem="@{variantEditModel.variantEditMeasure}"
+                bind:adapterSpinnerMeasureList="@{variantEditModel.variantEditMeasureList}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ved_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/ved_price_layout" />
+
+            <ImageButton
+                android:id="@+id/ved_measure_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:cropToPadding="false"
+                android:onClick="@{()->vedMeasure.performClick()}"
+                android:padding="0dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@id/ved_measure"
+                app:layout_constraintTop_toTopOf="@id/ved_measure"
+                app:srcCompat="@drawable/ic_arrow_drop_down_gray_24dp" />
+
+            <View
+                android:id="@+id/ved_divider2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#6b000000"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@id/ved_measure"
+                app:layout_constraintStart_toStartOf="@id/ved_measure"
+                app:layout_constraintTop_toBottomOf="@id/ved_measure" />
+
+            <View
+                android:id="@+id/ved_divider3"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#6b000000"
+                android:visibility="invisible"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="@id/ved_measure"
+                app:layout_constraintStart_toStartOf="@id/ved_measure"
+                app:layout_constraintTop_toBottomOf="@id/ved_measure" />
+
+        </android.support.constraint.ConstraintLayout>
+</layout>

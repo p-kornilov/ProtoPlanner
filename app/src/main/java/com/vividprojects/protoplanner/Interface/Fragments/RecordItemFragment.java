@@ -3,7 +3,6 @@ package com.vividprojects.protoplanner.Interface.Fragments;
 import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,15 +10,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -29,15 +25,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
-import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditVariantDialog;
@@ -46,7 +38,6 @@ import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.databinding.RecordFragmentBinding;
 
@@ -120,15 +111,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     };
 
     private Runnable onVariantEditClick = () -> {
-        EditVariantDialog editVariantDialog = EditVariantDialog.create();
-        if (navigationController.isTablet()) {
-//            editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
-            editVariantDialog.show(getFragmentManager(), "Edit main variant");
-        } else {
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.add(android.R.id.content, editVariantDialog).addToBackStack(null).commit();
-        }
+        EditVariantDialog.createAndShow(getFragmentManager(),!navigationController.isTablet(), ((ViewGroup)getView().getParent()).getId());
     };
 
     private RunnableParam<View> onAddImageClick = (view) -> {
@@ -169,7 +152,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         Log.d("Test", "onCreate - Record Fragment");
     }
 
@@ -179,6 +161,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
         Log.d("Test", "onCreateView - Record Fragment");
         Bundle args = getArguments();
+        setHasOptionsMenu(true);
 
         if (args != null && args.containsKey(RECORD_ID)){
             //    model.setFilter();
@@ -415,5 +398,34 @@ public class RecordItemFragment extends Fragment implements Injectable {
         args.putString(RECORD_ID,id);
         recordItemFragment.setArguments(args);
         return recordItemFragment;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (menu.size() == 0) {
+            getActivity().getMenuInflater().inflate(R.menu.menu_record, menu);
+        }
     }
 }
