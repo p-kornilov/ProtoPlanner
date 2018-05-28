@@ -45,7 +45,7 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
     private AlertDialog dialog;
     private MenuItem saveMenu;
     private boolean isFullScreen = false;
-    private int containerId = 0;
+    private boolean isClosing = false;
 
     private RunnableParam<Integer> enableCheck = (error) -> {
         if (error == 1) {
@@ -97,10 +97,8 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
-        if (b != null) {
+        if (b != null)
             isFullScreen = b.getBoolean("FULLSCREEN", false);
-            containerId = b.getInt("CONTAINER",0);
-        }
     }
 
     @Override
@@ -130,7 +128,9 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        getActivity().getMenuInflater().inflate(R.menu.menu_dialog_fullscreen, menu);
+        if (isClosing)
+            return;
+        inflater.inflate(R.menu.menu_dialog_fullscreen, menu);
         saveMenu = menu.findItem(R.id.mdf_action_save);
     }
 
@@ -139,9 +139,11 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
         int id = item.getItemId();
 
         if (id == R.id.mdf_action_save) {
+            isClosing = true;
             onSave();
-            closeEmptyFragment();
-           // dismiss();
+           // closeEmptyFragment();
+            getActivity().invalidateOptionsMenu();
+            dismiss();
             return true;
         } else if (id == android.R.id.home) {
             dismiss();
@@ -159,10 +161,9 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
 
     public void showDialog(FragmentManager fragmentManager, boolean isFullScreen){
         if (isFullScreen) {
-            fragmentManager.beginTransaction().add(containerId, new EmptyFragment()).addToBackStack(EMPTY_FRAGMENT).commit();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.add(android.R.id.content, this).addToBackStack(null).commit();
+            transaction.add(android.R.id.content, this).addToBackStack(EMPTY_FRAGMENT).commit();
         } else {
 //            editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
             this.show(fragmentManager, "Edit main variant");
@@ -173,7 +174,7 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
         getActivity().invalidateOptionsMenu();
         FragmentManager fm = getFragmentManager();
         if (fm != null)
-            fm.beginTransaction().remove(this).commitAllowingStateLoss();
+            fm.beginTransaction().remove(fm.findFragmentByTag(EMPTY_FRAGMENT)).commitNowAllowingStateLoss();
 /*        FragmentManager fm = getFragmentManager();
         if (fm != null)
             fm.beginTransaction().remove(fm.findFragmentByTag(EMPTY_FRAGMENT)).commit();*/

@@ -111,7 +111,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     };
 
     private Runnable onVariantEditClick = () -> {
-        EditVariantDialog.createAndShow(getFragmentManager(),!navigationController.isTablet(), ((ViewGroup)getView().getParent()).getId());
+        EditVariantDialog.createAndShow(getFragmentManager(),!navigationController.isTablet());
     };
 
     private RunnableParam<View> onAddImageClick = (view) -> {
@@ -214,8 +214,10 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     return onOptionsItemSelected(item);
                 }
             });
-        } else
-            inflater.inflate(R.menu.menu_record, menu);
+        } else {
+            if (menu.size() == 0)
+                inflater.inflate(R.menu.menu_record, menu);
+        }
     }
 
     @Override

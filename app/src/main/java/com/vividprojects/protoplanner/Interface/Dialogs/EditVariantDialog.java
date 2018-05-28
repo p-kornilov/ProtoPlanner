@@ -30,10 +30,9 @@ public class EditVariantDialog extends AbstractDialogFullScreen implements Injec
     private VariantEditBindingModel bindingModelVariantEdit;
     private DialogVariantEditBinding binding;
 
-    public static void createAndShow(FragmentManager fragmentManager, boolean isFullScreen, int containerId) {
+    public static void createAndShow(FragmentManager fragmentManager, boolean isFullScreen) {
         Bundle bundle = new Bundle();
         bundle.putBoolean("FULLSCREEN",isFullScreen);
-        bundle.putInt("CONTAINER",containerId);
         EditVariantDialog dialog = new EditVariantDialog();
         dialog.setArguments(bundle);
         dialog.showDialog(fragmentManager,isFullScreen);
