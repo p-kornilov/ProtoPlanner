@@ -140,7 +140,8 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
 
         if (id == R.id.mdf_action_save) {
             onSave();
-            dismiss();
+            closeEmptyFragment();
+           // dismiss();
             return true;
         } else if (id == android.R.id.home) {
             dismiss();
@@ -168,23 +169,20 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
         }
     }
 
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
-        closeEmptyFragment();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        closeEmptyFragment();
-    }
-
     private void closeEmptyFragment() {
         getActivity().invalidateOptionsMenu();
         FragmentManager fm = getFragmentManager();
         if (fm != null)
-            fm.beginTransaction().remove(fm.findFragmentByTag(EMPTY_FRAGMENT)).commit();
+            fm.beginTransaction().remove(this).commitAllowingStateLoss();
+/*        FragmentManager fm = getFragmentManager();
+        if (fm != null)
+            fm.beginTransaction().remove(fm.findFragmentByTag(EMPTY_FRAGMENT)).commit();*/
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        closeEmptyFragment();
     }
 
     public abstract View getRootView();
@@ -201,5 +199,30 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
     }
 }
