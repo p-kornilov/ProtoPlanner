@@ -215,7 +215,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 }
             });
         } else {
-           // if (menu.size() == 0)
+            if (menu.size() == 0)
                 inflater.inflate(R.menu.menu_record, menu);
         }
     }
@@ -425,9 +425,21 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        //if (menu.size() == 0)
-        //    getActivity().getMenuInflater().inflate(R.menu.menu_record, menu);
+        //super.onPrepareOptionsMenu(menu);
+        if (menu.size() == 0)
+            getActivity().getMenuInflater().inflate(R.menu.menu_record, menu);
 
     }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+    }
+
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        super.onOptionsMenuClosed(menu);
+    }
+
+
 }

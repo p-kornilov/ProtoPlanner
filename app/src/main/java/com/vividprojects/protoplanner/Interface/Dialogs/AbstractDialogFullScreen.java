@@ -127,9 +127,9 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (isClosing)
+            return;
         menu.clear();
-   /*     if (isClosing)
-            return;*/
         inflater.inflate(R.menu.menu_dialog_fullscreen, menu);
         saveMenu = menu.findItem(R.id.mdf_action_save);
     }
@@ -143,7 +143,10 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
             onSave();
            // closeEmptyFragment();
             getActivity().invalidateOptionsMenu();
-            dismiss();
+            FragmentManager fm = getFragmentManager();
+            if (fm != null)
+                fm.popBackStack();
+           // dismiss();
             return true;
         } else if (id == android.R.id.home) {
             dismiss();
@@ -220,10 +223,23 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getActivity().invalidateOptionsMenu();
     }
+
+
 
     @Override
     public void onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        super.onOptionsMenuClosed(menu);
     }
 }
