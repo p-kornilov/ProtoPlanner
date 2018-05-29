@@ -128,8 +128,8 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        if (isClosing)
-            return;
+   /*     if (isClosing)
+            return;*/
         inflater.inflate(R.menu.menu_dialog_fullscreen, menu);
         saveMenu = menu.findItem(R.id.mdf_action_save);
     }
@@ -183,7 +183,7 @@ public abstract class AbstractDialogFullScreen extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        closeEmptyFragment();
+    //    closeEmptyFragment();
     }
 
     public abstract View getRootView();

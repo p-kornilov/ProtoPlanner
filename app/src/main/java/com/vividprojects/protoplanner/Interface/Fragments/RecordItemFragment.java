@@ -152,6 +152,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Log.d("Test", "onCreate - Record Fragment");
     }
 
@@ -161,7 +162,6 @@ public class RecordItemFragment extends Fragment implements Injectable {
 
         Log.d("Test", "onCreateView - Record Fragment");
         Bundle args = getArguments();
-        setHasOptionsMenu(true);
 
         if (args != null && args.containsKey(RECORD_ID)){
             //    model.setFilter();
@@ -215,7 +215,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 }
             });
         } else {
-            if (menu.size() == 0)
+           // if (menu.size() == 0)
                 inflater.inflate(R.menu.menu_record, menu);
         }
     }
@@ -426,8 +426,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (menu.size() == 0) {
-            getActivity().getMenuInflater().inflate(R.menu.menu_record, menu);
-        }
+        //if (menu.size() == 0)
+        //    getActivity().getMenuInflater().inflate(R.menu.menu_record, menu);
+
     }
 }
