@@ -33,6 +33,7 @@ import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditVariantDialog;
+import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenHelper;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.MainActivity;
@@ -111,7 +112,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
     };
 
     private Runnable onVariantEditClick = () -> {
-        EditVariantDialog.createAndShow(getFragmentManager(),!navigationController.isTablet());
+        //EditVariantDialog.createAndShow(getFragmentManager(),!navigationController.isTablet());
+        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), 200);
     };
 
     private RunnableParam<View> onAddImageClick = (view) -> {

@@ -85,7 +85,6 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
         if (isFullScreen) {
             Dialog dialog = super.onCreateDialog(savedInstanceState);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             setHasOptionsMenu(true);
             return dialog;
         } else {
@@ -139,17 +138,6 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         observeModels();
-    }
-
-    public void showDialog(FragmentManager fragmentManager, boolean isFullScreen){
-        if (isFullScreen) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.add(android.R.id.content, this).addToBackStack(EMPTY_FRAGMENT).commit();
-        } else {
-//            editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
-            this.show(fragmentManager, "Edit main variant");
-        }
     }
 
     public abstract View getRootView();
