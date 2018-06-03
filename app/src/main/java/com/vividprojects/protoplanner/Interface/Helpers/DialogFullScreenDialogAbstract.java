@@ -2,27 +2,27 @@ package com.vividprojects.protoplanner.Interface.Helpers;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
+
+import static android.app.Activity.RESULT_OK;
 
 public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
     private static final String EMPTY_FRAGMENT = "EMPTY FRAGMENT";
@@ -67,7 +67,7 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
                 actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
                 actionBar.setTitle("Dialog title");
             }
-//            setHasOptionsMenu(true);
+            setHasOptionsMenu(true);
             return getRootView();
         } else
             return super.onCreateView(inflater,container,savedInstanceState);
@@ -84,9 +84,7 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
     @Override
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
         if (isFullScreen) {
-            Dialog dialog = super.onCreateDialog(savedInstanceState);
-            setHasOptionsMenu(true);
-            return dialog;
+            return super.onCreateDialog(savedInstanceState);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -96,6 +94,7 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             onSave();
+                            returnResult();
                         }
                     })
                     .setNegativeButton("Cancel", null);
@@ -117,21 +116,46 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
 
         if (id == R.id.mdf_action_save) {
             onSave();
-
-            FragmentActivity activity = getActivity();
-            if (activity != null)
-                try {
-                    ((ActionClose) activity).actionClose();
-                } catch (ClassCastException e) {
-                    throw new ClassCastException(activity.toString()
-                            + " must implement ActionClose");
-                }
+            returnResult();
+            dialogClose();
+            return true;
         } else if (id == android.R.id.home) {
-            dismiss();
+            dialogCancel();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void returnResult() {
+        Fragment tFragment = getTargetFragment();
+        if (tFragment != null) {
+            Intent intent = new Intent();
+            intent.putExtra("ID", getResult());
+            tFragment.onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
+        }
+    }
+
+    private void dialogClose() {
+        FragmentActivity activity = getActivity();
+        if (activity != null)
+            try {
+                ((DialogActions) activity).actionClose();
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement DialogActions");
+            }
+    }
+
+    private void dialogCancel() {
+        FragmentActivity activity = getActivity();
+        if (activity != null)
+            try {
+                ((DialogActions) activity).actionCancel();
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement DialogActions");
+            }
     }
 
     @Override
@@ -145,5 +169,7 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
     public abstract void observeModels();
 
     public abstract void onSave();
+
+    public abstract String getResult();
 
 }

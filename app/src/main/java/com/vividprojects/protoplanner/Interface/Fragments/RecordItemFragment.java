@@ -32,7 +32,6 @@ import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
-import com.vividprojects.protoplanner.Interface.Dialogs.EditVariantDialog;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenHelper;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
@@ -112,8 +111,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     };
 
     private Runnable onVariantEditClick = () -> {
-        //EditVariantDialog.createAndShow(getFragmentManager(),!navigationController.isTablet());
-        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), 200);
+        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), REQUEST_EDIT_VARIANT, bindingModelVariant.getVariantId());
     };
 
     private RunnableParam<View> onAddImageClick = (view) -> {
@@ -337,9 +335,8 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 return;
             case REQUEST_EDIT_VARIANT:
                 if (resultCode == RESULT_OK && data != null) {
-                    String comment = data.getStringExtra("EDITTEXT");
-                    model.setComment(comment);
-                    bindingModelRecord.setRecordComment(comment);
+                    String id = data.getStringExtra("ID");
+                    model.saveMainVariant(id);
                 }
                 return;
         }
@@ -403,45 +400,4 @@ public class RecordItemFragment extends Fragment implements Injectable {
         recordItemFragment.setArguments(args);
         return recordItemFragment;
     }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        //super.onPrepareOptionsMenu(menu);
-        if (menu.size() == 0)
-            getActivity().getMenuInflater().inflate(R.menu.menu_record, menu);
-
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu();
-    }
-
-    @Override
-    public void onOptionsMenuClosed(Menu menu) {
-        super.onOptionsMenuClosed(menu);
-    }
-
-
 }

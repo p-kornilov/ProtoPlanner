@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
-
 import com.vividprojects.protoplanner.DI.AppComponent;
 import com.vividprojects.protoplanner.DI.AppInjector;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
@@ -39,6 +38,8 @@ public class PPApplication extends Application implements HasActivityInjector {
 
         // Configure Realm for the application
         Realm.init(this);
+
+
         Log.d("Test", "------------------------------ Start");
 
 /*        appComponent = DaggerAppComponent.builder()

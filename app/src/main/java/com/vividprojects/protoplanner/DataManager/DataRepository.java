@@ -184,6 +184,10 @@ public class DataRepository {
         return localDataDB.saveVariant(id, name, price, count, currency, measure);
     }
 
+    public void saveMainVariantToRecord(String variantId, String recordId) {
+        localDataDB.saveMainVariantToRecord(variantId, recordId);
+    }
+
     public LiveData<Resource<List<String>>> loadImagesForVariant(String id) {
         return new NetworkBoundResource<List<String>, List<String>>(appExecutors) {
             @Override

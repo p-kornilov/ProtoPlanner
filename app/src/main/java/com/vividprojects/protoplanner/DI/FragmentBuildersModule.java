@@ -4,7 +4,6 @@ import com.vividprojects.protoplanner.Interface.BlockListFragment;
 import com.vividprojects.protoplanner.Interface.Dialogs.CreateLabelDialog;
 import com.vividprojects.protoplanner.Interface.Dialogs.DeleteLabelDialog;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditVariantDialog;
-import com.vividprojects.protoplanner.Interface.Dialogs.EditVariantDialog_;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureItemFragment;
@@ -53,10 +52,7 @@ public abstract class FragmentBuildersModule {
     abstract MeasureItemFragment contributeMeasureItemFragment();
 
     @ContributesAndroidInjector
-    abstract EditVariantDialog contributeEditVariantDialog();
-
-    @ContributesAndroidInjector
-    abstract EditVariantDialog_ contributeEditVariantDialog_();
+    abstract EditVariantDialog contributeEditVariantDialog_();
 
  /*   @ContributesAndroidInjector
     abstract UserFragment contributeUserFragment();

@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class DialogFullScreenActivity extends AppCompatActivity  implements ActionClose, HasSupportFragmentInjector{
+public class DialogFullScreenActivity extends AppCompatActivity  implements DialogActions, HasSupportFragmentInjector{
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
@@ -40,6 +40,9 @@ public class DialogFullScreenActivity extends AppCompatActivity  implements Acti
 
             Bundle bundle = new Bundle();
             bundle.putBoolean("FULLSCREEN", true);
+            String id = getIntent().getStringExtra("ID");
+            if (id != null)
+                bundle.putString("ID", id);
 
             DialogFragment dialog = DialogFullScreenHelper.createDialog(dialogType);
             dialog.setArguments(bundle);
@@ -54,10 +57,16 @@ public class DialogFullScreenActivity extends AppCompatActivity  implements Acti
     }
 
     public void actionClose() {
-
+        this.finish();
     }
+
+    public void actionCancel() {
+        this.finish();
+    }
+
 }
 
-interface ActionClose {
+interface DialogActions {
     public void actionClose();
+    public void actionCancel();
 }

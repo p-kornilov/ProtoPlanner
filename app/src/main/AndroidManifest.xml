@@ -101,8 +101,7 @@
         <activity
             android:name=".Interface.Helpers.DialogFullScreenActivity"
             android:label="DialogActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".Interface.Activity.RecordActivity"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

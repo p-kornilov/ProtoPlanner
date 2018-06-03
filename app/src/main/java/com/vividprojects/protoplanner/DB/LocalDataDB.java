@@ -48,6 +48,7 @@ public class LocalDataDB {
         Realm.setDefaultConfiguration(config);
 
         realm = Realm.getDefaultInstance();
+
     }
 
     public void initDB(){
@@ -647,6 +648,19 @@ public class LocalDataDB {
             }
         });
         return bid.item;
+    }
+
+    public void saveMainVariantToRecord(String variantId, String recordId) {
+        Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
+        Record  r = realm.where(Record.class ).equalTo("id", recordId ).findFirst();
+        if (v != null && r != null) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    r.setMainVariant(v);
+                }
+            });
+        }
     }
 
     //---------------- Labels ---------------------------------------------------------------

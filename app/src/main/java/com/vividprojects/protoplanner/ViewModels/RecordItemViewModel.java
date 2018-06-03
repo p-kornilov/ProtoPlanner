@@ -7,6 +7,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
@@ -164,17 +165,10 @@ public class RecordItemViewModel extends ViewModel {
         recordNameTrigger.setValue(name);
     }
 
-    public LiveData<List<Measure.Plain>> getMeasures() {
-        return dataRepository.getMeasures();
-    }
-
     public LiveData<Measure.Plain> getMeasure(int hash) {
         return dataRepository.getMeasure(hash);
     }
 
-    public LiveData<List<Currency.Plain>> getCurrencies() {
-        return dataRepository.getCurrencies();
-    }
 
     public RecordItemBindingModel getBindingModelRecord() {
         return bindingModelRecord;
@@ -182,17 +176,15 @@ public class RecordItemViewModel extends ViewModel {
     public VariantItemBindingModel getBindingModelVariant() {
         return bindingModelVariant;
     }
-    public VariantEditBindingModel getBindingModelVariantEdit() {
-        return bindingModelVariantEdit;
-    }
 
     public LiveData<String> setComment(String comment) {
         return dataRepository.setRecordComment(bindingModelRecord.getRecordId(),comment);
     }
 
-    public void saveVariant(String id, String name, double price, double count, int currency, int measure) {
-        String saveId = dataRepository.saveVariant(id, name, price, count, currency, measure);
-        LiveData<Resource<Variant.Plain>> currentVariant = dataRepository.loadVariant(saveId);
+    public void saveMainVariant(String variantId) {
+        if (variantId != null && (mainVariantItem.getValue() == null || !variantId.equals(mainVariantItem.getValue().id)))
+            dataRepository.saveMainVariantToRecord(variantId, recordItemId.getValue());
+        LiveData<Resource<Variant.Plain>> currentVariant = dataRepository.loadVariant(variantId);
         mainVariantItem.addSource(currentVariant, new Observer<Resource<Variant.Plain>>() {
             @Override
             public void onChanged(@Nullable Resource<Variant.Plain> variant) {

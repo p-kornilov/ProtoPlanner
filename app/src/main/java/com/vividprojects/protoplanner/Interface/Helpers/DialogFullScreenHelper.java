@@ -6,15 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import com.vividprojects.protoplanner.Interface.Dialogs.EditVariantDialog;
-import com.vividprojects.protoplanner.Interface.Dialogs.EditVariantDialog_;
 
 public class DialogFullScreenHelper {
     public static final int DIALOG_VARIANT = 0;
 
-    public static void showDialog(int dialogType, Fragment sourceFragment, boolean isFullScreen, int requestCode){
+    public static void showDialog(int dialogType, Fragment sourceFragment, boolean isFullScreen, int requestCode, String id){
         FragmentManager fm = sourceFragment.getFragmentManager();
         if (fm != null) {
             if (isFullScreen) {
@@ -25,13 +23,15 @@ public class DialogFullScreenHelper {
                     intent = new Intent(sourceFragment.getActivity(), DialogFullScreenActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
                 intent.putExtra("DIALOG_TYPE",dialogType);
+                intent.putExtra("ID",id);
                 sourceFragment.startActivityForResult(intent,requestCode);
             } else {
-//            editVariantDialog.setTargetFragment(RecordItemFragment.this, REQUEST_EDIT_VARIANT);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("FULLSCREEN", false);
+                bundle.putString("ID", id);
 
                 DialogFragment dialog = DialogFullScreenHelper.createDialog(dialogType);
+                dialog.setTargetFragment(sourceFragment, requestCode);
                 dialog.setArguments(bundle);
 
                 dialog.show(fm, "Edit main variant");
@@ -42,7 +42,7 @@ public class DialogFullScreenHelper {
     public static DialogFullScreenDialogAbstract createDialog(int dialogType) {
         switch (dialogType) {
             case DIALOG_VARIANT:
-                return new EditVariantDialog_();
+                return new EditVariantDialog();
         }
 
         return null;
