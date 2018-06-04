@@ -32,6 +32,7 @@ public class VariantInShop extends RealmObject {
         url = "";
         title = "";
         address = "";
+        currency = new Currency();
     }
 
     public VariantInShop(double price, Currency currency) {

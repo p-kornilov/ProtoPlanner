@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.UUID;
 //import java.util.Objects;
 
+import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -32,14 +33,17 @@ public class Variant extends RealmObject {
         return id;
     }
 
-    public Variant(String title, Measure measure, double count, double price, String comment, Currency currency) {
+    public Variant(Realm realm, String title, Measure measure, double count, double price, String comment, Currency currency) {
         this.title = title;
         this.measure = measure;
         this.count = count;
         this.comment = comment;
         this.urls = new RealmList<>();
         this.images = new RealmList<>();
+        this.shops = new RealmList<>();
+
         this.primaryShop = new VariantInShop(price, currency);
+        realm.insert(this.primaryShop);
     }
 
     public Currency getCurrency() {

@@ -48,9 +48,8 @@ public class ShopListAdapter extends DataBindingAdapter {
         models.clear();
         for (int i = 0; i < filtered_data.size(); i++) {
 
-            ShopItemListBindingModel model = new ShopItemListBindingModel(context.get(),null);
             VariantInShop.Plain v = filtered_data.get(i);
-            model.setShop(v);
+            ShopItemListBindingModel model = new ShopItemListBindingModel(context.get(),null, v);
 
             models.add(model);
         }

@@ -15,19 +15,10 @@ public class ShopItemListBindingModel extends BaseObservable {
     private Context context;
     private ItemActions listAdapter;
 
-    public ShopItemListBindingModel(Context context, ItemActions listAdapter) {
-        shop = (new VariantInShop()).getPlain();
+    public ShopItemListBindingModel(Context context, ItemActions listAdapter, VariantInShop.Plain shop) {
+        this.shop = shop;
         this.context = context;
         this.listAdapter = listAdapter;
-        notifyPropertyChanged(BR.shopTitle);
-        notifyPropertyChanged(BR.shopURL);
-        notifyPropertyChanged(BR.shopAddress);
-        notifyPropertyChanged(BR.shopComment);
-        notifyPropertyChanged(BR.shopPrice);
-    }
-
-    public void setShop(VariantInShop.Plain shop) {
-        this.shop = shop;
         notifyPropertyChanged(BR.shopTitle);
         notifyPropertyChanged(BR.shopURL);
         notifyPropertyChanged(BR.shopAddress);

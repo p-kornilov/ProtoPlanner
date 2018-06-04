@@ -240,37 +240,36 @@ public class LocalDataDB {
                 Currency cr = realm.where(Currency.class).equalTo("iso_code_str","RUB").findFirst();
                 Currency cf = realm.where(Currency.class).equalTo("iso_code_str","XAF").findFirst();
                 Currency cd = realm.where(Currency.class).equalTo("iso_code_str","USD").findFirst();
-                Variant v = new Variant("Торт",m1,7,100, "Мой торт и ссылка http://test.com",cr);
+                Variant v = new Variant(realm,"Торт",m1,7,100, "Мой торт и ссылка http://test.com",cr);
                 String s = v.toString();
-                Variant v2 = new Variant("Колбаса",m,3,50, "",cd);
-                Variant v3 = new Variant("Хлеб",m1,5.01,60, "",cf);
-                Variant v4 = new Variant("Фильтр для воды",m1,5,60, "",cr);
+                Variant v2 = new Variant(realm, "Колбаса",m,3,50, "",cd);
+                Variant v3 = new Variant(realm, "Хлеб",m1,5.01,60, "",cf);
+                Variant v4 = new Variant(realm, "Фильтр для воды",m1,5,60, "",cr);
                 v4.addUrl("https://test.com");
                 realm.insertOrUpdate(v);
                 realm.insertOrUpdate(v2);
                 realm.insertOrUpdate(v3);
                 realm.insertOrUpdate(v4);
 
-                realm.insertOrUpdate(new VariantInShop("Первый магазин","https://shop.ru df gsdgf s df gsdf gsdg f","Адрес первого магазина","Комментарий для первого магазина", 91.0, cr));
-                realm.insertOrUpdate(new VariantInShop("Второй магазин","https://shop2.ru","Адрес второго магазина","Комментарий для второго магазина", 101.0, cr));
-                realm.insertOrUpdate(new VariantInShop("Третий магазин","https://shop3.ru","Адрес третьего магазина","Комментарий для третьего магазина", 103.0, cr));
-                realm.insertOrUpdate(new VariantInShop("Четвертый магазин","https://shop4.ru","Адрес четвертого магазина","Комментарий для четвертого магазина hj hkhjk ghj ghj ghj", 104.0, cr));
+                VariantInShop vis;
+                vis = new VariantInShop("Первый магазин","https://shop.ru df gsdgf s df gsdf gsdg f","Адрес первого магазина","Комментарий для первого магазина", 91.0, cr);
+                realm.insertOrUpdate(vis);
+                v4.addShop(vis);
+                vis = new VariantInShop("Второй магазин","https://shop2.ru","Адрес второго магазина","Комментарий для второго магазина", 101.0, cr);
+                realm.insertOrUpdate(vis);
+                v4.addShop(vis);
+                vis = new VariantInShop("Третий магазин","https://shop3.ru","Адрес третьего магазина","Комментарий для третьего магазина", 103.0, cr);
+                realm.insertOrUpdate(vis);
+                v4.addShop(vis);
+                vis = new VariantInShop("Четвертый магазин","https://shop4.ru","Адрес четвертого магазина","Комментарий для четвертого магазина hj hkhjk ghj ghj ghj", 104.0, cr);
+                realm.insertOrUpdate(vis);
+                v4.addShop(vis);
+                v4.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
+                v4.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
+                v4.addImage("89d4f6cd-1f3b-382e-b4cd-38602710fc74");
+                v4.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
 
-                RealmResults<VariantInShop> vsps = realm.where(VariantInShop.class).findAll();
-                Variant vv1 = realm.where(Variant.class).contains("title","Фильтр для воды").findFirst();
-                Variant vv2 = realm.where(Variant.class).contains("title","Хлеб").findFirst();
-                Variant vv3 = realm.where(Variant.class).contains("title","Колбаса").findFirst();
-
-                vv1.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
-                vv1.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
-                vv1.addImage("89d4f6cd-1f3b-382e-b4cd-38602710fc74");
-                vv1.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
-
-                for (VariantInShop vis : vsps) {
-                    vv1.addShop(vis);
-                }
-
-                Record r2 = new Record(vv1);
+                Record r2 = new Record(v4);
                 r2.setName("Фильтр");
                 r2.setComment("Комментарий для записи со ссылкой http://test.com");
                 r2.addLabel(new Label("Green", Color.GREEN,"",null));
@@ -279,27 +278,27 @@ public class LocalDataDB {
                 r2.addLabel(new Label("Red", Color.RED,"",null));
                 r2.addLabel(new Label("Magenta", Color.MAGENTA,"",null));
                 realm.insertOrUpdate(r2);
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv1));
-                realm.insertOrUpdate(new Record(vv2));
-                realm.insertOrUpdate(new Record(vv3));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v4));
+                realm.insertOrUpdate(new Record(v3));
+                realm.insertOrUpdate(new Record(v2));
 
                 int colorCount = Pallet.getColors().size();
 
@@ -307,8 +306,8 @@ public class LocalDataDB {
                     realm.insertOrUpdate(new Label(Pallet.getNameColors().get(i), Pallet.getColors().get(i),"",null));
                 }
 
-                Record r = realm.where(Record.class).findFirst();
-                r.addVariant(vv2);
+/*                Record r = realm.where(Record.class).findFirst();
+                r.addVariant(vv2);*/
 
 
 /*                RealmResults<Label> ls = realm.where(Label.class).findAll();
@@ -643,7 +642,7 @@ public class LocalDataDB {
                     }
                 }
                 if (v == null)
-                    v = new Variant(name, m, count, price, "", c);
+                    v = new Variant(realm, name, m, count, price, "", c);
                 bid.item = v.getId();
             }
         });
