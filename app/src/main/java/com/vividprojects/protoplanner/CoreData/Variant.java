@@ -18,12 +18,13 @@ public class Variant extends RealmObject {
     private String title;
     private Measure measure;
     private double count;
-    private double price;
+   // private double price;
     private String comment;
+    private VariantInShop primaryShop;
     private RealmList<String> urls;
     private RealmList<String> images;
     private RealmList<VariantInShop> shops;
-    private Currency currency;
+   // private Currency currency;
 
     public Variant() {};
 
@@ -35,15 +36,14 @@ public class Variant extends RealmObject {
         this.title = title;
         this.measure = measure;
         this.count = count;
-        this.price = price;
         this.comment = comment;
         this.urls = new RealmList<>();
-        this.currency = currency;
         this.images = new RealmList<>();
+        this.primaryShop = new VariantInShop(price, currency);
     }
 
     public Currency getCurrency() {
-        return currency;
+        return primaryShop.getCurrency();
     }
 
     public String getTitle() {
@@ -60,7 +60,7 @@ public class Variant extends RealmObject {
     }
 
     public void setCurrency(Currency currency) {
-        this.currency = currency;
+        this.primaryShop.setCurrency(currency);
     }
 
     public Measure getMeasure() { return measure; }
@@ -70,14 +70,14 @@ public class Variant extends RealmObject {
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        this.primaryShop.setPrice(price);
     }
 
     public double getCount() { return count; }
 
-    public double getPrice() { return price; }
+    public double getPrice() { return primaryShop.getPrice(); }
 
-    public double getValue() { return price*count; }
+    public double getValue() { return primaryShop.getPrice()*count; }
 
     public void setComment(String comment) { this.comment = comment; }
 
@@ -124,12 +124,12 @@ public class Variant extends RealmObject {
                 ", title='" + title + '\'' +
                 ", measure=" + measure +
                 ", count=" + count +
-                ", price=" + price +
+                ", price=" + primaryShop.getPrice() +
                 ", comment='" + comment + '\'' +
                 ", urls=" + urls +
                 ", images=" + images +
                 ", shops=" + shops +
-                ", currency=" + currency +
+                ", currency=" + primaryShop.getCurrency() +
                 '}';
     }
 
@@ -152,7 +152,6 @@ public class Variant extends RealmObject {
         plain.title = title;
         plain.measure = measure.getPlain();
         plain.count = count;
-        plain.price = price;
         plain.comment = comment;
         plain.urls = new ArrayList<>(urls);
         plain.small_images = new ArrayList<>(images);
@@ -161,7 +160,7 @@ public class Variant extends RealmObject {
         for (VariantInShop shop : shops) {
             plain.shops.add(shop.getPlain());
         }
-        plain.currency = currency.getPlain();
+        plain.primaryShop = primaryShop.getPlain();
         return plain;
     }
 
@@ -170,13 +169,12 @@ public class Variant extends RealmObject {
         public String title;
         public Measure.Plain  measure;
         public double count;
-        public double price;
         public String comment;
         public List<String> urls;
         public List<String> small_images;
         public List<String> full_images;
         public List<VariantInShop.Plain> shops;
-        public Currency.Plain currency;
+        public VariantInShop.Plain primaryShop;
     }
 
 }

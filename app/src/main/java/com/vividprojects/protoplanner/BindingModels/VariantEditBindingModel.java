@@ -187,11 +187,11 @@ public class VariantEditBindingModel extends BaseObservable {
     public void setVariant(Variant.Plain variant) {
         this.id = variant.id;
         this.name = variant.title;
-        this.price = String.valueOf(variant.price);
+        this.price = String.valueOf(variant.primaryShop.price);
         this.count = String.valueOf(variant.count);
-        this.priceNum = variant.price;
+        this.priceNum = variant.primaryShop.price;
         this.countNum = variant.count;
-        this.currency = variant.currency;
+        this.currency = variant.primaryShop.currency;
         this.measure = variant.measure;
         checkMeasureList();
 

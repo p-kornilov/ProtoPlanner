@@ -79,12 +79,12 @@ public class VariantItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getVariantValueDecor() {
-        return PriceFormatter.createValue(variant.currency, variant.price * variant.count);
+        return PriceFormatter.createValue(variant.primaryShop.currency, variant.primaryShop.price * variant.count);
     }
 
     @Bindable
     public String getVariantPrice() {
-        return String.valueOf(variant.price);
+        return String.valueOf(variant.primaryShop.price);
     }
 
     @Bindable
@@ -104,7 +104,7 @@ public class VariantItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getVariantPriceDecor() {
-        return PriceFormatter.createPrice(context.get(), variant.currency, variant.price, variant.measure);
+        return PriceFormatter.createPrice(context.get(), variant.primaryShop.currency, variant.primaryShop.price, variant.measure);
     }
 
     @Bindable
@@ -119,7 +119,7 @@ public class VariantItemBindingModel extends BaseObservable {
     public void setVariant(Variant.Plain variant) {
         this.variant = variant;
         this.name = variant.title;
-        this.price = String.valueOf(variant.price);
+        this.price = String.valueOf(variant.primaryShop.price);
         this.count = String.valueOf(variant.count);
         imagesListAdapter.setData(variant.small_images);
         shopListAdapter.setData(variant.shops);

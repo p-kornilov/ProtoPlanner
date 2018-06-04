@@ -20,8 +20,11 @@ public class VariantInShop extends RealmObject {
     private String address;
     private String comment;
     private double price;
+    private Currency currency;
     @LinkingObjects("shops")
     private final RealmResults<Variant> variant = null;
+    @LinkingObjects("primaryShop")
+    private final RealmResults<Variant> variantPrimary = null;
 
     public VariantInShop(){
         price = 0;
@@ -31,12 +34,22 @@ public class VariantInShop extends RealmObject {
         address = "";
     }
 
-    public VariantInShop(String title, String url, String address, String comment, double price) {
+    public VariantInShop(double price, Currency currency) {
+        this.price = price;
+        this.currency = currency;
+        comment = "";
+        url = "";
+        title = "";
+        address = "";
+    }
+
+    public VariantInShop(String title, String url, String address, String comment, double price, Currency currency) {
         this.title = title;
         this.url = url;
         this.comment = comment;
         this.price = price;
         this.address = address;
+        this.currency = currency;
     }
 
     public String getId() {
@@ -52,6 +65,14 @@ public class VariantInShop extends RealmObject {
     public String getComment() { return comment; }
 
     public double getPrice() { return price; }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -80,10 +101,11 @@ public class VariantInShop extends RealmObject {
         plain.address = address;
         plain.comment = comment;
         plain.price = price;
-        if (variant != null && !variant.isEmpty()) {
-            plain.currency = variant.first().getCurrency().getPlain();
+        plain.currency = currency.getPlain();
+        if (variantPrimary != null && !variantPrimary.isEmpty())
+            plain.measure = variantPrimary.first().getMeasure().getPlain();
+        if (plain.measure == null && variant != null && !variant.isEmpty())
             plain.measure = variant.first().getMeasure().getPlain();
-        }
         return plain;
     }
 
