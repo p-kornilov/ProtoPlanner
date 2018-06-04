@@ -1,6 +1,7 @@
 package com.vividprojects.protoplanner.Interface.Helpers;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
     private MenuItem saveMenu;
     private boolean isFullScreen = false;
     private boolean isClosing = false;
+    private DialogActions hostingActivity;
 
     private RunnableParam<Integer> enableCheck = (error) -> {
         if (error == 1) {
@@ -79,6 +81,14 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
         Bundle b = getArguments();
         if (b != null)
             isFullScreen = b.getBoolean("FULLSCREEN", false);
+        if (isFullScreen) {
+            try {
+                hostingActivity = (DialogActions) getActivity();
+            } catch (ClassCastException e) {
+                throw new ClassCastException(hostingActivity.toString()
+                        + " must implement DialogActions");
+            }
+        }
     }
 
     @Override
@@ -116,11 +126,10 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
 
         if (id == R.id.mdf_action_save) {
             onSave();
-            returnResult();
-            dialogClose();
+            hostingActivity.actionResult(getResult());
             return true;
         } else if (id == android.R.id.home) {
-            dialogCancel();
+            hostingActivity.actionCancel();
             return true;
         }
 
@@ -134,28 +143,6 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
             intent.putExtra("ID", getResult());
             tFragment.onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
         }
-    }
-
-    private void dialogClose() {
-        FragmentActivity activity = getActivity();
-        if (activity != null)
-            try {
-                ((DialogActions) activity).actionClose();
-            } catch (ClassCastException e) {
-                throw new ClassCastException(activity.toString()
-                        + " must implement DialogActions");
-            }
-    }
-
-    private void dialogCancel() {
-        FragmentActivity activity = getActivity();
-        if (activity != null)
-            try {
-                ((DialogActions) activity).actionCancel();
-            } catch (ClassCastException e) {
-                throw new ClassCastException(activity.toString()
-                        + " must implement DialogActions");
-            }
     }
 
     @Override

@@ -54,9 +54,9 @@ public class VariantViewModel extends ViewModel {
     }
 
     public void setVariantId(String id) {
-        if (Objects.equals(variantId.getValue(), id)) {
+/*        if (Objects.equals(variantId.getValue(), id)) {
             return;
-        }
+        }*/
         variantId.setValue(id);
     }
 

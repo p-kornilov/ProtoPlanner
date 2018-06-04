@@ -19,7 +19,6 @@ public class Variant extends RealmObject {
     private Measure measure;
     private double count;
     private double price;
-//    private double value;
     private String comment;
     private RealmList<String> urls;
     private RealmList<String> images;

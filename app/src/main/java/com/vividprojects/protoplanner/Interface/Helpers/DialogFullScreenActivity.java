@@ -1,6 +1,8 @@
 package com.vividprojects.protoplanner.Interface.Helpers;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -64,9 +66,17 @@ public class DialogFullScreenActivity extends AppCompatActivity  implements Dial
         this.finish();
     }
 
+    public void actionResult(String id) {
+        Intent i = new Intent();
+        i.putExtra("ID", id);
+        setResult(Activity.RESULT_OK, i);
+        finish();
+    }
+
 }
 
 interface DialogActions {
     public void actionClose();
     public void actionCancel();
+    public void actionResult(String id);
 }
