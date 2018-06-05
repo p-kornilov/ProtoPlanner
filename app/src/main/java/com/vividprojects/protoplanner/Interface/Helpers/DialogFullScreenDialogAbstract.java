@@ -31,31 +31,26 @@ public abstract class DialogFullScreenDialogAbstract extends DialogFragment {
     private AlertDialog dialog;
     private MenuItem saveMenu;
     private boolean isFullScreen = false;
-    private boolean isClosing = false;
     private DialogActions hostingActivity;
 
-    private RunnableParam<Integer> enableCheck = (error) -> {
-        if (error == 1) {
-            if (isFullScreen) {
-                if (saveMenu != null) {
-                    saveMenu.setIcon(R.drawable.ic_check_disabled_24dp);
-                    saveMenu.setEnabled(false);
-                }
-            } else
-                dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
-        } else {
-            if (isFullScreen) {
-                if (saveMenu != null) {
-                    saveMenu.setIcon(R.drawable.ic_check_white_24dp);
-                    saveMenu.setEnabled(true);
-                }
-            } else
-                dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(true);
-        }
-    };
+    public void enableButtons() {
+        if (isFullScreen) {
+            if (saveMenu != null) {
+                saveMenu.setIcon(R.drawable.ic_check_white_24dp);
+                saveMenu.setEnabled(true);
+            }
+        } else
+            dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(true);
+    }
 
-    public RunnableParam<Integer> getEnableCheck() {
-        return enableCheck;
+    public void disableButtons() {
+        if (isFullScreen) {
+            if (saveMenu != null) {
+                saveMenu.setIcon(R.drawable.ic_check_disabled_24dp);
+                saveMenu.setEnabled(false);
+            }
+        } else
+            dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
     }
 
     @Override

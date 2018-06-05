@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
+import com.vividprojects.protoplanner.BindingModels.ShopEditBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
@@ -36,6 +37,7 @@ public class VariantViewModel extends ViewModel {
 
     private DataRepository dataRepository;
     private VariantEditBindingModel bindingModelVariantEdit;
+    private ShopEditBindingModel bindingModelShopEdit;
 
     private boolean inImageLoading = false;
 
@@ -46,6 +48,7 @@ public class VariantViewModel extends ViewModel {
         variantId = new MutableLiveData<>();
 
         bindingModelVariantEdit = new VariantEditBindingModel(dataRepository.getContext());
+        bindingModelShopEdit    = new ShopEditBindingModel(dataRepository.getContext());
 
         variantItem = Transformations.switchMap(variantId, input -> {
             return VariantViewModel.this.dataRepository.loadVariant(input);
@@ -79,6 +82,10 @@ public class VariantViewModel extends ViewModel {
 
     public VariantEditBindingModel getBindingModelVariantEdit() {
         return bindingModelVariantEdit;
+    }
+
+    public ShopEditBindingModel getBindingModelShopEdit() {
+        return bindingModelShopEdit;
     }
 
     public String getVariantId() {

@@ -8,11 +8,13 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.vividprojects.protoplanner.BindingModels.ShopEditBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenDialogAbstract;
+import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.VariantViewModel;
 import com.vividprojects.protoplanner.databinding.DialogVariantEditBinding;
@@ -30,9 +32,36 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
 
     private VariantViewModel model;
     private VariantEditBindingModel bindingModelVariantEdit;
+    private ShopEditBindingModel bindingModelShopEdit;
     private DialogVariantEditBinding binding;
 
     private String variantId;
+
+    private boolean ecVariant = true;
+    private boolean ecShop = true;
+
+    private RunnableParam<Integer> enableCheckVariant = (error) -> {
+        if (error == 1)
+            ecVariant = false;
+        else
+            ecVariant = true;
+        enableCheck();
+    };
+
+    private RunnableParam<Integer> enableCheckShop = (error) -> {
+        if (error == 1)
+            ecShop = false;
+        else
+            ecShop = true;
+        enableCheck();
+    };
+
+    private void enableCheck() {
+        if (ecVariant && ecShop)
+            enableButtons();
+        else
+            disableButtons();
+    }
 
 
     @Override
@@ -45,16 +74,24 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
     @Override
     public void observeModels() {
         model = ViewModelProviders.of(getActivity(), viewModelFactory).get(VariantViewModel.class);
+
         bindingModelVariantEdit = model.getBindingModelVariantEdit();
-        bindingModelVariantEdit.setEnableCheck(getEnableCheck());
+        bindingModelVariantEdit.setEnableCheck(enableCheckVariant);
+
+        bindingModelShopEdit = model.getBindingModelShopEdit();
+        bindingModelShopEdit.setEnableCheck(enableCheckShop);
+
         binding.setVariantEditModel(bindingModelVariantEdit);
+        binding.setShopEditModel(bindingModelShopEdit);
 
         if (variantId != null) {
             model.setVariantId(variantId);
 
             model.getVariantItem().observe(this, resource -> {
-                if (resource != null)
+                if (resource != null) {
                     bindingModelVariantEdit.setVariant(resource.data);
+                    bindingModelShopEdit.setShop(resource.data.primaryShop);
+                }
             });
 
             model.getMeasures().observe(this, measures -> {
@@ -64,7 +101,7 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
 
             model.getCurrencies().observe(this, currencies -> {
                 if (currencies != null)
-                    bindingModelVariantEdit.setVariantEditCurrencyList(Currency.Plain.sort(getContext(), currencies));
+                    bindingModelShopEdit.setShopEditCurrencyList(Currency.Plain.sort(getContext(), currencies));
             });
         }
     }
