@@ -17,19 +17,10 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class VariantEditBindingModel extends BaseObservable {
-    private String id;
-    private String price;
     private String count;
-    private String name;
-    private double priceNum;
-    private double countNum;
-    private Currency.Plain currency;
-    private Measure.Plain measure;
-    private List<Currency.Plain> currencyList;
+    private Variant.Plain variant;
     private List<Measure.Plain> measureList;
-    private int currencyCursor = 0;
     private int measureCursor = 0;
-    private boolean priceError = false;
     private boolean countError = false;
 
     private WeakReference<Context> context;
@@ -42,28 +33,19 @@ public class VariantEditBindingModel extends BaseObservable {
     public void enableCheck() {
         if (enableCheck == null || enableCheck.get() == null)
             return;
-        if (priceError || countError)
+        if (countError)
             enableCheck.get().run(1);
         else
             enableCheck.get().run(0);
 
     }
 
-    public double getPriceNum() {
-        return priceNum;
-    }
-
     public double getCountNum() {
-        return countNum;
+        return variant.count;
     }
 
     public VariantEditBindingModel(Context context) {
         this.context = new WeakReference<>(context);
-    }
-
-    @Bindable
-    public boolean getPriceError() {
-        return priceError;
     }
 
     @Bindable
@@ -73,17 +55,12 @@ public class VariantEditBindingModel extends BaseObservable {
 
     @Bindable
     public String getVariantEditName(){
-        return name;
+        return variant.title;
     }
 
     @Bindable
     public void setVariantEditName(String name) {
-        this.name = name;
-    }
-
-    @Bindable
-    public String getVariantEditPrice() {
-        return price;
+        this.variant.title = name;
     }
 
     @Bindable
@@ -92,22 +69,9 @@ public class VariantEditBindingModel extends BaseObservable {
     }
 
     @Bindable
-    public void setVariantEditPrice(String price) {
-        try {
-            priceNum = Double.parseDouble(price);
-            priceError = false;
-        } catch (NumberFormatException e) {
-            priceError = true;
-        }
-        this.price = price;
-        enableCheck();
-        notifyPropertyChanged(BR.priceError);
-    }
-
-    @Bindable
     public void setVariantEditCount(String count) {
         try {
-            countNum = Double.parseDouble(count);
+            variant.count = Double.parseDouble(count);
             countError = false;
         } catch (NumberFormatException e) {
             countError = true;
@@ -118,39 +82,13 @@ public class VariantEditBindingModel extends BaseObservable {
     }
 
     @Bindable
-    public Currency.Plain getVariantEditCurrency() {
-        return currency;
-    }
-
-    @Bindable
-    public List<Currency.Plain> getVariantEditCurrencyList() {
-        return currencyList;
-    }
-
-    @Bindable
-    public void setCurrencyCursor(int cursor) {
-        currency = currencyList.get(cursor);
-        currencyCursor = cursor;
-    }
-
-    @Bindable
-    public int getCurrencyCursor() {
-        return currencyCursor;
-    }
-
-    @Bindable
     public int getMeasureCursor() {
         return measureCursor;
     }
 
-    public void setVariantEditCurrencyList(List<Currency.Plain> currencyList) {
-        this.currencyList = currencyList;
-        notifyPropertyChanged(BR.variantEditCurrencyList);
-    }
-
     @Bindable
     public Measure.Plain getVariantEditMeasure() {
-        return measure;
+        return variant.measure;
     }
 
     @Bindable
@@ -160,7 +98,7 @@ public class VariantEditBindingModel extends BaseObservable {
 
     @Bindable
     public void setMeasureCursor(int cursor) {
-        measure = measureList.get(cursor);
+        variant.measure = measureList.get(cursor);
         measureCursor = cursor;
     }
 
@@ -171,34 +109,26 @@ public class VariantEditBindingModel extends BaseObservable {
     }
 
     private void checkMeasureList() {
-        if (measure != null && measureList != null) {
+        if (variant.measure != null && measureList != null) {
             for (Measure.Plain m : measureList)
-                if (m.hash == measure.hash)
+                if (m.hash == variant.measure.hash)
                     return;
-            measureList.add(measure);
+            measureList.add(variant.measure);
             measureList = Measure.Plain.sort(context.get(), measureList);
         }
     }
 
     public String getId() {
-        return id;
+        return variant.id;
     }
 
     public void setVariant(Variant.Plain variant) {
-        this.id = variant.id;
-        this.name = variant.title;
-        this.price = String.valueOf(variant.primaryShop.price);
+        this.variant = variant;
         this.count = String.valueOf(variant.count);
-        this.priceNum = variant.primaryShop.price;
-        this.countNum = variant.count;
-        this.currency = variant.primaryShop.currency;
-        this.measure = variant.measure;
         checkMeasureList();
 
         notifyPropertyChanged(BR.variantEditName);
         notifyPropertyChanged(BR.variantEditCount);
-        notifyPropertyChanged(BR.variantEditPrice);
-        notifyPropertyChanged(BR.variantEditCurrency);
 
         //...
     }

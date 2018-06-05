@@ -118,9 +118,9 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
     public void onSave() {
         model.saveVariant(bindingModelVariantEdit.getId()
                 ,bindingModelVariantEdit.getVariantEditName()
-                ,bindingModelVariantEdit.getPriceNum()
+                ,bindingModelShopEdit.getPriceNum()
                 ,bindingModelVariantEdit.getCountNum()
-                ,bindingModelVariantEdit.getVariantEditCurrency().iso_code_int
+                ,bindingModelShopEdit.getShopEditCurrency().iso_code_int
                 ,bindingModelVariantEdit.getVariantEditMeasure().hash);
     }
 
