@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.BindingModels;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.view.View;
 
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
@@ -44,6 +45,14 @@ public class ShopItemListBindingModel extends BaseObservable {
     @Bindable
     public String getShopComment() {
         return shop.comment;
+    }
+
+    @Bindable
+    public int getIsBasic() {
+        if (shop.basicVariant)
+            return View.VISIBLE;
+        else
+            return View.INVISIBLE;
     }
 
     @Bindable

@@ -152,7 +152,7 @@ public class ShopsAdapter extends RealmRecyclerViewAdapter<VariantInShop, ShopsA
             si_image_title = (ImageView) view.findViewById(R.id.si_image_title);
             si_image_address = (ImageView) view.findViewById(R.id.si_image_address);
             si_image_comment = (ImageView) view.findViewById(R.id.si_image_comment);
-            si_expand = (ImageButton) view.findViewById(R.id.si_expand);
+       //     si_expand = (ImageButton) view.findViewById(R.id.si_expand);
             root = (ViewGroup) view;
 
 /*            Button edit_button = (Button) view.findViewById(R.id.si_expand);

@@ -7,16 +7,25 @@
     <data>
         <variable name="obj" type="com.vividprojects.protoplanner.BindingModels.ShopItemListBindingModel"/>
         <import type="com.vividprojects.protoplanner.R"/>
+        <import type="android.view.View"/>
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <Space
+            android:id="@+id/space1"
+            android:layout_width="wrap_content"
+            android:layout_height="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <TextView
             android:id="@+id/si_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/roboto"
             android:paddingStart="4dp"
@@ -26,20 +35,23 @@
             android:textColor="@color/green"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/space1" />
 
-        <ImageButton
-            android:id="@+id/si_star"
+        <TextView
+            android:id="@+id/si_basic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="12dp"
-            android:cropToPadding="false"
-            android:padding="12dp"
-            android:background="@null"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/roboto"
+            android:paddingStart="4dp"
+            android:singleLine="true"
+            android:text="(Basic variant)"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:visibility="@{obj.isBasic}"
             app:layout_constraintStart_toEndOf="@id/si_price"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_star_border_black_24dp" />
+            app:layout_constraintBottom_toBottomOf="@id/si_price" />
 
         <ImageView
             android:id="@+id/si_image_url"
@@ -48,6 +60,7 @@
             app:srcCompat="@drawable/ic_link_black_24dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:visibility="@{obj.shopURL == null || obj.shopURL.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/si_price"/>
 
@@ -64,10 +77,11 @@
             tools:text="https://test.com"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginStart="48dp"
             android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{obj.shopURL == null || obj.shopURL.length() == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/si_price"/>
 
@@ -78,6 +92,7 @@
             app:srcCompat="@drawable/ic_shopping_cart_white_24dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:visibility="@{obj.shopTitle == null || obj.shopTitle.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/si_url"
             />
@@ -95,10 +110,11 @@
             tools:text="Наименование магазина"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginStart="48dp"
             android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{obj.shopTitle == null || obj.shopTitle.length() == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/si_url"/>
 
@@ -109,23 +125,26 @@
             app:srcCompat="@drawable/ic_place_black_24dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:visibility="@{obj.shopAddress == null || obj.shopAddress.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/si_title"
             />
 
 
         <ImageButton
-            android:id="@+id/si_expand"
+            android:id="@+id/si_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:cropToPadding="false"
             android:padding="12dp"
             android:background="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_expand_more_black_24dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/ic_more_vert_grey_24dp" />
 
         <TextView
             android:id="@+id/si_address"
@@ -138,11 +157,11 @@
             tools:text="Строка адреса"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginStart="48dp"
             android:layout_marginTop="4dp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{obj.shopAddress == null || obj.shopAddress.length() == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/si_title"/>
 
@@ -153,6 +172,7 @@
             app:srcCompat="@drawable/ic_note_black_24dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:visibility="@{obj.shopComment == null || obj.shopComment.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/si_address"
             />
@@ -161,7 +181,7 @@
             android:id="@+id/si_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginStart="48dp"
             android:layout_marginTop="4dp"
             android:ellipsize="start"
@@ -171,10 +191,18 @@
             tools:text="Строка комментария"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{obj.shopComment == null || obj.shopComment.length() == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/si_address" />
+
+        <Space
+            android:id="@+id/space2"
+            android:layout_width="wrap_content"
+            android:layout_height="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/si_comment"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

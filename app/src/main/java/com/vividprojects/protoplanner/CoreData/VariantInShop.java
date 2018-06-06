@@ -1,5 +1,7 @@
 package com.vividprojects.protoplanner.CoreData;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -103,14 +105,16 @@ public class VariantInShop extends RealmObject {
         plain.comment = comment;
         plain.price = price;
         plain.currency = currency.getPlain();
-        if (variantPrimary != null && !variantPrimary.isEmpty())
+        if (variantPrimary != null && !variantPrimary.isEmpty()) {
             plain.measure = variantPrimary.first().getMeasure().getPlain();
+            plain.basicVariant = true;
+        }
         if (plain.measure == null && variant != null && !variant.isEmpty())
             plain.measure = variant.first().getMeasure().getPlain();
         return plain;
     }
 
-    public class Plain {
+    public static class Plain {
         public String id;
         public String title;
         public String url;
@@ -119,6 +123,22 @@ public class VariantInShop extends RealmObject {
         public double price;
         public Currency.Plain currency;
         public Measure.Plain measure;
+        public boolean basicVariant = false;
+
+        public static List<Plain> sort(List<Plain> list) {
+            Plain[] holder_list = new Plain[list.size()];
+            list.toArray(holder_list);
+
+            Arrays.sort(holder_list,(x, y)->{
+                if (x.basicVariant)
+                    return -1;
+                if (y.basicVariant)
+                    return 1;
+                return (int) ((x.price - y.price)*100);
+            });
+
+            return new ArrayList<>(Arrays.asList(holder_list));
+        }
     }
 
 }
