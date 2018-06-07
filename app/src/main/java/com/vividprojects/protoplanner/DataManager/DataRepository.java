@@ -17,6 +17,7 @@ import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
+import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DB.LocalDataDB;
 import com.vividprojects.protoplanner.DB.NetworkDataDB;
 import com.vividprojects.protoplanner.AppExecutors;
@@ -180,8 +181,45 @@ public class DataRepository {
         }.asLiveData();
     }
 
+    public LiveData<Resource<VariantInShop.Plain>> loadShop(String id) {
+        return new NetworkBoundResource<VariantInShop.Plain, VariantInShop.Plain>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull VariantInShop.Plain item) {
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable VariantInShop.Plain data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<VariantInShop.Plain> loadFromLocalDB() {
+                MutableLiveData<VariantInShop.Plain> ld = new MutableLiveData<>();
+                VariantInShop.Plain variant = localDataDB
+                        .queryShop()
+                        .id_equalTo(id)
+                        .findFirst()
+                        .getPlain();
+                ld.setValue(variant);
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<VariantInShop.Plain>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<VariantInShop.Plain>>();
+            }
+        }.asLiveData();
+    }
+
     public String saveVariant(String id, String name, double price, double count, int currency, int measure) {
         return localDataDB.saveVariant(id, name, price, count, currency, measure);
+    }
+
+    public String saveShop(VariantInShop.Plain shop, String variantId, boolean asPrimary) {
+        return localDataDB.saveShop(shop, variantId, asPrimary);
     }
 
     public void saveMainVariantToRecord(String variantId, String recordId) {

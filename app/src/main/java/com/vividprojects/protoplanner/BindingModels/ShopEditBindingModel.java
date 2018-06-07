@@ -154,4 +154,8 @@ public class ShopEditBindingModel extends BaseObservable {
 
     }
 
+    public VariantInShop.Plain getShop() {
+        return this.shop;
+    }
+
 }

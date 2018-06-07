@@ -13,6 +13,7 @@ import com.vividprojects.protoplanner.ViewModels.MeasureListViewModel;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.RecordListViewModel;
 import com.vividprojects.protoplanner.ViewModel.PPViewModelFactory;
+import com.vividprojects.protoplanner.ViewModels.ShopViewModel;
 import com.vividprojects.protoplanner.ViewModels.VariantViewModel;
 
 import dagger.Binds;
@@ -75,6 +76,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(VariantViewModel.class)
     abstract ViewModel bindVariantViewModel(VariantViewModel variantViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ShopViewModel.class)
+    abstract ViewModel bindShopViewModel(ShopViewModel shopViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(PPViewModelFactory factory);

@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -15,9 +14,9 @@ import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenDialogAbstract;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
-import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.ShopViewModel;
 import com.vividprojects.protoplanner.ViewModels.VariantViewModel;
-import com.vividprojects.protoplanner.databinding.DialogVariantEditBinding;
+import com.vividprojects.protoplanner.databinding.DialogVariantShopEditBinding;
 
 import javax.inject.Inject;
 
@@ -25,28 +24,18 @@ import javax.inject.Inject;
  * Created by Smile on 23.01.2018.
  */
 
-public class EditVariantDialog extends DialogFullScreenDialogAbstract implements Injectable {
+public class EditShopDialog extends DialogFullScreenDialogAbstract implements Injectable {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    private VariantViewModel model;
-    private VariantEditBindingModel bindingModelVariantEdit;
+    private ShopViewModel model;
     private ShopEditBindingModel bindingModelShopEdit;
-    private DialogVariantEditBinding binding;
+    private DialogVariantShopEditBinding binding;
 
+    private String shopId;
     private String variantId;
-
-    private boolean ecVariant = true;
     private boolean ecShop = true;
-
-    private RunnableParam<Integer> enableCheckVariant = (error) -> {
-        if (error == 1)
-            ecVariant = false;
-        else
-            ecVariant = true;
-        enableCheck();
-    };
 
     private RunnableParam<Integer> enableCheckShop = (error) -> {
         if (error == 1)
@@ -57,7 +46,7 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
     };
 
     private void enableCheck() {
-        if (ecVariant && ecShop)
+        if (ecShop)
             enableButtons();
         else
             disableButtons();
@@ -67,36 +56,26 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
     @Override
     public View getRootView() {
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        binding = DialogVariantEditBinding.inflate(inflater);
+        binding = DialogVariantShopEditBinding.inflate(inflater);
         return binding.getRoot();
     }
 
     @Override
     public void observeModels() {
-        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(VariantViewModel.class);
-
-        bindingModelVariantEdit = model.getBindingModelVariantEdit();
-        bindingModelVariantEdit.setEnableCheck(enableCheckVariant);
+        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(ShopViewModel.class);
 
         bindingModelShopEdit = model.getBindingModelShopEdit();
         bindingModelShopEdit.setEnableCheck(enableCheckShop);
 
-        binding.setVariantEditModel(bindingModelVariantEdit);
         binding.setShopEditModel(bindingModelShopEdit);
 
-        if (variantId != null) {
-            model.setVariantId(variantId);
+        if (shopId != null) {
+            model.setShopId(shopId);
 
-            model.getVariantItem().observe(this, resource -> {
+            model.getShopItem().observe(this, resource -> {
                 if (resource != null) {
-                    bindingModelVariantEdit.setVariant(resource.data);
-                    bindingModelShopEdit.setShop(resource.data.primaryShop);
+                    bindingModelShopEdit.setShop(resource.data);
                 }
-            });
-
-            model.getMeasures().observe(this, measures -> {
-                if (measures != null)
-                    bindingModelVariantEdit.setVariantEditMeasureList(Measure.Plain.sort(getContext(), measures));
             });
 
             model.getCurrencies().observe(this, currencies -> {
@@ -112,23 +91,20 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
         Bundle bundle = getArguments();
         if (bundle != null) {
             Bundle b = bundle.getBundle("BUNDLE");
-            if (b != null)
-                variantId = b.getString("ID", null);
+            if (b != null) {
+                shopId = b.getString("ID", null);
+                variantId = b.getString("VARIANTID", null);
+            }
         }
     }
 
     @Override
     public void onSave() {
-        model.saveVariant(bindingModelVariantEdit.getId()
-                ,bindingModelVariantEdit.getVariantEditName()
-                ,bindingModelShopEdit.getPriceNum()
-                ,bindingModelVariantEdit.getCountNum()
-                ,bindingModelShopEdit.getShopEditCurrency().iso_code_int
-                ,bindingModelVariantEdit.getVariantEditMeasure().hash);
+        model.saveShop(bindingModelShopEdit.getShop(), variantId, false);
     }
 
     @Override
     public String getResult() {
-        return model.getVariantId();
+        return model.getShopId();
     }
 }

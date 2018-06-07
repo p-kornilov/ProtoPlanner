@@ -36,6 +36,7 @@ import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenHelper;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.MainActivity;
+import com.vividprojects.protoplanner.Utils.ItemActionsShop;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
@@ -52,7 +53,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Smile on 31.10.2017.
  */
 
-public class RecordItemFragment extends Fragment implements Injectable {
+public class RecordItemFragment extends Fragment implements Injectable, ItemActionsShop {
 
     public static final String RECORD_ID = "RECORD_ID";
     private static final String FILE_PROVIDER_AUTHORITY = "com.vividprojects.protoplanner.file_provider";
@@ -63,6 +64,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
     private static final int REQUEST_EDIT_NAME = 5;
     private static final int REQUEST_EDIT_COMMENT = 6;
     private static final int REQUEST_EDIT_VARIANT = 7;
+    private static final int REQUEST_EDIT_SHOP = 8;
     private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
 
     @Inject
@@ -111,7 +113,9 @@ public class RecordItemFragment extends Fragment implements Injectable {
     };
 
     private Runnable onVariantEditClick = () -> {
-        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), REQUEST_EDIT_VARIANT, bindingModelVariant.getVariantId());
+        Bundle b = new Bundle();
+        b.putString("ID", bindingModelVariant.getVariantId());
+        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), REQUEST_EDIT_VARIANT, b);
     };
 
     private RunnableParam<View> onAddImageClick = (view) -> {
@@ -339,6 +343,12 @@ public class RecordItemFragment extends Fragment implements Injectable {
                     model.saveMainVariant(id);
                 }
                 return;
+            case REQUEST_EDIT_SHOP:
+                if (resultCode == RESULT_OK && data != null) {
+                    String id = data.getStringExtra("ID");
+                    model.refreshShop(id);
+                }
+                return;
         }
     }
 
@@ -358,6 +368,7 @@ public class RecordItemFragment extends Fragment implements Injectable {
             bindingModelVariant.setOnEditClick(onVariantEditClick);
             bindingModelVariant.setImagesAdapter(onImageSelect);
             bindingModelVariant.setOnAddImageClick(onAddImageClick);
+            bindingModelVariant.setMaster(this);
             binding.setVariantModel(bindingModelVariant);
 
             Bundle args = getArguments();
@@ -390,6 +401,11 @@ public class RecordItemFragment extends Fragment implements Injectable {
                 if (progress != null)
                     bindingModelVariant.setLoadProgress(progress);
             });
+
+            model.getRefreshedShop().observe(this, shop -> {
+                if (shop != null && shop.data != null)
+                    bindingModelVariant.refreshShop(shop.data);
+            });
         }
     }
 
@@ -399,5 +415,24 @@ public class RecordItemFragment extends Fragment implements Injectable {
         args.putString(RECORD_ID,id);
         recordItemFragment.setArguments(args);
         return recordItemFragment;
+    }
+
+    @Override
+    public void itemShopDelete(String item) {
+
+
+    }
+
+    @Override
+    public void itemShopEdit(String item) {
+        Bundle b = new Bundle();
+        b.putString("ID", item);
+        b.putString("VARIANTID", bindingModelVariant.getVariantId());
+        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_SHOP, this, !navigationController.isTablet(), REQUEST_EDIT_SHOP, b);
+    }
+
+    @Override
+    public void itemShopPrimary(String item) {
+
     }
 }

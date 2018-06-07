@@ -821,4 +821,86 @@ public class LocalDataDB {
             }
         });
     }
+
+    //---------------- Measure --------------------------------------------------------------
+    public QueryShop queryShop() {
+        return new QueryShop();
+    }
+
+    public class QueryShop {
+        RealmQuery<VariantInShop> query;
+
+        public QueryShop () {
+            query = realm.where(VariantInShop.class);
+        }
+
+        public QueryShop id_equalTo(String id) {
+            query = query.equalTo("id",id);
+            return this;
+        }
+
+        public List<VariantInShop> findAll() {
+            RealmResults<VariantInShop> rr = query.findAll();
+            ArrayList<VariantInShop> al = new ArrayList<>();
+            al.addAll(rr);
+            return al;
+        }
+
+        public VariantInShop findFirst() {
+            return query.findFirst();
+        }
+    }
+
+    public String saveShop(VariantInShop.Plain shop, String variantId, boolean asPrimary) {
+        Currency c = realm.where(Currency.class).equalTo("iso_code_int", shop.currency.iso_code_int).findFirst();
+        if (c == null)
+            return null;
+
+        final Bundle1<String> bid = new Bundle1<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                VariantInShop s;
+                if (shop.id == null) {
+                    Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
+                    if (v == null)
+                        return;
+
+                    s = new VariantInShop(shop, c);
+                    realm.insert(s);
+                    if (asPrimary)
+                        v.setPrimaryShop(s);
+                    else
+                        v.addShop(s);
+                } else {
+                    s = realm.where(VariantInShop.class).equalTo("id", shop.id).findFirst();
+                    if (s == null)
+                        return;
+
+                    s.setPrice(shop.price);
+                    s.setCurrency(c);
+                    s.setAddress(shop.address);
+                    s.setComment(shop.comment);
+                    s.setTitle(shop.title);
+                    s.setURL(shop.url);
+                }
+                bid.item = s.getId();
+            }
+        });
+        return bid.item;
+    }
+
+    public void deleteShop(String id) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                VariantInShop s = realm.where(VariantInShop.class).equalTo("id", id).findFirst();
+                if (s != null) {
+                    //s.getVariant().
+                    s.deleteFromRealm();
+                }
+            }
+        });
+    }
+
 }

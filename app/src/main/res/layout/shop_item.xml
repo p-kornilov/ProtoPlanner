@@ -141,6 +141,7 @@
             android:cropToPadding="false"
             android:padding="12dp"
             android:background="@null"
+            android:onClick="@{()->obj.onMenuClicked(siEditButton)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

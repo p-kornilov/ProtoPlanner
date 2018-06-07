@@ -42,9 +42,11 @@ public class DialogFullScreenActivity extends AppCompatActivity  implements Dial
 
             Bundle bundle = new Bundle();
             bundle.putBoolean("FULLSCREEN", true);
-            String id = getIntent().getStringExtra("ID");
-            if (id != null)
-                bundle.putString("ID", id);
+            //String id = getIntent().getStringExtra("ID");
+            Bundle b = getIntent().getBundleExtra("BUNDLE");
+            bundle.putBundle("BUNDLE",getIntent().getBundleExtra("BUNDLE"));
+            if (b != null)
+                bundle.putBundle("BUNDLE",b);
 
             DialogFragment dialog = DialogFullScreenHelper.createDialog(dialogType);
             dialog.setArguments(bundle);

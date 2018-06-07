@@ -55,6 +55,10 @@ public class VariantInShop extends RealmObject {
         this.currency = currency;
     }
 
+    public VariantInShop(VariantInShop.Plain shop, Currency currency) {
+        this(shop.title, shop.url, shop.address, shop.comment, shop.price, currency);
+    }
+
     public String getId() {
         return id;
     }

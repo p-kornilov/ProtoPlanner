@@ -22,10 +22,12 @@ import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
+import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.ItemActionsShop;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
 
@@ -48,9 +50,13 @@ public class VariantItemBindingModel extends BaseObservable {
     private WeakReference<RunnableParam<View>> onAddImageClick;
     private WeakReference<Context> context;
 
-    public VariantItemBindingModel( Context context) {
+    public VariantItemBindingModel(Context context) {
         this.context = new WeakReference<>(context);
         this.shopListAdapter = new ShopListAdapter(context);
+    }
+
+    public void setMaster(ItemActionsShop master) {
+        this.shopListAdapter.setMaster(master);
     }
 
     public void setImagesAdapter(RunnableParam onImageSelect) {
@@ -132,6 +138,10 @@ public class VariantItemBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.variantValueDecor);
 
         //...
+    }
+
+    public void refreshShop(VariantInShop.Plain shop) {
+        shopListAdapter.refresh(shop);
     }
 
     public void initImageLoad() {

@@ -46,6 +46,10 @@ public class Variant extends RealmObject {
         realm.insert(this.primaryShop);
     }
 
+    public void setPrimaryShop(VariantInShop primaryShop) {
+        this.primaryShop = primaryShop;
+    }
+
     public Currency getCurrency() {
         return primaryShop.getCurrency();
     }

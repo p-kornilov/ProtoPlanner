@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mse_edit"
+        android:title="Edit"/>
+
+    <item
+        android:id="@+id/mse_set_basic"
+        android:title="Set as Primary price"/>
+
+    <item
+        android:id="@+id/mse_delete"
+        android:title="Delete"/>
+</menu>

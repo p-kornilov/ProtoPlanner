@@ -19,6 +19,7 @@ import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
+import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
@@ -40,6 +41,8 @@ public class RecordItemViewModel extends ViewModel {
     private final MutableLiveData<String> recordNameTrigger;
     private final LiveData<String> recordNameChange;
     private final MediatorLiveData<String> recordName;
+    private final LiveData<Resource<VariantInShop.Plain>> refreshedShop;
+    private final MutableLiveData<String> refreshShopId = new MutableLiveData<>();
 
     private DataRepository dataRepository;
     private RecordItemBindingModel bindingModelRecord;
@@ -64,6 +67,8 @@ public class RecordItemViewModel extends ViewModel {
         recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
             return RecordItemViewModel.this.dataRepository.setRecordName(recordItemId.getValue(),name);
         });
+
+        refreshedShop = Transformations.switchMap(refreshShopId, input -> RecordItemViewModel.this.dataRepository.loadShop(input));
 
         recordItem = Transformations.switchMap(recordItemId, input -> {
 /*            if (input.isEmpty()) {
@@ -194,4 +199,11 @@ public class RecordItemViewModel extends ViewModel {
         });
     }
 
+    public void refreshShop(String shopId) {
+        refreshShopId.setValue(shopId);
+    }
+
+    public LiveData<Resource<VariantInShop.Plain>> getRefreshedShop() {
+        return refreshedShop;
+    }
 }
