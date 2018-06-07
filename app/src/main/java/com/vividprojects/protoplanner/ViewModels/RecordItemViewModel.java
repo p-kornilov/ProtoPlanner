@@ -61,7 +61,7 @@ public class RecordItemViewModel extends ViewModel {
         recordNameTrigger = new MutableLiveData<>();
 
         bindingModelRecord = new RecordItemBindingModel();
-        bindingModelVariant = new VariantItemBindingModel(dataRepository.getContext());
+        bindingModelVariant = new VariantItemBindingModel();
         bindingModelVariantEdit = new VariantEditBindingModel(dataRepository.getContext());
 
         recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
@@ -197,6 +197,10 @@ public class RecordItemViewModel extends ViewModel {
                 mainVariantItem.removeSource(currentVariant);
             }
         });
+    }
+
+    public void deleteShop(String id) {
+        dataRepository.deleteShop(id);
     }
 
     public void refreshShop(String shopId) {

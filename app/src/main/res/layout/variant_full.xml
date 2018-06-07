@@ -239,6 +239,7 @@
             android:background="@null"
             android:cropToPadding="false"
             android:padding="12dp"
+            android:onClick="@{()->variantModel.onAddShopClick()}"
             app:layout_constraintEnd_toStartOf="@id/rf_show_on_map"
             app:layout_constraintTop_toBottomOf="@+id/divider3"
             app:srcCompat="@drawable/ic_add_list_black_24dp" />

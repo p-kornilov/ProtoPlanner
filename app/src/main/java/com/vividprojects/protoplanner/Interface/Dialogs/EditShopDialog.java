@@ -78,11 +78,12 @@ public class EditShopDialog extends DialogFullScreenDialogAbstract implements In
                 }
             });
 
-            model.getCurrencies().observe(this, currencies -> {
-                if (currencies != null)
-                    bindingModelShopEdit.setShopEditCurrencyList(Currency.Plain.sort(getContext(), currencies));
-            });
         }
+
+        model.getCurrencies().observe(this, currencies -> {
+            if (currencies != null)
+                bindingModelShopEdit.setShopEditCurrencyList(Currency.Plain.sort(getContext(), currencies));
+        });
     }
 
     @Override

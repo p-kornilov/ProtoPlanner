@@ -153,6 +153,13 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         popup.show();
     };
 
+    private Runnable onAddShopClick = () -> {
+        Bundle b = new Bundle();
+        b.putString("ID", "");
+        b.putString("VARIANTID", bindingModelVariant.getVariantId());
+        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_SHOP, this, !navigationController.isTablet(), REQUEST_EDIT_SHOP, b);
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -368,7 +375,8 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             bindingModelVariant.setOnEditClick(onVariantEditClick);
             bindingModelVariant.setImagesAdapter(onImageSelect);
             bindingModelVariant.setOnAddImageClick(onAddImageClick);
-            bindingModelVariant.setMaster(this);
+            bindingModelVariant.setOnAddShopClick(onAddShopClick);
+            bindingModelVariant.setContext(this);
             binding.setVariantModel(bindingModelVariant);
 
             Bundle args = getArguments();
@@ -418,9 +426,8 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
     }
 
     @Override
-    public void itemShopDelete(String item) {
-
-
+    public void itemShopDelete(String id) {
+        model.deleteShop(id);
     }
 
     @Override

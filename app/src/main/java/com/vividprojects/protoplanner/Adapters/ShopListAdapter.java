@@ -1,10 +1,13 @@
 package com.vividprojects.protoplanner.Adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 
 import com.vividprojects.protoplanner.BindingModels.ShopItemListBindingModel;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.DeleteDialogHelper;
 import com.vividprojects.protoplanner.Utils.ItemActionsShop;
 
 import java.lang.ref.WeakReference;
@@ -96,8 +99,21 @@ public class ShopListAdapter extends DataBindingAdapter implements ItemActionsSh
     }
 
     @Override
-    public void itemShopDelete(String item) {
-
+    public void itemShopDelete(String id) {
+        DeleteDialogHelper.show(context.get(), "Are you sure?", () -> {
+            int pos;
+            VariantInShop.Plain s = null;
+            for (pos = 0; pos < filtered_data.size(); pos++)
+                if (filtered_data.get(pos).id.equals(id)) {
+                    s = filtered_data.get(pos);
+                    break;
+                }
+            data.remove(s);
+            filtered_data.remove(s);
+            models.remove(pos);
+            master.itemShopDelete(id);
+            notifyItemRemoved(pos);
+        });
     }
 
     @Override

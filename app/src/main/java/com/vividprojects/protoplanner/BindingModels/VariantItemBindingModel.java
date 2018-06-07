@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -48,15 +49,16 @@ public class VariantItemBindingModel extends BaseObservable {
 
     private WeakReference<Runnable> onEditClick;
     private WeakReference<RunnableParam<View>> onAddImageClick;
+    private WeakReference<Runnable> onAddShopClick;
     private WeakReference<Context> context;
 
-    public VariantItemBindingModel(Context context) {
-        this.context = new WeakReference<>(context);
-        this.shopListAdapter = new ShopListAdapter(context);
+    public VariantItemBindingModel() {
     }
 
-    public void setMaster(ItemActionsShop master) {
-        this.shopListAdapter.setMaster(master);
+    public void setContext(Fragment fragment) {
+        this.context = new WeakReference<>(fragment.getContext());
+        this.shopListAdapter = new ShopListAdapter(this.context.get());
+        this.shopListAdapter.setMaster((ItemActionsShop) fragment);
     }
 
     public void setImagesAdapter(RunnableParam onImageSelect) {
@@ -210,6 +212,16 @@ public class VariantItemBindingModel extends BaseObservable {
     public void onAddImageClick(View view) {
         if (onAddImageClick != null && onAddImageClick.get() != null)
             onAddImageClick.get().run(view);
+    }
+
+    public void setOnAddShopClick(Runnable func) {
+        this.onAddShopClick = new WeakReference<>(func);
+    }
+
+    public void onAddShopClick() {
+        if (onAddShopClick != null && onAddShopClick.get() != null)
+            onAddShopClick.get().run();
+
     }
 
 }
