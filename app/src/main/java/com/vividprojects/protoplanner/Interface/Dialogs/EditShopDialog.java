@@ -101,11 +101,12 @@ public class EditShopDialog extends DialogFullScreenDialogAbstract implements In
 
     @Override
     public void onSave() {
-        model.saveShop(bindingModelShopEdit.getShop(), variantId, false);
+        String shopId = model.saveShop(bindingModelShopEdit.getShop(), variantId, false);
+        bindingModelShopEdit.setShopId(shopId);
     }
 
     @Override
     public String getResult() {
-        return model.getShopId();
+        return bindingModelShopEdit.getId();
     }
 }

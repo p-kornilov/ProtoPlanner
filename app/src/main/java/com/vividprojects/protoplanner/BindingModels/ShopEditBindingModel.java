@@ -158,4 +158,8 @@ public class ShopEditBindingModel extends BaseObservable {
         return this.shop;
     }
 
+    public void setShopId(String id) {
+        this.shop.id = id;
+    }
+
 }

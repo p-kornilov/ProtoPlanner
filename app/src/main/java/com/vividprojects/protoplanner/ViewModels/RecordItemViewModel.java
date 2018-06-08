@@ -210,4 +210,16 @@ public class RecordItemViewModel extends ViewModel {
     public LiveData<Resource<VariantInShop.Plain>> getRefreshedShop() {
         return refreshedShop;
     }
+
+    public void setShopPrimary(String shopId) {
+        dataRepository.setShopPrimary(shopId, mainVariantItem.getValue().id);
+        LiveData<Resource<Variant.Plain>> currentVariant = dataRepository.loadVariant(mainVariantItem.getValue().id);
+        mainVariantItem.addSource(currentVariant, new Observer<Resource<Variant.Plain>>() {
+            @Override
+            public void onChanged(@Nullable Resource<Variant.Plain> variant) {
+                mainVariantItem.setValue(variant.data);
+                mainVariantItem.removeSource(currentVariant);
+            }
+        });
+    }
 }

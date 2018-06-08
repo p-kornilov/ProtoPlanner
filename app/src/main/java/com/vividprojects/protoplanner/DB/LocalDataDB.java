@@ -872,6 +872,8 @@ public class LocalDataDB {
                         v.setPrimaryShop(s);
                     else
                         v.addShop(s);
+                    int i = 1;
+
                 } else {
                     s = realm.where(VariantInShop.class).equalTo("id", shop.id).findFirst();
                     if (s == null)
@@ -888,6 +890,24 @@ public class LocalDataDB {
             }
         });
         return bid.item;
+    }
+
+    public void setShopPrimary(String shopId, String variantId) {
+        Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
+        final VariantInShop s = realm.where(VariantInShop.class).equalTo("id", shopId).findFirst();
+        if (v == null || s == null)
+            return;
+
+        final Bundle1<String> bid = new Bundle1<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                VariantInShop oldPrimaryShop = v.getPrimaryShop();
+                v.setPrimaryShop(s);
+                v.deleteShop(s);
+                v.addShop(oldPrimaryShop);
+            }
+        });
     }
 
     public void deleteShop(String id) {

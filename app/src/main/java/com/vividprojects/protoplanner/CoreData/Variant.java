@@ -63,6 +63,14 @@ public class Variant extends RealmObject {
         return true;
     }
 
+    public VariantInShop getPrimaryShop() {
+        return primaryShop;
+    }
+
+    public void deleteShop(VariantInShop shop) {
+        shops.remove(shop);
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

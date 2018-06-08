@@ -233,6 +233,10 @@ public class DataRepository {
         return localDataDB.saveShop(shop, variantId, asPrimary);
     }
 
+    public void setShopPrimary(String shopId, String variantId) {
+        localDataDB.setShopPrimary(shopId, variantId);
+    }
+
     public void saveMainVariantToRecord(String variantId, String recordId) {
         localDataDB.saveMainVariantToRecord(variantId, recordId);
     }

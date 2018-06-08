@@ -59,17 +59,8 @@ public class ShopViewModel extends ViewModel {
         return bindingModelShopEdit;
     }
 
-    public String getShopId() {
-        return shopId.getValue();
-    }
-
-
-    public void saveShop(VariantInShop.Plain shop, String variantId, boolean asPrimary) {
-/*
-        String saveId = dataRepository.saveVariant(id, name, price, count, currency, measure);
-        setVariantId(saveId);
-*/
-        dataRepository.saveShop(shop, variantId, asPrimary);
+    public String saveShop(VariantInShop.Plain shop, String variantId, boolean asPrimary) {
+        return dataRepository.saveShop(shop, variantId, asPrimary);
     }
 
 }

@@ -439,7 +439,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
     }
 
     @Override
-    public void itemShopPrimary(String item) {
-
+    public void itemShopPrimary(String id) {
+        model.setShopPrimary(id);
     }
 }

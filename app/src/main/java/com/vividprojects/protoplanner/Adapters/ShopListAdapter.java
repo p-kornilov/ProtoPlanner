@@ -117,13 +117,45 @@ public class ShopListAdapter extends DataBindingAdapter implements ItemActionsSh
     }
 
     @Override
-    public void itemShopEdit(String item) {
-        master.itemShopEdit(item);
+    public void itemShopEdit(String id) {
+        master.itemShopEdit(id);
     }
 
     @Override
-    public void itemShopPrimary(String item) {
+    public void itemShopPrimary(String id) {
+        int dpos = 0;
+        VariantInShop.Plain ss = null;
+        for (VariantInShop.Plain s : filtered_data) {
+            if (s.id.equals(id)) {
+                ss = s;
+                break;
+            }
+        }
 
+        ss.basicVariant = true;
+        filtered_data.get(dpos).basicVariant = false;
+        int pos = filtered_data.indexOf(ss);
+        itemMove(pos,dpos);
+
+        for (int i = dpos+2; i < filtered_data.size(); i++)
+                if (filtered_data.get(i).price >= filtered_data.get(dpos+1).price) {
+                    itemMove(dpos+1,i-1);
+                    break;
+                }
+
+        master.itemShopPrimary(id);
+    }
+
+    private void itemMove(int from, int to) {
+        if (from > getItemCount() || to > getItemCount())
+            return;
+
+        filtered_data.add(to,filtered_data.remove(from));
+        models.add(to,models.remove(from));
+
+        notifyItemMoved(from,to);
+        notifyItemChanged(to);
+        notifyItemChanged(from);
     }
 
     public void refresh(VariantInShop.Plain shop) {
