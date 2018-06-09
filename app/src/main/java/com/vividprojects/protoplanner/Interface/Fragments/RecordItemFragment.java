@@ -37,6 +37,7 @@ import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.Utils.ItemActionsShop;
+import com.vividprojects.protoplanner.Utils.ItemActionsVariant;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
@@ -53,7 +54,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Smile on 31.10.2017.
  */
 
-public class RecordItemFragment extends Fragment implements Injectable, ItemActionsShop {
+public class RecordItemFragment extends Fragment implements Injectable, ItemActionsShop, ItemActionsVariant {
 
     public static final String RECORD_ID = "RECORD_ID";
     private static final String FILE_PROVIDER_AUTHORITY = "com.vividprojects.protoplanner.file_provider";
@@ -73,9 +74,6 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
     @Inject
     NavigationController navigationController;
 
-    private RecyclerView shopsRecycler;
-    private RecyclerView alternativesRecycler;
-  //  private ImageButton add_image;
     private RecordItemViewModel model;
     private boolean empty = false;
 
@@ -185,33 +183,11 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         View v;
 
         if (empty) {
-            //v = (View) inflater.inflate(R.layout.empty_item_fragment, container, false);
             return inflater.inflate(R.layout.empty_item_fragment, container, false);
         } else {
-            //v = (View) inflater.inflate(R.layout.record_fragment, container, false);
             binding = RecordFragmentBinding.inflate(inflater);
-            //return binding.getRoot();
-            v = binding.getRoot();  // TODO Сделать правильно (удалить v)
-
-/*            shopsRecycler = v.findViewById(R.id.rf_shops_recycler);
-
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-            layoutManager.setAutoMeasureEnabled(true);
-            shopsRecycler.setLayoutManager(layoutManager);
-            shopsRecycler.setNestedScrollingEnabled(false);
-            shopsRecycler.setFocusable(false);*/
-
-            alternativesRecycler = (RecyclerView) v.findViewById(R.id.rf_alternatives_recycler);
-
-            RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager(getContext());
-            layoutManager2.setAutoMeasureEnabled(true);
-            alternativesRecycler.setLayoutManager(layoutManager2);
-            alternativesRecycler.setNestedScrollingEnabled(false);
-            alternativesRecycler.setFocusable(false);
-
-        };
-
-        return v;
+            return binding.getRoot();
+        }
     }
 
     @Override
@@ -367,6 +343,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
 
             bindingModelRecord = model.getBindingModelRecord();
+            bindingModelRecord.setContext(this);
             bindingModelRecord.setOnCommentEditClick(onCommentEditClick);
             bindingModelRecord.setOnLabelsEditClick(onLabelsEditClick);
             binding.setRecordModel(bindingModelRecord);
@@ -414,6 +391,11 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
                 if (shop != null && shop.data != null)
                     bindingModelVariant.refreshShop(shop.data);
             });
+
+            model.getAlternativeVariants().observe(this, list -> {
+                if (list != null && list.size() > 0)
+                    bindingModelRecord.setAlternativeVariants(list);
+            });
         }
     }
 
@@ -441,5 +423,21 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
     @Override
     public void itemShopPrimary(String id) {
         model.setShopPrimary(id);
+    }
+
+    @Override
+    public void itemVariantDelete(String id) {
+
+
+    }
+
+    @Override
+    public void itemVariantEdit(String id) {
+
+    }
+
+    @Override
+    public void itemVariantBasic(String id) {
+
     }
 }

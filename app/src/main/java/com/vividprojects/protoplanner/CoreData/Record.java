@@ -184,7 +184,7 @@ public class Record extends RealmObject{
         plain.mainVariant = mainVariant.getId();
         plain.variants = new ArrayList<>();
         for (Variant variant : variants) {
-            plain.variants.add(variant.getId());
+            plain.variants.add(variant.getPlain());
         }
         plain.labels = new ArrayList<>();
         for (Label label: labels) {
@@ -199,7 +199,7 @@ public class Record extends RealmObject{
         public String id;
         public String name;
         public String mainVariant;
-        public List<String> variants;
+        public List<Variant.Plain> variants;
         public List<Label.Plain> labels;
         public String block;
         public String comment;

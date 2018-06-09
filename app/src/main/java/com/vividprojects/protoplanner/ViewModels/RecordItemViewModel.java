@@ -43,6 +43,7 @@ public class RecordItemViewModel extends ViewModel {
     private final MediatorLiveData<String> recordName;
     private final LiveData<Resource<VariantInShop.Plain>> refreshedShop;
     private final MutableLiveData<String> refreshShopId = new MutableLiveData<>();
+    private final MediatorLiveData<List<Variant.Plain>> alternativeVariants;
 
     private DataRepository dataRepository;
     private RecordItemBindingModel bindingModelRecord;
@@ -70,6 +71,7 @@ public class RecordItemViewModel extends ViewModel {
 
         refreshedShop = Transformations.switchMap(refreshShopId, input -> RecordItemViewModel.this.dataRepository.loadShop(input));
 
+
         recordItem = Transformations.switchMap(recordItemId, input -> {
 /*            if (input.isEmpty()) {
                 return AbsentLiveData.create();
@@ -78,6 +80,13 @@ public class RecordItemViewModel extends ViewModel {
             }*/
             return RecordItemViewModel.this.dataRepository.loadRecord(input);
         });
+
+        alternativeVariants = new MediatorLiveData<>();
+        alternativeVariants.addSource(recordItem, ri -> {
+            if (ri != null && ri.data != null)
+                alternativeVariants.setValue(ri.data.variants);
+        });
+
         mvItem = Transformations.switchMap(recordItem, input -> {
 /*            if (input.isEmpty()) {
                 return AbsentLiveData.create();
@@ -221,5 +230,9 @@ public class RecordItemViewModel extends ViewModel {
                 mainVariantItem.removeSource(currentVariant);
             }
         });
+    }
+
+    public LiveData<List<Variant.Plain>> getAlternativeVariants() {
+        return alternativeVariants;
     }
 }

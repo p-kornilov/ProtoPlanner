@@ -2,11 +2,15 @@ package com.vividprojects.protoplanner.BindingModels;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 
+import com.vividprojects.protoplanner.Adapters.VariantListAdapter;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
+import com.vividprojects.protoplanner.Utils.ItemActionsVariant;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -16,8 +20,21 @@ public class RecordItemBindingModel extends BaseObservable {
     private Variant.Plain mainVariant;
     private List<Variant.Plain> listVariant;
 
+    private VariantListAdapter alternativeVariantsListAdapter;
+
     private WeakReference<Runnable> onCommentEditClick;
     private WeakReference<Runnable> onLabelsEditClick;
+
+    public void setContext(Fragment fragment) {
+//        this.context = new WeakReference<>(fragment.getContext());
+        this.alternativeVariantsListAdapter = new VariantListAdapter(fragment.getContext());
+        this.alternativeVariantsListAdapter.setMaster((ItemActionsVariant) fragment);
+    }
+
+    @Bindable
+    public RecyclerView.Adapter getAlternativeVariantsAdapter() {
+        return alternativeVariantsListAdapter;
+    }
 
     @Bindable
     public String getRecordName(){
@@ -44,6 +61,15 @@ public class RecordItemBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.recordComment);
         notifyPropertyChanged(BR.recordLabels);
         //...
+    }
+
+    public void setAlternativeVariants(List<Variant.Plain> list) {
+        alternativeVariantsListAdapter.setData(list);
+        notifyPropertyChanged(BR.alternativeVariantsAdapter);
+    }
+
+    public void refreshAlternativeVariant(Variant.Plain variant) {
+        alternativeVariantsListAdapter.refresh(variant);
     }
 
     public void setRecordComment(String comment) {

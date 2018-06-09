@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.CoreData;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -180,7 +181,7 @@ public class Variant extends RealmObject {
         return plain;
     }
 
-    public class Plain {
+    public static class Plain {
         public String id;
         public String title;
         public Measure.Plain  measure;
@@ -191,6 +192,17 @@ public class Variant extends RealmObject {
         public List<String> full_images;
         public List<VariantInShop.Plain> shops;
         public VariantInShop.Plain primaryShop;
+
+        public static List<Plain> sort(List<Plain> list) {
+            Plain[] holder_list = new Plain[list.size()];
+            list.toArray(holder_list);
+
+            Arrays.sort(holder_list,(x, y)->{
+                return (int) ((x.primaryShop.price*x.count - y.primaryShop.price*y.count)*100);
+            });
+
+            return new ArrayList<>(Arrays.asList(holder_list));
+        }
     }
 
 }

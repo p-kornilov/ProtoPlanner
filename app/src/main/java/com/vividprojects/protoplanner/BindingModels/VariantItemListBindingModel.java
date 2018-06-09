@@ -6,7 +6,10 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
@@ -15,6 +18,7 @@ import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.ItemActionsShop;
 import com.vividprojects.protoplanner.Utils.ItemActionsVariant;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
@@ -52,33 +56,8 @@ public class VariantItemListBindingModel extends BaseObservable {
     }
 
     @Bindable
-    public void setVariantName(String name) {
-        variant.title = name;
-    }
-
-    @Bindable
     public String getVariantValueDecor() {
         return PriceFormatter.createValue(variant.primaryShop.currency, variant.primaryShop.price * variant.count);
-    }
-
-    @Bindable
-    public String getVariantPrice() {
-        return String.valueOf(variant.primaryShop.price);
-    }
-
-    @Bindable
-    public String getVariantCount() {
-        return String.valueOf(variant.count);
-    }
-
-    @Bindable
-    public void setVariantPrice(String price) {
-        this.price = price;
-    }
-
-    @Bindable
-    public void setVariantCount(String count) {
-        this.count = count;
     }
 
     @Bindable
@@ -95,5 +74,35 @@ public class VariantItemListBindingModel extends BaseObservable {
         return variant.id;
     }
 
-
+    public void onMenuClicked(View view) {
+        PopupMenu popup = new PopupMenu(view.getContext(), view);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.mve_edit:
+                    //    listAdapter.itemEdit(measure.hash);
+                        return true;
+                    case R.id.mve_default:
+/*
+                        if (!measure.def)
+                            listAdapter.itemDefault(measure.hash);
+*/
+                        return true;
+                    case R.id.mve_delete:
+//                        listAdapter.itemDelete(measure.hash);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_variant_edit, popup.getMenu());
+/*        if (measure.def) {
+            popup.getMenu().findItem(R.id.mce_default).setEnabled(false);
+            popup.getMenu().findItem(R.id.mce_delete).setEnabled(false);
+        }*/
+        popup.show();
+    }
 }

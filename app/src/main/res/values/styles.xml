@@ -55,6 +55,12 @@
         <item name="android:textColor">@color/textLightSecondary</item>
     </style>
 
+    <style name="NormalText">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="SpinnerText">
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">18sp</item>
