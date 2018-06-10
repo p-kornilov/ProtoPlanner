@@ -22,7 +22,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -64,6 +64,7 @@
             android:layout_marginStart="16dp"
             android:text="@{obj.variantValueDecor}"
             android:theme="@style/NormalText"
+            android:textColor="@color/green"
             app:layout_constraintStart_toEndOf="@id/variant_image"
             app:layout_constraintBottom_toBottomOf="@id/guideline3"
             tools:text="1000" />

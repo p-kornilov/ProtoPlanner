@@ -9,168 +9,197 @@
         <import type="com.vividprojects.protoplanner.R"/>
         <import type="android.view.View"/>
     </data>
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Space
-            android:id="@+id/space1"
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline4"
             android:layout_width="wrap_content"
-            android:layout_height="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            bind:layout_constraintGuide_begin="32dp" />
 
         <TextView
             android:id="@+id/si_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/record_left_padding"
             android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp"
             android:fontFamily="@font/roboto"
-            android:paddingStart="4dp"
             android:singleLine="true"
             android:text="@{obj.shopPrice}"
-            tools:text="1000"
             android:textColor="@color/green"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/space1" />
+            app:layout_constraintBottom_toBottomOf="@id/guideline4"
+            tools:text="1000" />
 
         <TextView
             android:id="@+id/si_basic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/roboto"
             android:paddingStart="4dp"
             android:singleLine="true"
-            android:text="(Basic variant)"
+            android:text="primary price"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:visibility="@{obj.isBasic}"
-            app:layout_constraintStart_toEndOf="@id/si_price"
-            app:layout_constraintBottom_toBottomOf="@id/si_price" />
+            app:layout_constraintBottom_toBottomOf="@id/guideline4"
+            app:layout_constraintStart_toEndOf="@id/si_price" />
 
         <ImageView
             android:id="@+id/si_image_url"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_link_black_24dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/record_left_padding"
             android:layout_marginTop="4dp"
             android:visibility="@{obj.shopURL == null || obj.shopURL.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_price"/>
+            app:layout_constraintTop_toTopOf="@id/si_url"
+            app:layout_constraintBottom_toBottomOf="@id/si_url"
+            app:srcCompat="@drawable/ic_link_black_24dp" />
+
+        <ImageView
+            android:id="@+id/si_image_empty"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/record_left_padding"
+            android:layout_marginTop="4dp"
+            android:visibility="@{obj.shopIsEmpty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/si_empty"
+            app:layout_constraintBottom_toBottomOf="@id/si_empty"
+            app:srcCompat="@drawable/ic_description_empty_black_24dp" />
 
         <TextView
             android:id="@+id/si_url"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="4dp"
             android:autoLink="web"
             android:ellipsize="start"
             android:linksClickable="true"
             android:singleLine="true"
             android:text="@{obj.shopURL}"
-            tools:text="https://test.com"
             android:theme="@style/NormalText"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="4dp"
             android:visibility="@{obj.shopURL == null || obj.shopURL.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_price"/>
+            app:layout_constraintTop_toBottomOf="@id/si_price"
+            tools:text="https://test.com" />
+
+        <TextView
+            android:id="@+id/si_empty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="start"
+            android:singleLine="true"
+            android:text="Description is empty"
+            android:theme="@style/NormalText"
+            android:visibility="@{obj.shopIsEmpty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/si_edit_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/si_price" />
 
         <ImageView
             android:id="@+id/si_image_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_shopping_cart_white_24dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/record_left_padding"
             android:layout_marginTop="4dp"
             android:visibility="@{obj.shopTitle == null || obj.shopTitle.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_url"
-            />
+            app:layout_constraintTop_toTopOf="@id/si_title"
+            app:layout_constraintBottom_toBottomOf="@id/si_title"
+            app:srcCompat="@drawable/ic_shopping_cart_white_24dp" />
 
         <TextView
             android:id="@+id/si_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="4dp"
             android:autoLink="web"
             android:ellipsize="start"
             android:linksClickable="true"
             android:singleLine="true"
             android:text="@{obj.shopTitle}"
-            tools:text="Наименование магазина"
             android:theme="@style/NormalText"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="4dp"
             android:visibility="@{obj.shopTitle == null || obj.shopTitle.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_url"/>
+            app:layout_constraintTop_toBottomOf="@id/si_url"
+            tools:text="Наименование магазина" />
 
         <ImageView
             android:id="@+id/si_image_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_place_black_24dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/record_left_padding"
             android:layout_marginTop="4dp"
             android:visibility="@{obj.shopAddress == null || obj.shopAddress.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_title"
-            />
+            app:layout_constraintTop_toTopOf="@id/si_address"
+            app:layout_constraintBottom_toBottomOf="@id/si_address"
+            app:srcCompat="@drawable/ic_place_black_24dp" />
 
 
         <ImageButton
             android:id="@+id/si_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="4dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:cropToPadding="false"
-            android:padding="12dp"
             android:background="@null"
+            android:cropToPadding="false"
             android:onClick="@{()->obj.onMenuClicked(siEditButton)}"
+            android:padding="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:srcCompat="@drawable/ic_more_vert_grey_24dp" />
 
         <TextView
             android:id="@+id/si_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="start"
-            android:singleLine="false"
-            android:text="@{obj.shopAddress}"
-            tools:text="Строка адреса"
-            android:theme="@style/NormalText"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="48dp"
             android:layout_marginTop="4dp"
+            android:ellipsize="start"
+            android:singleLine="false"
+            android:text="@{obj.shopAddress}"
+            android:theme="@style/NormalText"
             android:visibility="@{obj.shopAddress == null || obj.shopAddress.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_title"/>
+            app:layout_constraintTop_toBottomOf="@id/si_title"
+            tools:text="Строка адреса" />
 
         <ImageView
             android:id="@+id/si_image_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_note_black_24dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/record_left_padding"
             android:layout_marginTop="4dp"
             android:visibility="@{obj.shopComment == null || obj.shopComment.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_address"
-            />
+            app:layout_constraintTop_toTopOf="@id/si_comment"
+            app:layout_constraintBottom_toBottomOf="@id/si_comment"
+            app:srcCompat="@drawable/ic_note_black_24dp" />
 
         <TextView
             android:id="@+id/si_comment"
@@ -182,20 +211,20 @@
             android:ellipsize="start"
             android:singleLine="false"
             android:text="@{obj.shopComment}"
-            tools:text="Строка комментария"
             android:theme="@style/NormalText"
             android:visibility="@{obj.shopComment == null || obj.shopComment.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_address" />
+            app:layout_constraintTop_toBottomOf="@id/si_address"
+            tools:text="Строка комментария" />
 
         <Space
             android:id="@+id/space2"
             android:layout_width="wrap_content"
-            android:layout_height="8dp"
+            android:layout_height="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/si_comment"/>
+            app:layout_constraintTop_toBottomOf="@id/si_comment" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

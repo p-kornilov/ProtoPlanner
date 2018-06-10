@@ -19,16 +19,29 @@ public class ShopItemListBindingModel extends BaseObservable {
 
     private Context context;
     private ItemActionsShop listAdapter;
+    private boolean isEmpty = false;
 
     public ShopItemListBindingModel(Context context, ItemActionsShop listAdapter, VariantInShop.Plain shop) {
         this.shop = shop;
         this.context = context;
         this.listAdapter = listAdapter;
+        if ((shop.address == null || shop.address.length() == 0)
+                && (shop.comment == null || shop.comment.length() == 0)
+                && (shop.title == null || shop.title.length() == 0)
+                && (shop.url == null || shop.url.length() == 0))
+            isEmpty = true;
+
         notifyPropertyChanged(BR.shopTitle);
         notifyPropertyChanged(BR.shopURL);
         notifyPropertyChanged(BR.shopAddress);
         notifyPropertyChanged(BR.shopComment);
         notifyPropertyChanged(BR.shopPrice);
+        notifyPropertyChanged(BR.shopIsEmpty);
+    }
+
+    @Bindable
+    public boolean getShopIsEmpty() {
+        return isEmpty;
     }
 
     @Bindable

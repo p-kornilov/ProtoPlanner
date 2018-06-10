@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.Widgets;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
 import android.os.Build;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -22,10 +23,14 @@ import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Bundle2;
 import com.vividprojects.protoplanner.Utils.Bundle3;
+import com.vividprojects.protoplanner.Utils.Display;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static android.support.v7.widget.RecyclerView.HORIZONTAL;
+import static android.support.v7.widget.RecyclerView.VERTICAL;
 
 public class BindingHelper {
     @BindingAdapter({"app:adapterTextItem","app:adapterTextDropItem","app:adapterTextViewId","app:adapterTextItems"})
@@ -174,6 +179,18 @@ public class BindingHelper {
     @BindingAdapter("bind:scrollTo")
     public static void setRecyclerScrollTo(RecyclerView recycler, int position) {
         recycler.scrollToPosition(position);
+    }
+
+    @BindingAdapter({"bind:dividerAdapterStart","bind:dividerAdapterEnd"})
+    public static void setDividerAdapter(RecyclerView recycler, int start, int end) {
+        CustomDividerDecoration itemDecor = new CustomDividerDecoration(recycler.getContext(), VERTICAL);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            itemDecor.setDrawable(recycler.getContext().getDrawable(R.drawable.recycler_divider));
+        else
+            itemDecor.setDrawable(recycler.getContext().getResources().getDrawable(R.drawable.recycler_divider));
+
+        itemDecor.setOffset(Display.calc_pixels(start), Display.calc_pixels(end));
+        recycler.addItemDecoration(itemDecor);
     }
 
     public static int getMeasureImageResource(int measure) {
