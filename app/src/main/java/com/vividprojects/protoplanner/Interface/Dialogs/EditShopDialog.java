@@ -8,14 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.vividprojects.protoplanner.BindingModels.ShopEditBindingModel;
-import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
-import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenDialogAbstract;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.ViewModels.ShopViewModel;
-import com.vividprojects.protoplanner.ViewModels.VariantViewModel;
 import com.vividprojects.protoplanner.databinding.DialogVariantShopEditBinding;
 
 import javax.inject.Inject;

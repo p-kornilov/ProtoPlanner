@@ -1,12 +1,9 @@
 package com.vividprojects.protoplanner.Interface.Activity;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,18 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
-import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureItemFragment;
+import com.vividprojects.protoplanner.Interface.Fragments.VariantItemFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Utils.ViewModelHelper;
-import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
 import com.vividprojects.protoplanner.ViewModels.MeasureItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.VariantItemViewModel;
 
 import javax.inject.Inject;
 
@@ -89,6 +84,21 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                     if (hashm != null) {
                         Intent intent = new Intent();
                         intent.putExtra("HASH", hashm.intValue());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+                break;
+            case NavigationController.VARIANT_ITEM:
+                getSupportActionBar().setTitle("Variant");
+                String id = getIntent().getStringExtra(NavigationController.VARIANT_ID);
+                fragment = VariantItemFragment.create(id);
+                VariantItemViewModel model_v = ViewModelHelper.obtainViewModel(VariantItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
+
+                model_v.getOnSaveId().observe(this,onId->{
+                    if (onId != null) {
+                        Intent intent = new Intent();
+                        intent.putExtra("ID", onId);
                         setResult(RESULT_OK, intent);
                         finish();
                     }

@@ -37,10 +37,7 @@ public class ShopListAdapter extends DataBindingAdapter implements ItemActionsSh
 
     @Override
     public int getItemCount() {
-        if (filtered_data != null)
-            return filtered_data.size();
-        else
-            return 0;
+        return filtered_data != null ? filtered_data.size() : 0;
     }
 
     @Override

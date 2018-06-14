@@ -1,14 +1,25 @@
 package com.vividprojects.protoplanner.ViewModels;
 
+import android.Manifest;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
@@ -21,8 +32,16 @@ import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
+import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenHelper;
+import com.vividprojects.protoplanner.Interface.NavigationController;
+import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
+import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Camera;
+import com.vividprojects.protoplanner.Utils.RunnableParam;
 import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,22 +54,14 @@ import javax.inject.Inject;
 public class RecordItemViewModel extends ViewModel {
     final MutableLiveData<String> recordItemId;
     private final LiveData<Resource<Record.Plain>> recordItem;
-    private final LiveData<Resource<Variant.Plain>> mvItem;
-    private final MediatorLiveData<Variant.Plain> mainVariantItem;
     private final MutableLiveData<List<Label.Plain>> labels;
     private final MutableLiveData<String> recordNameTrigger;
     private final LiveData<String> recordNameChange;
     private final MediatorLiveData<String> recordName;
-    private final LiveData<Resource<VariantInShop.Plain>> refreshedShop;
-    private final MutableLiveData<String> refreshShopId = new MutableLiveData<>();
     private final MediatorLiveData<List<Variant.Plain>> alternativeVariants;
 
     private DataRepository dataRepository;
     private RecordItemBindingModel bindingModelRecord;
-    private VariantItemBindingModel bindingModelVariant;
-    private VariantEditBindingModel bindingModelVariantEdit;
-
-    private final SingleLiveEvent<Integer> loadProgress;
 
     private boolean inImageLoading = false;
 
@@ -62,15 +73,10 @@ public class RecordItemViewModel extends ViewModel {
         recordNameTrigger = new MutableLiveData<>();
 
         bindingModelRecord = new RecordItemBindingModel();
-        bindingModelVariant = new VariantItemBindingModel();
-        bindingModelVariantEdit = new VariantEditBindingModel(dataRepository.getContext());
 
         recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
             return RecordItemViewModel.this.dataRepository.setRecordName(recordItemId.getValue(),name);
         });
-
-        refreshedShop = Transformations.switchMap(refreshShopId, input -> RecordItemViewModel.this.dataRepository.loadShop(input));
-
 
         recordItem = Transformations.switchMap(recordItemId, input -> {
 /*            if (input.isEmpty()) {
@@ -87,28 +93,11 @@ public class RecordItemViewModel extends ViewModel {
                 alternativeVariants.setValue(ri.data.variants);
         });
 
-        mvItem = Transformations.switchMap(recordItem, input -> {
-/*            if (input.isEmpty()) {
-                return AbsentLiveData.create();
-            } else {
-                return dataRepository.loadRecords(input.getFilter());
-            }*/
-            if (!input.equals("Empty"))
-                return RecordItemViewModel.this.dataRepository.loadVariant(input.data.mainVariant);
-            else return null;
-        });
-
-        mainVariantItem = new MediatorLiveData<>();
-        mainVariantItem.addSource(mvItem, mv -> {mainVariantItem.setValue(mv.data);});
-
         recordName = new MediatorLiveData<>();
         recordName.addSource(recordNameChange,name->{recordName.setValue(name);});
         recordName.addSource(recordItem,record->{recordName.setValue(record.data.name);});
 
         labels = new MutableLiveData<>();
-
-        loadProgress = new SingleLiveEvent<>();
-
     }
 
     public void setId(String id) {
@@ -126,41 +115,8 @@ public class RecordItemViewModel extends ViewModel {
         return recordName;
     }
 
-    public LiveData<Variant.Plain> getMainVariantItem() {
-        return mainVariantItem;
-    }
-    public SingleLiveEvent<Integer> getLoadProgress() {return loadProgress;}
-
     public LiveData<String> getRecordItemID() {
         return recordItemId;
-    }
-
-    public SingleLiveEvent<Integer> loadImage(String url) {
-        if (!inImageLoading) {
-            inImageLoading = true;
-            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromURLtoVariant(url, mainVariantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
-        }
-        return loadProgress;
-    }
-
-    public SingleLiveEvent<Integer> loadCameraImage(String tempFileName) {
-        if (!inImageLoading) {
-            inImageLoading = true;
-            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromCameratoVariant(tempFileName, mainVariantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
-        }
-        return loadProgress;
-    }
-
-    public SingleLiveEvent<Integer> loadGalleryImage(Uri fileName) {
-        if (!inImageLoading) {
-            inImageLoading = true;
-            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromGallerytoVariant(fileName, mainVariantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
-        }
-        return loadProgress;
-    }
-
-    public boolean isInImageLoading() {
-        return inImageLoading;
     }
 
     public LiveData<List<Label.Plain>> getLabels() {
@@ -179,57 +135,12 @@ public class RecordItemViewModel extends ViewModel {
         recordNameTrigger.setValue(name);
     }
 
-    public LiveData<Measure.Plain> getMeasure(int hash) {
-        return dataRepository.getMeasure(hash);
-    }
-
-
     public RecordItemBindingModel getBindingModelRecord() {
         return bindingModelRecord;
-    }
-    public VariantItemBindingModel getBindingModelVariant() {
-        return bindingModelVariant;
     }
 
     public LiveData<String> setComment(String comment) {
         return dataRepository.setRecordComment(bindingModelRecord.getRecordId(),comment);
-    }
-
-    public void saveMainVariant(String variantId) {
-        if (variantId != null && (mainVariantItem.getValue() == null || !variantId.equals(mainVariantItem.getValue().id)))
-            dataRepository.saveMainVariantToRecord(variantId, recordItemId.getValue());
-        LiveData<Resource<Variant.Plain>> currentVariant = dataRepository.loadVariant(variantId);
-        mainVariantItem.addSource(currentVariant, new Observer<Resource<Variant.Plain>>() {
-            @Override
-            public void onChanged(@Nullable Resource<Variant.Plain> variant) {
-                mainVariantItem.setValue(variant.data);
-                mainVariantItem.removeSource(currentVariant);
-            }
-        });
-    }
-
-    public void deleteShop(String id) {
-        dataRepository.deleteShop(id);
-    }
-
-    public void refreshShop(String shopId) {
-        refreshShopId.setValue(shopId);
-    }
-
-    public LiveData<Resource<VariantInShop.Plain>> getRefreshedShop() {
-        return refreshedShop;
-    }
-
-    public void setShopPrimary(String shopId) {
-        dataRepository.setShopPrimary(shopId, mainVariantItem.getValue().id);
-        LiveData<Resource<Variant.Plain>> currentVariant = dataRepository.loadVariant(mainVariantItem.getValue().id);
-        mainVariantItem.addSource(currentVariant, new Observer<Resource<Variant.Plain>>() {
-            @Override
-            public void onChanged(@Nullable Resource<Variant.Plain> variant) {
-                mainVariantItem.setValue(variant.data);
-                mainVariantItem.removeSource(currentVariant);
-            }
-        });
     }
 
     public LiveData<List<Variant.Plain>> getAlternativeVariants() {

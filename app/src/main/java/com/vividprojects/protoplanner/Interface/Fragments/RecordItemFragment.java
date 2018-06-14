@@ -1,21 +1,12 @@
 package com.vividprojects.protoplanner.Interface.Fragments;
 
-import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.widget.LinearLayoutManager;
 
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -34,17 +25,13 @@ import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenHelper;
 import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.Utils.ItemActionsShop;
 import com.vividprojects.protoplanner.Utils.ItemActionsVariant;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.RunnableParam;
+import com.vividprojects.protoplanner.ViewModels.VariantItemViewModel;
 import com.vividprojects.protoplanner.databinding.RecordFragmentBinding;
-
-import java.io.File;
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -57,7 +44,6 @@ import static android.app.Activity.RESULT_OK;
 public class RecordItemFragment extends Fragment implements Injectable, ItemActionsShop, ItemActionsVariant {
 
     public static final String RECORD_ID = "RECORD_ID";
-    private static final String FILE_PROVIDER_AUTHORITY = "com.vividprojects.protoplanner.file_provider";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int REQUEST_IMAGE_URL_LOAD = 3;
@@ -74,18 +60,15 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
     @Inject
     NavigationController navigationController;
 
-    private RecordItemViewModel model;
+    private RecordItemViewModel modelRecord;
+    private VariantItemViewModel modelMainVariant;
     private boolean empty = false;
 
-    private String mTempPhotoPath;
+    //private String mTempPhotoPath;
 
     private RecordFragmentBinding binding;
     private RecordItemBindingModel bindingModelRecord;
     private VariantItemBindingModel bindingModelVariant;
-
-    private RunnableParam<Integer> onImageSelect = (position)->{
-        navigationController.openImageView(position,bindingModelVariant.getVariantId());
-    };
 
     private Runnable onCommentEditClick = () -> {
         EditTextDialog editNameDialog = new EditTextDialog();
@@ -110,54 +93,6 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         NavigationController.openLabelsForResult(ids,this, REQUEST_LABELS_SET);
     };
 
-    private Runnable onVariantEditClick = () -> {
-        Bundle b = new Bundle();
-        b.putString("ID", bindingModelVariant.getVariantId());
-        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), REQUEST_EDIT_VARIANT, b);
-    };
-
-    private RunnableParam<View> onAddImageClick = (view) -> {
-        PopupMenu popup = new PopupMenu(getContext(), view);
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.mli_url:
-                        RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
-                        addImageURLDialog.setTargetFragment(RecordItemFragment.this, REQUEST_IMAGE_URL_LOAD);
-                        addImageURLDialog.show(getFragmentManager(), "Add_image_url");
-                        return true;
-                    case R.id.mli_gallery:
-                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                        } else {
-                            Intent i = new Intent(
-                                    Intent.ACTION_PICK,
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                            startActivityForResult(i, REQUEST_IMAGE_GALLERY);
-                        }
-                        return true;
-                    case R.id.mli_foto:
-                        launchCamera();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_load_image, popup.getMenu());
-        popup.show();
-    };
-
-    private Runnable onAddShopClick = () -> {
-        Bundle b = new Bundle();
-        b.putString("ID", "");
-        b.putString("VARIANTID", bindingModelVariant.getVariantId());
-        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_SHOP, this, !navigationController.isTablet(), REQUEST_EDIT_SHOP, b);
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,7 +108,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         Bundle args = getArguments();
 
         if (args != null && args.containsKey(RECORD_ID)){
-            //    model.setFilter();
+            //    modelRecord.setFilter();
             if (args.getString(RECORD_ID).equals("Empty"))
                 empty = true;
             else
@@ -256,66 +191,48 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         inflater.inflate(R.menu.context_menu, menu);*/
     }
 
-    private void launchCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = BitmapUtils.createTempImageFile(getContext().getApplicationContext());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            if (photoFile != null) {
-                mTempPhotoPath = photoFile.getAbsolutePath();
-                Uri photoURI = FileProvider.getUriForFile(getContext().getApplicationContext(),FILE_PROVIDER_AUTHORITY,photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     bindingModelVariant.initImageLoad();
-                    model.loadCameraImage(mTempPhotoPath);
+                    modelMainVariant.loadCameraImage();
                 } else {
-                    BitmapUtils.deleteImageFile(getContext().getApplicationContext(), mTempPhotoPath);
+                    BitmapUtils.deleteImageFile(getContext().getApplicationContext(), modelMainVariant.getTempPhotoPath());
                 }
                 return;
             case REQUEST_IMAGE_GALLERY:
                 if (resultCode == RESULT_OK && data != null) {
                     bindingModelVariant.initImageLoad();
-                    model.loadGalleryImage(data.getData());
+                    modelMainVariant.loadGalleryImage(data.getData());
                 }
                 return;
             case REQUEST_IMAGE_URL_LOAD:
                 if (resultCode == RESULT_OK && data != null) {
                     String url = data.getExtras().get("URL").toString();
                     bindingModelVariant.initImageLoad();
-                    model.loadImage(url);
+                    modelMainVariant.loadImage(url);
                 }
                 return;
             case REQUEST_LABELS_SET:
                 if (resultCode == RESULT_OK && data != null) {
                     String[] t = data.getStringArrayExtra("SELECTED");
-                    model.setLabels(data.getStringArrayExtra("SELECTED"));
+                    modelRecord.setLabels(data.getStringArrayExtra("SELECTED"));
                 }
                 return;
             case REQUEST_EDIT_NAME:
                 if (resultCode == RESULT_OK && data != null) {
-                    model.setRecordName(data.getStringExtra("EDITTEXT"));
+                    modelRecord.setRecordName(data.getStringExtra("EDITTEXT"));
                 }
                 return;
             case REQUEST_EDIT_COMMENT:
                 if (resultCode == RESULT_OK && data != null) {
                     String comment = data.getStringExtra("EDITTEXT");
-                    model.setComment(comment);
+                    modelRecord.setComment(comment);
                     bindingModelRecord.setRecordComment(comment);
                     // Другой вариант
-                    //model.setComment(comment).observe(this, c -> {
+                    //modelRecord.setComment(comment).observe(this, c -> {
                     //    bindingModelRecord.setRecordComment(comment);
                     //});
                 }
@@ -323,13 +240,13 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             case REQUEST_EDIT_VARIANT:
                 if (resultCode == RESULT_OK && data != null) {
                     String id = data.getStringExtra("ID");
-                    model.saveMainVariant(id);
+                    modelMainVariant.saveVariant(id);
                 }
                 return;
             case REQUEST_EDIT_SHOP:
                 if (resultCode == RESULT_OK && data != null) {
                     String id = data.getStringExtra("ID");
-                    model.refreshShop(id);
+                    modelMainVariant.refreshShop(id);
                 }
                 return;
         }
@@ -340,59 +257,68 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         super.onActivityCreated(savedInstanceState);
 
         if (!empty) {
-            model = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
+            modelRecord = ViewModelProviders.of(getActivity(), viewModelFactory).get(RecordItemViewModel.class);
+            modelMainVariant = ViewModelProviders.of(getActivity(), viewModelFactory).get(VariantItemViewModel.class);
 
-            bindingModelRecord = model.getBindingModelRecord();
+
+            modelMainVariant.init(this
+                    ,REQUEST_IMAGE_URL_LOAD
+                    ,REQUEST_IMAGE_GALLERY
+                    ,REQUEST_IMAGE_CAPTURE
+                    ,REQUEST_EDIT_SHOP
+                    ,REQUEST_EDIT_VARIANT
+                    ,PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
+                    ,navigationController.isTablet());
+
+            bindingModelRecord = modelRecord.getBindingModelRecord();
             bindingModelRecord.setContext(this);
             bindingModelRecord.setOnCommentEditClick(onCommentEditClick);
             bindingModelRecord.setOnLabelsEditClick(onLabelsEditClick);
             binding.setRecordModel(bindingModelRecord);
 
-            bindingModelVariant = model.getBindingModelVariant();
-            bindingModelVariant.setOnEditClick(onVariantEditClick);
-            bindingModelVariant.setImagesAdapter(onImageSelect);
-            bindingModelVariant.setOnAddImageClick(onAddImageClick);
-            bindingModelVariant.setOnAddShopClick(onAddShopClick);
-            bindingModelVariant.setContext(this);
+            bindingModelVariant = modelMainVariant.getBindingModelVariant();
             binding.setVariantModel(bindingModelVariant);
 
             Bundle args = getArguments();
 
             if (args != null && args.containsKey(RECORD_ID)) {
-                //    model.setFilter();
-                model.setId(args.getString(RECORD_ID));
+                //    modelRecord.setFilter();
+                String id = args.getString(RECORD_ID);
+                modelRecord.setId(id);
+                modelMainVariant.setRecordId(id);
             } else {
-                model.setId(null);
+                modelRecord.setId(null);
             }
 
-            model.getRecordItem().observe(this, resource -> {
-                if (resource != null && resource.data != null)
+            modelRecord.getRecordItem().observe(this, resource -> {
+                if (resource != null && resource.data != null) {
                     bindingModelRecord.setRecord(resource.data);
+                    modelMainVariant.setVariantId(resource.data.mainVariant);
+                }
+            });
+
+            modelMainVariant.getVariantItem().observe(this, resource -> {
+                if (resource != null && resource != null)
+                    bindingModelVariant.setVariant(resource);
             });
 
             if (navigationController.isTablet())
-                model.getRecordName().observe(this, name -> {
+                modelRecord.getRecordName().observe(this, name -> {
                     if (name != null)
                         ((MainActivity) getActivity()).getSecondToolBar().setTitle(name);
                 });
 
-            model.getMainVariantItem().observe(this, resource -> {
-                if (resource != null ) {
-                    bindingModelVariant.setVariant(resource);
-                }
-            });
-
-            model.getLoadProgress().observe(this, (progress) -> {
+            modelMainVariant.getLoadProgress().observe(this, (progress) -> {
                 if (progress != null)
                     bindingModelVariant.setLoadProgress(progress);
             });
 
-            model.getRefreshedShop().observe(this, shop -> {
+            modelMainVariant.getRefreshedShop().observe(this, shop -> {
                 if (shop != null && shop.data != null)
                     bindingModelVariant.refreshShop(shop.data);
             });
 
-            model.getAlternativeVariants().observe(this, list -> {
+            modelRecord.getAlternativeVariants().observe(this, list -> {
                 if (list != null && list.size() > 0)
                     bindingModelRecord.setAlternativeVariants(list);
             });
@@ -409,7 +335,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
 
     @Override
     public void itemShopDelete(String id) {
-        model.deleteShop(id);
+        modelMainVariant.deleteShop(id);
     }
 
     @Override
@@ -422,7 +348,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
 
     @Override
     public void itemShopPrimary(String id) {
-        model.setShopPrimary(id);
+        modelMainVariant.setShopPrimary(id);
     }
 
     @Override
@@ -433,7 +359,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
 
     @Override
     public void itemVariantEdit(String id) {
-
+        NavigationController.openVariantForResult(id, this);
     }
 
     @Override

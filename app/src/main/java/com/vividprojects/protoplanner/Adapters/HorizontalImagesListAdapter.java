@@ -165,7 +165,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return data != null ? data.size() : 0;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

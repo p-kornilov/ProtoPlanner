@@ -81,7 +81,7 @@ public class VariantItemListBindingModel extends BaseObservable {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.mve_edit:
-                    //    listAdapter.itemEdit(measure.hash);
+                        listAdapter.itemVariantEdit(variant.id);
                         return true;
                     case R.id.mve_default:
 /*

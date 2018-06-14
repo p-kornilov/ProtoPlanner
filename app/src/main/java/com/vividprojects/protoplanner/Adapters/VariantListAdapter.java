@@ -88,7 +88,7 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
 
     @Override
     public void itemVariantEdit(String id) {
-       // master.itemShopEdit(id);
+        master.itemVariantEdit(id);
     }
 
     @Override

@@ -77,7 +77,7 @@ public class VariantItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getVariantName(){
-        return variant.title;
+        return variant != null ? variant.title : null;
     }
 
     @Bindable
@@ -87,17 +87,26 @@ public class VariantItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getVariantValueDecor() {
-        return PriceFormatter.createValue(variant.primaryShop.currency, variant.primaryShop.price * variant.count);
+        if (variant != null)
+            return PriceFormatter.createValue(variant.primaryShop.currency, variant.primaryShop.price * variant.count);
+        else
+            return null;
     }
 
     @Bindable
     public String getVariantPrice() {
-        return String.valueOf(variant.primaryShop.price);
+        if (variant != null)
+            return String.valueOf(variant.primaryShop.price);
+        else
+            return null;
     }
 
     @Bindable
     public String getVariantCount() {
-        return String.valueOf(variant.count);
+        if (variant != null)
+            return String.valueOf(variant.count);
+        else
+            return null;
     }
 
     @Bindable
@@ -112,12 +121,18 @@ public class VariantItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getVariantPriceDecor() {
-        return PriceFormatter.createPrice(context.get(), variant.primaryShop.currency, variant.primaryShop.price, variant.measure);
+        if (variant != null)
+            return PriceFormatter.createPrice(context.get(), variant.primaryShop.currency, variant.primaryShop.price, variant.measure);
+        else
+            return null;
     }
 
     @Bindable
     public String getVariantCountDecor() {
-        return PriceFormatter.createCount(context.get(), variant.count, variant.measure);
+        if (variant != null)
+            return PriceFormatter.createCount(context.get(), variant.count, variant.measure);
+        else
+            return null;
     }
 
     public String getVariantId() {

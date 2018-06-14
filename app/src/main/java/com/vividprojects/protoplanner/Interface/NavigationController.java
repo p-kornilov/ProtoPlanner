@@ -24,14 +24,17 @@ public class NavigationController {
     public final static int CURRENCY_ITEM = 2;
     public final static int MEASURE_LIST = 3;
     public final static int MEASURE_ITEM = 4;
+    public final static int VARIANT_ITEM = 5;
 
     public final static int REQUEST_CODE_CURRENCY = 100;
     public final static int REQUEST_CODE_MEASURE = 101;
+    public final static int REQUEST_CODE_VARIANT = 102;
 
     public final static String ACTIVITY_TYPE = "ACTIVITY_TYPE";
 
     public final static String CURRENCY_ID = "CURRENCY_ID";
     public final static String MEASURE_HASH = "MEASURE_HASH";
+    public final static String VARIANT_ID = "VARIANT_ID";
 
     private Context context;
     private Activity currentActivity;
@@ -98,7 +101,7 @@ public class NavigationController {
         }
     }
 
-    public void openImageView(int position, String variant) {
+    public static void openImageView(int position, String variant, Context context) {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
@@ -183,6 +186,19 @@ public class NavigationController {
         intent.putExtra(ACTIVITY_TYPE,MEASURE_ITEM);
         intent.putExtra(MEASURE_HASH,hash);
         context.startActivityForResult(intent,REQUEST_CODE_MEASURE);
+    }
+
+    public static void openVariantForResult(String id, Fragment context) {
+
+        Intent intent;
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context.getActivity(), ContainerItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context.getActivity(), ContainerItemActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        intent.putExtra(ACTIVITY_TYPE,VARIANT_ITEM);
+        intent.putExtra(VARIANT_ID,id);
+        context.startActivityForResult(intent,REQUEST_CODE_VARIANT);
     }
 
     public void openSettings() {

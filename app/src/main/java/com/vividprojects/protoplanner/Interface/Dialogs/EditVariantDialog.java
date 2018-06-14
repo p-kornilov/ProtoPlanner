@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -15,8 +14,7 @@ import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenDialogAbstract;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
-import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
-import com.vividprojects.protoplanner.ViewModels.VariantViewModel;
+import com.vividprojects.protoplanner.ViewModels.VariantItemViewModel;
 import com.vividprojects.protoplanner.databinding.DialogVariantEditBinding;
 
 import javax.inject.Inject;
@@ -30,7 +28,7 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    private VariantViewModel model;
+    private VariantItemViewModel model;
     private VariantEditBindingModel bindingModelVariantEdit;
     private ShopEditBindingModel bindingModelShopEdit;
     private DialogVariantEditBinding binding;
@@ -73,7 +71,7 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
 
     @Override
     public void observeModels() {
-        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(VariantViewModel.class);
+        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(VariantItemViewModel.class);
 
         bindingModelVariantEdit = model.getBindingModelVariantEdit();
         bindingModelVariantEdit.setEnableCheck(enableCheckVariant);
@@ -89,8 +87,8 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
 
             model.getVariantItem().observe(this, resource -> {
                 if (resource != null) {
-                    bindingModelVariantEdit.setVariant(resource.data);
-                    bindingModelShopEdit.setShop(resource.data.primaryShop);
+                    bindingModelVariantEdit.setVariant(resource);
+                    bindingModelShopEdit.setShop(resource.primaryShop);
                 }
             });
 

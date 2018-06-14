@@ -17,8 +17,6 @@ import java.util.List;
 
 public class RecordItemBindingModel extends BaseObservable {
     private Record.Plain record;
-    private Variant.Plain mainVariant;
-    private List<Variant.Plain> listVariant;
 
     private VariantListAdapter alternativeVariantsListAdapter;
 

@@ -9,6 +9,7 @@ import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
+import com.vividprojects.protoplanner.Interface.Fragments.VariantItemFragment;
 import com.vividprojects.protoplanner.Interface.ImageViewFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Interface.RecordListFragment;
@@ -57,6 +58,9 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract EditShopDialog contributeEditShopDialog();
+
+    @ContributesAndroidInjector
+    abstract VariantItemFragment contributeVariantItemFragment();
 
  /*   @ContributesAndroidInjector
     abstract UserFragment contributeUserFragment();
