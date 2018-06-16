@@ -1,28 +1,18 @@
 package com.vividprojects.protoplanner.BindingModels;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
-import com.vividprojects.protoplanner.Adapters.ShopListAdapter;
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.CoreData.Variant;
-import com.vividprojects.protoplanner.CoreData.VariantInShop;
-import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.ItemActionsShop;
 import com.vividprojects.protoplanner.Utils.ItemActionsVariant;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
-import com.vividprojects.protoplanner.Utils.RunnableParam;
 
 import java.lang.ref.WeakReference;
 
@@ -70,6 +60,10 @@ public class VariantItemListBindingModel extends BaseObservable {
         return PriceFormatter.createCount(context.get(), variant.count, variant.measure);
     }
 
+    public void onItemClick() {
+        listAdapter.itemVariantOpen(variant.id);
+    }
+
     public String getVariantId() {
         return variant.id;
     }
@@ -81,7 +75,7 @@ public class VariantItemListBindingModel extends BaseObservable {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.mve_edit:
-                        listAdapter.itemVariantEdit(variant.id);
+                        listAdapter.itemVariantOpen(variant.id);
                         return true;
                     case R.id.mve_default:
 /*

@@ -18,7 +18,7 @@ import javax.inject.Inject;
  * Created by Smile on 06.12.2017.
  */
 
-public class MeasureItemViewModel extends ViewModel {
+public class MeasureEditViewModel extends ViewModel {
     private final MutableLiveData<Integer> hash = new MutableLiveData<>();
     private final MutableLiveData<Integer> onSaveHash = new MutableLiveData<>();
     private final LiveData<Measure.Plain> measure;
@@ -27,12 +27,12 @@ public class MeasureItemViewModel extends ViewModel {
     private MeasureItemBindingModel bindingModel;
 
     @Inject
-    public MeasureItemViewModel(DataRepository dataRepository, Context context) {
+    public MeasureEditViewModel(DataRepository dataRepository, Context context) {
 
         bindingModel = new MeasureItemBindingModel(context);
         this.dataRepository = dataRepository;
 
-        measure = Transformations.switchMap(hash, input -> MeasureItemViewModel.this.dataRepository.getMeasure(input));
+        measure = Transformations.switchMap(hash, input -> MeasureEditViewModel.this.dataRepository.getMeasure(input));
     }
 
     public void setHash(int newHash) {

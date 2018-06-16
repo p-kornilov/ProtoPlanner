@@ -3,7 +3,6 @@ package com.vividprojects.protoplanner.Interface.Fragments;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -21,9 +20,9 @@ import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Label;
 import com.vividprojects.protoplanner.DI.Injectable;
-import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Interface.Dialogs.EditTextDialog;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenHelper;
+import com.vividprojects.protoplanner.Interface.Helpers.VariantFragmentHelper;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.Utils.ItemActionsShop;
@@ -44,15 +43,11 @@ import static android.app.Activity.RESULT_OK;
 public class RecordItemFragment extends Fragment implements Injectable, ItemActionsShop, ItemActionsVariant {
 
     public static final String RECORD_ID = "RECORD_ID";
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_IMAGE_GALLERY = 2;
-    private static final int REQUEST_IMAGE_URL_LOAD = 3;
     private static final int REQUEST_LABELS_SET = 4;
     private static final int REQUEST_EDIT_NAME = 5;
     private static final int REQUEST_EDIT_COMMENT = 6;
-    private static final int REQUEST_EDIT_VARIANT = 7;
-    private static final int REQUEST_EDIT_SHOP = 8;
-    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
+    private static final int REQUEST_NEW_VARIANT = 7;
+    private static final int REQUEST_NEW_MAIN_VARIANT = 8;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -91,6 +86,12 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             ids[i] = labels[i].id;
 
         NavigationController.openLabelsForResult(ids,this, REQUEST_LABELS_SET);
+    };
+
+    private Runnable onAddVariantClick = () -> {
+        Bundle b = new Bundle();
+        b.putString("ID", "");
+        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), REQUEST_NEW_VARIANT, b);
     };
 
     @Override
@@ -165,23 +166,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-        }
+        VariantFragmentHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -193,28 +178,11 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (VariantFragmentHelper.onActivityResult(requestCode, resultCode, data, modelMainVariant, bindingModelVariant, this.getContext()))
+            return;
+
         switch (requestCode) {
-            case REQUEST_IMAGE_CAPTURE:
-                if (resultCode == RESULT_OK) {
-                    bindingModelVariant.initImageLoad();
-                    modelMainVariant.loadCameraImage();
-                } else {
-                    BitmapUtils.deleteImageFile(getContext().getApplicationContext(), modelMainVariant.getTempPhotoPath());
-                }
-                return;
-            case REQUEST_IMAGE_GALLERY:
-                if (resultCode == RESULT_OK && data != null) {
-                    bindingModelVariant.initImageLoad();
-                    modelMainVariant.loadGalleryImage(data.getData());
-                }
-                return;
-            case REQUEST_IMAGE_URL_LOAD:
-                if (resultCode == RESULT_OK && data != null) {
-                    String url = data.getExtras().get("URL").toString();
-                    bindingModelVariant.initImageLoad();
-                    modelMainVariant.loadImage(url);
-                }
-                return;
             case REQUEST_LABELS_SET:
                 if (resultCode == RESULT_OK && data != null) {
                     String[] t = data.getStringArrayExtra("SELECTED");
@@ -237,18 +205,6 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
                     //});
                 }
                 return;
-            case REQUEST_EDIT_VARIANT:
-                if (resultCode == RESULT_OK && data != null) {
-                    String id = data.getStringExtra("ID");
-                    modelMainVariant.saveVariant(id);
-                }
-                return;
-            case REQUEST_EDIT_SHOP:
-                if (resultCode == RESULT_OK && data != null) {
-                    String id = data.getStringExtra("ID");
-                    modelMainVariant.refreshShop(id);
-                }
-                return;
         }
     }
 
@@ -262,18 +218,19 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
 
 
             modelMainVariant.init(this
-                    ,REQUEST_IMAGE_URL_LOAD
-                    ,REQUEST_IMAGE_GALLERY
-                    ,REQUEST_IMAGE_CAPTURE
-                    ,REQUEST_EDIT_SHOP
-                    ,REQUEST_EDIT_VARIANT
-                    ,PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
+                    ,VariantFragmentHelper.REQUEST_IMAGE_URL_LOAD
+                    ,VariantFragmentHelper.REQUEST_IMAGE_GALLERY
+                    ,VariantFragmentHelper.REQUEST_IMAGE_CAPTURE
+                    ,VariantFragmentHelper.REQUEST_EDIT_SHOP
+                    ,VariantFragmentHelper.REQUEST_EDIT_VARIANT
+                    ,VariantFragmentHelper.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
                     ,navigationController.isTablet());
 
             bindingModelRecord = modelRecord.getBindingModelRecord();
             bindingModelRecord.setContext(this);
             bindingModelRecord.setOnCommentEditClick(onCommentEditClick);
             bindingModelRecord.setOnLabelsEditClick(onLabelsEditClick);
+            bindingModelRecord.setOnAddVariantClick(onAddVariantClick);
             binding.setRecordModel(bindingModelRecord);
 
             bindingModelVariant = modelMainVariant.getBindingModelVariant();
@@ -335,35 +292,31 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
 
     @Override
     public void itemShopDelete(String id) {
-        modelMainVariant.deleteShop(id);
+        VariantFragmentHelper.itemShopDelete(id, modelMainVariant);
     }
 
     @Override
     public void itemShopEdit(String item) {
-        Bundle b = new Bundle();
-        b.putString("ID", item);
-        b.putString("VARIANTID", bindingModelVariant.getVariantId());
-        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_SHOP, this, !navigationController.isTablet(), REQUEST_EDIT_SHOP, b);
+        VariantFragmentHelper.itemShopEdit(item, bindingModelVariant, navigationController.isTablet(), this);
     }
 
     @Override
     public void itemShopPrimary(String id) {
-        modelMainVariant.setShopPrimary(id);
+        VariantFragmentHelper.itemShopPrimary(id, modelMainVariant);
     }
 
     @Override
     public void itemVariantDelete(String id) {
-
-
+        VariantFragmentHelper.itemVariantDelete(id);
     }
 
     @Override
-    public void itemVariantEdit(String id) {
-        NavigationController.openVariantForResult(id, this);
+    public void itemVariantOpen(String id) {
+        VariantFragmentHelper.itemVariantOpen(id, this);
     }
 
     @Override
     public void itemVariantBasic(String id) {
-
+        VariantFragmentHelper.itemVariantBasic(id);
     }
 }

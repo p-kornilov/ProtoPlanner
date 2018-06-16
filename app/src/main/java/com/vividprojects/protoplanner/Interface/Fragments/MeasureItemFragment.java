@@ -19,7 +19,7 @@ import com.vividprojects.protoplanner.BindingModels.MeasureItemBindingModel;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.ViewModels.MeasureItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.MeasureEditViewModel;
 import com.vividprojects.protoplanner.databinding.MeasureEditFragmentBinding;
 
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ import javax.inject.Inject;
  */
 
 public class MeasureItemFragment extends Fragment implements Injectable {
-    private MeasureItemViewModel model;
+    private MeasureEditViewModel model;
 
     private MeasureEditFragmentBinding binding;
     private MeasureItemBindingModel bindingModel;
@@ -67,7 +67,7 @@ public class MeasureItemFragment extends Fragment implements Injectable {
 
         if (args != null && args.containsKey(NavigationController.MEASURE_HASH)){
             int hash = args.getInt(NavigationController.MEASURE_HASH);
-                model = ViewModelProviders.of(getActivity(),viewModelFactory).get(MeasureItemViewModel.class);
+                model = ViewModelProviders.of(getActivity(),viewModelFactory).get(MeasureEditViewModel.class);
                 model.setHash(hash);
 
                 bindingModel = model.getBindingModel();

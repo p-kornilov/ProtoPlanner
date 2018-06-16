@@ -6,6 +6,7 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="variantModel" type="com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel"/>
+        <import type="android.view.View"/>
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -165,7 +166,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ai_images"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:orientation="horizontal"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="@dimen/record_left_padding"
@@ -173,6 +174,7 @@
                 android:focusable="false"
                 android:nestedScrollingEnabled="false"
                 android:adapter="@{variantModel.variantImagesAdapter}"
+                android:visibility="@{variantModel.isVariantImagesEmpty ? View.INVISIBLE : View.VISIBLE}"
                 tools:listitem="@layout/images_item"
                 tools:orientation="horizontal"
                 bind:layoutManagerHorizontal="@{true}"
@@ -181,6 +183,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textView5">
             </android.support.v7.widget.RecyclerView>
+
+        <ImageView
+            android:id="@+id/ii_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:visibility="@{variantModel.isVariantImagesEmpty ? View.VISIBLE : View.INVISIBLE}"
+            app:srcCompat="@drawable/ic_image_empty_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView5"/>
 
         <View
             android:id="@+id/divider3"

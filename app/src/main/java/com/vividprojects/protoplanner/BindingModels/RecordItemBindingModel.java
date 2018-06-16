@@ -22,6 +22,7 @@ public class RecordItemBindingModel extends BaseObservable {
 
     private WeakReference<Runnable> onCommentEditClick;
     private WeakReference<Runnable> onLabelsEditClick;
+    private WeakReference<Runnable> onAddVariantClick;
 
     public void setContext(Fragment fragment) {
 //        this.context = new WeakReference<>(fragment.getContext());
@@ -91,5 +92,14 @@ public class RecordItemBindingModel extends BaseObservable {
     public void onLabelsEditClick() {
         if (onLabelsEditClick != null && onLabelsEditClick.get() != null)
             onLabelsEditClick.get().run();
+    }
+
+    public void setOnAddVariantClick(Runnable func) {
+        this.onAddVariantClick = new WeakReference<>(func);
+    }
+
+    public void onAddVariantClick() {
+        if (onAddVariantClick != null && onAddVariantClick.get() != null)
+            onAddVariantClick.get().run();
     }
 }

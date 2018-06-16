@@ -10,7 +10,6 @@ import android.net.Uri;
 import com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Utils.Bundle2;
 
 import java.util.Objects;
 
@@ -20,7 +19,7 @@ import javax.inject.Inject;
  * Created by Smile on 06.12.2017.
  */
 
-public class CurrencyItemViewModel extends ViewModel {
+public class CurrencyEditViewModel extends ViewModel {
     private final MutableLiveData<Integer> currencyIsoCode = new MutableLiveData<>();
     private final MutableLiveData<Integer> onSaveId = new MutableLiveData<>();
     private final LiveData<Currency.Plain> currency;
@@ -29,13 +28,13 @@ public class CurrencyItemViewModel extends ViewModel {
     private CurrencyItemBindingModel bindingModel;
 
     @Inject
-    public CurrencyItemViewModel(DataRepository dataRepository, Context context) {
+    public CurrencyEditViewModel(DataRepository dataRepository, Context context) {
 
         bindingModel = new CurrencyItemBindingModel(context, dataRepository.getImagesDirectory() + "/");
 
         this.dataRepository = dataRepository;
 
-        currency = Transformations.switchMap(currencyIsoCode, input -> CurrencyItemViewModel.this.dataRepository.getCurrency(input));
+        currency = Transformations.switchMap(currencyIsoCode, input -> CurrencyEditViewModel.this.dataRepository.getCurrency(input));
     }
 
     public void setIsoCode(int iso_code) {

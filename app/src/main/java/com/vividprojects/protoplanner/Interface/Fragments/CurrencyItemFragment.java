@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.CurrencyEditViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.databinding.CurrencyEditFragmentBinding;
 
@@ -39,7 +39,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
     private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
 
-    private CurrencyItemViewModel model;
+    private CurrencyEditViewModel model;
 
     private CurrencyEditFragmentBinding binding;
     private CurrencyItemBindingModel bindingModel;
@@ -125,7 +125,7 @@ public class CurrencyItemFragment extends Fragment implements Injectable {
         if (args != null && args.containsKey(NavigationController.CURRENCY_ID)){
             int iso_code = args.getInt(NavigationController.CURRENCY_ID);
            // if (iso_code > 0) {
-                model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyItemViewModel.class);
+                model = ViewModelProviders.of(getActivity(),viewModelFactory).get(CurrencyEditViewModel.class);
                 model.setIsoCode(iso_code);
 
                 bindingModel = model.getBindingModel();

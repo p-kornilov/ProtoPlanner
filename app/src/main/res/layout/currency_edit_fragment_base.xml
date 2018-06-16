@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="symbolModel" type="com.vividprojects.protoplanner.BindingModels.CurrencyItemBindingModel"/>
-        <variable name="viewModel" type="com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel"/>
+        <variable name="viewModel" type="com.vividprojects.protoplanner.ViewModels.CurrencyEditViewModel"/>
         <import type="com.vividprojects.protoplanner.R"/>
         <import type="android.view.View"/>
     </data>

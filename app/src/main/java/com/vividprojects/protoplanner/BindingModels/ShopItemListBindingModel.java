@@ -77,6 +77,10 @@ public class ShopItemListBindingModel extends BaseObservable {
         return PriceFormatter.createPrice(context, shop.currency, shop.price, shop.measure);
     }
 
+    public void onItemClick() {
+        listAdapter.itemShopEdit(shop.id);
+    }
+
     public void onMenuClicked(View view) {
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

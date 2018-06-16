@@ -14,6 +14,7 @@
     <color name="gray">#eeeeee</color>
     <color name="colorPrimaryBorder">#e0e0e0</color>
     <color name="secondary_text">#e0e0e0</color>
+    <color name="empty_state">#e0e0e0</color>
     <color name="textHelper">#8A000000</color>
     <color name="textInputError">#ffff1744</color>
     <color name="textInputNormal">#ff000000</color>

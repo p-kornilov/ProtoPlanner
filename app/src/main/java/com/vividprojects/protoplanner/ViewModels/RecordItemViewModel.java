@@ -1,47 +1,18 @@
 package com.vividprojects.protoplanner.ViewModels;
 
-import android.Manifest;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.PopupMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 
 import com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel;
-import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
-import com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel;
-import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.CoreData.Label;
-import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Resource;
 import com.vividprojects.protoplanner.CoreData.Variant;
-import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
-import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenHelper;
-import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
-import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.Camera;
-import com.vividprojects.protoplanner.Utils.RunnableParam;
-import com.vividprojects.protoplanner.Utils.SingleLiveEvent;
 
-import java.io.File;
 import java.util.List;
 import java.util.Objects;
 

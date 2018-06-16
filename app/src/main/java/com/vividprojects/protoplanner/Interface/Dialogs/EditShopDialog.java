@@ -12,7 +12,7 @@ import com.vividprojects.protoplanner.CoreData.Currency;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenDialogAbstract;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
-import com.vividprojects.protoplanner.ViewModels.ShopViewModel;
+import com.vividprojects.protoplanner.ViewModels.ShopEditViewModel;
 import com.vividprojects.protoplanner.databinding.DialogVariantShopEditBinding;
 
 import javax.inject.Inject;
@@ -26,7 +26,7 @@ public class EditShopDialog extends DialogFullScreenDialogAbstract implements In
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    private ShopViewModel model;
+    private ShopEditViewModel model;
     private ShopEditBindingModel bindingModelShopEdit;
     private DialogVariantShopEditBinding binding;
 
@@ -59,7 +59,7 @@ public class EditShopDialog extends DialogFullScreenDialogAbstract implements In
 
     @Override
     public void observeModels() {
-        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(ShopViewModel.class);
+        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(ShopEditViewModel.class);
 
         bindingModelShopEdit = model.getBindingModelShopEdit();
         bindingModelShopEdit.setEnableCheck(enableCheckShop);

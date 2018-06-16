@@ -31,7 +31,7 @@ import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenHelper;
 import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
+import com.vividprojects.protoplanner.Interface.AddImageURLDialog;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Camera;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
@@ -115,7 +115,7 @@ public class VariantItemViewModel extends ViewModel {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.mli_url:
-                        RecordAddImageURLDialog addImageURLDialog = new RecordAddImageURLDialog();
+                        AddImageURLDialog addImageURLDialog = new AddImageURLDialog();
                         addImageURLDialog.setTargetFragment(master, requestImageUrlLoad);
                         addImageURLDialog.show(master.getFragmentManager(), "Add_image_url");
                         return true;

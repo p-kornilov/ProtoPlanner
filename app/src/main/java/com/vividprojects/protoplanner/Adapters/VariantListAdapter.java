@@ -2,13 +2,9 @@ package com.vividprojects.protoplanner.Adapters;
 
 import android.content.Context;
 
-import com.vividprojects.protoplanner.BindingModels.ShopItemListBindingModel;
 import com.vividprojects.protoplanner.BindingModels.VariantItemListBindingModel;
 import com.vividprojects.protoplanner.CoreData.Variant;
-import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.DeleteDialogHelper;
-import com.vividprojects.protoplanner.Utils.ItemActionsShop;
 import com.vividprojects.protoplanner.Utils.ItemActionsVariant;
 
 import java.lang.ref.WeakReference;
@@ -87,8 +83,8 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
     }
 
     @Override
-    public void itemVariantEdit(String id) {
-        master.itemVariantEdit(id);
+    public void itemVariantOpen(String id) {
+        master.itemVariantOpen(id);
     }
 
     @Override

@@ -163,6 +163,10 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         }
     }
 
+    public boolean isEmptyAdapter() {
+        return getItemCount() == 0 && !inLoadingState;
+    }
+
     @Override
     public int getItemCount() {
         return data != null ? data.size() : 0;

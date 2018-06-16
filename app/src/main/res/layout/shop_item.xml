@@ -12,7 +12,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{()->obj.onItemClick()}">
 
 
         <android.support.constraint.Guideline
@@ -107,6 +109,7 @@
             android:singleLine="true"
             android:text="Description is empty"
             android:theme="@style/NormalText"
+            android:textColor="@color/empty_state"
             android:visibility="@{obj.shopIsEmpty ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toStartOf="@id/si_edit_button"
             app:layout_constraintStart_toStartOf="parent"

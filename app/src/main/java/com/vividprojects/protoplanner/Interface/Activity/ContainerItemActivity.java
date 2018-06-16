@@ -17,9 +17,9 @@ import com.vividprojects.protoplanner.Interface.Fragments.MeasureItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.VariantItemFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.Utils.ViewModelHelper;
-import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.CurrencyEditViewModel;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.ViewModels.MeasureItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.MeasureEditViewModel;
 import com.vividprojects.protoplanner.ViewModels.VariantItemViewModel;
 
 import javax.inject.Inject;
@@ -63,7 +63,7 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                 getSupportActionBar().setTitle("Currency");
                 int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
                 fragment = CurrencyItemFragment.create(iso_code);
-                CurrencyItemViewModel model_c = ViewModelHelper.obtainViewModel(CurrencyItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
+                CurrencyEditViewModel model_c = ViewModelHelper.obtainViewModel(CurrencyEditViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
 
                 model_c.getOnSaveId().observe(this,id->{
                     if (id != null) {
@@ -78,7 +78,7 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                 getSupportActionBar().setTitle("Measure");
                 int hash = getIntent().getIntExtra(NavigationController.MEASURE_HASH,-1);
                 fragment = MeasureItemFragment.create(hash);
-                MeasureItemViewModel model_m = ViewModelHelper.obtainViewModel(MeasureItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
+                MeasureEditViewModel model_m = ViewModelHelper.obtainViewModel(MeasureEditViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
 
                 model_m.getOnSaveHash().observe(this,hashm->{
                     if (hashm != null) {

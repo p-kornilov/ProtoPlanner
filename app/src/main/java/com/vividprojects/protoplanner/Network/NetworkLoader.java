@@ -69,11 +69,11 @@ public class NetworkLoader {
 
                 // Enable if you want to see the progress with logcat
                  Log.d("Test", "Progress: " + p + "%");
-                try {
+/*                try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
                 progress.postValue(p);
                 if (done) {
                     Log.d("Test", "Done loading");

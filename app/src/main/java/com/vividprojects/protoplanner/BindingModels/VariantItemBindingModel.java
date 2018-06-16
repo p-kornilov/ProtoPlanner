@@ -1,39 +1,25 @@
 package com.vividprojects.protoplanner.BindingModels;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.vividprojects.protoplanner.Adapters.HorizontalImagesListAdapter;
 import com.vividprojects.protoplanner.Adapters.ShopListAdapter;
 import com.vividprojects.protoplanner.BR;
-import com.vividprojects.protoplanner.CoreData.Label;
-import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
-import com.vividprojects.protoplanner.Interface.RecordAddImageURLDialog;
-import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.ItemActionsShop;
 import com.vividprojects.protoplanner.Utils.PriceFormatter;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 public class VariantItemBindingModel extends BaseObservable {
     private Variant.Plain variant;
@@ -66,6 +52,11 @@ public class VariantItemBindingModel extends BaseObservable {
     }
 
     @Bindable
+    public boolean getIsVariantImagesEmpty() {
+        return imagesListAdapter.isEmptyAdapter();
+    }
+
+    @Bindable
     public RecyclerView.Adapter getVariantImagesAdapter() {
         return imagesListAdapter;
     }
@@ -87,26 +78,17 @@ public class VariantItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getVariantValueDecor() {
-        if (variant != null)
-            return PriceFormatter.createValue(variant.primaryShop.currency, variant.primaryShop.price * variant.count);
-        else
-            return null;
+        return variant != null ? PriceFormatter.createValue(variant.primaryShop.currency, variant.primaryShop.price * variant.count) : null;
     }
 
     @Bindable
     public String getVariantPrice() {
-        if (variant != null)
-            return String.valueOf(variant.primaryShop.price);
-        else
-            return null;
+        return variant != null ? String.valueOf(variant.primaryShop.price) : null;
     }
 
     @Bindable
     public String getVariantCount() {
-        if (variant != null)
-            return String.valueOf(variant.count);
-        else
-            return null;
+        return variant != null ? String.valueOf(variant.count) : null;
     }
 
     @Bindable
@@ -121,18 +103,12 @@ public class VariantItemBindingModel extends BaseObservable {
 
     @Bindable
     public String getVariantPriceDecor() {
-        if (variant != null)
-            return PriceFormatter.createPrice(context.get(), variant.primaryShop.currency, variant.primaryShop.price, variant.measure);
-        else
-            return null;
+        return variant != null ? PriceFormatter.createPrice(context.get(), variant.primaryShop.currency, variant.primaryShop.price, variant.measure) : null;
     }
 
     @Bindable
     public String getVariantCountDecor() {
-        if (variant != null)
-            return PriceFormatter.createCount(context.get(), variant.count, variant.measure);
-        else
-            return null;
+        return variant != null ? PriceFormatter.createCount(context.get(), variant.count, variant.measure) : null;
     }
 
     public String getVariantId() {
@@ -153,6 +129,7 @@ public class VariantItemBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.variantCount);
         notifyPropertyChanged(BR.variantPrice);
         notifyPropertyChanged(BR.variantValueDecor);
+        notifyPropertyChanged(BR.isVariantImagesEmpty);
 
         //...
     }
@@ -164,6 +141,7 @@ public class VariantItemBindingModel extends BaseObservable {
     public void initImageLoad() {
         imagesScroll = imagesListAdapter.loadingInProgress(0);
         notifyPropertyChanged(BR.variantImagesScrollTo);
+        notifyPropertyChanged(BR.isVariantImagesEmpty);
     }
 
     @Bindable
@@ -184,6 +162,7 @@ public class VariantItemBindingModel extends BaseObservable {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 imagesListAdapter.loadingDone(false, "");
+                                notifyPropertyChanged(BR.isVariantImagesEmpty);
                             }
                         });
                 alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -191,17 +170,20 @@ public class VariantItemBindingModel extends BaseObservable {
                     public void onCancel(DialogInterface dialog) {
                         dialog.dismiss();
                         imagesListAdapter.loadingDone(false, "");
+                        notifyPropertyChanged(BR.isVariantImagesEmpty);
                     }
                 });
                 alert.show();
             }
             if (progress == DataRepository.LOAD_DONE) {
                 imagesListAdapter.imageReady();
+                notifyPropertyChanged(BR.isVariantImagesEmpty);
                 //imagesListAdapter.setData(resource.data.small_images);
                 // imagesRecycler.
             }
             if (progress == DataRepository.SAVE_TO_DB_DONE) {
                 imagesListAdapter.loadingDone(true, loaded_image);
+                notifyPropertyChanged(BR.isVariantImagesEmpty);
                 //imagesListAdapter.setData(resource.data.small_images);
                 // imagesRecycler.
             }
@@ -236,7 +218,6 @@ public class VariantItemBindingModel extends BaseObservable {
     public void onAddShopClick() {
         if (onAddShopClick != null && onAddShopClick.get() != null)
             onAddShopClick.get().run();
-
     }
 
 }

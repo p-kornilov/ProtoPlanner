@@ -6,11 +6,8 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.vividprojects.protoplanner.BindingModels.ShopEditBindingModel;
-import com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel;
 import com.vividprojects.protoplanner.CoreData.Currency;
-import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Resource;
-import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
 import com.vividprojects.protoplanner.DataManager.DataRepository;
 
@@ -22,7 +19,7 @@ import javax.inject.Inject;
  * Created by Smile on 06.12.2017.
  */
 
-public class ShopViewModel extends ViewModel {
+public class ShopEditViewModel extends ViewModel {
     final MutableLiveData<String> shopId;
     private final LiveData<Resource<VariantInShop.Plain>> shopItem;
 
@@ -30,7 +27,7 @@ public class ShopViewModel extends ViewModel {
     private ShopEditBindingModel bindingModelShopEdit;
 
     @Inject
-    public ShopViewModel(DataRepository dataRepository) {
+    public ShopEditViewModel(DataRepository dataRepository) {
 
         this.dataRepository = dataRepository;
         shopId = new MutableLiveData<>();
@@ -38,7 +35,7 @@ public class ShopViewModel extends ViewModel {
         bindingModelShopEdit    = new ShopEditBindingModel(dataRepository.getContext());
 
         shopItem = Transformations.switchMap(shopId, input -> {
-            return ShopViewModel.this.dataRepository.loadShop(input);
+            return ShopEditViewModel.this.dataRepository.loadShop(input);
         });
 
     }

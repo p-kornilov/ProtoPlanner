@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Interface.Fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.Interface.Fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.Interface.NavigationController;
@@ -22,7 +21,6 @@ import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Utils.Bundle1;
 import com.vividprojects.protoplanner.Utils.ItemNew;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
-import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.ViewModels.MeasureListViewModel;
 

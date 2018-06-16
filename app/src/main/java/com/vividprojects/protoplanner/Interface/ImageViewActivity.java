@@ -50,15 +50,10 @@ public class ImageViewActivity extends AppCompatActivity implements HasSupportFr
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
-        if (mViewModelHolder == null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(ViewModelHolder.createContainer(obtainViewModel()),ViewModelHolder.TAG).commit();
-            mViewModelHolder = getSupportFragmentManager().findFragmentByTag(ViewModelHolder.TAG);
-        }
-
         int position = getIntent().getIntExtra("POSITION",0);
         String variant = getIntent().getStringExtra("VARIANT_ID");
+
+        model = ViewModelProviders.of(this,viewModelFactory).get(ImageViewViewModel.class);
 
         model.getV().observe(this,(item)->{});
         model.setVariantId(variant);
@@ -71,42 +66,9 @@ public class ImageViewActivity extends AppCompatActivity implements HasSupportFr
             viewPager.setCurrentItem(position);
         });
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-    }
-
-    private ImageViewViewModel obtainViewModel() {
-        model = ViewModelProviders.of(this,viewModelFactory).get(ImageViewViewModel.class);
-        return model;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        Log.d("Listener", "Listener000 - " + requestListener);
-
-        //noinspection SimplifiableIfStatement
-/*        if (id == R.id.change_listener) {
-            requestListener = !requestListener;
-            viewPager.requestDisallowInterceptTouchEvent(requestListener);
-      //      viewPager.requestD
-            Log.d("Listener", "Listener - " + requestListener);
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

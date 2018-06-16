@@ -4,16 +4,16 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.vividprojects.protoplanner.ViewModels.BlockListViewModel;
-import com.vividprojects.protoplanner.ViewModels.CurrencyItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.CurrencyEditViewModel;
 import com.vividprojects.protoplanner.ViewModels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.ViewModels.ImageViewViewModel;
 import com.vividprojects.protoplanner.ViewModels.LabelsViewModel;
-import com.vividprojects.protoplanner.ViewModels.MeasureItemViewModel;
+import com.vividprojects.protoplanner.ViewModels.MeasureEditViewModel;
 import com.vividprojects.protoplanner.ViewModels.MeasureListViewModel;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.RecordListViewModel;
 import com.vividprojects.protoplanner.ViewModel.PPViewModelFactory;
-import com.vividprojects.protoplanner.ViewModels.ShopViewModel;
+import com.vividprojects.protoplanner.ViewModels.ShopEditViewModel;
 import com.vividprojects.protoplanner.ViewModels.VariantItemViewModel;
 
 import dagger.Binds;
@@ -59,8 +59,8 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(CurrencyItemViewModel.class)
-    abstract ViewModel bindCurrencyViewModel(CurrencyItemViewModel currencyViewModel);
+    @ViewModelKey(CurrencyEditViewModel.class)
+    abstract ViewModel bindCurrencyViewModel(CurrencyEditViewModel currencyViewModel);
 
     @Binds
     @IntoMap
@@ -69,8 +69,8 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MeasureItemViewModel.class)
-    abstract ViewModel bindMeasureViewModel(MeasureItemViewModel measureViewModel);
+    @ViewModelKey(MeasureEditViewModel.class)
+    abstract ViewModel bindMeasureViewModel(MeasureEditViewModel measureViewModel);
 
 /*    @Binds
     @IntoMap
@@ -84,8 +84,8 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ShopViewModel.class)
-    abstract ViewModel bindShopViewModel(ShopViewModel shopViewModel);
+    @ViewModelKey(ShopEditViewModel.class)
+    abstract ViewModel bindShopViewModel(ShopEditViewModel shopEditViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(PPViewModelFactory factory);

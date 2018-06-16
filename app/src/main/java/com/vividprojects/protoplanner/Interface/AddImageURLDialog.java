@@ -3,7 +3,6 @@ package com.vividprojects.protoplanner.Interface;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +13,12 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.Utils.RunnableParam;
 
 /**
  * Created by Smile on 23.01.2018.
  */
 
-public class RecordAddImageURLDialog extends DialogFragment {
+public class AddImageURLDialog extends DialogFragment {
     private EditText url;
 
     @Override
@@ -30,7 +28,7 @@ public class RecordAddImageURLDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.record_addimage_url, null);
         url = (EditText) v.findViewById(R.id.record_image_url);
-        url.setText("http://dgwrlxstb34qz.cloudfront.net/media/article_image/cover/original/56886-6-binatang-ini-lucu-banget-dan-hanya-tinggal-pulau-hokkaido.jpg");
+        url.setText("https://s1.1zoom.ru/big3/4/Cats_Kittens_Ginger_484195.jpg");
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -43,12 +41,12 @@ public class RecordAddImageURLDialog extends DialogFragment {
                         Intent intent = new Intent();
                         intent.putExtra("URL",url.getText());
                         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-                        RecordAddImageURLDialog.this.getDialog().cancel();
+                        AddImageURLDialog.this.getDialog().cancel();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        RecordAddImageURLDialog.this.getDialog().cancel();
+                        AddImageURLDialog.this.getDialog().cancel();
                     }
                 });
         return builder.create();
