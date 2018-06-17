@@ -34,11 +34,8 @@ public class EditShopDialog extends DialogFullScreenDialogAbstract implements In
     private String variantId;
     private boolean ecShop = true;
 
-    private RunnableParam<Integer> enableCheckShop = (error) -> {
-        if (error == 1)
-            ecShop = false;
-        else
-            ecShop = true;
+    private RunnableParam<Boolean> enableCheckShop = (error) -> {
+        ecShop = !error;
         enableCheck();
     };
 

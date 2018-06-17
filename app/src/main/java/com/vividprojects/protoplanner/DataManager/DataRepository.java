@@ -162,14 +162,26 @@ public class DataRepository {
             @Override
             protected LiveData<Variant.Plain> loadFromLocalDB() {
                 MutableLiveData<Variant.Plain> ld = new MutableLiveData<>();
-                Variant.Plain variant = localDataDB
+                Variant.Plain vPlain;
+                Variant variant = localDataDB
                         .queryVariants()
                         .id_equalTo(id)
-                        .findFirst()
-                        .getPlain();
-                for (int i = 0;i<variant.small_images.size();i++) variant.small_images.set(i, imagesDirectory + "/img_s_" + variant.small_images.get(i) + ".jpg");
-                for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + "/img_f_" + variant.full_images.get(i) + ".jpg");
-                ld.setValue(variant);
+                        .findFirst();
+                if (variant != null)
+                    vPlain = variant.getPlain();
+                else {
+                    vPlain = Variant.Plain.createPlain(
+                            localDataDB.queryCurrency().getBase().getPlain(),
+                            localDataDB.queryMeasure()
+                                    .systemEqualTo(Settings.getMeasureSystem(context))
+                                    .measureEqualTo(Measure.MEASURE_UNIT)
+                                    .isDefault()
+                                    .findFirst()
+                                    .getPlain());
+                }
+                for (int i = 0;i<vPlain.small_images.size();i++) vPlain.small_images.set(i, imagesDirectory + "/img_s_" + vPlain.small_images.get(i) + ".jpg");
+                for (int i = 0;i<vPlain.full_images.size();i++) vPlain.full_images.set(i, imagesDirectory + "/img_f_" + vPlain.full_images.get(i) + ".jpg");
+                ld.setValue(vPlain);
                 return ld;
             }
 
@@ -204,10 +216,8 @@ public class DataRepository {
                         .findFirst();
                 if (shop != null)
                     sPlain = shop.getPlain();
-                else {
-                    sPlain = new VariantInShop.Plain();
-                    sPlain.currency = localDataDB.queryCurrency().getBase().getPlain();
-                }
+                else
+                    sPlain = VariantInShop.Plain.createPlain(localDataDB.queryCurrency().getBase().getPlain());
                 ld.setValue(sPlain);
                 return ld;
             }
@@ -612,6 +622,9 @@ public class DataRepository {
         return imageName;
     }
 
+    public boolean attachVariantToRecord(String variantId, String recordId) {
+        return localDataDB.attachVariantToRecord(variantId, recordId);
+    }
 
 }
 

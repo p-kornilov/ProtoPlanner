@@ -350,8 +350,10 @@ public class LocalDataDB {
                         v.setMeasure(m);
                     }
                 }
-                if (v == null)
-                    v = new Variant(realm, name, m, count, price, "", c);
+                if (v == null) {
+                    v = new Variant(name, m, count, price, "", c);
+                    realm.insertOrUpdate(v);
+                }
                 bid.item = v.getId();
             }
         });
@@ -459,6 +461,16 @@ public class LocalDataDB {
 
         public QueryMeasure systemEqualTo(int system) {
             query = query.equalTo("system",system);
+            return this;
+        }
+
+        public QueryMeasure measureEqualTo(int measure) {
+            query = query.equalTo("measure", measure);
+            return this;
+        }
+
+        public QueryMeasure isDefault() {
+            query = query.equalTo("def", true);
             return this;
         }
 
@@ -630,6 +642,23 @@ public class LocalDataDB {
                 }
             }
         });
+    }
+
+    public boolean attachVariantToRecord(String variantId, String recordId) {
+        Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
+        Record r = realm.where(Record.class).equalTo("id", recordId).findFirst();
+        if (v == null || r == null)
+            return false;
+
+        final Bundle1<Boolean> bid = new Bundle1<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                bid.item = r.addVariant(v);
+            }
+        });
+
+        return bid.item;
     }
 
 }

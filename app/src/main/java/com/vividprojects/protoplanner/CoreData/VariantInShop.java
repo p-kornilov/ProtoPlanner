@@ -143,6 +143,12 @@ public class VariantInShop extends RealmObject {
 
             return new ArrayList<>(Arrays.asList(holder_list));
         }
+
+        public static Plain createPlain(Currency.Plain currency) {
+            Plain plain = new Plain();
+            plain.currency = currency;
+            return plain;
+        }
     }
 
 }

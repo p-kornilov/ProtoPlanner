@@ -36,6 +36,11 @@ public class RecordItemBindingModel extends BaseObservable {
     }
 
     @Bindable
+    public boolean getIsAlternativeVariantsEmpty() {
+        return alternativeVariantsListAdapter.getItemCount() == 0;
+    }
+
+    @Bindable
     public String getRecordName(){
         return record.name;
     }
@@ -65,10 +70,12 @@ public class RecordItemBindingModel extends BaseObservable {
     public void setAlternativeVariants(List<Variant.Plain> list) {
         alternativeVariantsListAdapter.setData(list);
         notifyPropertyChanged(BR.alternativeVariantsAdapter);
+        notifyPropertyChanged(BR.isAlternativeVariantsEmpty);
     }
 
     public void refreshAlternativeVariant(Variant.Plain variant) {
         alternativeVariantsListAdapter.refresh(variant);
+        notifyPropertyChanged(BR.isAlternativeVariantsEmpty);
     }
 
     public void setRecordComment(String comment) {
@@ -101,5 +108,9 @@ public class RecordItemBindingModel extends BaseObservable {
     public void onAddVariantClick() {
         if (onAddVariantClick != null && onAddVariantClick.get() != null)
             onAddVariantClick.get().run();
+    }
+
+    public void refreshVariant(Variant.Plain variant) {
+        //alternativeVariantsListAdapter.refresh(variant);
     }
 }

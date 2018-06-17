@@ -22,20 +22,17 @@ public class ShopEditBindingModel extends BaseObservable {
     private boolean priceError = false;
 
     private WeakReference<Context> context;
-    private WeakReference<RunnableParam<Integer>> enableCheck;
+    private WeakReference<RunnableParam<Boolean>> enableCheck;
 
-    public void setEnableCheck(RunnableParam<Integer> f) {
+    public void setEnableCheck(RunnableParam<Boolean> f) {
         this.enableCheck = new WeakReference<>(f);
     }
 
     public void enableCheck() {
         if (enableCheck == null || enableCheck.get() == null)
             return;
-        if (priceError)
-            enableCheck.get().run(1);
-        else
-            enableCheck.get().run(0);
 
+        enableCheck.get().run(priceError);
     }
 
     public double getPriceNum() {

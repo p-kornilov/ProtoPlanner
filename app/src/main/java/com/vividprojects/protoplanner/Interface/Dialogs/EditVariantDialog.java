@@ -14,6 +14,7 @@ import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.DI.Injectable;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenDialogAbstract;
 import com.vividprojects.protoplanner.Utils.RunnableParam;
+import com.vividprojects.protoplanner.ViewModels.VariantEditViewModel;
 import com.vividprojects.protoplanner.ViewModels.VariantItemViewModel;
 import com.vividprojects.protoplanner.databinding.DialogVariantEditBinding;
 
@@ -28,7 +29,7 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    private VariantItemViewModel model;
+    private VariantEditViewModel model;
     private VariantEditBindingModel bindingModelVariantEdit;
     private ShopEditBindingModel bindingModelShopEdit;
     private DialogVariantEditBinding binding;
@@ -38,19 +39,13 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
     private boolean ecVariant = true;
     private boolean ecShop = true;
 
-    private RunnableParam<Integer> enableCheckVariant = (error) -> {
-        if (error == 1)
-            ecVariant = false;
-        else
-            ecVariant = true;
+    private RunnableParam<Boolean> enableCheckVariant = (error) -> {
+        ecVariant = !error;
         enableCheck();
     };
 
-    private RunnableParam<Integer> enableCheckShop = (error) -> {
-        if (error == 1)
-            ecShop = false;
-        else
-            ecShop = true;
+    private RunnableParam<Boolean> enableCheckShop = (error) -> {
+        ecShop = !error;
         enableCheck();
     };
 
@@ -71,7 +66,7 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
 
     @Override
     public void observeModels() {
-        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(VariantItemViewModel.class);
+        model = ViewModelProviders.of(getActivity(), viewModelFactory).get(VariantEditViewModel.class);
 
         bindingModelVariantEdit = model.getBindingModelVariantEdit();
         bindingModelVariantEdit.setEnableCheck(enableCheckVariant);
@@ -86,9 +81,9 @@ public class EditVariantDialog extends DialogFullScreenDialogAbstract implements
             model.setVariantId(variantId);
 
             model.getVariantItem().observe(this, resource -> {
-                if (resource != null) {
-                    bindingModelVariantEdit.setVariant(resource);
-                    bindingModelShopEdit.setShop(resource.primaryShop);
+                if (resource != null && resource.data != null) {
+                    bindingModelVariantEdit.setVariant(resource.data);
+                    bindingModelShopEdit.setShop(resource.data.primaryShop);
                 }
             });
 

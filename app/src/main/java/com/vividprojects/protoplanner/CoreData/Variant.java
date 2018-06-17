@@ -34,7 +34,7 @@ public class Variant extends RealmObject {
         return id;
     }
 
-    public Variant(Realm realm, String title, Measure measure, double count, double price, String comment, Currency currency) {
+    public Variant(String title, Measure measure, double count, double price, String comment, Currency currency) {
         this.title = title;
         this.measure = measure;
         this.count = count;
@@ -44,7 +44,6 @@ public class Variant extends RealmObject {
         this.shops = new RealmList<>();
 
         this.primaryShop = new VariantInShop(price, currency);
-        realm.insert(this.primaryShop);
     }
 
     public void setPrimaryShop(VariantInShop primaryShop) {
@@ -202,6 +201,19 @@ public class Variant extends RealmObject {
             });
 
             return new ArrayList<>(Arrays.asList(holder_list));
+        }
+
+        public static Plain createPlain(Currency.Plain currency, Measure.Plain measure) {
+            Plain plain = new Plain();
+            VariantInShop.Plain shop = VariantInShop.Plain.createPlain(currency);
+            plain.primaryShop = shop;
+            plain.measure = measure;
+            plain.urls = new ArrayList<>();
+            plain.small_images = new ArrayList<>();
+            plain.full_images = new ArrayList<>();
+            plain.shops = new ArrayList<>();
+
+            return plain;
         }
     }
 

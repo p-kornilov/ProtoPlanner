@@ -208,11 +208,11 @@ public class InitHelperLocalDB {
                 Currency cr = realm.where(Currency.class).equalTo("iso_code_str","RUB").findFirst();
                 Currency cf = realm.where(Currency.class).equalTo("iso_code_str","XAF").findFirst();
                 Currency cd = realm.where(Currency.class).equalTo("iso_code_str","USD").findFirst();
-                Variant v = new Variant(realm,"Торт",m1,7,100, "Мой торт и ссылка http://test.com",cr);
+                Variant v = new Variant("Торт",m1,7,100, "Мой торт и ссылка http://test.com",cr);
                 String s = v.toString();
-                Variant v2 = new Variant(realm, "Колбаса",m,3,50, "",cr);
-                Variant v3 = new Variant(realm, "Хлеб",m1,5.01,60, "",cr);
-                Variant v4 = new Variant(realm, "Фильтр для воды",m1,5,60, "",cr);
+                Variant v2 = new Variant("Колбаса",m,3,50, "",cr);
+                Variant v3 = new Variant("Хлеб",m1,5.01,60, "",cr);
+                Variant v4 = new Variant("Фильтр для воды",m1,5,60, "",cr);
                 v4.addUrl("https://test.com");
                 realm.insertOrUpdate(v);
                 realm.insertOrUpdate(v2);

@@ -30,6 +30,8 @@ public class RecordItemViewModel extends ViewModel {
     private final LiveData<String> recordNameChange;
     private final MediatorLiveData<String> recordName;
     private final MediatorLiveData<List<Variant.Plain>> alternativeVariants;
+    private final MutableLiveData<String> refreshedVariantId = new MutableLiveData<>();
+    private final LiveData<Resource<Variant.Plain>> refreshedVariant;
 
     private DataRepository dataRepository;
     private RecordItemBindingModel bindingModelRecord;
@@ -69,6 +71,11 @@ public class RecordItemViewModel extends ViewModel {
         recordName.addSource(recordItem,record->{recordName.setValue(record.data.name);});
 
         labels = new MutableLiveData<>();
+
+        refreshedVariant = Transformations.switchMap(refreshedVariantId, id -> {
+            int i =1;
+            return RecordItemViewModel.this.dataRepository.loadVariant(id);
+        });
     }
 
     public void setId(String id) {
@@ -117,4 +124,14 @@ public class RecordItemViewModel extends ViewModel {
     public LiveData<List<Variant.Plain>> getAlternativeVariants() {
         return alternativeVariants;
     }
+
+    public void refreshVariant(String id) {
+        dataRepository.attachVariantToRecord(id, recordItemId.getValue());
+        refreshedVariantId.setValue(id);
+    }
+
+    public LiveData<Resource<Variant.Plain>> getRefreshedVariant() {
+        return refreshedVariant;
+    }
+
 }

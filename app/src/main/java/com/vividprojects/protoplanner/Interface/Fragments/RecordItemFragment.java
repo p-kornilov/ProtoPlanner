@@ -205,6 +205,12 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
                     //});
                 }
                 return;
+            case REQUEST_NEW_VARIANT:
+                if (resultCode == RESULT_OK && data != null) {
+                    String id = data.getStringExtra("ID");
+                    modelRecord.refreshVariant(id);
+                }
+                return;
         }
     }
 
@@ -278,6 +284,11 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             modelRecord.getAlternativeVariants().observe(this, list -> {
                 if (list != null && list.size() > 0)
                     bindingModelRecord.setAlternativeVariants(list);
+            });
+
+            modelRecord.getRefreshedVariant().observe(this, variant -> {
+                if (variant != null && variant.data != null)
+                    bindingModelRecord.refreshAlternativeVariant(variant.data);
             });
         }
     }

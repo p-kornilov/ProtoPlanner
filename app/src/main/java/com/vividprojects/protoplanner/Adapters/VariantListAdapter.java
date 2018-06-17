@@ -34,10 +34,7 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
 
     @Override
     public int getItemCount() {
-        if (filtered_data != null)
-            return filtered_data.size();
-        else
-            return 0;
+        return filtered_data != null ? filtered_data.size() : 0;
     }
 
     @Override
@@ -125,26 +122,26 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
     }
 
     public void refresh(Variant.Plain variant) {
-/*        int posInsert = 0;
-        for (VariantInShop.Plain m : this.filtered_data) {
-            if (m.id.equals(shop.id)) {
-                int pos = filtered_data.indexOf(m);
-                data.remove(m);
-                filtered_data.remove(m);
+        int posInsert = 0;
+        for (Variant.Plain v : this.filtered_data) {
+            if (v.id.equals(variant.id)) {
+                int pos = filtered_data.indexOf(v);
+                data.remove(v);
+                filtered_data.remove(v);
                 models.remove(pos);
-                data.add(shop);
-                filtered_data.add(pos,shop);
-                models.add(pos,new ShopItemListBindingModel(context.get(),this, shop));
+                data.add(v);
+                filtered_data.add(pos,variant);
+                models.add(pos,new VariantItemListBindingModel(context.get(),this, variant));
                 notifyItemChanged(pos);
                 return;
             }
-            if (shop.price > m.price)
+            if (variant.primaryShop.price > v.primaryShop.price)
                 posInsert++;
         }
-        data.add(shop);
-        filtered_data.add(posInsert,shop);
-        models.add(posInsert,new ShopItemListBindingModel(context.get(),this, shop));
-        notifyItemInserted(posInsert);*/
+        data.add(variant);
+        filtered_data.add(posInsert,variant);
+        models.add(posInsert,new VariantItemListBindingModel(context.get(),this, variant));
+        notifyItemInserted(posInsert);
     }
 
 }

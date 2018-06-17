@@ -14,6 +14,7 @@ import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.ViewModels.RecordListViewModel;
 import com.vividprojects.protoplanner.ViewModel.PPViewModelFactory;
 import com.vividprojects.protoplanner.ViewModels.ShopEditViewModel;
+import com.vividprojects.protoplanner.ViewModels.VariantEditViewModel;
 import com.vividprojects.protoplanner.ViewModels.VariantItemViewModel;
 
 import dagger.Binds;
@@ -72,15 +73,15 @@ public abstract class ViewModelModule {
     @ViewModelKey(MeasureEditViewModel.class)
     abstract ViewModel bindMeasureViewModel(MeasureEditViewModel measureViewModel);
 
-/*    @Binds
+    @Binds
     @IntoMap
-    @ViewModelKey(VariantItemViewModel.class)
-    abstract ViewModel bindVariantViewModel(VariantItemViewModel variantItemViewModel);*/
+    @ViewModelKey(VariantEditViewModel.class)
+    abstract ViewModel bindVariantEditViewModel(VariantEditViewModel variantEditViewModel);
 
     @Binds
     @IntoMap
     @ViewModelKey(VariantItemViewModel.class)
-    abstract ViewModel bindVariantViewModel_(VariantItemViewModel variantItemViewModel);
+    abstract ViewModel bindVariantItemViewModel(VariantItemViewModel variantItemViewModel);
 
     @Binds
     @IntoMap
