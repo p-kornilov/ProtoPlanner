@@ -13,6 +13,16 @@
         android:layout_height="100dp"
         app:srcCompat="@drawable/record_test" />
 
+    <ImageView
+        android:id="@+id/ii_default"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_star_default_gold" />
+
     <ProgressBar
         android:id="@+id/ii_progress_horizontal"
         style="?android:attr/progressBarStyleHorizontal"

@@ -46,6 +46,7 @@ public class RecordItemViewModel extends ViewModel {
         recordNameTrigger = new MutableLiveData<>();
 
         bindingModelRecord = new RecordItemBindingModel();
+        bindingModelRecord.setDefaultImage(dataRepository.getDefaultVariantImage());
 
         recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
             return RecordItemViewModel.this.dataRepository.setRecordName(recordItemId.getValue(),name);

@@ -120,7 +120,7 @@ public class VariantItemBindingModel extends BaseObservable {
         this.name = variant.title;
         this.price = String.valueOf(variant.primaryShop.price);
         this.count = String.valueOf(variant.count);
-        imagesListAdapter.setData(variant.small_images);
+        imagesListAdapter.setData(variant.small_images, variant.defaultImage);
         shopListAdapter.setData(variant.shops, variant.primaryShop);
        // shopListAdapter.
         notifyPropertyChanged(BR.variantName);

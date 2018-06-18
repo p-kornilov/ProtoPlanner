@@ -19,14 +19,19 @@ public class RecordItemBindingModel extends BaseObservable {
     private Record.Plain record;
 
     private VariantListAdapter alternativeVariantsListAdapter;
+    private String defaultImage;
 
     private WeakReference<Runnable> onCommentEditClick;
     private WeakReference<Runnable> onLabelsEditClick;
     private WeakReference<Runnable> onAddVariantClick;
 
+    public void setDefaultImage(String defaultImage) {
+        this.defaultImage = defaultImage;
+    }
+
     public void setContext(Fragment fragment) {
 //        this.context = new WeakReference<>(fragment.getContext());
-        this.alternativeVariantsListAdapter = new VariantListAdapter(fragment.getContext());
+        this.alternativeVariantsListAdapter = new VariantListAdapter(fragment.getContext(), defaultImage);
         this.alternativeVariantsListAdapter.setMaster((ItemActionsVariant) fragment);
     }
 

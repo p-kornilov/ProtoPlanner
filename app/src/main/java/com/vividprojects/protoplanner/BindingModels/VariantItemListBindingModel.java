@@ -21,6 +21,7 @@ public class VariantItemListBindingModel extends BaseObservable {
     private String price;
     private String count;
     private String name;
+    private String defaultImage;
 
     private WeakReference<Context> context;
     private ItemActionsVariant listAdapter;
@@ -28,16 +29,18 @@ public class VariantItemListBindingModel extends BaseObservable {
     public VariantItemListBindingModel() {
     }
 
-    public VariantItemListBindingModel(Context context, ItemActionsVariant listAdapter, Variant.Plain variant) {
+    public VariantItemListBindingModel(Context context, ItemActionsVariant listAdapter, Variant.Plain variant, String defaultImage) {
         this.variant = variant;
         this.context = new WeakReference<>(context);
         this.listAdapter = listAdapter;
+        this.defaultImage = defaultImage;
         notifyPropertyChanged(BR.variantName);
         notifyPropertyChanged(BR.variantCountDecor);
         notifyPropertyChanged(BR.variantPriceDecor);
         notifyPropertyChanged(BR.variantCount);
         notifyPropertyChanged(BR.variantPrice);
         notifyPropertyChanged(BR.variantValueDecor);
+        notifyPropertyChanged(BR.variantItemListImage);
     }
 
     @Bindable
@@ -45,7 +48,7 @@ public class VariantItemListBindingModel extends BaseObservable {
         if (variant.small_images.size() != 0 && variant.small_images.size() > variant.defaultImage)
             return variant.small_images.get(variant.defaultImage);
         else
-            return null;
+            return defaultImage;
     }
 
     @Bindable

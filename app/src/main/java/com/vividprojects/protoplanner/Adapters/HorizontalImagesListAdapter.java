@@ -25,6 +25,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
     private boolean inDeletionMode = false;
     private ViewGroup parent;
     private int progress;
+    private int defaultImage = 0;
 
     private List<String> data;
   //  private LayoutInflater inflater;
@@ -39,12 +40,11 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         this.data = data;
         this.model = model;
         this.onImageClick = onImageClick;
-/*        data.add("");
-        data.remove("");*/
     }
 
-    public void setData(List<String> data) {
+    public void setData(List<String> data, int defaultImage) {
         this.data = data;
+        this.defaultImage = defaultImage;
         notifyDataSetChanged();
     }
 
@@ -141,6 +141,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         holder.data = obj;
         //noinspection ConstantConditions
 //            holder.record_title.setText(obj.getId());
+        holder.defImage.setVisibility(View.INVISIBLE);
         if (!obj.equals("")) {
             GlideApp.with(holder.image)
                     .load(new File(obj))
@@ -148,6 +149,8 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
                     .into(holder.image);
             holder.circlePBar.setVisibility(ProgressBar.INVISIBLE);
             holder.horisontalPBar.setVisibility(ProgressBar.INVISIBLE);
+            if (position == defaultImage)
+                holder.defImage.setVisibility(View.VISIBLE);
         } else {
 //            holder.circlePBar.setVisibility(ProgressBar.VISIBLE);
             if (inLoadingState) {
@@ -174,6 +177,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
+        ImageView defImage;
         ProgressBar horisontalPBar;
         ProgressBar circlePBar;
         public String data;
@@ -181,6 +185,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         ViewHolder(View view) {
             super(view);
             image = (ImageView) view.findViewById(R.id.ii_image);
+            defImage = (ImageView) view.findViewById(R.id.ii_default);
             horisontalPBar = (ProgressBar) view.findViewById(R.id.ii_progress_horizontal);
             circlePBar = (ProgressBar) view.findViewById(R.id.ii_progress_circle);
 

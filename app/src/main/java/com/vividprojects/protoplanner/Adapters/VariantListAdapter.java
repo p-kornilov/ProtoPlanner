@@ -15,12 +15,14 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
     private List<Variant.Plain> data = new ArrayList<>();
     private List<Variant.Plain> filtered_data = new ArrayList<>();
     private List<VariantItemListBindingModel> models = new ArrayList<>();
+    private String defaultImage;
 
     private WeakReference<Context> context;
     private ItemActionsVariant master;
 
-    public VariantListAdapter(Context context) {
+    public VariantListAdapter(Context context, String defaultImage) {
         this.context = new WeakReference<>(context);
+        this.defaultImage = defaultImage;
     }
 
     public void setMaster(ItemActionsVariant master) {
@@ -53,10 +55,7 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
     private void createModels() {
         models.clear();
         for (int i = 0; i < filtered_data.size(); i++) {
-
-            Variant.Plain v = filtered_data.get(i);
-            VariantItemListBindingModel model = new VariantItemListBindingModel(context.get(),this, v);
-
+            VariantItemListBindingModel model = new VariantItemListBindingModel(context.get(),this, filtered_data.get(i), defaultImage);
             models.add(model);
         }
     }
@@ -131,7 +130,7 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
                 models.remove(pos);
                 data.add(v);
                 filtered_data.add(pos,variant);
-                models.add(pos,new VariantItemListBindingModel(context.get(),this, variant));
+                models.add(pos,new VariantItemListBindingModel(context.get(),this, variant, defaultImage));
                 notifyItemChanged(pos);
                 return;
             }
@@ -140,7 +139,7 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
         }
         data.add(variant);
         filtered_data.add(posInsert,variant);
-        models.add(posInsert,new VariantItemListBindingModel(context.get(),this, variant));
+        models.add(posInsert,new VariantItemListBindingModel(context.get(),this, variant, defaultImage));
         notifyItemInserted(posInsert);
     }
 

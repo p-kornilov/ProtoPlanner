@@ -602,6 +602,10 @@ public class DataRepository {
         return thumb_name;
     }
 
+    public String getDefaultVariantImage() {
+        return imagesDirectory + IMAGES_SMALL + IMAGE_DEFAULT_ALTERNATIVE + ".jpg";
+    }
+
     public LiveData<String> saveImageFromGallery(Uri temp_name_uri) {
         MutableLiveData<String> imageName = new MutableLiveData<>();
 
