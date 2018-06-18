@@ -51,8 +51,8 @@ public class LocalDataDB {
 
     }
 
-    public void initDB(){
-        InitHelperLocalDB.init(realm, context);
+    public void initDB(String imagesDirectory){
+        InitHelperLocalDB.init(realm, context, imagesDirectory);
     }
 
     public Label.Plain createLabel(Label.Plain label) {

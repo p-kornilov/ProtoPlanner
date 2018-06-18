@@ -49,6 +49,7 @@ public class DataRepository {
 
     public static final String IMAGES_FULL = "/img_f_";
     public static final String IMAGES_SMALL = "/img_s_";
+    public static final String IMAGE_DEFAULT_ALTERNATIVE = "00000000-def1-0000-0000-alternative0";
 
     private Context context;
     private String imagesDirectory;
@@ -134,6 +135,12 @@ public class DataRepository {
                         .id_equalTo(id)
                         .findFirst()
                         .getPlain();
+                for (Variant.Plain v : record.variants) {
+                    for (int i = 0; i < v.small_images.size(); i++)
+                        v.small_images.set(i, imagesDirectory + IMAGES_FULL + v.small_images.get(i) + ".jpg");
+                    for (int i = 0; i < v.full_images.size(); i++)
+                        v.full_images.set(i, imagesDirectory + IMAGES_SMALL + v.full_images.get(i) + ".jpg");
+                }
                 ld.setValue(record);
                 return ld;
             }
@@ -483,7 +490,7 @@ public class DataRepository {
     }
 
     public void initDB(){
-        localDataDB.initDB();
+        localDataDB.initDB(imagesDirectory);
     }
 
     public void showDB(){

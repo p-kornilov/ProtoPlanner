@@ -28,7 +28,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/orig" />
+            bind:srcImage="@{obj.variantItemListImage}"
+            tools:srcCompat="@drawable/box3" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline2"

@@ -1,6 +1,8 @@
 package com.vividprojects.protoplanner.DB;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -12,15 +14,40 @@ import com.vividprojects.protoplanner.CoreData.Measure;
 import com.vividprojects.protoplanner.CoreData.Record;
 import com.vividprojects.protoplanner.CoreData.Variant;
 import com.vividprojects.protoplanner.CoreData.VariantInShop;
+import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.Widgets.Pallet;
+
+import java.io.File;
+import java.io.InputStream;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class InitHelperLocalDB {
-    public static void init(Realm realm, Context context) {
+    public static void createDefFile(Context context, String imagesDirectory, String fileName, int resource) {
+        String full_name = imagesDirectory + DataRepository.IMAGES_FULL + fileName + ".jpg";
+        String thumb_name = imagesDirectory + DataRepository.IMAGES_SMALL + fileName + ".jpg";
+
+        File file = new File(full_name);
+        if(!file.exists()) {
+            Bitmap b = BitmapFactory.decodeResource(context.getResources(), resource);
+            BitmapUtils.saveImage(context, b, full_name, false);
+            BitmapUtils.saveImage(context, BitmapUtils.resamplePic(context, full_name, 256, 256), thumb_name, false);
+        }
+    }
+
+    public static void init(Realm realm, Context context, String imagesDirectory) {
         int i = 1;
+        //--------------- init images -----------------------------
+        createDefFile(context, imagesDirectory, "00000000-def1-0000-0000-000000000000", R.raw.def1);
+        createDefFile(context, imagesDirectory, "00000000-def2-0000-0000-000000000000", R.raw.def2);
+        createDefFile(context, imagesDirectory, "00000000-def3-0000-0000-000000000000", R.raw.def3);
+        createDefFile(context, imagesDirectory, "00000000-def4-0000-0000-000000000000", R.raw.def4);
+        createDefFile(context, imagesDirectory, "00000000-def5-0000-0000-000000000000", R.raw.def5);
+        createDefFile(context, imagesDirectory, DataRepository.IMAGE_DEFAULT_ALTERNATIVE, R.drawable.box3);
+
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -232,10 +259,11 @@ public class InitHelperLocalDB {
                 vis = new VariantInShop("Четвертый магазин","https://shop4.ru","Адрес четвертого магазина","Комментарий для четвертого магазина hj hkhjk ghj ghj ghj", 104.0, cr);
                 realm.insertOrUpdate(vis);
                 v4.addShop(vis);
-                v4.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
-                v4.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
-                v4.addImage("89d4f6cd-1f3b-382e-b4cd-38602710fc74");
-                v4.addImage("c3c59002-5a86-3c7e-b7ed-93f2c79255de");
+                v4.addImage("00000000-def1-0000-0000-000000000000");
+                v4.addImage("00000000-def2-0000-0000-000000000000");
+                v4.addImage("00000000-def3-0000-0000-000000000000");
+                v4.addImage("00000000-def4-0000-0000-000000000000");
+                v4.addImage("00000000-def5-0000-0000-000000000000");
 
                 Record r2 = new Record(v4);
                 r2.setName("Фильтр");

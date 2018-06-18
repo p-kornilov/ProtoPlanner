@@ -25,6 +25,7 @@ public class Variant extends RealmObject {
     private VariantInShop primaryShop;
     private RealmList<String> urls;
     private RealmList<String> images;
+    private int defaultImage = 0;
     private RealmList<VariantInShop> shops;
    // private Currency currency;
 
@@ -169,6 +170,7 @@ public class Variant extends RealmObject {
         plain.measure = measure.getPlain();
         plain.count = count;
         plain.comment = comment;
+        plain.defaultImage = defaultImage;
         plain.urls = new ArrayList<>(urls);
         plain.small_images = new ArrayList<>(images);
         plain.full_images = new ArrayList<>(images);
@@ -186,6 +188,7 @@ public class Variant extends RealmObject {
         public Measure.Plain  measure;
         public double count;
         public String comment;
+        public int defaultImage;
         public List<String> urls;
         public List<String> small_images;
         public List<String> full_images;

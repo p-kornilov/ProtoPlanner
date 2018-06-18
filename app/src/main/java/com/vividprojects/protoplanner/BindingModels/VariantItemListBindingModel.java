@@ -41,6 +41,14 @@ public class VariantItemListBindingModel extends BaseObservable {
     }
 
     @Bindable
+    public String getVariantItemListImage() {
+        if (variant.small_images.size() != 0 && variant.small_images.size() > variant.defaultImage)
+            return variant.small_images.get(variant.defaultImage);
+        else
+            return null;
+    }
+
+    @Bindable
     public String getVariantName(){
         return variant.title;
     }
