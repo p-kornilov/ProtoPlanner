@@ -12,12 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
+import com.vividprojects.protoplanner.Images.GlideApp;
 import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.Utils.ViewModelHelper;
 import com.vividprojects.protoplanner.ViewModels.RecordItemViewModel;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.ViewModel.ViewModelHolder;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -48,13 +52,21 @@ public class RecordActivity extends AppCompatActivity implements HasSupportFragm
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
 
-        CollapsingToolbarLayout mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout1);
+        CollapsingToolbarLayout mCollapsingToolbarLayout = findViewById(R.id.toolbar_layout1);
+        ImageView defaultImage = findViewById(R.id.ar_default_image);
 
         model = ViewModelHelper.obtainViewModel(RecordItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
         model.getRecordName().observe(this, name -> {
             if (name != null) {
                 mCollapsingToolbarLayout.setTitle(name);
             }
+        });
+
+        model.getDefaultImage().observe(this, image -> {
+            GlideApp.with(defaultImage)
+                    .load(new File(image))
+                    .error(R.drawable.ic_error_outline_black_24dp)
+                    .into(defaultImage);
         });
 
         FragmentManager fragmentManager = getSupportFragmentManager();

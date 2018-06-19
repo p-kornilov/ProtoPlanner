@@ -360,6 +360,21 @@ public class LocalDataDB {
         return bid.item;
     }
 
+    public void setDefaultImage(String variantId , int image) {
+        final Bundle1<String> bid = new Bundle1<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                if (variantId != null) {
+                    Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
+                    if (v != null)
+                        v.setDefaultImage(image);
+                }
+            }
+        });
+    }
+
+
     public void saveMainVariantToRecord(String variantId, String recordId) {
         Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
         Record  r = realm.where(Record.class ).equalTo("id", recordId ).findFirst();

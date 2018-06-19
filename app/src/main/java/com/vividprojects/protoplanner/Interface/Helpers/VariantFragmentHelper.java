@@ -11,6 +11,7 @@ import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Interface.NavigationController;
 import com.vividprojects.protoplanner.ViewModels.VariantItemViewModel;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class VariantFragmentHelper {
@@ -18,6 +19,7 @@ public class VariantFragmentHelper {
     public static final int REQUEST_IMAGE_CAPTURE = 101;
     public static final int REQUEST_IMAGE_GALLERY = 102;
     public static final int REQUEST_IMAGE_URL_LOAD = 103;
+    public static final int REQUEST_IMAGE_SHOW = 104;
     public static final int REQUEST_EDIT_VARIANT = 107;
     public static final int REQUEST_EDIT_SHOP = 108;
     public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 111;
@@ -71,6 +73,13 @@ public class VariantFragmentHelper {
                     String url = data.getExtras().get("URL").toString();
                     bindingModel.initImageLoad();
                     model.loadImage(url);
+                }
+                return true;
+            case REQUEST_IMAGE_SHOW:
+                if ((resultCode == RESULT_OK || resultCode == RESULT_CANCELED) && data != null) {
+                    int position = data.getExtras().getInt("DEFAULT_IMAGE", 0);
+                    bindingModel.defaultImageChanged(position);
+                    model.setDefaultImage(position);
                 }
                 return true;
             case REQUEST_EDIT_VARIANT:

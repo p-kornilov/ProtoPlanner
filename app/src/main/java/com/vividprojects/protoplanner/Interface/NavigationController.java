@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 
 import com.vividprojects.protoplanner.Interface.Activity.ContainerItemActivity;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;
+import com.vividprojects.protoplanner.Interface.Activity.ImageViewActivity;
 import com.vividprojects.protoplanner.Interface.Activity.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.R;
@@ -221,6 +222,19 @@ public class NavigationController {
         }
         intent.putExtra("SELECTED",id);
         context.startActivityForResult(intent,requestCode);
+    }
+
+    public static void openImageViewForResult(int position, String variant, Fragment context, int requestCode) {
+
+        Intent intent;
+        if (Build.VERSION.SDK_INT <= 23) {
+            intent = new Intent(context.getActivity(), ImageViewActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            intent = new Intent(context.getActivity(), ImageViewActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        intent.putExtra("POSITION",position);
+        intent.putExtra("VARIANT_ID",variant);
+        context.startActivityForResult(intent, requestCode);
     }
 
     public String getType() {

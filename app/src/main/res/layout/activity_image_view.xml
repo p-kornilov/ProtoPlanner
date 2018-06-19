@@ -58,19 +58,29 @@
         android:id="@+id/iv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginBottom="48dp"
         android:text="TextView"
         android:textColor="@color/white"
-        android:layout_gravity="bottom" />
+        android:visibility="invisible"
+        android:layout_gravity="center_horizontal|bottom" />
 
     <View
+        android:id="@+id/iv_scrim"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="56dp"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="48dp"
         android:background="@drawable/scrim"
         android:foregroundGravity="bottom" />
+
+    <ImageButton
+        android:id="@+id/iv_default"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_gravity="center_horizontal|bottom"
+        app:srcCompat="@drawable/ic_star_default_black" />
 
 
 </android.support.design.widget.CoordinatorLayout>

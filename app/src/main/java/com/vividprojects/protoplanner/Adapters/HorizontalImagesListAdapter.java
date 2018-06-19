@@ -48,6 +48,13 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         notifyDataSetChanged();
     }
 
+    public void setDefaultImage(int defaultImage) {
+        int oldDefImage =  this.defaultImage;
+        this.defaultImage = defaultImage;
+        notifyItemChanged(oldDefImage);
+        notifyItemChanged(defaultImage);
+    }
+
     public int addMode() {
         int index;
         if (inLoadingState) {

@@ -21,6 +21,7 @@
             android:fontFamily="@font/roboto"
             android:text="Basic variant"
             android:textSize="14sp"
+            android:visibility="@{variantModel.isMaster ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,6 +39,7 @@
             tools:text="Поле для наименования товара"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:visibility="@{variantModel.isMaster ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/t10"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -130,7 +132,7 @@
             android:background="@null"
             android:cropToPadding="false"
             android:padding="12dp"
-            android:visibility="visible"
+            android:visibility="@{variantModel.isMaster ? View.GONE : View.VISIBLE}"
             android:onClick="@{()->variantModel.onEditClick()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -214,7 +216,7 @@
             android:layout_marginStart="@dimen/record_left_padding"
             android:layout_marginTop="13dp"
             android:fontFamily="@font/roboto"
-            android:text="In shops"
+            android:text="Shop prices"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider3" />

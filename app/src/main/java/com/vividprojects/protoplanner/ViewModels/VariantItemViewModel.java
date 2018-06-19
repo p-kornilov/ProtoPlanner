@@ -55,6 +55,7 @@ public class VariantItemViewModel extends ViewModel {
     private final MutableLiveData<String> recordId = new MutableLiveData<>();
     private final MutableLiveData<String> variantId = new MutableLiveData<>();
     private final MutableLiveData<String> onSaveId = new MutableLiveData<>();
+    private final MutableLiveData<String> defaultImage = new MutableLiveData<>();
 
     private DataRepository dataRepository;
     private VariantItemBindingModel bindingModelVariant;
@@ -70,6 +71,7 @@ public class VariantItemViewModel extends ViewModel {
     private int requestImageUrlLoad;
     private int requestImageGallery;
     private int requestImageCapture;
+    private int requestImageShow;
     private int permissionRequestReadStorage;
     private int requestEditShop;
     private int requestEditVariant;
@@ -79,14 +81,17 @@ public class VariantItemViewModel extends ViewModel {
             ,int requestImageUrlLoad
             ,int requestImageGallery
             ,int requestImageCapture
+            ,int requestImageShow
             ,int requestEditShop
             ,int requestEditVariant
             ,int permissionRequestReadStorage
-            ,boolean isTablet) {
+            ,boolean isTablet
+            ,boolean isMaster) {
         this.master = master;
         this.requestImageUrlLoad = requestImageUrlLoad;
         this.requestImageGallery = requestImageGallery;
         this.requestImageCapture = requestImageCapture;
+        this.requestImageShow = requestImageShow;
         this.requestEditShop = requestEditShop;
         this.requestEditVariant = requestEditVariant;
         this.permissionRequestReadStorage = permissionRequestReadStorage;
@@ -96,7 +101,7 @@ public class VariantItemViewModel extends ViewModel {
         bindingModelVariant.setImagesAdapter(onImageSelect);
         bindingModelVariant.setOnAddImageClick(onAddImageClick);
         bindingModelVariant.setOnAddShopClick(onAddShopClick);
-        bindingModelVariant.setContext(master);
+        bindingModelVariant.setContext(master, isMaster);
     }
 
     public Runnable onAddShopClick = () -> {
@@ -152,7 +157,7 @@ public class VariantItemViewModel extends ViewModel {
     };
 
     public RunnableParam<Integer> onImageSelect = (position)->{
-        NavigationController.openImageView(position,bindingModelVariant.getVariantId(), master.getContext());
+        NavigationController.openImageViewForResult(position,bindingModelVariant.getVariantId(), master, requestImageShow);
     };
 
     public String getTempPhotoPath() {
@@ -203,10 +208,17 @@ public class VariantItemViewModel extends ViewModel {
     }
     public SingleLiveEvent<Integer> getLoadProgress() {return loadProgress;}
 
+    private void addImage(String thumbName) {
+        String fullName = DataRepository.toFullImage(thumbName);
+        variantItem.getValue().full_images.add(fullName);
+        variantItem.getValue().small_images.add(thumbName);
+        bindingModelVariant.setLoadedImage(thumbName);
+    }
+
     public SingleLiveEvent<Integer> loadImage(String url) {
         if (!inImageLoading) {
             inImageLoading = true;
-            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromURLtoVariant(url, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
+            addImage(dataRepository.saveImageFromURLtoVariant(url, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
         }
         return loadProgress;
     }
@@ -214,7 +226,7 @@ public class VariantItemViewModel extends ViewModel {
     public SingleLiveEvent<Integer> loadCameraImage() {
         if (!inImageLoading) {
             inImageLoading = true;
-            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromCameratoVariant(mTempPhotoPath, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
+            addImage(dataRepository.saveImageFromCameratoVariant(mTempPhotoPath, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
         }
         return loadProgress;
     }
@@ -222,7 +234,7 @@ public class VariantItemViewModel extends ViewModel {
     public SingleLiveEvent<Integer> loadGalleryImage(Uri fileName) {
         if (!inImageLoading) {
             inImageLoading = true;
-            bindingModelVariant.setLoadedImage(dataRepository.saveImageFromGallerytoVariant(fileName, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
+            addImage(dataRepository.saveImageFromGallerytoVariant(fileName, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
         }
         return loadProgress;
     }
@@ -308,5 +320,18 @@ public class VariantItemViewModel extends ViewModel {
     public void save(){
         onSaveId.setValue(getVariantId());
         return;
+    }
+
+    public void setDefaultImage(int position) {
+        dataRepository.setDefaultImage(variantItem.getValue().id ,position);
+        String newImage = variantItem.getValue().full_images.get(position);
+        if (Objects.equals(defaultImage.getValue(), newImage)) {
+            return;
+        }
+        defaultImage.setValue(newImage);
+    }
+
+    public MutableLiveData<String> getDefaultImage() {
+        return defaultImage;
     }
 }

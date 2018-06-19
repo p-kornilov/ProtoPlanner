@@ -32,6 +32,7 @@ public class VariantItemBindingModel extends BaseObservable {
     private HorizontalImagesListAdapter imagesListAdapter;
     private int imagesScroll = 0;
     private String loaded_image = "";
+    private boolean isMaster = false;
 
     private WeakReference<Runnable> onEditClick;
     private WeakReference<RunnableParam<View>> onAddImageClick;
@@ -41,14 +42,24 @@ public class VariantItemBindingModel extends BaseObservable {
     public VariantItemBindingModel() {
     }
 
-    public void setContext(Fragment fragment) {
+    public void setContext(Fragment fragment, boolean isMaster) {
         this.context = new WeakReference<>(fragment.getContext());
         this.shopListAdapter = new ShopListAdapter(this.context.get());
         this.shopListAdapter.setMaster((ItemActionsShop) fragment);
+        this.isMaster = isMaster;
     }
 
     public void setImagesAdapter(RunnableParam onImageSelect) {
         imagesListAdapter = new HorizontalImagesListAdapter(null, null, onImageSelect);
+    }
+
+    public void defaultImageChanged(int position) {
+        imagesListAdapter.setDefaultImage(position);
+    }
+
+    @Bindable
+    public boolean getIsMaster() {
+        return isMaster;
     }
 
     @Bindable

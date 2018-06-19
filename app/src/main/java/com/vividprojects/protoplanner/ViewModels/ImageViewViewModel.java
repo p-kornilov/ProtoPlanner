@@ -6,6 +6,7 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.vividprojects.protoplanner.DataManager.DataRepository;
+import com.vividprojects.protoplanner.Utils.Bundle2;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +19,7 @@ import javax.inject.Inject;
 
 public class ImageViewViewModel extends ViewModel {
     final MutableLiveData<String> variantId;
-    private final LiveData<List<String>> images;
+    private final LiveData<Bundle2<List<String>,Integer>> images;
 
     private DataRepository dataRepository;
 
@@ -27,10 +28,7 @@ public class ImageViewViewModel extends ViewModel {
 
         this.dataRepository = dataRepository;
         variantId = new MutableLiveData<>();
-        images = Transformations.switchMap(variantId, input -> {
-            LiveData<List<String>> ll = ImageViewViewModel.this.dataRepository.loadImagesForVariant2(input);
-            return ll;
-        });
+        images = Transformations.switchMap(variantId, input -> ImageViewViewModel.this.dataRepository.loadImagesForVariant2(input));
     }
 
     public void setVariantId(String id) {
@@ -40,7 +38,7 @@ public class ImageViewViewModel extends ViewModel {
         variantId.setValue(id);
     }
 
-    public LiveData<List<String>> getImages(){
+    public LiveData<Bundle2<List<String>,Integer>> getImages(){
         return images;
     }
 

@@ -89,10 +89,12 @@ public class VariantItemFragment extends Fragment implements Injectable, ItemAct
                     ,VariantFragmentHelper.REQUEST_IMAGE_URL_LOAD
                     ,VariantFragmentHelper.REQUEST_IMAGE_GALLERY
                     ,VariantFragmentHelper.REQUEST_IMAGE_CAPTURE
+                    ,VariantFragmentHelper.REQUEST_IMAGE_SHOW
                     ,VariantFragmentHelper.REQUEST_EDIT_SHOP
                     ,VariantFragmentHelper.REQUEST_EDIT_VARIANT
                     ,VariantFragmentHelper.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
-                    ,navigationController.isTablet());
+                    ,navigationController.isTablet()
+                    ,true);
 
             model.setVariantId(id);
 
@@ -118,7 +120,7 @@ public class VariantItemFragment extends Fragment implements Injectable, ItemAct
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_item, menu);
+        inflater.inflate(R.menu.menu_edit, menu);
     }
 
     @Override
@@ -126,7 +128,8 @@ public class VariantItemFragment extends Fragment implements Injectable, ItemAct
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.item_check:
+            case R.id.menu_edit:
+                model.onVariantEditClick.run();
 /*                boolean error = false;
                 String errorText = "";
                 if (bindingModel.getMeasureName() == null || bindingModel.getMeasureName().length()==0) {
@@ -152,7 +155,7 @@ public class VariantItemFragment extends Fragment implements Injectable, ItemAct
                 }
                 model.save();*/
               //  getActivity().finish();
-                break;
+                return true;
         }
         return true;
     }

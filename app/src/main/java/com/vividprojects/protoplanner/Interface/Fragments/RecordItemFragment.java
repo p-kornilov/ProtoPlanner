@@ -130,7 +130,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (navigationController.isTablet()) {
             ((MainActivity) getActivity()).getSecondToolBar().getMenu().clear();
-            ((MainActivity) getActivity()).getSecondToolBar().inflateMenu(R.menu.menu_record);
+            ((MainActivity) getActivity()).getSecondToolBar().inflateMenu(R.menu.menu_edit);
             ((MainActivity) getActivity()).getSecondToolBar().setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -139,7 +139,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             });
         } else {
             if (menu.size() == 0)
-                inflater.inflate(R.menu.menu_record, menu);
+                inflater.inflate(R.menu.menu_edit, menu);
         }
     }
 
@@ -148,7 +148,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.ra_edit_name:
+            case R.id.menu_edit:
                 EditTextDialog editNameDialog = new EditTextDialog();
                 editNameDialog.setTargetFragment(this, REQUEST_EDIT_NAME);
                 Bundle b = new Bundle();
@@ -227,10 +227,14 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
                     ,VariantFragmentHelper.REQUEST_IMAGE_URL_LOAD
                     ,VariantFragmentHelper.REQUEST_IMAGE_GALLERY
                     ,VariantFragmentHelper.REQUEST_IMAGE_CAPTURE
+                    ,VariantFragmentHelper.REQUEST_IMAGE_SHOW
                     ,VariantFragmentHelper.REQUEST_EDIT_SHOP
                     ,VariantFragmentHelper.REQUEST_EDIT_VARIANT
                     ,VariantFragmentHelper.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
-                    ,navigationController.isTablet());
+                    ,navigationController.isTablet()
+                    ,false);
+
+            добавить onResult из варианта
 
             bindingModelRecord = modelRecord.getBindingModelRecord();
             bindingModelRecord.setContext(this);
@@ -261,8 +265,16 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             });
 
             modelMainVariant.getVariantItem().observe(this, resource -> {
-                if (resource != null && resource != null)
+                if (resource != null && resource != null) {
                     bindingModelVariant.setVariant(resource);
+                    modelRecord.setDefaultImage(resource.full_images.get(resource.defaultImage));
+                }
+            });
+
+            modelMainVariant.getDefaultImage().observe(this, image -> {
+                if (image != null) {
+                    modelRecord.setDefaultImage(image);
+                }
             });
 
             if (navigationController.isTablet())

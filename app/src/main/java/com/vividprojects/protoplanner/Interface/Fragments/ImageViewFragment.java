@@ -1,4 +1,4 @@
-package com.vividprojects.protoplanner.Interface;
+package com.vividprojects.protoplanner.Interface.Fragments;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -34,7 +34,7 @@ public class ImageViewFragment extends Fragment implements Injectable {
 
     private int position;
     private ZoomImageView imageView;
-    private TextView textView;
+    //private TextView textView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class ImageViewFragment extends Fragment implements Injectable {
         Log.d("Test", "onCreateView - RootListFragment");
         View v = (View) inflater.inflate(R.layout.image_view_fragment, container, false);
         imageView = (ZoomImageView) v.findViewById(R.id.iv_iv);
-        textView = v.findViewById(R.id.iv_name);
+    //    textView = v.findViewById(R.id.iv_name);
 //        recycler.setAdapter(new TestRecyclerAdapter(getActivity()));
         return v;
     }
@@ -74,12 +74,12 @@ public class ImageViewFragment extends Fragment implements Injectable {
             position = 0;
         }
 
-        textView.setText("Position " + position);
+        //textView.setText("Position " + position);
 
         model.getImages().observe(this,resource -> {
             if (resource != null)
                 GlideApp.with(imageView)
-                        .load(new File(resource.get(position)))
+                        .load(new File(resource.first.get(position)))
                         .error(R.drawable.ic_error_outline_white_24dp)
                         .into(imageView);
         });

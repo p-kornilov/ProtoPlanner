@@ -32,6 +32,7 @@ public class RecordItemViewModel extends ViewModel {
     private final MediatorLiveData<List<Variant.Plain>> alternativeVariants;
     private final MutableLiveData<String> refreshedVariantId = new MutableLiveData<>();
     private final LiveData<Resource<Variant.Plain>> refreshedVariant;
+    private final MutableLiveData<String> defaultImage  = new MutableLiveData<>();
 
     private DataRepository dataRepository;
     private RecordItemBindingModel bindingModelRecord;
@@ -135,4 +136,14 @@ public class RecordItemViewModel extends ViewModel {
         return refreshedVariant;
     }
 
+    public MutableLiveData<String> getDefaultImage() {
+        return defaultImage;
+    }
+
+    public void setDefaultImage(String image) {
+        if (Objects.equals(defaultImage.getValue(), image)) {
+            return;
+        }
+        defaultImage.setValue(image);
+    }
 }

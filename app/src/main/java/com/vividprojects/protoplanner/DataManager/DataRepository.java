@@ -26,6 +26,7 @@ import com.vividprojects.protoplanner.DB.NetworkResponse;
 import com.vividprojects.protoplanner.Images.BitmapUtils;
 import com.vividprojects.protoplanner.Network.NetworkLoader;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.Utils.Bundle2;
 import com.vividprojects.protoplanner.Utils.Settings;
 
 import java.io.File;
@@ -77,6 +78,10 @@ public class DataRepository {
         }
         imagesDirectory = storageDir.getAbsolutePath();
         Log.d("Test", "External Storage - " + imagesDirectory);*/
+    }
+
+    public static String toFullImage(String smallImage) {
+        return smallImage.replace(IMAGES_SMALL, IMAGES_FULL);
     }
 
     public String getImagesDirectory() {
@@ -246,6 +251,10 @@ public class DataRepository {
         return localDataDB.saveVariant(id, name, price, count, currency, measure);
     }
 
+    public void setDefaultImage(String variantId , int image) {
+        localDataDB.setDefaultImage(variantId, image);
+    }
+
     public String saveShop(VariantInShop.Plain shop, String variantId, boolean asPrimary) {
         return localDataDB.saveShop(shop, variantId, asPrimary);
     }
@@ -292,15 +301,18 @@ public class DataRepository {
         }.asLiveData();
     }
 
-    public LiveData<List<String>> loadImagesForVariant2(String id) {
-                MutableLiveData<List<String>> ld = new MutableLiveData<>();
+    public LiveData<Bundle2<List<String>,Integer>> loadImagesForVariant2(String id) {
+                MutableLiveData<Bundle2<List<String>,Integer>> ld = new MutableLiveData<>();
+                Bundle2<List<String>,Integer> bundle = new Bundle2<>();
                 Variant.Plain variant = localDataDB
                         .queryVariants()
                         .id_equalTo(id)
                         .findFirst()
                         .getPlain();
                 for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + "/img_f_" + variant.full_images.get(i) + ".jpg");
-                ld.setValue(variant.full_images);
+                bundle.first = variant.full_images;
+                bundle.second = variant.defaultImage;
+                ld.setValue(bundle);
                 return ld;
     }
 

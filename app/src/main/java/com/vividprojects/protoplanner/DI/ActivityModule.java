@@ -3,7 +3,7 @@ package com.vividprojects.protoplanner.DI;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerItemActivity;
 import com.vividprojects.protoplanner.Interface.Activity.ContainerListActivity;
 import com.vividprojects.protoplanner.Interface.Helpers.DialogFullScreenActivity;
-import com.vividprojects.protoplanner.Interface.ImageViewActivity;
+import com.vividprojects.protoplanner.Interface.Activity.ImageViewActivity;
 import com.vividprojects.protoplanner.Interface.LabelsActivity;
 import com.vividprojects.protoplanner.Interface.Activity.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;

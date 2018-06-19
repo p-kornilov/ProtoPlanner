@@ -49,7 +49,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Interface.ImageViewActivity"
+            android:name=".Interface.Activity.ImageViewActivity"
             android:label="ImageView"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"

@@ -64,6 +64,10 @@ public class Variant extends RealmObject {
         return true;
     }
 
+    public void setDefaultImage(int defaultImage) {
+        this.defaultImage = defaultImage;
+    }
+
     public VariantInShop getPrimaryShop() {
         return primaryShop;
     }

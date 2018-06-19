@@ -7,8 +7,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.vividprojects.protoplanner.DataManager.DataRepository;
@@ -90,7 +92,13 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                 });
                 break;
             case NavigationController.VARIANT_ITEM:
-                getSupportActionBar().setTitle("Variant");
+                ActionBar actionBar = getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setHomeButtonEnabled(true);
+                    actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+                    //actionBar.setTitle("Variant");
+                }
                 String id = getIntent().getStringExtra(NavigationController.VARIANT_ID);
                 fragment = VariantItemFragment.create(id);
                 VariantItemViewModel model_v = ViewModelHelper.obtainViewModel(VariantItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
@@ -102,6 +110,11 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                         setResult(RESULT_OK, intent);
                         finish();
                     }
+                });
+
+                model_v.getVariantItem().observe(this, variant -> {
+                    if (variant != null)
+                        actionBar.setTitle(variant.title);
                 });
                 break;
         }
@@ -118,6 +131,19 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
         return dispatchingAndroidInjector;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.mdf_action_save) {
+            return true;
+        } else if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 /*
     @Override
     public void onBackPressed() {
