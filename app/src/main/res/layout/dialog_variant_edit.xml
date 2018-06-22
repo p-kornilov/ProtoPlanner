@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="variantEditModel" type="com.vividprojects.protoplanner.BindingModels.VariantEditBindingModel"/>
-        <variable name="shopEditModel" type="com.vividprojects.protoplanner.BindingModels.ShopEditBindingModel"/>
+        <variable name="variantEditModel" type="com.vividprojects.protoplanner.bindingmodels.VariantEditBindingModel"/>
+        <variable name="shopEditModel" type="com.vividprojects.protoplanner.bindingmodels.ShopEditBindingModel"/>
         <import type="com.vividprojects.protoplanner.R"/>
     </data>
 

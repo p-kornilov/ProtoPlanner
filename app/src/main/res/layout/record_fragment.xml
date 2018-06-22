@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="recordModel" type="com.vividprojects.protoplanner.BindingModels.RecordItemBindingModel"/>
-        <variable name="variantModel" type="com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel"/>
-        <import type="com.vividprojects.protoplanner.Widgets.ChipsLayout"/>
+        <variable name="recordModel" type="com.vividprojects.protoplanner.bindingmodels.RecordItemBindingModel"/>
+        <variable name="variantModel" type="com.vividprojects.protoplanner.bindingmodels.VariantItemBindingModel"/>
+        <import type="com.vividprojects.protoplanner.widgets.ChipsLayout"/>
         <import type="android.view.View"/>
     </data>
     <ScrollView
@@ -128,7 +128,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/chipLayout"/>-->
 
-                <com.vividprojects.protoplanner.Widgets.ChipsLayout
+                <com.vividprojects.protoplanner.widgets.ChipsLayout
                     android:id="@+id/chipLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

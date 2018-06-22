@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="variantModel" type="com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel"/>
+        <variable name="variantModel" type="com.vividprojects.protoplanner.bindingmodels.VariantItemBindingModel"/>
         <import type="android.view.View"/>
     </data>
     <android.support.constraint.ConstraintLayout

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.vividprojects.protoplanner.Interface.LabelsActivity">
+    tools:context="com.vividprojects.protoplanner.ui.LabelsActivity">
     <item android:id="@+id/search"
         android:title="Search"
         android:icon="@drawable/ic_search_white_24dp"

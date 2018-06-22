@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="variantModel" type="com.vividprojects.protoplanner.BindingModels.VariantItemBindingModel"/>
+        <variable name="variantModel" type="com.vividprojects.protoplanner.bindingmodels.VariantItemBindingModel"/>
     </data>
 
     <LinearLayout

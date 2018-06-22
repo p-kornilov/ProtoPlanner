@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Interface.Activity.RecordActivity"
+            android:name=".ui.activity.RecordActivity"
             android:label="test"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
@@ -49,7 +49,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Interface.Activity.ImageViewActivity"
+            android:name=".ui.activity.ImageViewActivity"
             android:label="ImageView"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
@@ -59,7 +59,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Interface.LabelsActivity"
+            android:name=".ui.LabelsActivity"
             android:label="Labels"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
@@ -69,7 +69,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Interface.SettingsActivity"
+            android:name=".ui.SettingsActivity"
             android:label="Settings"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
@@ -79,17 +79,17 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Interface.Activity.ContainerItemActivity"
+            android:name=".ui.activity.ContainerItemActivity"
             android:label="CurrencyItem"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Interface.Activity.ContainerListActivity" />
+                android:value=".ui.activity.ContainerListActivity" />
         </activity>
         <activity
-            android:name=".Interface.Activity.ContainerListActivity"
+            android:name=".ui.activity.ContainerListActivity"
             android:label="CurrencyList"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
@@ -99,13 +99,13 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Interface.Helpers.DialogFullScreenActivity"
+            android:name=".ui.helpers.DialogFullScreenActivity"
             android:label="DialogActivity"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Interface.Helpers.DialogFullScreenActivity" />
+                android:value=".ui.helpers.DialogFullScreenActivity" />
         </activity>
 <!--                <activity
                     android:name=".Interface.RecordActivity"

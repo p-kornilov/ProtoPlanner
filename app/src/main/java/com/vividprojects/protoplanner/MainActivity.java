@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,10 +17,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Interface.NavigationController;
-import com.vividprojects.protoplanner.Interface.Fragments.RecordItemFragment;
-import com.vividprojects.protoplanner.Interface.RecordListFragment;
+import com.vividprojects.protoplanner.datamanager.DataRepository;
+import com.vividprojects.protoplanner.ui.NavigationController;
+import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
+import com.vividprojects.protoplanner.ui.RecordListFragment;
 
 import javax.inject.Inject;
 

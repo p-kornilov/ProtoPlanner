@@ -3,7 +3,7 @@
 xmlns:bind="http://schemas.android.com/apk/res-auto"
 xmlns:app="http://schemas.android.com/apk/res-auto">
 <data>
-    <variable name="measureModel" type="com.vividprojects.protoplanner.BindingModels.MeasureItemBindingModel"/>
+    <variable name="measureModel" type="com.vividprojects.protoplanner.bindingmodels.MeasureItemBindingModel"/>
 </data>
 
 

@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="measureModel" type="com.vividprojects.protoplanner.BindingModels.MeasureItemBindingModel"/>
+        <variable name="measureModel" type="com.vividprojects.protoplanner.bindingmodels.MeasureItemBindingModel"/>
     </data>
     <LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"

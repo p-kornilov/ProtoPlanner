@@ -46,7 +46,7 @@
                     android:animateLayoutChanges="true"
                     android:paddingBottom="16dp">
 
-                    <com.vividprojects.protoplanner.Widgets.ChipsLayout
+                    <com.vividprojects.protoplanner.widgets.ChipsLayout
                         android:id="@+id/al_chiplayout_available"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

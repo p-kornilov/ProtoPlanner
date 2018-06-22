@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
-import com.vividprojects.protoplanner.DI.AppComponent;
-import com.vividprojects.protoplanner.DI.AppInjector;
-import com.vividprojects.protoplanner.DataManager.DataRepository;
-import com.vividprojects.protoplanner.Interface.NavigationController;
+import com.vividprojects.protoplanner.di.AppComponent;
+import com.vividprojects.protoplanner.di.AppInjector;
+import com.vividprojects.protoplanner.datamanager.DataRepository;
+import com.vividprojects.protoplanner.ui.NavigationController;
 
 import javax.inject.Inject;
 
