@@ -173,6 +173,8 @@ public class VariantItemViewModel extends ViewModel {
         bindingModelVariantEdit = new VariantEditBindingModel(dataRepository.getContext());
         bindingModelShopEdit    = new ShopEditBindingModel(dataRepository.getContext());
 
+        defaultImage.setValue(dataRepository.getDefaultVariantImage());
+
         refreshedShop = Transformations.switchMap(refreshShopId, input -> VariantItemViewModel.this.dataRepository.loadShop(input));
 
         mvItem = Transformations.switchMap(variantId, input -> {

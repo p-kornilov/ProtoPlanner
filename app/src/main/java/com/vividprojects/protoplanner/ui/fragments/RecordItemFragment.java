@@ -280,10 +280,10 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
                 }
             });
 
-            modelMainVariant.getVariantItem().observe(this, resource -> {
-                if (resource != null && resource != null) {
-                    bindingModelVariant.setVariant(resource);
-                    modelRecord.setDefaultImage(resource.full_images.get(resource.defaultImage));
+            modelMainVariant.getVariantItem().observe(this, variant -> {
+                if (variant != null) {
+                    bindingModelVariant.setVariant(variant);
+               //     modelRecord.setDefaultImage(variant.full_images.get(variant.defaultImage));
                 }
             });
 
