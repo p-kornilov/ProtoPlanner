@@ -3,8 +3,10 @@ package com.vividprojects.protoplanner.viewmodels;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
 
 import com.vividprojects.protoplanner.bindingmodels.RecordItemBindingModel;
 import com.vividprojects.protoplanner.coredata.Label;
@@ -33,6 +35,7 @@ public class RecordItemViewModel extends ViewModel {
     private final MutableLiveData<String> refreshedVariantId = new MutableLiveData<>();
     private final LiveData<Resource<Variant.Plain>> refreshedVariant;
     private final MutableLiveData<String> defaultImage  = new MutableLiveData<>();
+    private final MediatorLiveData<String> mainVariantId = new MediatorLiveData<>();
 
     private DataRepository dataRepository;
     private RecordItemBindingModel bindingModelRecord;
@@ -71,6 +74,11 @@ public class RecordItemViewModel extends ViewModel {
         recordName = new MediatorLiveData<>();
         recordName.addSource(recordNameChange,name->{recordName.setValue(name);});
         recordName.addSource(recordItem,record->{recordName.setValue(record.data.name);});
+
+        mainVariantId.addSource(recordItem,record->{
+            if (record != null && record.data != null)
+                mainVariantId.setValue(record.data.mainVariant);
+        });
 
         labels = new MutableLiveData<>();
 
@@ -150,5 +158,26 @@ public class RecordItemViewModel extends ViewModel {
             return;
         }
         defaultImage.setValue(image);
+    }
+
+    public void deleteVariant(String id) {
+        dataRepository.deleteVariant(id);
+    }
+
+    public void setBasicVariant(String id) {
+        if (recordItem != null && recordItem.getValue().data != null) {
+            LiveData<String> v = dataRepository.setBasicVariant(recordItem.getValue().data.id, id);
+            mainVariantId.addSource(v, new Observer<String>() {
+                @Override
+                public void onChanged(@Nullable String mainVariant) {
+                    mainVariantId.setValue(mainVariant);
+                    mainVariantId.removeSource(v);
+                }
+            });
+        }
+    }
+
+    public LiveData<String> getMainVariantId() {
+        return mainVariantId;
     }
 }

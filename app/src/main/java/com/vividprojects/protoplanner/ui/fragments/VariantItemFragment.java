@@ -30,7 +30,7 @@ import javax.inject.Inject;
  * Created by Smile on 19.10.2017.
  */
 
-public class VariantItemFragment extends ContainerFragment implements Injectable, ItemActionsShop, ItemActionsVariant {
+public class VariantItemFragment extends ContainerFragment implements Injectable, ItemActionsShop/*, ItemActionsVariant*/ {
 
     private VariantItemViewModel model;
 
@@ -158,21 +158,6 @@ public class VariantItemFragment extends ContainerFragment implements Injectable
     @Override
     public void itemShopPrimary(String id) {
         VariantFragmentHelper.itemShopPrimary(id, model);
-    }
-
-    @Override
-    public void itemVariantDelete(String id) {
-        VariantFragmentHelper.itemVariantDelete(id);
-    }
-
-    @Override
-    public void itemVariantOpen(String id) {
-        VariantFragmentHelper.itemVariantOpen(id, this);
-    }
-
-    @Override
-    public void itemVariantBasic(String id) {
-        VariantFragmentHelper.itemVariantBasic(id);
     }
 
     @Override

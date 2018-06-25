@@ -246,6 +246,9 @@ public class DataRepository {
         localDataDB.deleteShop(id);
     }
 
+    public void deleteVariant(String id) {
+        localDataDB.deleteVariant(id);
+    }
 
     public String saveVariant(String id, String name, double price, double count, int currency, int measure) {
         return localDataDB.saveVariant(id, name, price, count, currency, measure);
@@ -261,6 +264,13 @@ public class DataRepository {
 
     public void setShopPrimary(String shopId, String variantId) {
         localDataDB.setShopPrimary(shopId, variantId);
+    }
+
+    public LiveData<String> setBasicVariant(String recordId, String variantId) {
+        localDataDB.setBasicVariant(recordId, variantId);
+        MutableLiveData<String> vId = new MutableLiveData<>();
+        vId.setValue(variantId);
+        return vId;
     }
 
     public void saveMainVariantToRecord(String variantId, String recordId) {

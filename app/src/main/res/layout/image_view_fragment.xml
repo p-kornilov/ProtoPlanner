@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.vividprojects.protoplanner.Widgets.ZoomImageView
+    <com.vividprojects.protoplanner.widgets.ZoomImageView
         android:id="@+id/iv_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

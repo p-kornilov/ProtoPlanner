@@ -641,6 +641,24 @@ public class LocalDataDB {
         });
     }
 
+    public void setBasicVariant(String recordId, String variantId) {
+        Record r = realm.where(Record.class).equalTo("id", recordId).findFirst();
+        Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
+        if (v == null || r == null)
+            return;
+
+        final Bundle1<String> bid = new Bundle1<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Variant oldBasicVariant = r.getMainVariant();
+                r.setMainVariant(v);
+                r.deleteVariant(v);
+                r.addVariant(oldBasicVariant);
+            }
+        });
+    }
+
     public void deleteShop(String id) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -649,6 +667,19 @@ public class LocalDataDB {
                 if (s != null) {
                     //s.getVariant().
                     s.deleteFromRealm();
+                }
+            }
+        });
+    }
+
+    public void deleteVariant(String id) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Variant v = realm.where(Variant.class).equalTo("id", id).findFirst();
+                if (v != null) {
+                    //s.getVariant().
+                    v.deleteFromRealm();
                 }
             }
         });

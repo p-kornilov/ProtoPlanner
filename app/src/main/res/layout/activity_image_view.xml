@@ -31,13 +31,13 @@
         app:zoomage_maxScale="8"
         />-->
 
-    <com.vividprojects.protoplanner.Widgets.TouchableViewPager
+    <com.vividprojects.protoplanner.widgets.TouchableViewPager
         android:id="@+id/iv_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-    </com.vividprojects.protoplanner.Widgets.TouchableViewPager>
+    </com.vividprojects.protoplanner.widgets.TouchableViewPager>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import com.vividprojects.protoplanner.bindingmodels.VariantItemBindingModel;
 import com.vividprojects.protoplanner.images.BitmapUtils;
 import com.vividprojects.protoplanner.ui.NavigationController;
+import com.vividprojects.protoplanner.viewmodels.RecordItemViewModel;
 import com.vividprojects.protoplanner.viewmodels.VariantItemViewModel;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -37,19 +38,6 @@ public class VariantFragmentHelper {
 
     public static void itemShopPrimary(String id, VariantItemViewModel model) {
         model.setShopPrimary(id);
-    }
-
-    public static void itemVariantDelete(String id) {
-
-
-    }
-
-    public static void itemVariantOpen(String id, Fragment fragment) {
-        NavigationController.openVariantForResult(id, fragment);
-    }
-
-    public static void itemVariantBasic(String id) {
-
     }
 
     public static boolean onActivityResult(int requestCode, int resultCode, Intent data, VariantItemViewModel model, VariantItemBindingModel bindingModel, Context context) {

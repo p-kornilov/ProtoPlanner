@@ -79,6 +79,10 @@ public class Record extends RealmObject{
         this.name = name;
     }
 
+    public void deleteVariant(Variant variant) {
+        variants.remove(variant);
+    }
+
 
     public boolean setMainVariant(Variant v) {
         mainVariant = v; // проверить, можно ли так делать или нужно создать новый объект

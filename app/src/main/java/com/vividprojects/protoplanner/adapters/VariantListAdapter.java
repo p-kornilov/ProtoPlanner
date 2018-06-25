@@ -5,6 +5,7 @@ import android.content.Context;
 import com.vividprojects.protoplanner.bindingmodels.VariantItemListBindingModel;
 import com.vividprojects.protoplanner.coredata.Variant;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.utils.DeleteDialogHelper;
 import com.vividprojects.protoplanner.utils.ItemActionsVariant;
 
 import java.lang.ref.WeakReference;
@@ -61,30 +62,31 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
     }
 
     @Override
-    public void itemVariantDelete(String id) {
-/*        DeleteDialogHelper.show(context.get(), "Are you sure?", () -> {
+    public void variantDelete(String id) {
+        DeleteDialogHelper.show(context.get(), "Are you sure?", () -> {
             int pos;
-            VariantInShop.Plain s = null;
+            Variant.Plain v = null;
             for (pos = 0; pos < filtered_data.size(); pos++)
                 if (filtered_data.get(pos).id.equals(id)) {
-                    s = filtered_data.get(pos);
+                    v = filtered_data.get(pos);
                     break;
                 }
-            data.remove(s);
-            filtered_data.remove(s);
+            data.remove(v);
+            filtered_data.remove(v);
             models.remove(pos);
-            master.itemShopDelete(id);
+            master.variantDelete(id);
             notifyItemRemoved(pos);
-        });*/
+        });
     }
 
     @Override
-    public void itemVariantOpen(String id) {
-        master.itemVariantOpen(id);
+    public void variantOpen(String id) {
+        master.variantOpen(id);
     }
 
     @Override
-    public void itemVariantBasic(String id) {
+    public void variantSetBasic(String id) {
+        master.variantSetBasic(id);
 /*        int dpos = 0;
         VariantInShop.Plain ss = null;
         for (VariantInShop.Plain s : filtered_data) {

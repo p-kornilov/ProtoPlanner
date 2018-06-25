@@ -270,7 +270,13 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             modelRecord.getRecordItem().observe(this, resource -> {
                 if (resource != null && resource.data != null) {
                     bindingModelRecord.setRecord(resource.data);
-                    modelMainVariant.setVariantId(resource.data.mainVariant);
+                    //modelMainVariant.setVariantId(resource.data.mainVariant);
+                }
+            });
+
+            modelRecord.getMainVariantId().observe(this, mainVariantId -> {
+                if (mainVariantId != null) {
+                    modelMainVariant.setVariantId(mainVariantId);
                 }
             });
 
@@ -339,17 +345,18 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
     }
 
     @Override
-    public void itemVariantDelete(String id) {
-        VariantFragmentHelper.itemVariantDelete(id);
+    public void variantDelete(String id) {
+        modelRecord.deleteVariant(id);
     }
 
     @Override
-    public void itemVariantOpen(String id) {
-        VariantFragmentHelper.itemVariantOpen(id, this);
+    public void variantOpen(String id) {
+        NavigationController.openVariantForResult(id, this);
     }
 
     @Override
-    public void itemVariantBasic(String id) {
-        VariantFragmentHelper.itemVariantBasic(id);
+    public void variantSetBasic(String id) {
+        modelRecord.setBasicVariant(id);
+        //VariantFragmentHelper.variantSetBasic(id);
     }
 }

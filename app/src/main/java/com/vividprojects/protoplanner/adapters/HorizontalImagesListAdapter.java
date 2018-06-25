@@ -13,6 +13,7 @@ import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.utils.RunnableParam;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
     }
 
     public void setData(List<String> data, int defaultImage) {
-        this.data = data;
+        this.data = new ArrayList<>(data);
         this.defaultImage = defaultImage;
         notifyDataSetChanged();
     }
@@ -55,7 +56,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
         notifyItemChanged(defaultImage);
     }
 
-    public int addMode() {
+/*    public int addMode() {
         int index;
         if (inLoadingState) {
             inLoadingState = false;
@@ -70,7 +71,7 @@ public class HorizontalImagesListAdapter extends RecyclerView.Adapter<Horizontal
             notifyItemInserted(data.indexOf(""));
         }
         return index;
-    }
+    }*/
 
 /*    public int loadingState(boolean state, int progress) {
         int index=0;

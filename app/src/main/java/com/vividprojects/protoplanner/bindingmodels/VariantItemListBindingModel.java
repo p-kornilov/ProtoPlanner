@@ -72,7 +72,7 @@ public class VariantItemListBindingModel extends BaseObservable {
     }
 
     public void onItemClick() {
-        listAdapter.itemVariantOpen(variant.id);
+        listAdapter.variantOpen(variant.id);
     }
 
     public String getVariantId() {
@@ -86,16 +86,13 @@ public class VariantItemListBindingModel extends BaseObservable {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.mve_edit:
-                        listAdapter.itemVariantOpen(variant.id);
+                        listAdapter.variantOpen(variant.id);
                         return true;
                     case R.id.mve_default:
-/*
-                        if (!measure.def)
-                            listAdapter.itemDefault(measure.hash);
-*/
+                        listAdapter.variantSetBasic(variant.id);
                         return true;
                     case R.id.mve_delete:
-//                        listAdapter.itemDelete(measure.hash);
+                        listAdapter.variantDelete(variant.id);
                         return true;
                     default:
                         return false;
