@@ -186,6 +186,7 @@ public class LocalDataDB {
                         }
                     c.setExchange_rate(1);
                     c.setIsBase(true);
+                    realm.insertOrUpdate(c);
                 }
             }
         });
@@ -197,8 +198,10 @@ public class LocalDataDB {
             @Override
             public void execute(Realm realm) {
                 Variant v = realm.where(Variant.class).contains("id",variant).findFirst();
-                if (v != null)
+                if (v != null) {
                     v.addImage(image);
+                    realm.insertOrUpdate(v);
+                }
             }
         });
     }
@@ -209,8 +212,10 @@ public class LocalDataDB {
             public void execute(Realm realm) {
                 Record r = realm.where(Record.class).contains("id",recordId).findFirst();
                 RealmResults<Label> labels = realm.where(Label.class).in("id",ids).findAll();
-                if (r != null && labels != null)
+                if (r != null && labels != null) {
                     r.setLebels(labels);
+                    realm.insertOrUpdate(r);
+                }
             }
         });
     }
@@ -225,6 +230,7 @@ public class LocalDataDB {
                     Currency c = realm.where(Currency.class).equalTo("iso_code_int", currency.iso_code_int).findFirst();
                     if (c != null) {
                         c.update(currency);
+                        realm.insertOrUpdate(c);
                         id.item = currency.iso_code_int;
                     }
                 } else {
@@ -343,6 +349,7 @@ public class LocalDataDB {
                         v.setCount(count);
                         v.setCurrency(c);
                         v.setMeasure(m);
+                        realm.insertOrUpdate(v);
                     }
                 }
                 if (v == null) {
@@ -362,8 +369,10 @@ public class LocalDataDB {
             public void execute(Realm realm) {
                 if (variantId != null) {
                     Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
-                    if (v != null)
+                    if (v != null) {
                         v.setDefaultImage(image);
+                        realm.insertOrUpdate(v);
+                    }
                 }
             }
         });
@@ -378,6 +387,7 @@ public class LocalDataDB {
                 @Override
                 public void execute(Realm realm) {
                     r.setMainVariant(v);
+                    realm.insertOrUpdate(r);
                 }
             });
         }
@@ -603,6 +613,7 @@ public class LocalDataDB {
                         v.setPrimaryShop(s);
                     else
                         v.addShop(s);
+                    realm.insertOrUpdate(v);
                     int i = 1;
 
                 } else {
@@ -616,6 +627,7 @@ public class LocalDataDB {
                     s.setComment(shop.comment);
                     s.setTitle(shop.title);
                     s.setURL(shop.url);
+                    realm.insertOrUpdate(s);
                 }
                 bid.item = s.getId();
             }
@@ -637,6 +649,7 @@ public class LocalDataDB {
                 v.setPrimaryShop(s);
                 v.deleteShop(s);
                 v.addShop(oldPrimaryShop);
+                realm.insertOrUpdate(v);
             }
         });
     }
@@ -655,8 +668,11 @@ public class LocalDataDB {
                 r.setMainVariant(v);
                 r.deleteVariant(v);
                 r.addVariant(oldBasicVariant);
+                realm.insertOrUpdate(r);
             }
         });
+
+        int i = 1;
     }
 
     public void deleteShop(String id) {
@@ -696,6 +712,7 @@ public class LocalDataDB {
             @Override
             public void execute(Realm realm) {
                 bid.item = r.addVariant(v);
+                realm.insertOrUpdate(r);
             }
         });
 

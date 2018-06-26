@@ -65,6 +65,7 @@ public class VariantItemViewModel extends ViewModel {
     private final SingleLiveEvent<Integer> loadProgress;
 
     private boolean inImageLoading = false;
+    private String imageLoading;
 
     private Fragment master;
     private String mTempPhotoPath;
@@ -185,9 +186,26 @@ public class VariantItemViewModel extends ViewModel {
 
         variantItem = new MediatorLiveData<>();
         variantItem.addSource(mvItem, mv -> {
-            variantItem.setValue(mv.data);});
+            if (mv != null && mv.data != null) {
+                variantItem.setValue(mv.data);
+                if (mv.data.full_images != null && mv.data.full_images.size() > mv.data.defaultImage)
+                    defaultImage.setValue(mv.data.full_images.get(mv.data.defaultImage));
+                else
+                    defaultImage.setValue(dataRepository.getDefaultVariantImage());
+            }
+        });
 
         loadProgress = new SingleLiveEvent<>();
+
+        loadProgress.observeForever(progress->{
+            if (progress == DataRepository.LOAD_ERROR) {
+                inImageLoading=false;
+            }
+            if (progress == DataRepository.SAVE_TO_DB_DONE) {
+                inImageLoading=false;
+                addImage(imageLoading);
+            }
+        });
 
     }
 
@@ -212,33 +230,35 @@ public class VariantItemViewModel extends ViewModel {
 
     private void addImage(String thumbName) {
         String fullName = DataRepository.toFullImage(thumbName);
-        variantItem.getValue().full_images.add(fullName);
-        variantItem.getValue().small_images.add(thumbName);
-        bindingModelVariant.setLoadedImage(thumbName);
+        Variant.Plain v = variantItem.getValue();
+        if (v != null) {
+            v.full_images.add(fullName);
+            v.small_images.add(thumbName);
+            bindingModelVariant.setLoadedImage(thumbName);
+            if (v.full_images.size() == 1)
+                defaultImage.setValue(fullName);
+        }
     }
 
-    public SingleLiveEvent<Integer> loadImage(String url) {
+    public void loadImage(String url) {
         if (!inImageLoading) {
             inImageLoading = true;
-            addImage(dataRepository.saveImageFromURLtoVariant(url, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
+            imageLoading = dataRepository.saveImageFromURLtoVariant(url, variantItem.getValue().id, loadProgress);
         }
-        return loadProgress;
     }
 
-    public SingleLiveEvent<Integer> loadCameraImage() {
+    public void loadCameraImage() {
         if (!inImageLoading) {
             inImageLoading = true;
-            addImage(dataRepository.saveImageFromCameratoVariant(mTempPhotoPath, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
+            imageLoading = dataRepository.saveImageFromCameratoVariant(mTempPhotoPath, variantItem.getValue().id, loadProgress);
         }
-        return loadProgress;
     }
 
-    public SingleLiveEvent<Integer> loadGalleryImage(Uri fileName) {
+    public void loadGalleryImage(Uri fileName) {
         if (!inImageLoading) {
             inImageLoading = true;
-            addImage(dataRepository.saveImageFromGallerytoVariant(fileName, variantItem.getValue().id, loadProgress,()->{inImageLoading=false;}));
+            imageLoading = dataRepository.saveImageFromGallerytoVariant(fileName, variantItem.getValue().id, loadProgress);
         }
-        return loadProgress;
     }
 
     public boolean isInImageLoading() {

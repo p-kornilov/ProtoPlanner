@@ -84,6 +84,10 @@ public class DataRepository {
         return smallImage.replace(IMAGES_SMALL, IMAGES_FULL);
     }
 
+    public String getImagePath(String image) {
+        return imagesDirectory + image + ".jpg";
+    }
+
     public String getImagesDirectory() {
         return imagesDirectory;
     }
@@ -523,7 +527,7 @@ public class DataRepository {
         Log.d("Test", "External Storage - " + getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
     }
 
-    public String saveImageFromURLtoVariant(String url, String variant, MutableLiveData<Integer> progress, Runnable onDone) {
+    public String saveImageFromURLtoVariant(String url, String variant, MutableLiveData<Integer> progress) {
 
         String file_name = UUID.nameUUIDFromBytes(url.getBytes()).toString();
         String full_name = imagesDirectory + "/img_f_" + file_name + ".jpg";
@@ -544,18 +548,16 @@ public class DataRepository {
                 localDataDB.addImageToVariant(variant, file_name); // сделать проверку
                 BitmapUtils.deleteImageFile(context, temp_name);
                 progress.setValue(SAVE_TO_DB_DONE);
-                onDone.run();
             });
             else appExecutors.mainThread().execute(()-> {
                 progress.setValue(LOAD_ERROR);
-                onDone.run();
             });
         });
 
         return thumb_name;
     }
 
-    public String saveImageFromCameratoVariant(String temp_name, String variant, MutableLiveData<Integer> progress, Runnable onDone) {
+    public String saveImageFromCameratoVariant(String temp_name, String variant, MutableLiveData<Integer> progress) {
 
         progress.setValue(LOAD_DONE);
 
@@ -574,18 +576,16 @@ public class DataRepository {
                 appExecutors.mainThread().execute(()-> {
                     localDataDB.addImageToVariant(variant, file_name); // сделать проверку
                     progress.setValue(SAVE_TO_DB_DONE);
-                    onDone.run();
                 });
             else appExecutors.mainThread().execute(()-> {
                 progress.setValue(LOAD_ERROR);
-                onDone.run();
             });
         });
 
         return thumb_name;
     }
 
-    public String saveImageFromGallerytoVariant(Uri temp_name_uri, String variant, MutableLiveData<Integer> progress, Runnable onDone) {
+    public String saveImageFromGallerytoVariant(Uri temp_name_uri, String variant, MutableLiveData<Integer> progress) {
 
         progress.setValue(LOAD_DONE);
 
@@ -613,11 +613,9 @@ public class DataRepository {
                 appExecutors.mainThread().execute(()-> {
                     localDataDB.addImageToVariant(variant, file_name); // сделать проверку
                     progress.setValue(SAVE_TO_DB_DONE);
-                    onDone.run();
                 });
             else appExecutors.mainThread().execute(()-> {
                 progress.setValue(LOAD_ERROR);
-                onDone.run();
             });
         });
 

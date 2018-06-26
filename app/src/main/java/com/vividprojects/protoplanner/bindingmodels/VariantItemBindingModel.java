@@ -20,6 +20,7 @@ import com.vividprojects.protoplanner.utils.PriceFormatter;
 import com.vividprojects.protoplanner.utils.RunnableParam;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class VariantItemBindingModel extends BaseObservable {
     private Variant.Plain variant;
@@ -133,7 +134,7 @@ public class VariantItemBindingModel extends BaseObservable {
         this.count = String.valueOf(variant.count);
         imagesListAdapter.setData(variant.small_images, variant.defaultImage);
         shopListAdapter.setData(variant.shops, variant.primaryShop);
-       // shopListAdapter.
+
         notifyPropertyChanged(BR.variantName);
         notifyPropertyChanged(BR.variantCountDecor);
         notifyPropertyChanged(BR.variantPriceDecor);
@@ -141,8 +142,7 @@ public class VariantItemBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.variantPrice);
         notifyPropertyChanged(BR.variantValueDecor);
         notifyPropertyChanged(BR.isVariantImagesEmpty);
-
-        //...
+        notifyPropertyChanged(BR.variantShopsAdapter);
     }
 
     public void refreshShop(VariantInShop.Plain shop) {

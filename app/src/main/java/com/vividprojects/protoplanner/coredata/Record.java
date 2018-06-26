@@ -80,7 +80,15 @@ public class Record extends RealmObject{
     }
 
     public void deleteVariant(Variant variant) {
-        variants.remove(variant);
+        String id = variant.getId();
+        int i = 0;
+        for (Variant v : variants) {
+            if (id.equals(v.getId())) {
+                variants.remove(i);
+                break;
+            }
+            i++;
+        }
     }
 
 

@@ -64,19 +64,23 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
     @Override
     public void variantDelete(String id) {
         DeleteDialogHelper.show(context.get(), "Are you sure?", () -> {
-            int pos;
-            Variant.Plain v = null;
-            for (pos = 0; pos < filtered_data.size(); pos++)
-                if (filtered_data.get(pos).id.equals(id)) {
-                    v = filtered_data.get(pos);
-                    break;
-                }
-            data.remove(v);
-            filtered_data.remove(v);
-            models.remove(pos);
-            master.variantDelete(id);
-            notifyItemRemoved(pos);
+            delete(id);
         });
+    }
+
+    private void delete(String id) {
+        int pos;
+        Variant.Plain v = null;
+        for (pos = 0; pos < filtered_data.size(); pos++)
+            if (filtered_data.get(pos).id.equals(id)) {
+                v = filtered_data.get(pos);
+                break;
+            }
+        data.remove(v);
+        filtered_data.remove(v);
+        models.remove(pos);
+        master.variantDelete(id);
+        notifyItemRemoved(pos);
     }
 
     @Override
@@ -87,6 +91,7 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
     @Override
     public void variantSetBasic(String id) {
         master.variantSetBasic(id);
+        delete(id);
 /*        int dpos = 0;
         VariantInShop.Plain ss = null;
         for (VariantInShop.Plain s : filtered_data) {

@@ -166,6 +166,7 @@ public class RecordItemViewModel extends ViewModel {
 
     public void setBasicVariant(String id) {
         if (recordItem != null && recordItem.getValue().data != null) {
+            refreshedVariantId.setValue(recordItem.getValue().data.mainVariant);
             LiveData<String> v = dataRepository.setBasicVariant(recordItem.getValue().data.id, id);
             mainVariantId.addSource(v, new Observer<String>() {
                 @Override
