@@ -282,5 +282,12 @@
 
         </android.support.v7.widget.RecyclerView>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rf_shops_recycler"/>
+
     </android.support.constraint.ConstraintLayout>
 </layout>

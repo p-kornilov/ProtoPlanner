@@ -135,7 +135,10 @@ public class ShopEditBindingModel extends BaseObservable {
 
     public void setShop(VariantInShop.Plain shop) {
         this.shop = shop;
-        this.price = String.valueOf(shop.price);
+        if (shop.price == 0)
+            this.price = "";
+        else
+            this.price = String.valueOf(shop.price);
 
         notifyPropertyChanged(BR.shopEditUrl);
         notifyPropertyChanged(BR.shopEditName);

@@ -11,8 +11,12 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <include layout="@layout/variant_base"
-            bind:variantModel="@{variantModel}"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/variant_base"
+                bind:variantModel="@{variantModel}"/>
+        </ScrollView>
 
     </LinearLayout>
 </layout>

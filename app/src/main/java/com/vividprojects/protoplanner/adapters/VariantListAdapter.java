@@ -90,29 +90,18 @@ public class VariantListAdapter extends DataBindingAdapter implements ItemAction
 
     @Override
     public void variantSetBasic(String id) {
-        master.variantSetBasic(id);
-        delete(id);
-/*        int dpos = 0;
-        VariantInShop.Plain ss = null;
-        for (VariantInShop.Plain s : filtered_data) {
-            if (s.id.equals(id)) {
-                ss = s;
+        int pos;
+        Variant.Plain v = null;
+        for (pos = 0; pos < filtered_data.size(); pos++)
+            if (filtered_data.get(pos).id.equals(id)) {
+                v = filtered_data.get(pos);
                 break;
             }
-        }
-
-        ss.basicVariant = true;
-        filtered_data.get(dpos).basicVariant = false;
-        int pos = filtered_data.indexOf(ss);
-        itemMove(pos,dpos);
-
-        for (int i = dpos+2; i < filtered_data.size(); i++)
-                if (filtered_data.get(i).price >= filtered_data.get(dpos+1).price) {
-                    itemMove(dpos+1,i-1);
-                    break;
-                }
-
-        master.itemShopPrimary(id);*/
+        data.remove(v);
+        filtered_data.remove(v);
+        models.remove(pos);
+        notifyItemRemoved(pos);
+        master.variantSetBasic(id);
     }
 
     private void itemMove(int from, int to) {

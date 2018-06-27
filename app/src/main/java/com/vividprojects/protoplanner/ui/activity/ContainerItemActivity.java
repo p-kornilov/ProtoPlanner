@@ -59,12 +59,20 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
 
         int activityType = getIntent().getIntExtra(NavigationController.ACTIVITY_TYPE, NavigationController.CURRENCY_ITEM);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         switch (activityType) {
             case NavigationController.CURRENCY_ITEM:
-                getSupportActionBar().setTitle("Currency");
+                if (actionBar != null)
+                    actionBar.setTitle("Currency");
                 int iso_code = getIntent().getIntExtra(NavigationController.CURRENCY_ID,-1);
                 fragment = CurrencyItemFragment.create(iso_code);
                 CurrencyEditViewModel model_c = ViewModelHelper.obtainViewModel(CurrencyEditViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
@@ -77,7 +85,8 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                 });
                 break;
             case NavigationController.MEASURE_ITEM:
-                getSupportActionBar().setTitle("Measure");
+                if (actionBar != null)
+                    actionBar.setTitle("Measure");
                 int hash = getIntent().getIntExtra(NavigationController.MEASURE_HASH,-1);
                 fragment = MeasureItemFragment.create(hash);
                 MeasureEditViewModel model_m = ViewModelHelper.obtainViewModel(MeasureEditViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
@@ -90,12 +99,6 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
                 });
                 break;
             case NavigationController.VARIANT_ITEM:
-                ActionBar actionBar = getSupportActionBar();
-                if (actionBar != null) {
-                    actionBar.setDisplayHomeAsUpEnabled(true);
-                    actionBar.setHomeButtonEnabled(true);
-                    actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
-                }
                 String id = getIntent().getStringExtra(NavigationController.VARIANT_ID);
                 fragment = VariantItemFragment.create(id);
                 VariantItemViewModel model_v = ViewModelHelper.obtainViewModel(VariantItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);

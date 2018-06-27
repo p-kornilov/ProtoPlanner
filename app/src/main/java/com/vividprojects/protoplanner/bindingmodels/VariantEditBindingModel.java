@@ -116,7 +116,10 @@ public class VariantEditBindingModel extends BaseObservable {
 
     public void setVariant(Variant.Plain variant) {
         this.variant = variant;
-        this.count = String.valueOf(variant.count);
+        if (variant.count == 0)
+            this.count = "";
+        else
+            this.count = String.valueOf(variant.count);
         checkMeasureList();
 
         notifyPropertyChanged(BR.variantEditName);

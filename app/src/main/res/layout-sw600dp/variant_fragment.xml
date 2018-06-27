@@ -17,8 +17,12 @@
         card_view:cardElevation="4dp"
         app:cardCornerRadius="0dp">
 
-       <include layout="@layout/variant_base"
-            bind:variantModel="@{variantModel}"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+           <include layout="@layout/variant_base"
+                bind:variantModel="@{variantModel}"/>
+        </ScrollView>
 
 </android.support.v7.widget.CardView>
 </layout>

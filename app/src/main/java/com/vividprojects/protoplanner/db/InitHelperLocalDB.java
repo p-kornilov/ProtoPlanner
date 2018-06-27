@@ -17,6 +17,7 @@ import com.vividprojects.protoplanner.coredata.VariantInShop;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
 import com.vividprojects.protoplanner.images.BitmapUtils;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.utils.Bundle1;
 import com.vividprojects.protoplanner.widgets.Pallet;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class InitHelperLocalDB {
         }
     }
 
-    public static void init(Realm realm, Context context, String imagesDirectory) {
+    public static String init(Realm realm, Context context, String imagesDirectory) {
         int i = 1;
         //--------------- init images -----------------------------
         createDefFile(context, imagesDirectory, "00000000-def1-0000-0000-000000000000", R.raw.def1);
@@ -226,6 +227,8 @@ public class InitHelperLocalDB {
             }
         });
 
+        Bundle1<String> id = new Bundle1<>();
+
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -275,6 +278,7 @@ public class InitHelperLocalDB {
                 r2.addVariant(v);
                 r2.addVariant(v2);
                 r2.addVariant(v3);
+                id.item = r2.getId();
                 realm.insertOrUpdate(r2);
                 realm.insertOrUpdate(new Record(v4));
                 realm.insertOrUpdate(new Record(v4));
@@ -343,6 +347,6 @@ public class InitHelperLocalDB {
 
         Log.d("Test", "------------------------------ onCreate - DB done");
 
-
+        return id.item;
     }
 }
