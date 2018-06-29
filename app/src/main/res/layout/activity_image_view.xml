@@ -31,7 +31,7 @@
         app:zoomage_maxScale="8"
         />-->
 
-    <android.support.design.widget.AppBarLayout
+<!--    <android.support.design.widget.AppBarLayout
         android:id="@+id/AppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             app:title=" "
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.AppBarLayout>-->
 
     <com.vividprojects.protoplanner.widgets.TouchableViewPager
         android:id="@+id/iv_pager"
@@ -57,7 +57,7 @@
 
     </com.vividprojects.protoplanner.widgets.TouchableViewPager>
 
-<!--    <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
         android:elevation="1dp"
         app:title=" ">
 
-    </android.support.v7.widget.Toolbar>-->
+    </android.support.v7.widget.Toolbar>
 
     <TextView
         android:id="@+id/iv_name"

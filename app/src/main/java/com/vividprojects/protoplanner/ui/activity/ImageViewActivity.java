@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -145,10 +146,24 @@ public class ImageViewActivity extends AppCompatActivity implements HasSupportFr
 
     @Override
     public void onBackPressed() {
+        setResultToReturn();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            setResultToReturn();
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setResultToReturn() {
         Intent intent = new Intent();
         intent.putExtra("DEFAULT_IMAGE", defaultImageP);
         setResult(RESULT_OK, intent);
-        super.onBackPressed();
     }
 
     @Override

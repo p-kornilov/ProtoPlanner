@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
@@ -109,6 +110,13 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
         setContentView(R.layout.activity_labels);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
 
         chipsAvailable = findViewById(R.id.al_chiplayout_available);
         card = findViewById(R.id.al_card);
@@ -274,9 +282,12 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
             case R.id.labels_add:
                 openNewLabelDialog();
                 break;
+            case android.R.id.home:
+                finish();
+                return true;
         }
-        return true;
-        //return super.onOptionsItemSelected(item);
+        //return true;
+        return super.onOptionsItemSelected(item);
     }
 
 

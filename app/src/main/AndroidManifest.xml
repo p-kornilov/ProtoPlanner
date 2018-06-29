@@ -54,9 +54,9 @@
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
+<!--            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity" />-->
         </activity>
         <activity
             android:name=".ui.LabelsActivity"

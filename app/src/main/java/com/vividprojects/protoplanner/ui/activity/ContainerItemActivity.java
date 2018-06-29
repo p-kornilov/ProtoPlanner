@@ -79,7 +79,7 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
 
                 model_c.onSave().observe(this,s->{
                     if (s != null) {
-                        closeActivity();
+                        setResultToReturn();
                         finish();
                     }
                 });
@@ -93,7 +93,7 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
 
                 model_m.onSave().observe(this, s->{
                     if (s != null) {
-                        closeActivity();
+                        setResultToReturn();
                         finish();
                     }
                 });
@@ -129,7 +129,7 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
         if (id == R.id.mdf_action_save) {
             return true;
         } else if (id == android.R.id.home) {
-            closeActivity();
+            setResultToReturn();
             finish();
             return true;
         }
@@ -139,11 +139,11 @@ public class ContainerItemActivity extends AppCompatActivity implements HasSuppo
 
     @Override
     public void onBackPressed() {
-        closeActivity();
+        setResultToReturn();
         super.onBackPressed();
     }
 
-    private void closeActivity() {
+    private void setResultToReturn() {
         Bundle b = fragment.onCloseActivity();
         Intent intent = new Intent();
         intent.putExtra("BUNDLE", b);
