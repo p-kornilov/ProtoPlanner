@@ -77,7 +77,7 @@ public class RecordItemViewModel extends ViewModel {
 
         mainVariantId.addSource(recordItem,record->{
             if (record != null && record.data != null)
-                mainVariantId.setValue(record.data.mainVariant);
+                mainVariantId.setValue(record.data.mainVariant.id);
         });
 
         labels = new MutableLiveData<>();

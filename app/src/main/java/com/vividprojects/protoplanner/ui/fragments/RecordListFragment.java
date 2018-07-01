@@ -1,4 +1,4 @@
-package com.vividprojects.protoplanner.ui;
+package com.vividprojects.protoplanner.ui.fragments;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.adapters.RecordListAdapter;
+import com.vividprojects.protoplanner.adapters.RecordListAdapter_;
 import com.vividprojects.protoplanner.di.Injectable;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.viewmodels.RecordListViewModel;
@@ -95,9 +96,14 @@ public class RecordListFragment extends Fragment implements Injectable {
             model.setFilter(null);
         }
 
+        RecordListAdapter_ adapter = new RecordListAdapter_(getContext(),null);
+        recycler.setAdapter(adapter);
+
         model.getList().observe(this,resource -> {
             if (resource.data != null)
-                recycler.setAdapter(new RecordListAdapter(resource.data,getActivity()));
+                adapter.setData(resource.data);
+                //recycler.setAdapter(new RecordListAdapter_(resource.data,getActivity()));
+//            recycler.setAdapter(new RecordListAdapter(resource.data,getActivity()));
         });
     }
 }

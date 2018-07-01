@@ -25,7 +25,7 @@ public class RecordListViewModel extends ViewModel {
 
     final MutableLiveData<Filter> filter;
 
-    private final LiveData<Resource<List<Record>>> list;
+    private final LiveData<Resource<List<Record.Plain>>> list;
 
     private DataRepository dataRepository;
 
@@ -55,7 +55,7 @@ public class RecordListViewModel extends ViewModel {
         filter.setValue(update);
     }
 
-    public LiveData<Resource<List<Record>>> getList(){
+    public LiveData<Resource<List<Record.Plain>>> getList(){
 
         return list;//dataRepository.loadRecords();
     }

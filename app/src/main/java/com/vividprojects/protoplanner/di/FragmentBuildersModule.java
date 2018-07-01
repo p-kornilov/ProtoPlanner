@@ -12,7 +12,7 @@ import com.vividprojects.protoplanner.ui.fragments.MeasureListFragment;
 import com.vividprojects.protoplanner.ui.fragments.VariantItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.ImageViewFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
-import com.vividprojects.protoplanner.ui.RecordListFragment;
+import com.vividprojects.protoplanner.ui.fragments.RecordListFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

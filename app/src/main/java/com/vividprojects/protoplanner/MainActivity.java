@@ -20,7 +20,7 @@ import android.view.MenuItem;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
 import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
-import com.vividprojects.protoplanner.ui.RecordListFragment;
+import com.vividprojects.protoplanner.ui.fragments.RecordListFragment;
 
 import javax.inject.Inject;
 

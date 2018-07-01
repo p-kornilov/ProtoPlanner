@@ -92,33 +92,40 @@ public class DataRepository {
         return imagesDirectory;
     }
 
-    public LiveData<Resource<List<Record>>> loadRecords(List<String> filter) {
-        return new NetworkBoundResource<List<Record>, List<Record>>(appExecutors) {
+    public LiveData<Resource<List<Record.Plain>>> loadRecords(List<String> filter) {
+        return new NetworkBoundResource<List<Record.Plain>, List<Record.Plain>>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull List<Record> item) {
+            protected void saveCallResult(@NonNull List<Record.Plain> item) {
 
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable List<Record> data) {
+            protected boolean shouldFetch(@Nullable List<Record.Plain> data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<List<Record>> loadFromLocalDB() {
-                MutableLiveData<List<Record>> ld = new MutableLiveData<>();
+            protected LiveData<List<Record.Plain>> loadFromLocalDB() {
+                MutableLiveData<List<Record.Plain>> ld = new MutableLiveData<>();
+                List<Record> records;
                 if (filter != null && filter.size() > 0)
-                    ld.setValue(localDataDB.queryRecords().labels_equalTo(filter).findAll());
+                    records = localDataDB.queryRecords().labels_equalTo(filter).findAll();
                 else
-                    ld.setValue(localDataDB.queryRecords().findAll());
+                    records = localDataDB.queryRecords().findAll();
+                List<Record.Plain> recordsPlain = new ArrayList<>();
+                if (records != null) {
+                    for (Record r : records)
+                        recordsPlain.add(r.getPlain());
+                }
+                ld.setValue(recordsPlain);
                 return ld;
             }
 
             @NonNull
             @Override
-            protected LiveData<NetworkResponse<List<Record>>> loadFromNetworkDB() {
-                return new MutableLiveData<NetworkResponse<List<Record>>>();
+            protected LiveData<NetworkResponse<List<Record.Plain>>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<List<Record.Plain>>>();
             }
         }.asLiveData();
     }

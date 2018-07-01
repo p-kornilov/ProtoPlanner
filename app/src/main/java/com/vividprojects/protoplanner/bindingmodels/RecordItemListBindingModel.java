@@ -1,0 +1,115 @@
+package com.vividprojects.protoplanner.bindingmodels;
+
+import android.content.Context;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+
+import com.vividprojects.protoplanner.BR;
+import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.coredata.Record;
+import com.vividprojects.protoplanner.coredata.VariantInShop;
+import com.vividprojects.protoplanner.utils.ItemActionsRecord;
+import com.vividprojects.protoplanner.utils.ItemActionsShop;
+import com.vividprojects.protoplanner.utils.PriceFormatter;
+
+import java.lang.ref.WeakReference;
+
+public class RecordItemListBindingModel extends BaseObservable {
+    private Record.Plain record;
+
+    private ItemActionsRecord listAdapter;
+    private boolean isEmpty = false;
+    private String defaultImage;
+
+    private WeakReference<Context> context;
+
+    public RecordItemListBindingModel(Context context, ItemActionsRecord listAdapter, Record.Plain record, String defaultImage) {
+        this.record = record;
+        this.context = new WeakReference<>(context);
+        this.listAdapter = listAdapter;
+        this.defaultImage = defaultImage;
+/*        if ((shop.address == null || shop.address.length() == 0)
+                && (shop.comment == null || shop.comment.length() == 0)
+                && (shop.title == null || shop.title.length() == 0)
+                && (shop.url == null || shop.url.length() == 0))
+            isEmpty = true;*/
+
+        notifyPropertyChanged(BR.recordItemListImage);
+        notifyPropertyChanged(BR.recordItemListBasicVariantName);
+        notifyPropertyChanged(BR.recordItemListValueDecor);
+        notifyPropertyChanged(BR.recordItemListPriceDecor);
+        notifyPropertyChanged(BR.recordItemListCountDecor);
+        //notifyPropertyChanged(BR.shopIsEmpty);
+    }
+
+    @Bindable
+    public String getRecordItemListName() {
+        return record.name;
+    }
+
+    @Bindable
+    public String getRecordItemListBasicVariantName() {
+        return record.mainVariant.title;
+    }
+
+    @Bindable
+    public String getRecordItemListValueDecor() {
+        return PriceFormatter.createValue(record.mainVariant.primaryShop.currency, record.mainVariant.primaryShop.price * record.mainVariant.count);
+    }
+
+    @Bindable
+    public String getRecordItemListPriceDecor() {
+        return PriceFormatter.createPrice(context.get(), record.mainVariant.primaryShop.currency, record.mainVariant.primaryShop.price, record.mainVariant.measure);
+    }
+
+    @Bindable
+    public String getRecordItemListCountDecor() {
+        return PriceFormatter.createCount(context.get(), record.mainVariant.count, record.mainVariant.measure);
+    }
+
+    @Bindable
+    public String getRecordItemListImage() {
+        if (record.mainVariant.small_images.size() != 0 && record.mainVariant.small_images.size() > record.mainVariant.defaultImage)
+            return record.mainVariant.small_images.get(record.mainVariant.defaultImage);
+        else
+            return defaultImage;
+    }
+
+    public void onItemClick() {
+        listAdapter.itemRecordEdit(record.id);
+    }
+
+    public void onMenuClicked(View view) {
+/*        PopupMenu popup = new PopupMenu(view.getContext(), view);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.mse_edit:
+                        listAdapter.itemShopEdit(shop.id);
+                        return true;
+                    case R.id.mse_set_basic:
+                        if (!shop.basicVariant)
+                            listAdapter.itemShopPrimary(shop.id);
+                        return true;
+                    case R.id.mse_delete:
+                        listAdapter.itemShopDelete(shop.id);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_shop_edit, popup.getMenu());
+        if (shop.basicVariant) {
+            popup.getMenu().findItem(R.id.mse_set_basic).setEnabled(false);
+            popup.getMenu().findItem(R.id.mse_delete).setEnabled(false);
+        }
+        popup.show();*/
+    }
+}
