@@ -23,7 +23,7 @@ public class BlockListViewModel extends ViewModel {
 
     private final MutableLiveData<Filter> filter;
 
-    private final LiveData<Resource<List<Record>>> list;
+    private final LiveData<Resource<List<Record.Plain>>> list;
 
     private final LiveData<Integer> loadProgress;
     private final MutableLiveData<String> loadProgressSwitcher;
@@ -65,7 +65,7 @@ public class BlockListViewModel extends ViewModel {
         filter.setValue(update);
     }
 
-    public LiveData<Resource<List<Record>>> getList(){
+    public LiveData<Resource<List<Record.Plain>>> getList(){
 
         return list;//dataRepository.loadRecords();
     }

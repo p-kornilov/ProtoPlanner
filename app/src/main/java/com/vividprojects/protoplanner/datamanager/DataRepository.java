@@ -115,8 +115,12 @@ public class DataRepository {
                     records = localDataDB.queryRecords().findAll();
                 List<Record.Plain> recordsPlain = new ArrayList<>();
                 if (records != null) {
-                    for (Record r : records)
-                        recordsPlain.add(r.getPlain());
+                    for (Record r : records) {
+                        Record.Plain rp = r.getPlain();
+                        for (int i = 0; i < rp.mainVariant.small_images.size(); i++)
+                            rp.mainVariant.small_images.set(i, imagesDirectory + IMAGES_FULL + rp.mainVariant.small_images.get(i) + ".jpg");
+                        recordsPlain.add(rp);
+                    }
                 }
                 ld.setValue(recordsPlain);
                 return ld;

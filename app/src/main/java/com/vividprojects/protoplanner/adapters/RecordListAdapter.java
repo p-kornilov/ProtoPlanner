@@ -1,136 +1,130 @@
 package com.vividprojects.protoplanner.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.vividprojects.protoplanner.coredata.Record;
-import com.vividprojects.protoplanner.images.GlideApp;
-import com.vividprojects.protoplanner.ui.NavigationController;
-import com.vividprojects.protoplanner.PPApplication;
 import com.vividprojects.protoplanner.R;
-import com.vividprojects.protoplanner.utils.PriceFormatter;
-import com.vividprojects.protoplanner.widgets.Chip;
-import com.vividprojects.protoplanner.widgets.ChipsLayout;
+import com.vividprojects.protoplanner.bindingmodels.RecordItemListBindingModel;
+import com.vividprojects.protoplanner.coredata.Record;
+import com.vividprojects.protoplanner.coredata.VariantInShop;
+import com.vividprojects.protoplanner.utils.ItemActionsRecord;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
+public class RecordListAdapter extends DataBindingAdapter implements ItemActionsRecord {
+    private List<Record.Plain> data = new ArrayList<>();
+    private List<Record.Plain> filtered_data = new ArrayList<>();
+    private List<RecordItemListBindingModel> models = new ArrayList<>();
 
-/**
- * Created by Smile on 27.10.2017.
- */
+    private WeakReference<Context> context;
+    private ItemActionsRecord master;
+    private String defaultImage;
 
+    public RecordListAdapter(Context context, String defaultImage) {
+        this.context = new WeakReference<>(context);
+        this.defaultImage = defaultImage;
+    }
 
-public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.ViewHolder> {
-
-    private boolean inDeletionMode = false;
-    private ViewGroup parent;
-
-    private List<Record> data;
-    private LayoutInflater inflater;
-    private Context context;
-
-    @Inject
-    NavigationController navigationController;
-
-    public RecordListAdapter(List<Record> data,Context context) {
-        this.data = data;
-
-        this.context = context;
-
-        ((PPApplication) context.getApplicationContext()).getMainComponent().inject(this);   // TODO Пересмотреть, как можно сделать по аналогии с ViewModel - автоматическое инжектирование
-
-        Log.d("Test", "------------------------------ In RLA Type of the device " + navigationController.getType());
-
-        //inflater = LayoutInflater.from(context);
+    public void setMaster(ItemActionsRecord master) {
+        this.master = master;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        this.parent = parent;
- /*       View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.record_item, parent, false);
-        return new MyViewHolder(itemView);*/
-
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.record_item, parent, false); // Сначала вернуть view инфлаттером
-        // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        // После найти каждый view findView
-        return vh;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final Record obj = data.get(position);
-        holder.data = obj;
-        //noinspection ConstantConditions
-//            holder.record_title.setText(obj.getId());
-        holder.record_title.setText(obj.getMainVariant().getTitle());
-        holder.record_count.setText(PriceFormatter.createCount(context, obj.getMainVariant().getCount(),obj.getMainVariant().getMeasure().getPlain())); // TODO !!!Исправить!!!
-       // holder.record_measure.setText(obj.getMainVariant().getMeasure().getName());
-        holder.record_value.setText(PriceFormatter.createValue(obj.getMainVariant().getCurrency().getPlain(),obj.getMainVariant().getPrice()*obj.getMainVariant().getCount()));
-
-        holder.record_chiplayout.removeAllViews();
-        holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.BLUE,false));
-        holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.RED,false));
-        holder.record_chiplayout.addView(new Chip(parent.getContext(),Color.GREEN,false));
-        holder.record_chiplayout.noneChip(context);
-
-        GlideApp.with(holder.record_image)
-                .load(R.drawable.orig)
-                .error(R.drawable.ic_error_outline_black_24dp)
-                .into(holder.record_image);
+    protected int getLayoutIdForPosition(int position) {
+        return R.layout.record_item;
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return filtered_data != null ? filtered_data.size() : 0;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        TextView record_title;
-        TextView record_count;
-        TextView record_measure;
-        TextView record_value;
-        ChipsLayout record_chiplayout;
-        ImageView record_image;
-        public Record data;
+    @Override
+    public Object getObjForPosition(int position) {
+        return models.get(position);
+    }
 
-        ViewHolder(View view) {
-            super(view);
-            record_title = (TextView) view.findViewById(R.id.record_title);
-            record_count = (TextView) view.findViewById(R.id.record_count);
-        //    record_measure = (TextView) view.findViewById(R.id.record_measure);
-            record_value = (TextView) view.findViewById(R.id.record_value);
-            record_chiplayout = (ChipsLayout) view.findViewById(R.id.record_chiplayout);
-            record_image = view.findViewById(R.id.record_image);
+    public void setData(List<Record.Plain> data) {
+        this.data.clear();
+        this.data.addAll(data);
 
-/*            Button edit_button = (Button) view.findViewById(R.id.record_list_edit);
-            edit_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("Test", "------------------------------ Edit click" + data.getId());
-                    mCallback.onRecordEditClick(data.getId());
-                }
-            });*/
+        this.filtered_data = data;// VariantInShop.Plain.sort(this.data);
+        createModels();
+    }
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("Test", "------------------------------ Edit click" + data.getId());
-                    //mCallback.onRecordEditClick(data.getId());
-                   // appController.openRecord(data.getId());
-                    navigationController.openRecord(data.getId());
-                }
-            });
+    private void createModels() {
+        models.clear();
+        for (int i = 0; i < filtered_data.size(); i++) {
+
+            Record.Plain v = filtered_data.get(i);
+            RecordItemListBindingModel model = new RecordItemListBindingModel(context.get(),this, v, defaultImage);
+
+            models.add(model);
         }
     }
-}
 
+    @Override
+    public void itemRecordDelete(String id) {
+/*        DeleteDialogHelper.show(context.get(), "Are you sure?", () -> {
+            int pos;
+            VariantInShop.Plain s = null;
+            for (pos = 0; pos < filtered_data.size(); pos++)
+                if (filtered_data.get(pos).id.equals(id)) {
+                    s = filtered_data.get(pos);
+                    break;
+                }
+            data.remove(s);
+            filtered_data.remove(s);
+            models.remove(pos);
+            master.itemShopDelete(id);
+            notifyItemRemoved(pos);
+        });*/
+    }
+
+    @Override
+    public void itemRecordEdit(String id) {
+        master.itemRecordEdit(id);
+    }
+
+    @Override
+    public void itemRecordAttachToBlock(String item) {
+
+    }
+
+    private void itemMove(int from, int to) {
+        if (from > getItemCount() || to > getItemCount())
+            return;
+
+        filtered_data.add(to,filtered_data.remove(from));
+        models.add(to,models.remove(from));
+
+        notifyItemMoved(from,to);
+        notifyItemChanged(to);
+        notifyItemChanged(from);
+    }
+
+    public void refresh(VariantInShop.Plain shop) {
+/*        int posInsert = 0;
+        for (VariantInShop.Plain m : this.filtered_data) {
+            if (m.id.equals(shop.id)) {
+                int pos = filtered_data.indexOf(m);
+                data.remove(m);
+                filtered_data.remove(m);
+                models.remove(pos);
+                data.add(shop);
+                filtered_data.add(pos,shop);
+                models.add(pos,new ShopItemListBindingModel(context.get(),this, shop));
+                notifyItemChanged(pos);
+                return;
+            }
+            if (shop.price > m.price)
+                posInsert++;
+        }
+        data.add(shop);
+        filtered_data.add(posInsert,shop);
+        models.add(posInsert,new ShopItemListBindingModel(context.get(),this, shop));
+        notifyItemInserted(posInsert);*/
+    }
+
+}

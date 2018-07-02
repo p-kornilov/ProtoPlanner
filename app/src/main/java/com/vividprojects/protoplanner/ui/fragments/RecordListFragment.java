@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.adapters.RecordListAdapter;
-import com.vividprojects.protoplanner.adapters.RecordListAdapter_;
+import com.vividprojects.protoplanner.datamanager.DataRepository;
 import com.vividprojects.protoplanner.di.Injectable;
 import com.vividprojects.protoplanner.MainActivity;
+import com.vividprojects.protoplanner.ui.NavigationController;
+import com.vividprojects.protoplanner.utils.ItemActionsRecord;
 import com.vividprojects.protoplanner.viewmodels.RecordListViewModel;
 import com.vividprojects.protoplanner.R;
 
@@ -26,12 +28,18 @@ import javax.inject.Inject;
  * Created by Smile on 19.10.2017.
  */
 
-public class RecordListFragment extends Fragment implements Injectable {
+public class RecordListFragment extends Fragment implements Injectable, ItemActionsRecord {
     private RecyclerView recycler;
     private boolean fabVisible = true;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+
+    @Inject
+    DataRepository dataRepository;
+
+    @Inject
+    NavigationController navigationController;
 
 
     @Override
@@ -96,14 +104,31 @@ public class RecordListFragment extends Fragment implements Injectable {
             model.setFilter(null);
         }
 
-        RecordListAdapter_ adapter = new RecordListAdapter_(getContext(),null);
+        RecordListAdapter adapter = new RecordListAdapter(getContext(),dataRepository.getDefaultVariantImage());
+        adapter.setMaster(this);
         recycler.setAdapter(adapter);
 
         model.getList().observe(this,resource -> {
             if (resource.data != null)
                 adapter.setData(resource.data);
-                //recycler.setAdapter(new RecordListAdapter_(resource.data,getActivity()));
+                //recycler.setAdapter(new RecordListAdapter(resource.data,getActivity()));
 //            recycler.setAdapter(new RecordListAdapter(resource.data,getActivity()));
         });
+    }
+
+
+    @Override
+    public void itemRecordDelete(String item) {
+
+    }
+
+    @Override
+    public void itemRecordEdit(String recordId) {
+        navigationController.openRecord(recordId);
+    }
+
+    @Override
+    public void itemRecordAttachToBlock(String item) {
+
     }
 }

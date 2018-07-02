@@ -2,7 +2,6 @@ package com.vividprojects.protoplanner.di;
 
 import android.content.Context;
 
-import com.vividprojects.protoplanner.adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.PPApplication;
 
 import javax.inject.Singleton;
@@ -35,7 +34,6 @@ public interface AppComponent {
    // DataRepository returnDataManager();
 
     void inject(PPApplication application);
-    void inject(RecordListAdapter recordListAdapter);
 
 /*
     void inject(MainActivity activity);

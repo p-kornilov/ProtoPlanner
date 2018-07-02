@@ -123,9 +123,9 @@ public class Chip extends ConstraintLayout {
         textView = rootView.findViewById(R.id.textChip);
         mContent = rootView.findViewById(R.id.content);
         deleteButton = rootView.findViewById(R.id.deleteChip);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+/*        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setElevation(Display.calc_pixels(8));
-        }
+        }*/
     }
 
     public boolean matchFilter(String filter){
@@ -204,10 +204,11 @@ public class Chip extends ConstraintLayout {
                 deleteButton.setOnClickListener(null);
                 break;
             case MODE_SMALL:
+                setColor(label.color);
                 deleteButton.setVisibility(GONE);
-                textView.setText(" ");
+                textView.setText("      ");
                 LayoutParams params = (LayoutParams) mContent.getLayoutParams();
-                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics());
+                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
                 mContent.setLayoutParams(params);
                 break;
             case MODE_NONE:

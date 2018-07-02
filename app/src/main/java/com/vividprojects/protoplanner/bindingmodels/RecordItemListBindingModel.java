@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.coredata.VariantInShop;
 import com.vividprojects.protoplanner.utils.ItemActionsRecord;
@@ -79,25 +80,30 @@ public class RecordItemListBindingModel extends BaseObservable {
             return defaultImage;
     }
 
+    @Bindable
+    public Label.Plain[] getRecordItemListLabels() {
+        return record.labels.toArray(new Label.Plain[record.labels.size()]);
+    }
+
     public void onItemClick() {
         listAdapter.itemRecordEdit(record.id);
     }
 
     public void onMenuClicked(View view) {
-/*        PopupMenu popup = new PopupMenu(view.getContext(), view);
+        PopupMenu popup = new PopupMenu(view.getContext(), view);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.mse_edit:
-                        listAdapter.itemShopEdit(shop.id);
+                    case R.id.mre_edit:
+                        listAdapter.itemRecordEdit(record.id);
                         return true;
-                    case R.id.mse_set_basic:
-                        if (!shop.basicVariant)
-                            listAdapter.itemShopPrimary(shop.id);
+                    case R.id.mre_block:
+                        /*if (!shop.basicVariant)
+                            listAdapter.itemShopPrimary(shop.id);*/
                         return true;
-                    case R.id.mse_delete:
-                        listAdapter.itemShopDelete(shop.id);
+                    case R.id.mre_delete:
+                        listAdapter.itemRecordDelete(record.id);
                         return true;
                     default:
                         return false;
@@ -105,11 +111,7 @@ public class RecordItemListBindingModel extends BaseObservable {
             }
         });
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_shop_edit, popup.getMenu());
-        if (shop.basicVariant) {
-            popup.getMenu().findItem(R.id.mse_set_basic).setEnabled(false);
-            popup.getMenu().findItem(R.id.mse_delete).setEnabled(false);
-        }
-        popup.show();*/
+        inflater.inflate(R.menu.menu_record_edit, popup.getMenu());
+        popup.show();
     }
 }
