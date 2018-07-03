@@ -191,6 +191,24 @@ public class BindingHelper {
         recycler.addItemDecoration(itemDecor);
     }
 
+    @BindingAdapter("bind:fabManager")
+    public static void setRecyclerFabManager(RecyclerView recycler, FabManager manager) {
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private boolean fabVisible = true;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && fabVisible) {
+                    manager.hideFab();
+                    fabVisible = false;
+                } else if (dy < 0 && !fabVisible) {
+                    manager.showFab();
+                    fabVisible = true;
+                }
+            }
+        });
+    }
+
     public static int getMeasureImageResource(int measure) {
         switch (measure) {
             case Measure.MEASURE_UNIT:

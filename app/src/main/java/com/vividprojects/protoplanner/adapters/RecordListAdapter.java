@@ -51,6 +51,7 @@ public class RecordListAdapter extends DataBindingAdapter implements ItemActions
 
         this.filtered_data = data;// VariantInShop.Plain.sort(this.data);
         createModels();
+        //notifyDataSetChanged();
     }
 
     private void createModels() {
@@ -104,27 +105,27 @@ public class RecordListAdapter extends DataBindingAdapter implements ItemActions
         notifyItemChanged(from);
     }
 
-    public void refresh(VariantInShop.Plain shop) {
-/*        int posInsert = 0;
-        for (VariantInShop.Plain m : this.filtered_data) {
-            if (m.id.equals(shop.id)) {
-                int pos = filtered_data.indexOf(m);
-                data.remove(m);
-                filtered_data.remove(m);
+    public void refresh(Record.Plain record) {
+        int posInsert = 0;
+        for (Record.Plain r : this.filtered_data) {
+            if (r.id.equals(record.id)) {
+                int pos = filtered_data.indexOf(r);
+                data.remove(r);
+                filtered_data.remove(r);
                 models.remove(pos);
-                data.add(shop);
-                filtered_data.add(pos,shop);
-                models.add(pos,new ShopItemListBindingModel(context.get(),this, shop));
+                data.add(record);
+                filtered_data.add(pos,record);
+                models.add(pos,new RecordItemListBindingModel(context.get(),this, record, defaultImage));
                 notifyItemChanged(pos);
                 return;
             }
-            if (shop.price > m.price)
-                posInsert++;
+/*            if (record.mainVariant.primaryShop.price > record.mainVariant.primaryShop.price)
+                posInsert++;*/
         }
-        data.add(shop);
-        filtered_data.add(posInsert,shop);
-        models.add(posInsert,new ShopItemListBindingModel(context.get(),this, shop));
-        notifyItemInserted(posInsert);*/
+        data.add(record);
+        filtered_data.add(posInsert, record);
+        models.add(posInsert,new RecordItemListBindingModel(context.get(),this, record, defaultImage));
+        notifyItemInserted(posInsert);
     }
 
 }

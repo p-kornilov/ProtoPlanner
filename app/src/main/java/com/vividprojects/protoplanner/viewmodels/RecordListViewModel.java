@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
+import com.vividprojects.protoplanner.bindingmodels.RecordListBindingModel;
 import com.vividprojects.protoplanner.coredata.Filter;
 import com.vividprojects.protoplanner.coredata.Record;
 
@@ -26,13 +27,20 @@ public class RecordListViewModel extends ViewModel {
     final MutableLiveData<Filter> filter;
 
     private final LiveData<Resource<List<Record.Plain>>> list;
+    private final LiveData<Resource<Record.Plain>> refreshedRecord;
+    private final MutableLiveData<String> refreshedRecordId = new MutableLiveData<>();
 
     private DataRepository dataRepository;
+
+    private RecordListBindingModel recordListBindingModel;
 
     @Inject
     public RecordListViewModel(DataRepository dataRepository) {
         //super();
         //list = new MutableLiveData<>();
+
+        recordListBindingModel = new RecordListBindingModel();
+        recordListBindingModel.setDefaultImage(dataRepository.getDefaultVariantImage());
 
         this.dataRepository = dataRepository;
 
@@ -45,6 +53,9 @@ public class RecordListViewModel extends ViewModel {
             }*/
             return RecordListViewModel.this.dataRepository.loadRecords(input.getFilter());
         });
+
+        refreshedRecord = Transformations.switchMap(refreshedRecordId, id -> RecordListViewModel.this.dataRepository.loadRecord(id));
+
     }
 
     public void setFilter(List<String> ids) {
@@ -58,5 +69,18 @@ public class RecordListViewModel extends ViewModel {
     public LiveData<Resource<List<Record.Plain>>> getList(){
 
         return list;//dataRepository.loadRecords();
+    }
+
+    public RecordListBindingModel getRecordListBindingModel() {
+        return recordListBindingModel;
+    }
+
+    public LiveData<Resource<Record.Plain>> getRefreshedRecord() {
+        return refreshedRecord;
+    }
+
+    public void refreshRecord(String id) {
+        //dataRepository.attachVariantToRecord(id, recordItemId.getValue());
+        refreshedRecordId.setValue(id);
     }
 }

@@ -37,6 +37,9 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.realm.ObjectChangeSet;
+import io.realm.RealmObjectChangeListener;
+
 /**
  * Created by Smile on 05.12.2017.
  */
@@ -91,6 +94,21 @@ public class DataRepository {
     public String getImagesDirectory() {
         return imagesDirectory;
     }
+
+/*    public LiveData<Record.Plain> subscribeOnChangeRecord(String recordId) {
+        final MutableLiveData<Record.Plain> result = new MutableLiveData<>();
+        Record record = localDataDB
+                .queryRecords()
+                .id_equalTo(recordId)
+                .findFirst();
+        record.addChangeListener(new RealmObjectChangeListener<Record>() {
+            @Override
+            public void onChange(Record r, ObjectChangeSet changeSet) {
+                result.setValue(r.getPlain());
+            }
+        });
+        return result;
+    }*/
 
     public LiveData<Resource<List<Record.Plain>>> loadRecords(List<String> filter) {
         return new NetworkBoundResource<List<Record.Plain>, List<Record.Plain>>(appExecutors) {

@@ -21,13 +21,14 @@ import com.vividprojects.protoplanner.datamanager.DataRepository;
 import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordListFragment;
+import com.vividprojects.protoplanner.widgets.FabManager;
 
 import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationView.OnNavigationItemSelectedListener, FabManager {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -143,10 +144,12 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         fragmentTransaction.commit();
     }
 
+    @Override
     public void hideFab() {
         fab.hide();
     }
 
+    @Override
     public void showFab() {
         fab.show();
     }

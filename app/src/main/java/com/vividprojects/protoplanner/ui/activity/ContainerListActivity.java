@@ -23,13 +23,14 @@ import com.vividprojects.protoplanner.utils.ItemNew;
 import com.vividprojects.protoplanner.viewmodel.ViewModelHolder;
 import com.vividprojects.protoplanner.viewmodels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.viewmodels.MeasureListViewModel;
+import com.vividprojects.protoplanner.widgets.FabManager;
 
 import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class ContainerListActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class ContainerListActivity extends AppCompatActivity implements HasSupportFragmentInjector, FabManager {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -91,10 +92,12 @@ public class ContainerListActivity extends AppCompatActivity implements HasSuppo
         fragmentTransaction.commit();
     }
 
+    @Override
     public void hideFab() {
         fab.hide();
     }
 
+    @Override
     public void showFab() {
         fab.show();
     }

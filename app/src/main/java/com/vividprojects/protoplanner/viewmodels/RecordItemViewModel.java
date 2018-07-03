@@ -82,10 +82,7 @@ public class RecordItemViewModel extends ViewModel {
 
         labels = new MutableLiveData<>();
 
-        refreshedVariant = Transformations.switchMap(refreshedVariantId, id -> {
-            int i =1;
-            return RecordItemViewModel.this.dataRepository.loadVariant(id);
-        });
+        refreshedVariant = Transformations.switchMap(refreshedVariantId, id -> RecordItemViewModel.this.dataRepository.loadVariant(id));
     }
 
     public void setId(String id) {
