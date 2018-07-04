@@ -78,6 +78,11 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
             if (resource != null && resource.data != null)
                 bindingModelRecords.refreshRecord(resource.data);
         });
+
+        model.getChangedRecord().observe(this, data -> {
+            if (data != null)
+                bindingModelRecords.refreshRecord(data);
+        });
     }
 
     @Override
@@ -98,6 +103,7 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
 
     @Override
     public void itemRecordEdit(String recordId) {
+        model.subscribe(recordId);
         navigationController.openRecord(recordId);
     }
 

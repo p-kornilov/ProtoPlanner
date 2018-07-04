@@ -68,7 +68,7 @@ public class DataRepository {
     private final AppExecutors appExecutors;
     private final NetworkLoader networkLoader;
 
-    private Map<String,MutableLiveData<? extends Object>> subscribedPlains = new HashMap<>();
+    private Map<String,MutableLiveData> subscribedPlains = new HashMap<>();
 
     @Inject
     public DataRepository(Context context, AppExecutors appExecutors, LocalDataDB ldb, NetworkDataDB ndb, NetworkLoader networkLoader){
@@ -90,12 +90,12 @@ public class DataRepository {
         Log.d("Test", "External Storage - " + imagesDirectory);*/
     }
 
-    public <P> LiveData<P> subscribeOnChangePlain(Class<P> pClass, String id) {
+/*    public <P> LiveData<P> subscribeOnChangePlain(Class<P> pClass, String id) {
         MutableLiveData<P> mld = new MutableLiveData<>();
         subscribedPlains.put(id,mld);
         //setValueHelper((MutableLiveData<P>) subscribedPlains.get(id), (P) localDataDB.queryRecords().id_equalTo(id).findFirst().getPlain()));
         return mld;
-    }
+    }*/
 
     private <P> void setValueHelper(MutableLiveData<P> ld, P value) {
         ld.setValue(value);
@@ -394,10 +394,15 @@ public class DataRepository {
         recordName.setValue(localDataDB.setRecordName(id,name));
 
         if (subscribedPlains.containsKey(id)) {
-            setValueHelper(subscribedPlains.get(id), localDataDB.queryRecords().id_equalTo(id).findFirst());
-            .setValue( localDataDB.queryRecords().id_equalTo(id).findFirst());
+            subscribedPlains.get(id).setValue( localDataDB.queryRecords().id_equalTo(id).findFirst().getPlain());
         }
         return recordName;
+    }
+
+    public <P> MutableLiveData<P> subscribePlain(Class<P> type, String id) {
+        MutableLiveData<P> m = new MutableLiveData<>();
+        subscribedPlains.put(id,m);
+        return m;
     }
 
     public LiveData<String> setRecordComment(String id, String name) {

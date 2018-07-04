@@ -1,9 +1,12 @@
 package com.vividprojects.protoplanner.viewmodels;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
 
 import com.vividprojects.protoplanner.bindingmodels.RecordListBindingModel;
 import com.vividprojects.protoplanner.coredata.Filter;
@@ -33,6 +36,7 @@ public class RecordListViewModel extends ViewModel {
     private DataRepository dataRepository;
 
     private RecordListBindingModel recordListBindingModel;
+    private MediatorLiveData<Record.Plain> changedRecord = new MediatorLiveData<>();
 
     @Inject
     public RecordListViewModel(DataRepository dataRepository) {
@@ -82,5 +86,14 @@ public class RecordListViewModel extends ViewModel {
     public void refreshRecord(String id) {
         //dataRepository.attachVariantToRecord(id, recordItemId.getValue());
         refreshedRecordId.setValue(id);
+    }
+
+    public void subscribe(String id) {
+        LiveData<Record.Plain> s = dataRepository.subscribePlain(Record.Plain.class,id);
+        changedRecord.addSource(s, rp->changedRecord.setValue(rp));
+    }
+
+    public LiveData<Record.Plain> getChangedRecord() {
+        return changedRecord;
     }
 }
