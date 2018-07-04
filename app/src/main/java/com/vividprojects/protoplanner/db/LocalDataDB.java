@@ -1,5 +1,7 @@
 package com.vividprojects.protoplanner.db;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
@@ -14,6 +16,7 @@ import com.vividprojects.protoplanner.utils.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -46,9 +49,7 @@ public class LocalDataDB {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
-
         realm = Realm.getDefaultInstance();
-
     }
 
     public void initDB(String imagesDirectory){

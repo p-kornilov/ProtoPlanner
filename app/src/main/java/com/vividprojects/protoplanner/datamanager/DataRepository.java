@@ -31,13 +31,18 @@ import com.vividprojects.protoplanner.utils.Settings;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.realm.ObjectChangeSet;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmObject;
 import io.realm.RealmObjectChangeListener;
 
 /**
@@ -63,6 +68,8 @@ public class DataRepository {
     private final AppExecutors appExecutors;
     private final NetworkLoader networkLoader;
 
+    private Map<String,MutableLiveData<? extends Object>> subscribedPlains = new HashMap<>();
+
     @Inject
     public DataRepository(Context context, AppExecutors appExecutors, LocalDataDB ldb, NetworkDataDB ndb, NetworkLoader networkLoader){
         this.localDataDB = ldb;
@@ -81,6 +88,17 @@ public class DataRepository {
         }
         imagesDirectory = storageDir.getAbsolutePath();
         Log.d("Test", "External Storage - " + imagesDirectory);*/
+    }
+
+    public <P> LiveData<P> subscribeOnChangePlain(Class<P> pClass, String id) {
+        MutableLiveData<P> mld = new MutableLiveData<>();
+        subscribedPlains.put(id,mld);
+        //setValueHelper((MutableLiveData<P>) subscribedPlains.get(id), (P) localDataDB.queryRecords().id_equalTo(id).findFirst().getPlain()));
+        return mld;
+    }
+
+    private <P> void setValueHelper(MutableLiveData<P> ld, P value) {
+        ld.setValue(value);
     }
 
     public static String toFullImage(String smallImage) {
@@ -374,6 +392,11 @@ public class DataRepository {
     public LiveData<String> setRecordName(String id, String name) {
         MutableLiveData<String> recordName = new MutableLiveData<>();
         recordName.setValue(localDataDB.setRecordName(id,name));
+
+        if (subscribedPlains.containsKey(id)) {
+            setValueHelper(subscribedPlains.get(id), localDataDB.queryRecords().id_equalTo(id).findFirst());
+            .setValue( localDataDB.queryRecords().id_equalTo(id).findFirst());
+        }
         return recordName;
     }
 
