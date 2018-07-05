@@ -58,6 +58,7 @@ public class DataRepository {
 
     public static final String IMAGES_FULL = "/img_f_";
     public static final String IMAGES_SMALL = "/img_s_";
+    public static final String IMAGES_EXT = ".jpg";
     public static final String IMAGE_DEFAULT_ALTERNATIVE = "00000000-def1-0000-0000-alternative0";
 
     private Context context;
@@ -69,6 +70,7 @@ public class DataRepository {
     private final NetworkLoader networkLoader;
 
     private Map<String,MutableLiveData> subscribedPlains = new HashMap<>();
+    private Map<String,MutableLiveData<Record.Plain>> subscribedRecords = new HashMap<>();
 
     @Inject
     public DataRepository(Context context, AppExecutors appExecutors, LocalDataDB ldb, NetworkDataDB ndb, NetworkLoader networkLoader){
@@ -88,17 +90,6 @@ public class DataRepository {
         }
         imagesDirectory = storageDir.getAbsolutePath();
         Log.d("Test", "External Storage - " + imagesDirectory);*/
-    }
-
-/*    public <P> LiveData<P> subscribeOnChangePlain(Class<P> pClass, String id) {
-        MutableLiveData<P> mld = new MutableLiveData<>();
-        subscribedPlains.put(id,mld);
-        //setValueHelper((MutableLiveData<P>) subscribedPlains.get(id), (P) localDataDB.queryRecords().id_equalTo(id).findFirst().getPlain()));
-        return mld;
-    }*/
-
-    private <P> void setValueHelper(MutableLiveData<P> ld, P value) {
-        ld.setValue(value);
     }
 
     public static String toFullImage(String smallImage) {
@@ -389,20 +380,55 @@ public class DataRepository {
         return labelId;
     }
 
-    public LiveData<String> setRecordName(String id, String name) {
-        MutableLiveData<String> recordName = new MutableLiveData<>();
-        recordName.setValue(localDataDB.setRecordName(id,name));
+    private void setFullImagePath(Variant.Plain variant) {
+        for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + IMAGES_FULL + variant.full_images.get(i) + IMAGES_EXT);
+        for (int i = 0;i<variant.small_images.size();i++) variant.small_images.set(i, imagesDirectory + IMAGES_SMALL + variant.small_images.get(i) + IMAGES_EXT);
+    }
+
+    public LiveData<Record.Plain> setRecordName(String id, String name) {
+        MutableLiveData<Record.Plain> record = new MutableLiveData<>();
+        Record.Plain rp = localDataDB.setRecordName(id,name);
+        setFullImagePath(rp.mainVariant);
+        record.setValue(rp);
 
         if (subscribedPlains.containsKey(id)) {
-            subscribedPlains.get(id).setValue( localDataDB.queryRecords().id_equalTo(id).findFirst().getPlain());
+            subscribedPlains.get(id).setValue(rp);
         }
-        return recordName;
+        return record;
     }
+
+/*    public LiveData<Record.Plain> subscribeRecordPlain(String id) {
+        MutableLiveData<Record.Plain> ld = new MutableLiveData<>();
+        Record record = localDataDB
+                .queryRecords()
+                .id_equalTo(id)
+                .findFirst();
+        if (record != null) {
+            Record.Plain rp = record.getPlain();
+            setFullImagePath(rp.mainVariant);
+            for (Variant.Plain v : rp.variants)
+                setFullImagePath(v);
+            ld.setValue(rp);
+            subscribedRecords.put(id,ld);
+            return ld;
+        } else
+            return null;
+    }*/
 
     public <P> MutableLiveData<P> subscribePlain(Class<P> type, String id) {
         MutableLiveData<P> m = new MutableLiveData<>();
         subscribedPlains.put(id,m);
         return m;
+    }
+
+    public void unsubscribePlain(String id) {
+        if (subscribedPlains.containsKey(id))
+            subscribedPlains.remove(id);
+    }
+
+    public void unsubscribeRecord(String id) {
+        if (subscribedRecords.containsKey(id))
+            subscribedRecords.remove(id);
     }
 
     public LiveData<String> setRecordComment(String id, String name) {
@@ -551,7 +577,12 @@ public class DataRepository {
     //---------------------------------------------------------------------------------------
 
     public void saveLabelsForRecord(String recordItemId,String[] ids) {
-        localDataDB.saveLabelsForRecord(recordItemId,ids);
+        Record.Plain rp = localDataDB.saveLabelsForRecord(recordItemId,ids);
+        setFullImagePath(rp.mainVariant);
+
+        if (subscribedPlains.containsKey(recordItemId)) {
+            subscribedPlains.get(recordItemId).setValue(rp);
+        }
     };
 
     public void deleteLabel(String id) {

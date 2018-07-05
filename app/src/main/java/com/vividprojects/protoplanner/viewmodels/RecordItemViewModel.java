@@ -29,7 +29,7 @@ public class RecordItemViewModel extends ViewModel {
     private final LiveData<Resource<Record.Plain>> recordItem;
     private final MutableLiveData<List<Label.Plain>> labels;
     private final MutableLiveData<String> recordNameTrigger;
-    private final LiveData<String> recordNameChange;
+    //private final LiveData<String> recordNameChange;
     private final MediatorLiveData<String> recordName;
     private final MediatorLiveData<List<Variant.Plain>> alternativeVariants;
     private final MutableLiveData<String> refreshedVariantId = new MutableLiveData<>();
@@ -52,9 +52,11 @@ public class RecordItemViewModel extends ViewModel {
         bindingModelRecord = new RecordItemBindingModel();
         bindingModelRecord.setDefaultImage(dataRepository.getDefaultVariantImage());
 
-        recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
+
+/*        recordNameChange = Transformations.switchMap(recordNameTrigger, name->{
             return RecordItemViewModel.this.dataRepository.setRecordName(recordItemId.getValue(),name);
-        });
+        });*/
+
 
         recordItem = Transformations.switchMap(recordItemId, input -> {
 /*            if (input.isEmpty()) {
@@ -72,7 +74,10 @@ public class RecordItemViewModel extends ViewModel {
         });
 
         recordName = new MediatorLiveData<>();
-        recordName.addSource(recordNameChange,name->{recordName.setValue(name);});
+        recordName.addSource(recordNameTrigger,name->{
+            RecordItemViewModel.this.dataRepository.setRecordName(recordItemId.getValue(),name);
+            recordName.setValue(name);
+        });
         recordName.addSource(recordItem,record->{recordName.setValue(record.data.name);});
 
         mainVariantId.addSource(recordItem,record->{
@@ -118,6 +123,7 @@ public class RecordItemViewModel extends ViewModel {
             return;
         }
         recordNameTrigger.setValue(name);
+        //dataRepository.setRecordName(recordItemId.getValue(),name);
     }
 
     public RecordItemBindingModel getBindingModelRecord() {

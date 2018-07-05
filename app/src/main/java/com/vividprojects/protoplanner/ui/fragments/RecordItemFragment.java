@@ -359,4 +359,5 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         modelRecord.setBasicVariant(id);
         //VariantFragmentHelper.variantSetBasic(id);
     }
+
 }

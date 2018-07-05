@@ -38,6 +38,8 @@ public class RecordListViewModel extends ViewModel {
     private RecordListBindingModel recordListBindingModel;
     private MediatorLiveData<Record.Plain> changedRecord = new MediatorLiveData<>();
 
+    private LiveData<Record.Plain> currentSubscribedRecord;
+
     @Inject
     public RecordListViewModel(DataRepository dataRepository) {
         //super();
@@ -89,8 +91,13 @@ public class RecordListViewModel extends ViewModel {
     }
 
     public void subscribe(String id) {
-        LiveData<Record.Plain> s = dataRepository.subscribePlain(Record.Plain.class,id);
-        changedRecord.addSource(s, rp->changedRecord.setValue(rp));
+        if (currentSubscribedRecord != null) {
+            if (currentSubscribedRecord.getValue() != null)
+                dataRepository.unsubscribePlain(currentSubscribedRecord.getValue().id);
+            changedRecord.removeSource(currentSubscribedRecord);
+        }
+        currentSubscribedRecord = dataRepository.subscribePlain(Record.Plain.class,id);
+        changedRecord.addSource(currentSubscribedRecord, rp->changedRecord.setValue(rp));
     }
 
     public LiveData<Record.Plain> getChangedRecord() {

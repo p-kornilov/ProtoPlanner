@@ -81,17 +81,17 @@ public class LocalDataDB {
         return label;
     }
 
-    public String setRecordName(String id, String name) {
+    public Record.Plain setRecordName(String id, String name) {
+        Record record = realm.where(Record.class).equalTo("id",id).findFirst();
+        if (record == null)
+            return null;
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Record record = realm.where(Record.class).equalTo("id",id).findFirst();
-                if (record != null) {
-                    record.setName(name);
-                }
+                record.setName(name);
             }
         });
-        return name;
+        return record.getPlain();
     }
 
     public String setRecordComment(String id, String comment) {
@@ -207,17 +207,21 @@ public class LocalDataDB {
         });
     }
 
-    public void saveLabelsForRecord(String recordId, String[] ids) {
+    public Record.Plain saveLabelsForRecord(String recordId, String[] ids) {
+        Record r = realm.where(Record.class).contains("id",recordId).findFirst();
+        if (r == null)
+            return null;
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Record r = realm.where(Record.class).contains("id",recordId).findFirst();
                 RealmResults<Label> labels = realm.where(Label.class).in("id",ids).findAll();
-                if (r != null && labels != null) {
+                if (labels != null) {
                     r.setLebels(labels);
                 }
             }
         });
+
+        return r.getPlain();
     }
 
     public int saveCurrency(Currency.Plain currency) {
