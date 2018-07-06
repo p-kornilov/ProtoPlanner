@@ -103,7 +103,7 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
 
     @Override
     public void itemRecordEdit(String recordId) {
-        model.subscribe(recordId);
+        model.subscribeToRecord(recordId);
         navigationController.openRecord(recordId);
     }
 

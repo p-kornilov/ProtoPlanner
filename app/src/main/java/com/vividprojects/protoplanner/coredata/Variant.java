@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.annotations.LinkingObjects;
 import io.realm.annotations.PrimaryKey;
 
 public class Variant extends RealmObject {
@@ -23,6 +25,10 @@ public class Variant extends RealmObject {
     private RealmList<String> images;
     private int defaultImage = 0;
     private RealmList<VariantInShop> shops;
+    @LinkingObjects("mainVariant")
+    private final RealmResults<Record> masterRecord = null;
+    @LinkingObjects("variants")
+    private final RealmResults<Record> variantsRecord = null;
    // private Currency currency;
 
     public Variant() {};
@@ -175,10 +181,17 @@ public class Variant extends RealmObject {
         plain.small_images = new ArrayList<>(images);
         plain.full_images = new ArrayList<>(images);
         plain.shops = new ArrayList<>();
-        for (VariantInShop shop : shops) {
+        for (VariantInShop shop : shops)
             plain.shops.add(shop.getPlain());
-        }
         plain.primaryShop = primaryShop.getPlain();
+        plain.masterRecord = new ArrayList<>();
+        if (masterRecord != null)
+            for (Record r : masterRecord)
+                plain.masterRecord.add(r.getId());
+        plain.variantsRecord = new ArrayList<>();
+        if (variantsRecord != null)
+            for (Record r : variantsRecord)
+                plain.variantsRecord.add(r.getId());
         return plain;
     }
 
@@ -194,6 +207,8 @@ public class Variant extends RealmObject {
         public List<String> full_images;
         public List<VariantInShop.Plain> shops;
         public VariantInShop.Plain primaryShop;
+        public List<String> masterRecord;
+        public List<String> variantsRecord;
 
         public static List<Plain> sort(List<Plain> list) {
             Plain[] holder_list = new Plain[list.size()];
@@ -215,6 +230,8 @@ public class Variant extends RealmObject {
             plain.small_images = new ArrayList<>();
             plain.full_images = new ArrayList<>();
             plain.shops = new ArrayList<>();
+            plain.masterRecord = new ArrayList<>();
+            plain.variantsRecord = new ArrayList<>();
 
             return plain;
         }

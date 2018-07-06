@@ -194,17 +194,17 @@ public class LocalDataDB {
         });
     }
 
-    public void addImageToVariant(String variant, String image) {
-        final Integer result = 0;
+    public Variant.Plain addImageToVariant(String variant, String image) {
+        Variant v = realm.where(Variant.class).contains("id",variant).findFirst();
+        if (v == null)
+            return null;
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Variant v = realm.where(Variant.class).contains("id",variant).findFirst();
-                if (v != null) {
                     v.addImage(image);
-                }
             }
         });
+        return v.getPlain();
     }
 
     public Record.Plain saveLabelsForRecord(String recordId, String[] ids) {
@@ -334,63 +334,63 @@ public class LocalDataDB {
         }
     }
 
-    public String saveVariant(String id, String name, double price, double count, int currency, int measure) {
+    public Variant.Plain saveVariant(String id, String name, double price, double count, int currency, int measure) {
         Currency c = realm.where(Currency.class).equalTo("iso_code_int", currency).findFirst();
         Measure  m = realm.where(Measure.class ).equalTo("hash",         measure ).findFirst();
         if (c == null || m == null)
             return null;
-        final Bundle1<String> bid = new Bundle1<>();
+        final Bundle1<Variant> bid = new Bundle1<>();
+        bid.item = null;
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Variant v = null;
                 if (id != null) {
-                    v = realm.where(Variant.class).equalTo("id", id).findFirst();
-                    if (v != null) {
-                        v.setTitle(name);
-                        v.setPrice(price);
-                        v.setCount(count);
-                        v.setCurrency(c);
-                        v.setMeasure(m);
+                    bid.item = realm.where(Variant.class).equalTo("id", id).findFirst();
+                    if (bid.item != null) {
+                        bid.item.setTitle(name);
+                        bid.item.setPrice(price);
+                        bid.item.setCount(count);
+                        bid.item.setCurrency(c);
+                        bid.item.setMeasure(m);
                     }
                 }
-                if (v == null) {
-                    v = new Variant(name, m, count, price, "", c);
-                    realm.insertOrUpdate(v);
+                if (bid.item == null) {
+                    bid.item = new Variant(name, m, count, price, "", c);
+                    realm.insertOrUpdate(bid.item);
                 }
-                bid.item = v.getId();
             }
         });
-        return bid.item;
+        return bid.item != null ? bid.item.getPlain() : null;
     }
 
-    public void setDefaultImage(String variantId , int image) {
-        final Bundle1<String> bid = new Bundle1<>();
+    public Variant.Plain setDefaultImage(String variantId , int image) {
+        Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
+        if (v == null)
+            return null;
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 if (variantId != null) {
-                    Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
-                    if (v != null) {
                         v.setDefaultImage(image);
-                    }
                 }
             }
         });
+        return v.getPlain();
     }
 
 
-    public void saveMainVariantToRecord(String variantId, String recordId) {
+    public Record.Plain saveMainVariantToRecord(String variantId, String recordId) {
         Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
         Record  r = realm.where(Record.class ).equalTo("id", recordId ).findFirst();
-        if (v != null && r != null) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
+        if (v == null || r == null)
+            return null;
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
                     r.setMainVariant(v);
                 }
-            });
-        }
+        });
+        return r.getPlain();
     }
 
     //---------------- Labels ---------------------------------------------------------------
@@ -650,11 +650,11 @@ public class LocalDataDB {
         });
     }
 
-    public void setBasicVariant(String recordId, String variantId) {
+    public Record.Plain setBasicVariant(String recordId, String variantId) {
         Record r = realm.where(Record.class).equalTo("id", recordId).findFirst();
         Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
         if (v == null || r == null)
-            return;
+            return null;
 
         final Bundle1<String> bid = new Bundle1<>();
         realm.executeTransaction(new Realm.Transaction() {
@@ -669,7 +669,7 @@ public class LocalDataDB {
 
         });
 
-        int i = 1;
+        return r.getPlain();
     }
 
     public void deleteShop(String id) {

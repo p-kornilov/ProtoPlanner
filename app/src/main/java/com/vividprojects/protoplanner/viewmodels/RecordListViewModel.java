@@ -14,6 +14,7 @@ import com.vividprojects.protoplanner.coredata.Record;
 
 
 import com.vividprojects.protoplanner.coredata.Resource;
+import com.vividprojects.protoplanner.coredata.Variant;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
 
 import java.util.List;
@@ -90,7 +91,7 @@ public class RecordListViewModel extends ViewModel {
         refreshedRecordId.setValue(id);
     }
 
-    public void subscribe(String id) {
+    public void subscribeToRecord(String id) {
         if (currentSubscribedRecord != null) {
             if (currentSubscribedRecord.getValue() != null)
                 dataRepository.unsubscribePlain(currentSubscribedRecord.getValue().id);

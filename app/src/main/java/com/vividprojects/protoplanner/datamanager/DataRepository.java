@@ -293,11 +293,38 @@ public class DataRepository {
     }
 
     public String saveVariant(String id, String name, double price, double count, int currency, int measure) {
-        return localDataDB.saveVariant(id, name, price, count, currency, measure);
+        Variant.Plain vp = localDataDB.saveVariant(id, name, price, count, currency, measure);
+        updateSubscribedVariant(vp);
+        return vp.id;
     }
 
+    private void updateSubscribedRecord(Variant.Plain vp) {
+        if (vp != null && vp.masterRecord != null)
+            for (String id : vp.masterRecord)
+                if (subscribedPlains.containsKey(id)) {
+                    Record r = localDataDB.queryRecords().id_equalTo(id).findFirst();
+                    if (r != null) {
+                        Record.Plain rp = r.getPlain();
+                        setFullImagePath(rp.mainVariant);
+                        subscribedPlains.get(id).setValue(rp);
+                    }
+                }
+    }
+
+    private void updateSubscribedRecord(Record.Plain rp) {
+        if (rp != null && subscribedPlains.containsKey(rp.id))
+            subscribedPlains.get(rp.id).setValue(rp);
+    }
+
+    private void updateSubscribedVariant(Variant.Plain vp) {
+        updateSubscribedRecord(vp);
+        if (vp != null && subscribedPlains.containsKey(vp.id))
+            subscribedPlains.get(vp.id).setValue(vp);
+    }
+
+
     public void setDefaultImage(String variantId , int image) {
-        localDataDB.setDefaultImage(variantId, image);
+        updateSubscribedVariant(localDataDB.setDefaultImage(variantId, image));
     }
 
     public String saveShop(VariantInShop.Plain shop, String variantId, boolean asPrimary) {
@@ -309,14 +336,14 @@ public class DataRepository {
     }
 
     public LiveData<String> setBasicVariant(String recordId, String variantId) {
-        localDataDB.setBasicVariant(recordId, variantId);
+        updateSubscribedRecord(localDataDB.setBasicVariant(recordId, variantId));
         MutableLiveData<String> vId = new MutableLiveData<>();
         vId.setValue(variantId);
         return vId;
     }
 
     public void saveMainVariantToRecord(String variantId, String recordId) {
-        localDataDB.saveMainVariantToRecord(variantId, recordId);
+        updateSubscribedRecord(localDataDB.saveMainVariantToRecord(variantId, recordId));
     }
 
     public LiveData<Resource<List<String>>> loadImagesForVariant(String id) {
@@ -633,7 +660,9 @@ public class DataRepository {
             appExecutors.mainThread().execute(()-> {
                 progress.setValue(CONVERT_DONE);
 
-                localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                Variant.Plain vp = localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                if (vp != null && vp.small_images.size() == 1)
+                    updateSubscribedVariant(vp);
                 BitmapUtils.deleteImageFile(context, temp_name);
                 progress.setValue(SAVE_TO_DB_DONE);
             });
@@ -662,7 +691,9 @@ public class DataRepository {
 
             if (success)
                 appExecutors.mainThread().execute(()-> {
-                    localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                    Variant.Plain vp = localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                    if (vp != null && vp.small_images.size() == 1)
+                        updateSubscribedVariant(vp);
                     progress.setValue(SAVE_TO_DB_DONE);
                 });
             else appExecutors.mainThread().execute(()-> {
@@ -699,7 +730,9 @@ public class DataRepository {
 
             if (success)
                 appExecutors.mainThread().execute(()-> {
-                    localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                    Variant.Plain vp = localDataDB.addImageToVariant(variant, file_name); // сделать проверку
+                    if (vp != null && vp.small_images.size() == 1)
+                        updateSubscribedVariant(vp);
                     progress.setValue(SAVE_TO_DB_DONE);
                 });
             else appExecutors.mainThread().execute(()-> {
