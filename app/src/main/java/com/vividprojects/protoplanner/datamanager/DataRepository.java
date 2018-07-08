@@ -27,6 +27,7 @@ import com.vividprojects.protoplanner.images.BitmapUtils;
 import com.vividprojects.protoplanner.network.NetworkLoader;
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.utils.Bundle2;
+import com.vividprojects.protoplanner.utils.DataQuery;
 import com.vividprojects.protoplanner.utils.Settings;
 
 import java.io.File;
@@ -65,20 +66,22 @@ public class DataRepository {
     private String imagesDirectory;
 
     private final NetworkDataDB networkDataDB;
-    private final LocalDataDB localDataDB;
+    private LocalDataDB localDataDB = null;
     private final AppExecutors appExecutors;
     private final NetworkLoader networkLoader;
+    private final DataSubscriber dataSubscriber;
 
-    private Map<String,MutableLiveData> subscribedPlains = new HashMap<>();
     private Map<String,MutableLiveData<Record.Plain>> subscribedRecords = new HashMap<>();
 
     @Inject
-    public DataRepository(Context context, AppExecutors appExecutors, LocalDataDB ldb, NetworkDataDB ndb, NetworkLoader networkLoader){
+    public DataRepository(Context context, AppExecutors appExecutors, LocalDataDB ldb, NetworkDataDB ndb, NetworkLoader networkLoader, DataSubscriber dataSubscriber){
         this.localDataDB = ldb;
         this.networkDataDB = ndb;
         this.appExecutors = appExecutors;
         this.networkLoader = networkLoader;
         this.context = context;
+        this.dataSubscriber = dataSubscriber;
+        this.dataSubscriber.init(functionLoadRecord);
         File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (dir != null)
             imagesDirectory = dir.getAbsolutePath(); //TODO Проверить на Null и подготовить несколько вариантов директорий
@@ -200,6 +203,16 @@ public class DataRepository {
         }.asLiveData();
     }
 
+    private DataQuery<String, Record.Plain> functionLoadRecord = (id) -> {
+        Record record = localDataDB.queryRecords().id_equalTo(id).findFirst();
+        if (record != null) {
+            Record.Plain rp = record.getPlain();
+            setFullImagePath(rp.mainVariant);
+            return rp;
+        } else
+            return null;
+    };
+
     public LiveData<Resource<Variant.Plain>> loadVariant(String id) {
         return new NetworkBoundResource<Variant.Plain, Variant.Plain>(appExecutors) {
             @Override
@@ -294,37 +307,12 @@ public class DataRepository {
 
     public String saveVariant(String id, String name, double price, double count, int currency, int measure) {
         Variant.Plain vp = localDataDB.saveVariant(id, name, price, count, currency, measure);
-        updateSubscribedVariant(vp);
+        dataSubscriber.updateSubscribedVariant(vp);
         return vp.id;
     }
 
-    private void updateSubscribedRecord(Variant.Plain vp) {
-        if (vp != null && vp.masterRecord != null)
-            for (String id : vp.masterRecord)
-                if (subscribedPlains.containsKey(id)) {
-                    Record r = localDataDB.queryRecords().id_equalTo(id).findFirst();
-                    if (r != null) {
-                        Record.Plain rp = r.getPlain();
-                        setFullImagePath(rp.mainVariant);
-                        subscribedPlains.get(id).setValue(rp);
-                    }
-                }
-    }
-
-    private void updateSubscribedRecord(Record.Plain rp) {
-        if (rp != null && subscribedPlains.containsKey(rp.id))
-            subscribedPlains.get(rp.id).setValue(rp);
-    }
-
-    private void updateSubscribedVariant(Variant.Plain vp) {
-        updateSubscribedRecord(vp);
-        if (vp != null && subscribedPlains.containsKey(vp.id))
-            subscribedPlains.get(vp.id).setValue(vp);
-    }
-
-
     public void setDefaultImage(String variantId , int image) {
-        updateSubscribedVariant(localDataDB.setDefaultImage(variantId, image));
+        dataSubscriber.updateSubscribedVariant(localDataDB.setDefaultImage(variantId, image));
     }
 
     public String saveShop(VariantInShop.Plain shop, String variantId, boolean asPrimary) {
@@ -332,18 +320,20 @@ public class DataRepository {
     }
 
     public void setShopPrimary(String shopId, String variantId) {
-        localDataDB.setShopPrimary(shopId, variantId);
+        dataSubscriber.updateSubscribedVariant(localDataDB.setShopPrimary(shopId, variantId));
     }
 
     public LiveData<String> setBasicVariant(String recordId, String variantId) {
-        updateSubscribedRecord(localDataDB.setBasicVariant(recordId, variantId));
+        Record.Plain rp = localDataDB.setBasicVariant(recordId, variantId);
+        setFullImagePath(rp.mainVariant);
+        dataSubscriber.updateSubscribedRecord(rp);
         MutableLiveData<String> vId = new MutableLiveData<>();
         vId.setValue(variantId);
         return vId;
     }
 
     public void saveMainVariantToRecord(String variantId, String recordId) {
-        updateSubscribedRecord(localDataDB.saveMainVariantToRecord(variantId, recordId));
+        dataSubscriber.updateSubscribedRecord(localDataDB.saveMainVariantToRecord(variantId, recordId));
     }
 
     public LiveData<Resource<List<String>>> loadImagesForVariant(String id) {
@@ -418,9 +408,8 @@ public class DataRepository {
         setFullImagePath(rp.mainVariant);
         record.setValue(rp);
 
-        if (subscribedPlains.containsKey(id)) {
-            subscribedPlains.get(id).setValue(rp);
-        }
+        dataSubscriber.updateSubscribedRecord(rp);
+
         return record;
     }
 
@@ -441,22 +430,6 @@ public class DataRepository {
         } else
             return null;
     }*/
-
-    public <P> MutableLiveData<P> subscribePlain(Class<P> type, String id) {
-        MutableLiveData<P> m = new MutableLiveData<>();
-        subscribedPlains.put(id,m);
-        return m;
-    }
-
-    public void unsubscribePlain(String id) {
-        if (subscribedPlains.containsKey(id))
-            subscribedPlains.remove(id);
-    }
-
-    public void unsubscribeRecord(String id) {
-        if (subscribedRecords.containsKey(id))
-            subscribedRecords.remove(id);
-    }
 
     public LiveData<String> setRecordComment(String id, String name) {
         MutableLiveData<String> recordComment = new MutableLiveData<>();
@@ -607,9 +580,7 @@ public class DataRepository {
         Record.Plain rp = localDataDB.saveLabelsForRecord(recordItemId,ids);
         setFullImagePath(rp.mainVariant);
 
-        if (subscribedPlains.containsKey(recordItemId)) {
-            subscribedPlains.get(recordItemId).setValue(rp);
-        }
+        dataSubscriber.updateSubscribedRecord(rp);
     };
 
     public void deleteLabel(String id) {
@@ -662,7 +633,7 @@ public class DataRepository {
 
                 Variant.Plain vp = localDataDB.addImageToVariant(variant, file_name); // сделать проверку
                 if (vp != null && vp.small_images.size() == 1)
-                    updateSubscribedVariant(vp);
+                    dataSubscriber.updateSubscribedVariant(vp);
                 BitmapUtils.deleteImageFile(context, temp_name);
                 progress.setValue(SAVE_TO_DB_DONE);
             });
@@ -693,7 +664,7 @@ public class DataRepository {
                 appExecutors.mainThread().execute(()-> {
                     Variant.Plain vp = localDataDB.addImageToVariant(variant, file_name); // сделать проверку
                     if (vp != null && vp.small_images.size() == 1)
-                        updateSubscribedVariant(vp);
+                        dataSubscriber.updateSubscribedVariant(vp);
                     progress.setValue(SAVE_TO_DB_DONE);
                 });
             else appExecutors.mainThread().execute(()-> {
@@ -732,7 +703,7 @@ public class DataRepository {
                 appExecutors.mainThread().execute(()-> {
                     Variant.Plain vp = localDataDB.addImageToVariant(variant, file_name); // сделать проверку
                     if (vp != null && vp.small_images.size() == 1)
-                        updateSubscribedVariant(vp);
+                        dataSubscriber.updateSubscribedVariant(vp);
                     progress.setValue(SAVE_TO_DB_DONE);
                 });
             else appExecutors.mainThread().execute(()-> {

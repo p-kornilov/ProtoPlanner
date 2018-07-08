@@ -16,6 +16,7 @@ import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.coredata.Resource;
 import com.vividprojects.protoplanner.coredata.Variant;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
+import com.vividprojects.protoplanner.datamanager.DataSubscriber;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class RecordListViewModel extends ViewModel {
     private final MutableLiveData<String> refreshedRecordId = new MutableLiveData<>();
 
     private DataRepository dataRepository;
+    private DataSubscriber dataSubscriber;
 
     private RecordListBindingModel recordListBindingModel;
     private MediatorLiveData<Record.Plain> changedRecord = new MediatorLiveData<>();
@@ -42,7 +44,7 @@ public class RecordListViewModel extends ViewModel {
     private LiveData<Record.Plain> currentSubscribedRecord;
 
     @Inject
-    public RecordListViewModel(DataRepository dataRepository) {
+    public RecordListViewModel(DataRepository dataRepository, DataSubscriber dataSubscriber) {
         //super();
         //list = new MutableLiveData<>();
 
@@ -50,6 +52,7 @@ public class RecordListViewModel extends ViewModel {
         recordListBindingModel.setDefaultImage(dataRepository.getDefaultVariantImage());
 
         this.dataRepository = dataRepository;
+        this.dataSubscriber = dataSubscriber;
 
         this.filter = new MutableLiveData<>();
         list = Transformations.switchMap(filter,input -> {
@@ -94,10 +97,10 @@ public class RecordListViewModel extends ViewModel {
     public void subscribeToRecord(String id) {
         if (currentSubscribedRecord != null) {
             if (currentSubscribedRecord.getValue() != null)
-                dataRepository.unsubscribePlain(currentSubscribedRecord.getValue().id);
+                dataSubscriber.unsubscribePlain(currentSubscribedRecord.getValue().id);
             changedRecord.removeSource(currentSubscribedRecord);
         }
-        currentSubscribedRecord = dataRepository.subscribePlain(Record.Plain.class,id);
+        currentSubscribedRecord = dataSubscriber.subscribePlain(Record.Plain.class,id);
         changedRecord.addSource(currentSubscribedRecord, rp->changedRecord.setValue(rp));
     }
 

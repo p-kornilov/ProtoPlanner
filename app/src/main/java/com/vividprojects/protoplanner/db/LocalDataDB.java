@@ -632,11 +632,11 @@ public class LocalDataDB {
         return bid.item;
     }
 
-    public void setShopPrimary(String shopId, String variantId) {
+    public Variant.Plain setShopPrimary(String shopId, String variantId) {
         Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
         final VariantInShop s = realm.where(VariantInShop.class).equalTo("id", shopId).findFirst();
         if (v == null || s == null)
-            return;
+            return null;
 
         final Bundle1<String> bid = new Bundle1<>();
         realm.executeTransaction(new Realm.Transaction() {
@@ -648,6 +648,7 @@ public class LocalDataDB {
                 v.addShop(oldPrimaryShop);
             }
         });
+        return v.getPlain();
     }
 
     public Record.Plain setBasicVariant(String recordId, String variantId) {

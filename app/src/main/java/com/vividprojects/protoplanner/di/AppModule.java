@@ -2,6 +2,7 @@ package com.vividprojects.protoplanner.di;
 
 import android.content.Context;
 
+import com.vividprojects.protoplanner.datamanager.DataSubscriber;
 import com.vividprojects.protoplanner.db.LocalDataDB;
 import com.vividprojects.protoplanner.db.NetworkDataDB;
 import com.vividprojects.protoplanner.db.SDFileManager;
@@ -35,6 +36,12 @@ public class AppModule {
     @Singleton
     NetworkDataDB provideNetworkDB(){
         return new NetworkDataDB();
+    }
+
+    @Provides
+    @Singleton
+    DataSubscriber provideDataSubscriber(){
+        return new DataSubscriber();
     }
 
     @Provides
