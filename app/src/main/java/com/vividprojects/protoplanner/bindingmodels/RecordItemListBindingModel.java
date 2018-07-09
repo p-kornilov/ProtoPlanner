@@ -74,7 +74,7 @@ public class RecordItemListBindingModel extends BaseObservable {
 
     @Bindable
     public String getRecordItemListImage() {
-        if (record.mainVariant.small_images.size() != 0 && record.mainVariant.small_images.size() > record.mainVariant.defaultImage)
+        if (record.mainVariant != null && record.mainVariant.small_images.size() != 0 && record.mainVariant.small_images.size() > record.mainVariant.defaultImage)
             return record.mainVariant.small_images.get(record.mainVariant.defaultImage);
         else
             return defaultImage;

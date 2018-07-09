@@ -81,7 +81,7 @@ public class RecordItemViewModel extends ViewModel {
         recordName.addSource(recordItem,record->{recordName.setValue(record.data.name);});
 
         mainVariantId.addSource(recordItem,record->{
-            if (record != null && record.data != null)
+            if (record != null && record.data != null && record.data.mainVariant != null)
                 mainVariantId.setValue(record.data.mainVariant.id);
         });
 
