@@ -17,6 +17,8 @@ import com.vividprojects.protoplanner.coredata.Resource;
 import com.vividprojects.protoplanner.coredata.Variant;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
 import com.vividprojects.protoplanner.datamanager.DataSubscriber;
+import com.vividprojects.protoplanner.utils.FabActions;
+import com.vividprojects.protoplanner.utils.RunnableParam;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +29,9 @@ import javax.inject.Inject;
  * Created by Smile on 06.12.2017.
  */
 
-public class RecordListViewModel extends ViewModel {
+public class RecordListViewModel extends ViewModel implements FabActions {
+
+    private Runnable addAction;
 
     final MutableLiveData<Filter> filter;
 
@@ -42,6 +46,9 @@ public class RecordListViewModel extends ViewModel {
     private MediatorLiveData<Record.Plain> changedRecord = new MediatorLiveData<>();
 
     private LiveData<Record.Plain> currentSubscribedRecord;
+
+    private MutableLiveData<String> newRecordName = new MutableLiveData<>();
+    private final LiveData<Record.Plain> newRecord;
 
     @Inject
     public RecordListViewModel(DataRepository dataRepository, DataSubscriber dataSubscriber) {
@@ -65,6 +72,7 @@ public class RecordListViewModel extends ViewModel {
         });
 
         refreshedRecord = Transformations.switchMap(refreshedRecordId, id -> RecordListViewModel.this.dataRepository.loadRecord(id));
+        newRecord = Transformations.switchMap(newRecordName, name -> RecordListViewModel.this.dataRepository.newRecord(name));
 
     }
 
@@ -106,5 +114,23 @@ public class RecordListViewModel extends ViewModel {
 
     public LiveData<Record.Plain> getChangedRecord() {
         return changedRecord;
+    }
+
+    public void setActionAdd(Runnable addAction) {
+        this.addAction = addAction;
+    }
+
+    @Override
+    public void actionAdd() {
+        if (addAction != null)
+            addAction.run();
+    }
+
+    public void createNewRecord(String recordName) {
+        newRecordName.setValue(recordName);
+    }
+
+    public LiveData<Record.Plain> getNewRecord() {
+        return newRecord;
     }
 }

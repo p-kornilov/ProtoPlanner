@@ -1,5 +1,7 @@
 package com.vividprojects.protoplanner;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,6 +23,8 @@ import com.vividprojects.protoplanner.datamanager.DataRepository;
 import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordListFragment;
+import com.vividprojects.protoplanner.utils.FabActions;
+import com.vividprojects.protoplanner.viewmodels.RecordListViewModel;
 import com.vividprojects.protoplanner.widgets.FabManager;
 
 import javax.inject.Inject;
@@ -38,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Inject
     NavigationController navigationController;
 
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
     private Toolbar secondToolBar;
     private FloatingActionButton fab;
 
@@ -51,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 //        setContentView(R.layout.activity_main);
         Toolbar toolbar;
 
+        final FabActions model;
+
         if (navigationController.isTablet()) {
             toolbar = (Toolbar) findViewById(R.id.toolbar1);
             setSupportActionBar(toolbar);
@@ -62,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             final RecordListFragment fragment = new RecordListFragment();
             fragmentTransaction.replace(R.id.lists_container, fragment);
             fragmentTransaction.commit();
+
+            model = ViewModelProviders.of(this,viewModelFactory).get(RecordListViewModel.class);
 
             setRecordItem("Empty");
 
@@ -75,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             final RecordListFragment fragment = new RecordListFragment();
             fragmentTransaction.replace(R.id.lists_container, fragment);
             fragmentTransaction.commit();
+            model = ViewModelProviders.of(this,viewModelFactory).get(RecordListViewModel.class);
         }
 
 
@@ -82,8 +94,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (model != null)
+                    model.actionAdd();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                  //      .setAction("Action", null).show();
             }
         });
 

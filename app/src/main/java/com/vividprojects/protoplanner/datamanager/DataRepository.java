@@ -311,6 +311,17 @@ public class DataRepository {
         return vp.id;
     }
 
+    public LiveData<Record.Plain> newRecord(String recordName) {
+        MutableLiveData<Record.Plain> rId = new MutableLiveData<>();
+        Record.Plain r = localDataDB.newRecord(recordName);
+        if (r != null) {
+            rId.setValue(r);
+            return rId;
+        } else
+            return null;
+
+    }
+
     public void setDefaultImage(String variantId , int image) {
         dataSubscriber.updateSubscribedVariant(localDataDB.setDefaultImage(variantId, image));
     }

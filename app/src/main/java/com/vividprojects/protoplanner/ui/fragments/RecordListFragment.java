@@ -15,6 +15,7 @@ import com.vividprojects.protoplanner.bindingmodels.RecordListBindingModel;
 import com.vividprojects.protoplanner.databinding.RecordsFragmentBinding;
 import com.vividprojects.protoplanner.di.Injectable;
 import com.vividprojects.protoplanner.ui.NavigationController;
+import com.vividprojects.protoplanner.ui.dialogs.EditTextDialog;
 import com.vividprojects.protoplanner.utils.ItemActionsRecord;
 import com.vividprojects.protoplanner.viewmodels.RecordListViewModel;
 
@@ -27,7 +28,9 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class RecordListFragment extends Fragment implements Injectable, ItemActionsRecord {
-    private static final int REQUEST_EDIT_RECORD = 1;
+    private static final int REQUEST_NEW_RECORD_NAME = 1;
+
+    //private static final int REQUEST_EDIT_RECORD = 1;
 
     private RecordsFragmentBinding binding;
     private RecordListBindingModel bindingModelRecords;
@@ -39,6 +42,18 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
     @Inject
     NavigationController navigationController;
 
+    private Runnable addAction = () -> {
+        EditTextDialog setRecordNameDialog = new EditTextDialog();
+        setRecordNameDialog.setTargetFragment(this, REQUEST_NEW_RECORD_NAME);
+        Bundle b = new Bundle();
+        b.putString("TITLE","Set new record name");
+        b.putString("HINT","Name");
+        b.putString("POSITIVE","Create");
+        b.putString("NEGATIVE","Cancel");
+        b.putString("EDITTEXT", "");
+        setRecordNameDialog.setArguments(b);
+        setRecordNameDialog.show(getFragmentManager(), "Edit name");
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +83,7 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
         binding.setRecordsModel(bindingModelRecords);
 
         model.setFilter(null);
+        model.setActionAdd(addAction);
 
         model.getList().observe(this,resource -> {
             if (resource != null && resource.data != null)
@@ -83,20 +99,28 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
             if (data != null)
                 bindingModelRecords.refreshRecord(data);
         });
+
+        model.getNewRecord().observe(this, record -> {
+            if (record != null) {
+                bindingModelRecords.refreshRecord(record);
+              //  model.subscribeToRecord(record.id);
+                navigationController.openRecord(record.id);
+            }
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
-            case REQUEST_EDIT_RECORD:
+            case REQUEST_NEW_RECORD_NAME:
                 if (resultCode == RESULT_OK && data != null) {
-                    String id = data.getStringExtra("ID");
-                    model.refreshRecord(id);
+                    model.createNewRecord(data.getStringExtra("EDITTEXT"));
                 }
         }
     }
-            @Override
+
+    @Override
     public void itemRecordDelete(String item) {
 
     }

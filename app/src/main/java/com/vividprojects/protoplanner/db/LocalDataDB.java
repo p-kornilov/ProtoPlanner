@@ -81,6 +81,20 @@ public class LocalDataDB {
         return label;
     }
 
+    public Record.Plain newRecord(String recordName) {
+        if (recordName == null)
+            return null;
+        Record r = new Record();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                r.setName(recordName);
+                realm.insertOrUpdate(r);
+            }
+        });
+        return r.getPlain();
+    }
+
     public Record.Plain setRecordName(String id, String name) {
         Record record = realm.where(Record.class).equalTo("id",id).findFirst();
         if (record == null)

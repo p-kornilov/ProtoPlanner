@@ -54,22 +54,22 @@ public class RecordItemListBindingModel extends BaseObservable {
 
     @Bindable
     public String getRecordItemListBasicVariantName() {
-        return record.mainVariant.title;
+        return record.mainVariant != null ? record.mainVariant.title : null;
     }
 
     @Bindable
     public String getRecordItemListValueDecor() {
-        return PriceFormatter.createValue(record.mainVariant.primaryShop.currency, record.mainVariant.primaryShop.price * record.mainVariant.count);
+        return record.mainVariant != null ? PriceFormatter.createValue(record.mainVariant.primaryShop.currency, record.mainVariant.primaryShop.price * record.mainVariant.count) : null;
     }
 
     @Bindable
     public String getRecordItemListPriceDecor() {
-        return PriceFormatter.createPrice(context.get(), record.mainVariant.primaryShop.currency, record.mainVariant.primaryShop.price, record.mainVariant.measure);
+        return record.mainVariant != null ? PriceFormatter.createPrice(context.get(), record.mainVariant.primaryShop.currency, record.mainVariant.primaryShop.price, record.mainVariant.measure) : null;
     }
 
     @Bindable
     public String getRecordItemListCountDecor() {
-        return PriceFormatter.createCount(context.get(), record.mainVariant.count, record.mainVariant.measure);
+        return record.mainVariant != null ? PriceFormatter.createCount(context.get(), record.mainVariant.count, record.mainVariant.measure) : null;
     }
 
     @Bindable
