@@ -162,10 +162,17 @@
                 card_view:cardCornerRadius="0dp"
                 android:background="@color/white">
 
-            <include
-                layout="@layout/variant_base"
-                android:id="@+id/alter_layout"
-                bind:variantModel="@{variantModel}"/>
+                <include
+                    layout="@layout/variant_base"
+                    android:id="@+id/variant_base_layout"
+                    android:visibility="gone"
+                    bind:variantModel="@{variantModel}"/>
+
+                <include
+                    layout="@layout/variant_base_empty"
+                    android:id="@+id/variant_base_layout"
+                    android:visibility="visible"
+                    bind:variantModel="@{variantModel}"/>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
