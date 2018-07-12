@@ -103,7 +103,7 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
         model.getNewRecord().observe(this, record -> {
             if (record != null) {
                 bindingModelRecords.refreshRecord(record);
-              //  model.subscribeToRecord(record.id);
+                model.subscribeToRecord(record.id);
                 navigationController.openRecord(record.id);
             }
         });

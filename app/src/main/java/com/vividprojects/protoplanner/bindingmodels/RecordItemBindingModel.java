@@ -24,6 +24,7 @@ public class RecordItemBindingModel extends BaseObservable {
     private WeakReference<Runnable> onCommentEditClick;
     private WeakReference<Runnable> onLabelsEditClick;
     private WeakReference<Runnable> onAddVariantClick;
+    private WeakReference<Runnable> onCreateBasicVariantClick;
 
     public void setDefaultImage(String defaultImage) {
         this.defaultImage = defaultImage;
@@ -56,6 +57,11 @@ public class RecordItemBindingModel extends BaseObservable {
     }
 
     @Bindable
+    public boolean getRecordBasicVariantIsEmpty(){
+        return record.mainVariant == null;
+    }
+
+    @Bindable
     public Label.Plain[] getRecordLabels() {
         return record.labels.toArray(new Label.Plain[record.labels.size()]);
     }
@@ -69,6 +75,7 @@ public class RecordItemBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.recordName);
         notifyPropertyChanged(BR.recordComment);
         notifyPropertyChanged(BR.recordLabels);
+        notifyPropertyChanged(BR.recordBasicVariantIsEmpty);
         //...
     }
 
@@ -110,10 +117,20 @@ public class RecordItemBindingModel extends BaseObservable {
         this.onAddVariantClick = new WeakReference<>(func);
     }
 
+    public void setOnCreateBasicVariantClick(Runnable func) {
+        this.onCreateBasicVariantClick = new WeakReference<>(func);
+    }
+
     public void onAddVariantClick() {
         if (onAddVariantClick != null && onAddVariantClick.get() != null)
             onAddVariantClick.get().run();
     }
+
+    public void onCreateBasicVariantClick() {
+        if (onCreateBasicVariantClick != null && onCreateBasicVariantClick.get() != null)
+            onCreateBasicVariantClick.get().run();
+    }
+
 
     public void refreshVariant(Variant.Plain variant) {
         //alternativeVariantsListAdapter.refresh(variant);

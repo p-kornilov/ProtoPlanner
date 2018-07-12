@@ -40,6 +40,7 @@ public class ChipsLayout extends ViewGroup {
     private Chip noneChip;
 
     private boolean selectedSort = false;
+    private boolean showEmptyChip = false;
     private boolean nameSort = false;
 
     private final int item_padding = Display.calc_pixels(4);
@@ -119,13 +120,17 @@ public class ChipsLayout extends ViewGroup {
         setData(labels,selected,null);
     }
 
+    public void setShowEmptyChip(boolean showEmptyChip) {
+        this.showEmptyChip = showEmptyChip;
+    }
+
     public void setData(List<Label.Plain> labels, String[] selected, Activity activity) {
         this.labels.clear();
         this.selected.clear();
 
         removeAllViews();
 
-        if (mode == MODE_FULL) {
+        if (showEmptyChip) {
             noneChip = new Chip(getContext());
             noneChip.setData(null, MODE_NONE);
             noneChip.setVisibility(GONE);

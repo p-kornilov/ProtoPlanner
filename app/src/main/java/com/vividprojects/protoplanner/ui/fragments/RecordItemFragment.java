@@ -47,7 +47,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
     private static final int REQUEST_EDIT_NAME = 5;
     private static final int REQUEST_EDIT_COMMENT = 6;
     private static final int REQUEST_NEW_VARIANT = 7;
-    private static final int REQUEST_NEW_MAIN_VARIANT = 8;
+    private static final int REQUEST_CREATE_BASIC_VARIANT = 8;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -92,6 +92,12 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
         Bundle b = new Bundle();
         b.putString("ID", "");
         DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), REQUEST_NEW_VARIANT, b);
+    };
+
+    private Runnable onCreateBasicVariantClick = () -> {
+        Bundle b = new Bundle();
+        b.putString("ID", "");
+        DialogFullScreenHelper.showDialog(DialogFullScreenHelper.DIALOG_VARIANT, this, !navigationController.isTablet(), REQUEST_CREATE_BASIC_VARIANT, b);
     };
 
     @Override
@@ -211,6 +217,12 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
                     modelRecord.addVariant(id);
                 }
                 return;
+            case REQUEST_CREATE_BASIC_VARIANT:
+                if (resultCode == RESULT_OK && data != null) {
+                    String id = data.getStringExtra("ID");
+                    modelRecord.createBasicVariant(id);
+                }
+                return;
             case NavigationController.REQUEST_OPEN_VARIANT:
                 if (resultCode == RESULT_OK && data != null) {
                     Bundle b = data.getBundleExtra("BUNDLE");
@@ -251,6 +263,7 @@ public class RecordItemFragment extends Fragment implements Injectable, ItemActi
             bindingModelRecord.setOnCommentEditClick(onCommentEditClick);
             bindingModelRecord.setOnLabelsEditClick(onLabelsEditClick);
             bindingModelRecord.setOnAddVariantClick(onAddVariantClick);
+            bindingModelRecord.setOnCreateBasicVariantClick(onCreateBasicVariantClick);
             binding.setRecordModel(bindingModelRecord);
 
             bindingModelVariant = modelMainVariant.getBindingModelVariant();

@@ -687,6 +687,23 @@ public class LocalDataDB {
         return r.getPlain();
     }
 
+    public Record.Plain createBasicVariant(String recordId, String variantId) {
+        Record r = realm.where(Record.class).equalTo("id", recordId).findFirst();
+        Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
+        if (v == null || r == null)
+            return null;
+
+        final Bundle1<String> bid = new Bundle1<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                r.setMainVariant(v);
+            }
+        });
+
+        return r.getPlain();
+    }
+
     public void deleteShop(String id) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override

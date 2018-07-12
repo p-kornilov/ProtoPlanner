@@ -181,6 +181,13 @@ public class RecordItemViewModel extends ViewModel {
         }
     }
 
+    public void createBasicVariant(String id) {
+        if (recordItem != null && recordItem.getValue().data != null) {
+            dataRepository.createBasicVariant(recordItem.getValue().data.id, id);
+            recordItemId.setValue(recordItemId.getValue());
+        }
+    }
+
     public LiveData<String> getMainVariantId() {
         return mainVariantId;
     }

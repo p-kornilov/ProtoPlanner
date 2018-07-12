@@ -156,6 +156,12 @@ public class BindingHelper {
             layout.setMode(mode);
     }
 
+    @BindingAdapter("bind:labelsLayoutShowEmpty")
+    public static void setLabelsLayoutMode(ChipsLayout layout, boolean showEmpty) {
+        if (layout != null)
+            layout.setShowEmptyChip(showEmpty);
+    }
+
     @BindingAdapter({"bind:labelsLayoutData","bind:labelsLayoutDataSelected"})
     public static void setLabelsLayoutData(ChipsLayout layout, Label.Plain[] labels, String[] selected) {
         if (layout != null) {

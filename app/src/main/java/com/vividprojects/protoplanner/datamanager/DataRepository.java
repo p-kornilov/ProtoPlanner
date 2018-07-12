@@ -343,6 +343,12 @@ public class DataRepository {
         return vId;
     }
 
+    public void createBasicVariant(String recordId, String variantId) {
+        Record.Plain rp = localDataDB.createBasicVariant(recordId, variantId);
+        setFullImagePath(rp.mainVariant);
+        dataSubscriber.updateSubscribedRecord(rp);
+    }
+
     public void saveMainVariantToRecord(String variantId, String recordId) {
         dataSubscriber.updateSubscribedRecord(localDataDB.saveMainVariantToRecord(variantId, recordId));
     }
