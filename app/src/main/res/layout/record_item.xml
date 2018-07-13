@@ -8,6 +8,7 @@
         <variable name="obj" type="com.vividprojects.protoplanner.bindingmodels.RecordItemListBindingModel"/>
         <import type="com.vividprojects.protoplanner.R"/>
         <import type="com.vividprojects.protoplanner.widgets.ChipsLayout"/>
+        <import type="android.view.View"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -41,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="8dp"
+            bind:layout_marginTop="@{obj.recordItemListVariantIsEmpty ? @dimen/recordItemHeaderEmptyTop : @dimen/recordItemHeaderNormalTop}"
             android:fontFamily="@font/roboto"
             android:textColor="@android:color/black"
             android:textSize="18sp"
@@ -71,6 +72,7 @@
             android:text="@{obj.recordItemListBasicVariantName}"
             android:textColor="@android:color/black"
             android:textSize="16sp"
+            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
             bind:layout_constraintBottom_toTopOf="@id/ril_guideline2"
             bind:layout_constraintStart_toEndOf="@id/ril_image"
             tools:text="Variant name" />
@@ -85,6 +87,7 @@
             android:text="@{obj.recordItemListValueDecor}"
             android:textColor="@color/green"
             android:theme="@style/NormalText"
+            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toEndOf="@id/ril_image"
             app:layout_constraintTop_toBottomOf="@id/ril_variant_name"
             tools:text="1000" />
@@ -95,6 +98,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="20dp"
             android:background="@color/black_divider"
+            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@id/ril_variant_price"
             app:layout_constraintStart_toEndOf="@id/ril_image"
             app:layout_constraintTop_toBottomOf="@id/ril_variant_value" />
@@ -106,6 +110,7 @@
             android:layout_marginStart="20dp"
             android:text="@{obj.recordItemListCountDecor}"
             android:theme="@style/SecondaryText"
+            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toEndOf="@id/ril_image"
             app:layout_constraintTop_toBottomOf="@id/divider10"
             tools:text="10" />
@@ -116,6 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:text="*"
+            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
             android:theme="@style/SecondaryText"
             app:layout_constraintStart_toEndOf="@id/ril_variant_count"
             app:layout_constraintTop_toBottomOf="@id/divider10" />
@@ -127,6 +133,7 @@
             android:layout_marginStart="2dp"
             android:text="@{obj.recordItemListPriceDecor}"
             android:theme="@style/SecondaryText"
+            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toEndOf="@id/t1"
             app:layout_constraintTop_toBottomOf="@id/divider10"
             tools:text="100" />

@@ -415,8 +415,12 @@ public class DataRepository {
     }
 
     private void setFullImagePath(Variant.Plain variant) {
-        for (int i = 0;i<variant.full_images.size();i++) variant.full_images.set(i, imagesDirectory + IMAGES_FULL + variant.full_images.get(i) + IMAGES_EXT);
-        for (int i = 0;i<variant.small_images.size();i++) variant.small_images.set(i, imagesDirectory + IMAGES_SMALL + variant.small_images.get(i) + IMAGES_EXT);
+        if (variant != null) {
+            for (int i = 0; i < variant.full_images.size(); i++)
+                variant.full_images.set(i, imagesDirectory + IMAGES_FULL + variant.full_images.get(i) + IMAGES_EXT);
+            for (int i = 0; i < variant.small_images.size(); i++)
+                variant.small_images.set(i, imagesDirectory + IMAGES_SMALL + variant.small_images.get(i) + IMAGES_EXT);
+        }
     }
 
     public LiveData<Record.Plain> setRecordName(String id, String name) {

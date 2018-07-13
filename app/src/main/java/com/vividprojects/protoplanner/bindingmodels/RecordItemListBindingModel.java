@@ -48,6 +48,11 @@ public class RecordItemListBindingModel extends BaseObservable {
     }
 
     @Bindable
+    public boolean getRecordItemListVariantIsEmpty() {
+        return record.mainVariant == null;
+    }
+
+    @Bindable
     public String getRecordItemListName() {
         return record.name;
     }
