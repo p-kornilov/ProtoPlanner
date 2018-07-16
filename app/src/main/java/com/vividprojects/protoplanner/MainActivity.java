@@ -24,6 +24,7 @@ import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordListFragment;
 import com.vividprojects.protoplanner.utils.FabActions;
+import com.vividprojects.protoplanner.viewmodels.BlockListViewModel;
 import com.vividprojects.protoplanner.viewmodels.RecordListViewModel;
 import com.vividprojects.protoplanner.widgets.FabManager;
 
@@ -33,6 +34,9 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
 public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, NavigationView.OnNavigationItemSelectedListener, FabManager {
+    private final static String FRAGMENT_RECORD = "FRAGMENT_RECORD";
+    private final static String FRAGMENT_BLOCK = "FRAGMENT_BLOCK";
+
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     private Toolbar secondToolBar;
     private FloatingActionButton fab;
+    private FabActions model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 //        setContentView(R.layout.activity_main);
         Toolbar toolbar;
 
-        final FabActions model;
-
         if (navigationController.isTablet()) {
             toolbar = (Toolbar) findViewById(R.id.toolbar1);
             setSupportActionBar(toolbar);
@@ -69,12 +72,13 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
             final RecordListFragment fragment = new RecordListFragment();
+
             fragmentTransaction.replace(R.id.lists_container, fragment);
             fragmentTransaction.commit();
 
             model = ViewModelProviders.of(this,viewModelFactory).get(RecordListViewModel.class);
 
-            setRecordItem("Empty");
+           // setRecordItem("Empty");
 
         } else {
             toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -115,6 +119,28 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         Log.i("Test", "------------------------------ Dimension height " + dataRepository.getHeight());
         Log.i("Test", "------------------------------ Type of the device " + dataRepository.getType());
 
+    }
+
+    private void replaceListFragment(String type) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Fragment fragment = null;
+        switch (type) {
+            case FRAGMENT_RECORD:
+                fragment = fragmentManager.findFragmentByTag(FRAGMENT_RECORD);
+                if (fragment == null)
+                    fragment = new RecordListFragment();
+                fragmentTransaction.replace(R.id.lists_container, fragment, FRAGMENT_RECORD);
+                fragmentTransaction.commit();
+                model = ViewModelProviders.of(this,viewModelFactory).get(RecordListViewModel.class);
+                break;
+            case FRAGMENT_BLOCK:
+                fragment = new RecordListFragment();
+                fragmentTransaction.replace(R.id.lists_container, fragment, FRAGMENT_BLOCK);
+                fragmentTransaction.commit();
+                model = ViewModelProviders.of(this,viewModelFactory).get(BlockListViewModel.class);
+        }
     }
 
     public Toolbar getSecondToolBar() {
