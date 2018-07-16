@@ -133,4 +133,8 @@ public class RecordListViewModel extends ViewModel implements FabActions {
     public LiveData<Record.Plain> getNewRecord() {
         return newRecord;
     }
+
+    public void deleteRecord(String id) {
+        dataRepository.deleteRecord(id);
+    }
 }

@@ -147,8 +147,7 @@ public class DataRepository {
                 if (records != null) {
                     for (Record r : records) {
                         Record.Plain rp = r.getPlain();
-                        for (int i = 0; i < rp.mainVariant.small_images.size(); i++)
-                            rp.mainVariant.small_images.set(i, imagesDirectory + IMAGES_FULL + rp.mainVariant.small_images.get(i) + ".jpg");
+                        setFullImagePath(rp.mainVariant);
                         recordsPlain.add(rp);
                     }
                 }
@@ -303,6 +302,10 @@ public class DataRepository {
 
     public void deleteVariant(String id) {
         localDataDB.deleteVariant(id);
+    }
+
+    public void deleteRecord(String id) {
+        localDataDB.deleteRecord(id);
     }
 
     public String saveVariant(String id, String name, double price, double count, int currency, int measure) {

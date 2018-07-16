@@ -6,11 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.bindingmodels.RecordListBindingModel;
 import com.vividprojects.protoplanner.databinding.RecordsFragmentBinding;
 import com.vividprojects.protoplanner.di.Injectable;
@@ -58,6 +64,7 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Log.d("Test", "onCreate - Records Fragment");
     }
 
@@ -121,8 +128,44 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
     }
 
     @Override
-    public void itemRecordDelete(String item) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
 
+        MenuItem myActionMenuItem = menu.findItem( R.id.search);
+        final SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("Test","Entered - Submit");
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String filter) {
+                if (TextUtils.isEmpty(filter)) {
+/*
+                    adapter.filter("");
+                    listView.clearTextFilter();
+*/
+                    bindingModelRecords.setFilter(filter);
+                    Log.d("Test","Entered - Empty");
+                } else {
+                    Log.d("Test","Entered - " + filter);
+                    bindingModelRecords.setFilter(filter);
+/*
+                    adapter.filter(newText);
+*/
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void itemRecordDelete(String id) {
+        model.deleteRecord(id);
+        if (navigationController.isTablet())
+            navigationController.openRecord("Empty");
     }
 
     @Override

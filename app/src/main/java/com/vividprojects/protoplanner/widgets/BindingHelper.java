@@ -5,6 +5,7 @@ import android.databinding.BindingAdapter;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Constraints;
+import android.support.constraint.Guideline;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -167,11 +168,9 @@ public class BindingHelper {
             layout.setShowEmptyChip(showEmpty);
     }
 
-    @BindingAdapter("bind:layout_marginTop")
-    public static void setLayoutMarginTop(View v, float margin) {
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) v.getLayoutParams();
-        params.setMargins(params.leftMargin, (int)margin, params.rightMargin, params.bottomMargin);
-        v.setLayoutParams(params);
+    @BindingAdapter("bind:layout_constraintGuide_begin")
+    public static void setLayoutMarginTop(View v, float x) {
+        ((Guideline) v).setGuidelineBegin((int) x);
     }
 
     @BindingAdapter({"bind:labelsLayoutData","bind:labelsLayoutDataSelected"})

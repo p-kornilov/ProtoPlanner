@@ -16,7 +16,7 @@
     <dimen name="cardElevation">2dp</dimen>
     <dimen name="cardRadius">2dp</dimen>
     <dimen name="statusBarHeight">24dp</dimen>
-    <dimen name="recordItemHeaderNormalTop">200dp</dimen>
-    <dimen name="recordItemHeaderEmptyTop">500dp</dimen>
+    <dimen name="recordItemHeaderNormalTop">30dp</dimen>
+    <dimen name="recordItemHeaderEmptyTop">70dp</dimen>
 
 </resources>

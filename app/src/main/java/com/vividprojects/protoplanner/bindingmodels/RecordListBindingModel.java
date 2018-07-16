@@ -48,4 +48,8 @@ public class RecordListBindingModel extends BaseObservable {
         recordListAdapter.refresh(record);
         notifyPropertyChanged(BR.recordListAdapter);
     }
+
+    public void setFilter(String filter) {
+        recordListAdapter.setFilter(filter);
+    }
 }

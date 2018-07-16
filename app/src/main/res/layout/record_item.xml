@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            bind:layout_constraintGuide_begin="30dp" />
+            bind:layout_constraintGuide_begin="@{obj.recordItemListVariantIsEmpty ? @dimen/recordItemHeaderEmptyTop : @dimen/recordItemHeaderNormalTop}" />
 
         <ImageView
             android:id="@+id/ril_image"
@@ -42,7 +42,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            bind:layout_marginTop="@{obj.recordItemListVariantIsEmpty ? @dimen/recordItemHeaderEmptyTop : @dimen/recordItemHeaderNormalTop}"
             android:fontFamily="@font/roboto"
             android:textColor="@android:color/black"
             android:textSize="18sp"

@@ -6,6 +6,7 @@ import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.bindingmodels.RecordItemListBindingModel;
 import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.coredata.VariantInShop;
+import com.vividprojects.protoplanner.utils.DeleteDialogHelper;
 import com.vividprojects.protoplanner.utils.ItemActionsRecord;
 
 import java.lang.ref.WeakReference;
@@ -20,6 +21,7 @@ public class RecordListAdapter extends DataBindingAdapter implements ItemActions
     private WeakReference<Context> context;
     private ItemActionsRecord master;
     private String defaultImage;
+    private String filter;
 
     public RecordListAdapter(Context context, String defaultImage) {
         this.context = new WeakReference<>(context);
@@ -54,6 +56,26 @@ public class RecordListAdapter extends DataBindingAdapter implements ItemActions
         //notifyDataSetChanged();
     }
 
+    public void setFilter(String filter) {
+        String fLower;
+        if (filter != null)
+            fLower = filter.toLowerCase();
+        else
+            return;
+        if (!fLower.equals(this.filter)) {
+            this.filter = fLower;
+            filtered_data = new ArrayList<>();
+            for (Record.Plain r : data) {
+                if (r.name.toLowerCase().contains(filter) || (r.mainVariant != null && r.mainVariant.title.toLowerCase().contains(filter)))
+                    filtered_data.add(r);
+            }
+            createModels();
+            notifyDataSetChanged();
+        } else
+            filtered_data = data;
+
+    }
+
     private void createModels() {
         models.clear();
         for (int i = 0; i < filtered_data.size(); i++) {
@@ -67,20 +89,20 @@ public class RecordListAdapter extends DataBindingAdapter implements ItemActions
 
     @Override
     public void itemRecordDelete(String id) {
-/*        DeleteDialogHelper.show(context.get(), "Are you sure?", () -> {
+        DeleteDialogHelper.show(context.get(), "Are you sure?", () -> {
             int pos;
-            VariantInShop.Plain s = null;
+            Record.Plain r = null;
             for (pos = 0; pos < filtered_data.size(); pos++)
                 if (filtered_data.get(pos).id.equals(id)) {
-                    s = filtered_data.get(pos);
+                    r = filtered_data.get(pos);
                     break;
                 }
-            data.remove(s);
-            filtered_data.remove(s);
+            data.remove(r);
+            filtered_data.remove(r);
             models.remove(pos);
-            master.itemShopDelete(id);
+            master.itemRecordDelete(id);
             notifyItemRemoved(pos);
-        });*/
+        });
     }
 
     @Override

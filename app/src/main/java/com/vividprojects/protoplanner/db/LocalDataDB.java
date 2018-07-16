@@ -730,6 +730,19 @@ public class LocalDataDB {
         });
     }
 
+    public void deleteRecord(String id) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Record r = realm.where(Record.class).equalTo("id", id).findFirst();
+                if (r != null) {
+                    //s.getVariant().
+                    r.deleteFromRealm();
+                }
+            }
+        });
+    }
+
     public boolean attachVariantToRecord(String variantId, String recordId) {
         Variant v = realm.where(Variant.class).equalTo("id", variantId).findFirst();
         Record r = realm.where(Record.class).equalTo("id", recordId).findFirst();
