@@ -57,6 +57,7 @@ public class RecordListAdapter extends DataBindingAdapter implements ItemActions
     }
 
     public void setFilter(String filter) {
+
         String fLower;
         if (filter != null)
             fLower = filter.toLowerCase();
@@ -107,7 +108,13 @@ public class RecordListAdapter extends DataBindingAdapter implements ItemActions
 
     @Override
     public void itemRecordEdit(String id) {
+        clearSelected();
         master.itemRecordEdit(id);
+    }
+
+    public void clearSelected() {
+        for (RecordItemListBindingModel m : models)
+            m.setSelected(false);
     }
 
     @Override

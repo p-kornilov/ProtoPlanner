@@ -16,15 +16,17 @@ import com.vividprojects.protoplanner.coredata.VariantInShop;
 import com.vividprojects.protoplanner.utils.ItemActionsRecord;
 import com.vividprojects.protoplanner.utils.ItemActionsShop;
 import com.vividprojects.protoplanner.utils.PriceFormatter;
+import com.vividprojects.protoplanner.utils.Selectable;
 
 import java.lang.ref.WeakReference;
 
-public class RecordItemListBindingModel extends BaseObservable {
+public class RecordItemListBindingModel extends BaseObservable implements Selectable {
     private Record.Plain record;
 
     private ItemActionsRecord listAdapter;
     private boolean isEmpty = false;
     private String defaultImage;
+    private boolean selected = false;
 
     private WeakReference<Context> context;
 
@@ -45,6 +47,11 @@ public class RecordItemListBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.recordItemListPriceDecor);
         notifyPropertyChanged(BR.recordItemListCountDecor);
         //notifyPropertyChanged(BR.shopIsEmpty);
+    }
+
+    @Bindable
+    public boolean getRecordItemListSelected() {
+        return selected;
     }
 
     @Bindable
@@ -92,6 +99,15 @@ public class RecordItemListBindingModel extends BaseObservable {
 
     public void onItemClick() {
         listAdapter.itemRecordEdit(record.id);
+        setSelected(true);
+    }
+
+    @Override
+    public void setSelected(boolean s) {
+        if (selected != s) {
+            selected = s;
+            notifyPropertyChanged(BR.recordItemListSelected);
+        }
     }
 
     public void onMenuClicked(View view) {
@@ -102,6 +118,7 @@ public class RecordItemListBindingModel extends BaseObservable {
                 switch (item.getItemId()) {
                     case R.id.mre_edit:
                         listAdapter.itemRecordEdit(record.id);
+                        setSelected(true);
                         return true;
                     case R.id.mre_block:
                         /*if (!shop.basicVariant)

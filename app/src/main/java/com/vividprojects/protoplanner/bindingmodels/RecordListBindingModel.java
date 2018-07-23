@@ -52,4 +52,8 @@ public class RecordListBindingModel extends BaseObservable {
     public void setFilter(String filter) {
         recordListAdapter.setFilter(filter);
     }
+
+    public void clearSelected() {
+        recordListAdapter.clearSelected();
+    }
 }

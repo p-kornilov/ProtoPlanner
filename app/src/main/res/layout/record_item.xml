@@ -24,6 +24,19 @@
             android:orientation="horizontal"
             bind:layout_constraintGuide_begin="@{obj.recordItemListVariantIsEmpty ? @dimen/recordItemHeaderEmptyTop : @dimen/recordItemHeaderNormalTop}" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorSelected"
+            android:visibility="@{obj.recordItemListSelected ? View.VISIBLE : View.GONE}" />
+
+        <View
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/square"
+            android:visibility="@{obj.recordItemListSelected ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <ImageView
             android:id="@+id/ril_image"
             android:layout_width="104dp"

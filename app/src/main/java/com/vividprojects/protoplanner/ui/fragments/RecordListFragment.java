@@ -93,8 +93,11 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
         model.setActionAdd(addAction);
 
         model.getList().observe(this,resource -> {
-            if (resource != null && resource.data != null)
+            if (resource != null && resource.data != null) {
                 bindingModelRecords.setRecordList(resource.data);
+                if (navigationController.isTablet())
+                    navigationController.openRecord("Empty");
+            }
         });
 
         model.getRefreshedRecord().observe(this, resource -> {
@@ -124,6 +127,14 @@ public class RecordListFragment extends Fragment implements Injectable, ItemActi
                 if (resultCode == RESULT_OK && data != null) {
                     model.createNewRecord(data.getStringExtra("EDITTEXT"));
                 }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!navigationController.isTablet()) {
+            bindingModelRecords.clearSelected();
         }
     }
 

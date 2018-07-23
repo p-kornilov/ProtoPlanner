@@ -42,7 +42,7 @@ public class AppInjector {
 
                     @Override
                     public void onActivityResumed(Activity activity) {
-                        ppApp.getNavigationController().setCurrentActivity(activity);
+                       // ppApp.getNavigationController().setCurrentActivity(activity);
                     }
 
                     @Override

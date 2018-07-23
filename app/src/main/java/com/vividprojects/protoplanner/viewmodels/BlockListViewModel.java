@@ -9,6 +9,7 @@ import com.vividprojects.protoplanner.coredata.Filter;
 import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.coredata.Resource;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
+import com.vividprojects.protoplanner.utils.FabActions;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +20,7 @@ import javax.inject.Inject;
  * Created by Smile on 06.12.2017.
  */
 
-public class BlockListViewModel extends ViewModel {
+public class BlockListViewModel extends ViewModel implements FabActions {
 
     private final MutableLiveData<Filter> filter;
 
@@ -82,4 +83,8 @@ public class BlockListViewModel extends ViewModel {
       //  });
     }
 
+    @Override
+    public void actionAdd() {
+
+    }
 }

@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.vividprojects.protoplanner.datamanager.DataRepository;
+import com.vividprojects.protoplanner.ui.BlockListFragment;
 import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordListFragment;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     private Toolbar secondToolBar;
     private FloatingActionButton fab;
     private FabActions model;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,35 +65,19 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 //        setContentView(R.layout.activity_main);
         Toolbar toolbar;
 
+        drawer = findViewById(R.id.drawer_layout);
+
+        navigationController.setCurrentActivity(this);
+
         if (navigationController.isTablet()) {
             toolbar = (Toolbar) findViewById(R.id.toolbar1);
             setSupportActionBar(toolbar);
             secondToolBar = (Toolbar) findViewById(R.id.toolbar2);
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            final RecordListFragment fragment = new RecordListFragment();
-
-            fragmentTransaction.replace(R.id.lists_container, fragment);
-            fragmentTransaction.commit();
-
-            model = ViewModelProviders.of(this,viewModelFactory).get(RecordListViewModel.class);
-
-           // setRecordItem("Empty");
-
         } else {
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            final RecordListFragment fragment = new RecordListFragment();
-            fragmentTransaction.replace(R.id.lists_container, fragment);
-            fragmentTransaction.commit();
-            model = ViewModelProviders.of(this,viewModelFactory).get(RecordListViewModel.class);
         }
+        replaceListFragment(FRAGMENT_RECORD);
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -128,15 +114,13 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         Fragment fragment = null;
         switch (type) {
             case FRAGMENT_RECORD:
-                fragment = fragmentManager.findFragmentByTag(FRAGMENT_RECORD);
-                if (fragment == null)
-                    fragment = new RecordListFragment();
+                fragment = new RecordListFragment();
                 fragmentTransaction.replace(R.id.lists_container, fragment, FRAGMENT_RECORD);
                 fragmentTransaction.commit();
                 model = ViewModelProviders.of(this,viewModelFactory).get(RecordListViewModel.class);
                 break;
             case FRAGMENT_BLOCK:
-                fragment = new RecordListFragment();
+                fragment = new BlockListFragment();
                 fragmentTransaction.replace(R.id.lists_container, fragment, FRAGMENT_BLOCK);
                 fragmentTransaction.commit();
                 model = ViewModelProviders.of(this,viewModelFactory).get(BlockListViewModel.class);
@@ -210,30 +194,27 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_labels) {
-            navigationController.openLabels();
-
+        switch (id) {
+            case R.id.nav_records:
+                replaceListFragment(FRAGMENT_RECORD);
+                break;
+            case R.id.nav_blocks:
+                replaceListFragment(FRAGMENT_BLOCK);
+                break;
+            case R.id.nav_labels:
+                navigationController.openLabels();
+                break;
+            case R.id.nav_currency:
+                navigationController.openCurrencies();
+                break;
+            case R.id.nav_measure:
+                navigationController.openMeasures();
+                break;
+            case R.id.nav_settings:
+                navigationController.openSettings();
+                break;
         }
 
-        if (id == R.id.nav_currency) {
-            navigationController.openCurrencies();
-            /*else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        }*/
-        } else if (id == R.id.nav_measure) {
-            navigationController.openMeasures();
-        } else if (id == R.id.nav_settings) {
-            navigationController.openSettings();
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

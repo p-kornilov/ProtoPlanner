@@ -52,7 +52,6 @@ public class NavigationController {
     }
 
     public void openRecord(String id) {
-        boolean isTablet = context.getResources().getBoolean(R.bool.isTablet);
 
 /*        SDK_INT value        Build.VERSION_CODES        Human Version Name
         1                  BASE                      Android 1.0 (no codename)
