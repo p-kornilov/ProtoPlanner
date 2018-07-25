@@ -75,6 +75,10 @@ public class Currency extends RealmObject {
     }
 */
 
+    public boolean isExchangeable() {
+        return exchange_base != 0 && exchange_rate != 0;
+    }
+
     public Currency(Currency.Plain plain) {
         iso_code_int = plain.iso_code_int;
         iso_name_id = 0;

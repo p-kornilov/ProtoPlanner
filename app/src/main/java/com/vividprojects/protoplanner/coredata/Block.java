@@ -99,18 +99,23 @@ public class Block extends RealmObject {
 
     public void setPriorityType(int p) { priority_type = p;}
 
-    public int getPriority_type() { return priority_type; }
+    public int getPriorityType() { return priority_type; }
 
     public List<AttachedRecord> getRecords() { return records; }
 
     private double calculateValue() {
-        сделать рассчет
         double totalValue = 0;
-        for (AttachedRecord pr : records) {
-            totalValue += pr.getRecord().getMainVariant().getValue();
+        boolean error = !currency.isExchangeable();
+        for (AttachedRecord ar : records) {
+            Variant mVariant = ar.getRecord().getMainVariant();
+            if (ar.getRecord().getMainVariant().getCurrency().equals(currency))
+                totalValue += mVariant.getValue();
+            else {
+                error = !mVariant.getCurrency().isExchangeable() || error;
+                totalValue += mVariant.getValue()*currency.getExchange_rate()/mVariant.getCurrency().getExchange_rate();
+            }
         }
-
-        return totalValue;
+        return error ? -1*totalValue : totalValue;
     }
 
     public List<Label> getLocalLabels() {
