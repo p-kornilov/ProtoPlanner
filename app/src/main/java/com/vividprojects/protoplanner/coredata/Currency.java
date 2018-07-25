@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -191,6 +192,15 @@ public class Currency extends RealmObject {
         isBase = plain.isBase;
         flag_id = plain.flag_id;
         flag_file = plain.flag_file;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        Currency other = (Currency) obj;
+        return iso_code_int == other.iso_code_int;
     }
 
     public Plain getPlain() {

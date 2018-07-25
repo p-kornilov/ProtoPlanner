@@ -2,18 +2,21 @@ package com.vividprojects.protoplanner.coredata;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Block extends RealmObject {
-    @PrimaryKey
-    private String name;
-    private double totalValue;
     public final static int PRIORITY_OFF = 0;
     public final static int PRIORITY_DATE = 1;
     public final static int PRIORITY_SIMPLE = 2;
+
+    @PrimaryKey
+    private String id = UUID.randomUUID().toString();
+    private String name;
+    private Currency currency;
     private int priority_type;
     private RealmList<AttachedRecord> records;
     private RealmList<Label> local_labels;
@@ -57,6 +60,10 @@ public class Block extends RealmObject {
         return 31 * 17 + name.hashCode();
     }
 
+    public String getId() {
+        return id;
+    }
+
     private boolean findRecord(Record r) {
         for (AttachedRecord pr : records) {
             if (pr.getRecord().equals(r)) {
@@ -68,27 +75,22 @@ public class Block extends RealmObject {
 
     public Block() {
         priority_type = Block.PRIORITY_OFF;
-        totalValue = 0;
         name = new String("");
         records = new RealmList<>();
         local_labels = new RealmList<>();
     }
 
-    public Block(String name, int priority_type) {
+    public Block(String name, int priority_type, Currency currency) {
         this.priority_type = priority_type;
-        totalValue = 0;
         this.name = name;
-        records = new RealmList<>();
-        local_labels = new RealmList<>();
+        this.currency = currency;
+        this.records = new RealmList<>();
+        this.local_labels = new RealmList<>();
     }
 
-    public Block(String name, int priority_type, Record r) {
-        this.priority_type = priority_type;
-        totalValue = 0;
-        this.name = name;
-        records = new RealmList<AttachedRecord>();
-        records.add(new AttachedRecord(r));
-        local_labels = new RealmList<>();
+    public Block(String name, int priority_type, Currency currency, Record r) {
+        this(name, priority_type, currency);
+        this.records.add(new AttachedRecord(r));
     }
 
     public void setName(String name) { this.name = name; }
@@ -101,13 +103,14 @@ public class Block extends RealmObject {
 
     public List<AttachedRecord> getRecords() { return records; }
 
-    public double getTotalValue() { return totalValue; }
-
-    private void recalcValues() {
-        totalValue = 0;
+    private double calculateValue() {
+        сделать рассчет
+        double totalValue = 0;
         for (AttachedRecord pr : records) {
             totalValue += pr.getRecord().getMainVariant().getValue();
         }
+
+        return totalValue;
     }
 
     public List<Label> getLocalLabels() {
@@ -135,11 +138,7 @@ public class Block extends RealmObject {
             return true;
         } else {
             if (records.add(new AttachedRecord(r))) {
-                if (r.addToBlock(this)) {
-                    recalcValues();
-                    return true;
-                } else
-                    return false;
+                return r.addToBlock(this);
             } else
                 return false;
         }
@@ -147,7 +146,7 @@ public class Block extends RealmObject {
 
     @Override
     public String toString() {
-        String str = "--- BLOCK ---\nName: \"" + name + "\"; Total value: " + totalValue;
+        String str = "--- BLOCK ---\nName: \"" + name;
         switch (priority_type) {
             case Block.PRIORITY_OFF:
                 str += "; Priority is OFF";
@@ -184,13 +183,13 @@ public class Block extends RealmObject {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-
         if (obj == null) return false;
-
         if (getClass() != obj.getClass()) return false;
-
         Block other = (Block) obj;
+        return Objects.equals(id,other.id);
+    }
 
-        return Objects.equals(name,other.name) && Objects.equals(records,other.records) && priority_type == other.priority_type;
+    public class Plain {
+
     }
 }

@@ -10,40 +10,54 @@ import io.realm.RealmObject;
 
 public class AttachedRecord extends RealmObject {
     private Record record;
-    private Date date;
-    private int priority;
+    private Date priorityDate;
+    private int priorityQueue;
 
-    private void init(Record r, int p, Date dt) {
-        record = r;
-        date = dt;
-        priority = 0;
+    public AttachedRecord(Record record, int queue, Date date) {
+        this.record = record;
+        this.priorityDate = date;
+        this.priorityQueue = queue;
     }
 
     public AttachedRecord() {
-        init(null,0, new Date());
+        this(null,0, new Date());
     }
 
-    public AttachedRecord(Record r) {
-        init(r,0, new Date());
+    public AttachedRecord(Record record) {
+        this(record,0, new Date());
     }
 
-    public AttachedRecord(Record r, int p) {
-        init(r, p, new Date());
+    public AttachedRecord(Record record, int queue) {
+        this(record, queue, new Date());
     }
 
-    public AttachedRecord(Record r, Date dt) {
-        init(r,0, dt);
+    public AttachedRecord(Record record, Date date) {
+        this(record,0, date);
     }
 
     public Record getRecord() { return record; }
 
-    public Date getDate() { return date; }
+    public Date getPriorityDate() { return priorityDate; }
 
-    public int getPriority() { return priority; }
+    public int getPriorityQueue() { return priorityQueue; }
 
     public void setRecord(Record record) { this.record = record; }
 
-    public void setDate(Date date) { this.date = date; }
+    public void setPriorityDate(Date priorityDate) { this.priorityDate = priorityDate; }
 
-    public void setPriority(int priority) { this.priority = priority; }
+    public void setPriorityQueue(int priorityQueue) { this.priorityQueue = priorityQueue; }
+
+    public Plain getPlain() {
+        Plain plain = new Plain();
+        plain.record = record.getPlain();
+        plain.date = priorityDate;
+        plain.priority = priorityQueue;
+        return plain;
+    }
+
+    public class Plain {
+        public Record.Plain record;
+        public Date date;
+        public int priority;
+    }
 }
