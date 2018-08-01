@@ -20,12 +20,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.vividprojects.protoplanner.datamanager.DataRepository;
-import com.vividprojects.protoplanner.ui.BlockListFragment;
 import com.vividprojects.protoplanner.ui.NavigationController;
+import com.vividprojects.protoplanner.ui.fragments.BlockListFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordListFragment;
 import com.vividprojects.protoplanner.utils.FabActions;
 import com.vividprojects.protoplanner.viewmodels.BlockListViewModel;
+import com.vividprojects.protoplanner.viewmodels.BlockListViewModel_;
 import com.vividprojects.protoplanner.viewmodels.RecordListViewModel;
 import com.vividprojects.protoplanner.widgets.FabManager;
 
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
                 fragment = new BlockListFragment();
                 fragmentTransaction.replace(R.id.lists_container, fragment, FRAGMENT_BLOCK);
                 fragmentTransaction.commit();
-                model = ViewModelProviders.of(this,viewModelFactory).get(BlockListViewModel.class);
+                model = ViewModelProviders.of(this,viewModelFactory).get(BlockListViewModel_.class);
         }
     }
 

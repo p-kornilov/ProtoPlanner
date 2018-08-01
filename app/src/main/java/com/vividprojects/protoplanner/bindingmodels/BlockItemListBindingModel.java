@@ -73,8 +73,8 @@ public class BlockItemListBindingModel extends BaseObservable implements Selecta
     }
 
     @Bindable
-    public int getBlockItemListElementsCount() {
-        return block.elementsCount;
+    public String getBlockItemListElementsCount() {
+        return String.valueOf(block.elementsCount);
     }
 
     public void onItemClick() {

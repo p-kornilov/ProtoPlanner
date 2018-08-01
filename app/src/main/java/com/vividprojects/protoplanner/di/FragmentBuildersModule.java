@@ -1,10 +1,11 @@
 package com.vividprojects.protoplanner.di;
 
-import com.vividprojects.protoplanner.ui.BlockListFragment;
+
 import com.vividprojects.protoplanner.ui.dialogs.CreateLabelDialog;
 import com.vividprojects.protoplanner.ui.dialogs.DeleteLabelDialog;
 import com.vividprojects.protoplanner.ui.dialogs.EditShopDialog;
 import com.vividprojects.protoplanner.ui.dialogs.EditVariantDialog;
+import com.vividprojects.protoplanner.ui.fragments.BlockListFragment;
 import com.vividprojects.protoplanner.ui.fragments.CurrencyItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.CurrencyListFragment;
 import com.vividprojects.protoplanner.ui.fragments.MeasureItemFragment;
@@ -27,10 +28,13 @@ public abstract class FragmentBuildersModule {
     abstract RecordListFragment contributeRecordListFragment();
 
     @ContributesAndroidInjector
-    abstract RecordItemFragment contributeRecordItemFragment();
+    abstract BlockListFragment contributeBlockListFragment();
 
     @ContributesAndroidInjector
-    abstract BlockListFragment contributeBlockFragment();
+    abstract RecordItemFragment contributeRecordItemFragment();
+
+/*    @ContributesAndroidInjector
+    abstract BlockListFragment contributeBlockFragment();*/
 
     @ContributesAndroidInjector
     abstract ImageViewFragment contributeImageViewFragment();
