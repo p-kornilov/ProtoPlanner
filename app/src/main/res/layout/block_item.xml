@@ -5,9 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="obj" type="com.vividprojects.protoplanner.bindingmodels.RecordItemListBindingModel"/>
+        <variable name="obj" type="com.vividprojects.protoplanner.bindingmodels.BlockItemListBindingModel"/>
         <import type="com.vividprojects.protoplanner.R"/>
-        <import type="com.vividprojects.protoplanner.widgets.ChipsLayout"/>
         <import type="android.view.View"/>
     </data>
 
@@ -22,20 +21,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            bind:layout_constraintGuide_begin="@{obj.recordItemListVariantIsEmpty ? @dimen/recordItemHeaderEmptyTop : @dimen/recordItemHeaderNormalTop}" />
+            bind:layout_constraintGuide_begin="40dp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorSelected"
             tools:visibility="gone"
-            android:visibility="@{obj.recordItemListSelected ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{obj.blockItemListSelected ? View.VISIBLE : View.GONE}" />
 
         <View
             android:layout_width="4dp"
             android:layout_height="match_parent"
             android:background="@drawable/square"
-            android:visibility="@{obj.recordItemListSelected ? View.VISIBLE : View.GONE}"
+            android:visibility="@{obj.blockItemListSelected ? View.VISIBLE : View.GONE}"
             tools:visibility="gone"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -49,11 +48,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:srcImage="@{obj.recordItemListImage}"
-            tools:srcCompat="@drawable/spring2" />
+            bind:srcCompat="@drawable/spring2" />
 
         <TextView
-            android:id="@+id/ril_title"
+            android:id="@+id/bil_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -61,99 +59,45 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="@{obj.recordItemListName}"
+            android:text="@{obj.blockItemListName}"
             app:layout_constraintBottom_toBottomOf="@id/guideline1"
             app:layout_constraintStart_toEndOf="@id/ril_image"
             tools:text="Block name">
 
         </TextView>
 
-        <android.support.constraint.Guideline
-            android:id="@+id/ril_guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5" />
-
-
         <TextView
-            android:id="@+id/ril_variant_name"
+            android:id="@+id/bil_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/roboto"
-            android:text="@{obj.recordItemListBasicVariantName}"
-            android:textColor="@android:color/black"
+            android:text="@{obj.blockItemListValueDecor}"
+            android:textColor="@{obj.blockItemListValueError ? @color/textInputError : @color/green}"
             android:textSize="16sp"
-            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
-            bind:layout_constraintBottom_toTopOf="@id/ril_guideline2"
+            bind:layout_constraintTop_toBottomOf="@id/guideline1"
             bind:layout_constraintStart_toEndOf="@id/ril_image"
-            tools:text="Variant name" />
-
-
-        <TextView
-            android:id="@+id/ril_variant_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="20dp"
-            android:text="@{obj.recordItemListValueDecor}"
-            android:textColor="@color/green"
-            android:theme="@style/NormalText"
-            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toEndOf="@id/ril_image"
-            app:layout_constraintTop_toBottomOf="@id/ril_variant_name"
-            tools:text="1000" />
-
-        <View
-            android:id="@+id/divider10"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:background="@color/black_divider"
-            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
-            app:layout_constraintEnd_toEndOf="@id/ril_variant_price"
-            app:layout_constraintStart_toEndOf="@id/ril_image"
-            app:layout_constraintTop_toBottomOf="@id/ril_variant_value" />
+            tools:text="$1000"
+            tools:textColor="@color/green"/>
 
         <TextView
-            android:id="@+id/ril_variant_count"
+            android:id="@+id/bil_elements_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:text="@{obj.recordItemListCountDecor}"
-            android:theme="@style/SecondaryText"
-            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toEndOf="@id/ril_image"
-            app:layout_constraintTop_toBottomOf="@id/divider10"
-            tools:text="10" />
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto"
+            android:text="@{obj.blockItemListElementsCount}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            bind:layout_constraintTop_toBottomOf="@id/guideline1"
+            bind:layout_constraintEnd_toStartOf="@+id/bil_edit_button"
+            tools:text="(7)" />
 
-        <TextView
-            android:id="@+id/t1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:text="*"
-            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
-            android:theme="@style/SecondaryText"
-            app:layout_constraintStart_toEndOf="@id/ril_variant_count"
-            app:layout_constraintTop_toBottomOf="@id/divider10" />
-
-        <TextView
-            android:id="@+id/ril_variant_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:text="@{obj.recordItemListPriceDecor}"
-            android:theme="@style/SecondaryText"
-            android:visibility="@{obj.recordItemListVariantIsEmpty ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toEndOf="@id/t1"
-            app:layout_constraintTop_toBottomOf="@id/divider10"
-            tools:text="100" />
 
         <ImageButton
-            android:id="@+id/ril_edit_button"
+            android:id="@+id/bil_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -161,7 +105,7 @@
             android:layout_marginTop="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:cropToPadding="false"
-            android:onClick="@{()->obj.onMenuClicked(rilEditButton)}"
+            android:onClick="@{()->obj.onMenuClicked(bilEditButton)}"
             android:padding="12dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -101,6 +101,22 @@ public class NavigationController {
         }
     }
 
+    public void openBlock(String id) {
+/*        if (isTablet) {
+            ((MainActivity) currentActivity).setBlockItem(id);
+        } else {
+            Intent intent;
+            if (Build.VERSION.SDK_INT <= 23) {
+                intent = new Intent(context, BlockActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            } else {
+                intent = new Intent(context, BlockActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
+
+            intent.putExtra("BLOCK_ID",id);
+            context.startActivity(intent);
+        }*/
+    }
+
     public static void openImageView(int position, String variant, Context context) {
 
         Intent intent;

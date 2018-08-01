@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.adapters;
 import android.content.Context;
 
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.bindingmodels.BlockItemListBindingModel;
 import com.vividprojects.protoplanner.bindingmodels.RecordItemListBindingModel;
 import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Record;
@@ -16,11 +17,11 @@ import java.util.List;
 
 public class BlockListAdapter extends DataBindingAdapter implements ItemActionsBlock {
     private List<Block.Plain> data = new ArrayList<>();
-    private List<Record.Plain> filtered_data = new ArrayList<>();
-    private List<RecordItemListBindingModel> models = new ArrayList<>();
+    private List<Block.Plain> filtered_data = new ArrayList<>();
+    private List<BlockItemListBindingModel> models = new ArrayList<>();
 
     private WeakReference<Context> context;
-    private ItemActionsRecord master;
+    private ItemActionsBlock master;
     private String defaultImage;
     private String filter;
 
@@ -29,13 +30,13 @@ public class BlockListAdapter extends DataBindingAdapter implements ItemActionsB
         this.defaultImage = defaultImage;
     }
 
-    public void setMaster(ItemActionsRecord master) {
+    public void setMaster(ItemActionsBlock master) {
         this.master = master;
     }
 
     @Override
     protected int getLayoutIdForPosition(int position) {
-        return R.layout.record_item;
+        return R.layout.block_item;
     }
 
     @Override
@@ -48,17 +49,17 @@ public class BlockListAdapter extends DataBindingAdapter implements ItemActionsB
         return models.get(position);
     }
 
-    public void setData(List<Record.Plain> data) {
+    public void setData(List<Block.Plain> data) {
         this.data.clear();
         this.data.addAll(data);
 
-        this.filtered_data = data;// VariantInShop.Plain.sort(this.data);
+        this.filtered_data = data;
         createModels();
-        //notifyDataSetChanged();
     }
 
     public void setFilter(String filter) {
 
+/*
         String fLower;
         if (filter != null)
             fLower = filter.toLowerCase();
@@ -75,6 +76,7 @@ public class BlockListAdapter extends DataBindingAdapter implements ItemActionsB
             notifyDataSetChanged();
         } else
             filtered_data = data;
+*/
 
     }
 
@@ -82,8 +84,8 @@ public class BlockListAdapter extends DataBindingAdapter implements ItemActionsB
         models.clear();
         for (int i = 0; i < filtered_data.size(); i++) {
 
-            Record.Plain v = filtered_data.get(i);
-            RecordItemListBindingModel model = new RecordItemListBindingModel(context.get(),this, v, defaultImage);
+            Block.Plain v = filtered_data.get(i);
+            BlockItemListBindingModel model = new BlockItemListBindingModel(context.get(),this, v, defaultImage);
 
             models.add(model);
         }
@@ -93,7 +95,7 @@ public class BlockListAdapter extends DataBindingAdapter implements ItemActionsB
     public void itemBlockDelete(String id) {
         DeleteDialogHelper.show(context.get(), "Are you sure?", () -> {
             int pos;
-            Record.Plain r = null;
+            Block.Plain r = null;
             for (pos = 0; pos < filtered_data.size(); pos++)
                 if (filtered_data.get(pos).id.equals(id)) {
                     r = filtered_data.get(pos);
@@ -102,7 +104,7 @@ public class BlockListAdapter extends DataBindingAdapter implements ItemActionsB
             data.remove(r);
             filtered_data.remove(r);
             models.remove(pos);
-            master.itemRecordDelete(id);
+            master.itemBlockDelete(id);
             notifyItemRemoved(pos);
         });
     }
@@ -110,11 +112,11 @@ public class BlockListAdapter extends DataBindingAdapter implements ItemActionsB
     @Override
     public void itemBlockEdit(String id) {
         clearSelected();
-        master.itemRecordEdit(id);
+        master.itemBlockEdit(id);
     }
 
     public void clearSelected() {
-        for (RecordItemListBindingModel m : models)
+        for (BlockItemListBindingModel m : models)
             m.setSelected(false);
     }
 
@@ -130,26 +132,26 @@ public class BlockListAdapter extends DataBindingAdapter implements ItemActionsB
         notifyItemChanged(from);
     }
 
-    public void refresh(Record.Plain record) {
+    public void refresh(Block.Plain block) {
         int posInsert = 0;
-        for (Record.Plain r : this.filtered_data) {
-            if (r.id.equals(record.id)) {
-                int pos = filtered_data.indexOf(r);
-                data.remove(r);
-                filtered_data.remove(r);
+        for (Block.Plain b : this.filtered_data) {
+            if (b.id.equals(block.id)) {
+                int pos = filtered_data.indexOf(b);
+                data.remove(b);
+                filtered_data.remove(b);
                 models.remove(pos);
-                data.add(record);
-                filtered_data.add(pos,record);
-                models.add(pos,new RecordItemListBindingModel(context.get(),this, record, defaultImage));
+                data.add(block);
+                filtered_data.add(pos,block);
+                models.add(pos,new BlockItemListBindingModel(context.get(),this, block, defaultImage));
                 notifyItemChanged(pos);
                 return;
             }
 /*            if (record.mainVariant.primaryShop.price > record.mainVariant.primaryShop.price)
                 posInsert++;*/
         }
-        data.add(record);
-        filtered_data.add(posInsert, record);
-        models.add(posInsert,new RecordItemListBindingModel(context.get(),this, record, defaultImage));
+        data.add(block);
+        filtered_data.add(posInsert, block);
+        models.add(posInsert,new BlockItemListBindingModel(context.get(),this, block, defaultImage));
         notifyItemInserted(posInsert);
     }
 

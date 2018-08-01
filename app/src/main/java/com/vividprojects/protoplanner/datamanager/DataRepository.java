@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Currency;
 import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.coredata.Measure;
@@ -159,6 +160,46 @@ public class DataRepository {
             @Override
             protected LiveData<NetworkResponse<List<Record.Plain>>> loadFromNetworkDB() {
                 return new MutableLiveData<NetworkResponse<List<Record.Plain>>>();
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<List<Block.Plain>>> loadBlocks(List<String> filter) {
+        return new NetworkBoundResource<List<Block.Plain>, List<Block.Plain>>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull List<Block.Plain> item) {
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable List<Block.Plain> data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<List<Block.Plain>> loadFromLocalDB() {
+                MutableLiveData<List<Block.Plain>> ld = new MutableLiveData<>();
+                List<Block> blocks;
+/*                if (filter != null && filter.size() > 0)
+                    blocks = localDataDB.queryBlocks().labels_equalTo(filter).findAll();
+                else*/
+                    blocks = localDataDB.queryBlocks().findAll();
+                List<Block.Plain> blocksPlain = new ArrayList<>();
+                if (blocks != null) {
+                    for (Block b : blocks) {
+                        Block.Plain bp = b.getPlain();
+                        blocksPlain.add(bp);
+                    }
+                }
+                ld.setValue(blocksPlain);
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<List<Block.Plain>>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<List<Block.Plain>>>();
             }
         }.asLiveData();
     }

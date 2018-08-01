@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
+import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Currency;
 import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.coredata.Measure;
@@ -314,6 +315,36 @@ public class LocalDataDB {
 
         public Record findFirst() {
             Record rr = query.findFirst();
+            return rr;
+        }
+    }
+
+    //---------------- Records --------------------------------------------------------------
+    public QueryBlocks queryBlocks() {
+        return new QueryBlocks();
+    }
+
+    public class QueryBlocks {
+        RealmQuery<Block> query;
+
+        public QueryBlocks() {
+            query = realm.where(Block.class);
+        }
+
+        public QueryBlocks id_equalTo(String id) {
+            query = query.equalTo("id",id);
+            return this;
+        }
+
+        public List<Block> findAll() {
+            RealmResults<Block> rr = query.findAll();
+            ArrayList<Block> al = new ArrayList<>();
+            al.addAll(rr);
+            return al;
+        }
+
+        public Block findFirst() {
+            Block rr = query.findFirst();
             return rr;
         }
     }

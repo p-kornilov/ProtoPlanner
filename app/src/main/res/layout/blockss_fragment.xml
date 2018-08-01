@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="blocksModel" type="com.vividprojects.protoplanner.bindingmodels.BlockListBindingModel"/>
+    </data>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_blocks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@null"
+        bind:dividerAdapterStart="@{0}"
+        bind:dividerAdapterEnd="@{0}"
+        bind:layoutManagerHorizontal="@{false}"
+        bind:fabManager="@{blocksModel.blockListFabManager}"
+        android:adapter="@{blocksModel.blockListAdapter}"
+        tools:listitem="@layout/block_item"/>
+
+</layout>

@@ -317,7 +317,7 @@ public class InitHelperLocalDB {
                     r.addLabel(l);
                 }*/
 
-                realm.insertOrUpdate(new Block("Блокнот 1",Block.PRIORITY_OFF));
+                realm.insertOrUpdate(new Block("Блокнот 1", Block.PRIORITY_OFF, cr));
                 Block b = realm.where(Block.class).contains("name","Блокнот 1").findFirst();
                 //   b.addRecord(r);
 

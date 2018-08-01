@@ -1,5 +1,6 @@
 package com.vividprojects.protoplanner.coredata;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -17,9 +18,9 @@ public class Block extends RealmObject {
     private String id = UUID.randomUUID().toString();
     private String name;
     private Currency currency;
-    private int priority_type;
+    private int priorityType;
     private RealmList<AttachedRecord> records;
-    private RealmList<Label> local_labels;
+    private RealmList<Label> localLabels;
 
     @Override
     public int hashCode() {
@@ -74,18 +75,18 @@ public class Block extends RealmObject {
     }
 
     public Block() {
-        priority_type = Block.PRIORITY_OFF;
+        priorityType = Block.PRIORITY_OFF;
         name = new String("");
         records = new RealmList<>();
-        local_labels = new RealmList<>();
+        localLabels = new RealmList<>();
     }
 
     public Block(String name, int priority_type, Currency currency) {
-        this.priority_type = priority_type;
+        this.priorityType = priority_type;
         this.name = name;
         this.currency = currency;
         this.records = new RealmList<>();
-        this.local_labels = new RealmList<>();
+        this.localLabels = new RealmList<>();
     }
 
     public Block(String name, int priority_type, Currency currency, Record r) {
@@ -97,14 +98,14 @@ public class Block extends RealmObject {
 
     public String getName() { return name; }
 
-    public void setPriorityType(int p) { priority_type = p;}
+    public void setPriorityType(int p) { priorityType = p;}
 
-    public int getPriorityType() { return priority_type; }
+    public int getPriorityType() { return priorityType; }
 
     public List<AttachedRecord> getRecords() { return records; }
 
-    private double calculateValue() {
-        double totalValue = 0;
+    private float calculateValue() {
+        float totalValue = 0;
         boolean error = !currency.isExchangeable();
         for (AttachedRecord ar : records) {
             Variant mVariant = ar.getRecord().getMainVariant();
@@ -119,21 +120,21 @@ public class Block extends RealmObject {
     }
 
     public List<Label> getLocalLabels() {
-        return local_labels;
+        return localLabels;
     }
 
-    public boolean addLocalLabel(Label l) { return local_labels.add(l);}
+    public boolean addLocalLabel(Label l) { return localLabels.add(l);}
 
-    public boolean removeLocalLabel(Label l) { return local_labels.remove(l); }
+    public boolean removeLocalLabel(Label l) { return localLabels.remove(l); }
 
     public boolean removeLocalLabel(int i) {
-        local_labels.remove(i);
+        localLabels.remove(i);
         return true;
     }
 
     public boolean removeLocalLabel(String name) {
-        for (Label l : local_labels) {
-            if (l.getName().equals(name)) return local_labels.remove(l);
+        for (Label l : localLabels) {
+            if (l.getName().equals(name)) return localLabels.remove(l);
         }
         return false;
     }
@@ -152,7 +153,7 @@ public class Block extends RealmObject {
     @Override
     public String toString() {
         String str = "--- BLOCK ---\nName: \"" + name;
-        switch (priority_type) {
+        switch (priorityType) {
             case Block.PRIORITY_OFF:
                 str += "; Priority is OFF";
                 break;
@@ -166,9 +167,9 @@ public class Block extends RealmObject {
 
         str +="\nLocal labels:\n";
 
-        if (!local_labels.isEmpty()) {
-            for (Label l : local_labels) {
-                str += "\tLabel [" + local_labels.indexOf(l) + "] - " + l.toString() + "\n";
+        if (!localLabels.isEmpty()) {
+            for (Label l : localLabels) {
+                str += "\tLabel [" + localLabels.indexOf(l) + "] - " + l.toString() + "\n";
             }
         } else { str += "\tNo Local labels\n";}
 
@@ -194,7 +195,31 @@ public class Block extends RealmObject {
         return Objects.equals(id,other.id);
     }
 
-    public class Plain {
+    public Plain getPlain() {
+        Plain plain = new Plain();
+        plain.id = id;
+        plain.name = name;
+        plain.currency = currency.getPlain();
+        plain.priorityType = priorityType;
+        plain.value = calculateValue();
+        plain.elementsCount = records.size();
+        plain.records = new ArrayList<>();
+        for (AttachedRecord ar : records)
+            plain.records.add(ar.getPlain());
+        plain.localLabels = new ArrayList<>();
+        for (Label l : localLabels)
+            plain.localLabels.add(l.getPlain());
+        return plain;
+    }
 
+    public class Plain {
+        public String id;
+        public String name;
+        public Currency.Plain currency;
+        public float value;
+        public int elementsCount;
+        public int priorityType;
+        public List<AttachedRecord.Plain> records;
+        public List<Label.Plain> localLabels;
     }
 }
