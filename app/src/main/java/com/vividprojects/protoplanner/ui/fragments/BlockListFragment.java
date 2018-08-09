@@ -18,17 +18,12 @@ import android.view.ViewGroup;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.bindingmodels.BlockListBindingModel;
-import com.vividprojects.protoplanner.bindingmodels.RecordListBindingModel;
-import com.vividprojects.protoplanner.databinding.BlockssFragmentBinding;
-import com.vividprojects.protoplanner.databinding.RecordsFragmentBinding;
+import com.vividprojects.protoplanner.databinding.BlocksFragmentBinding;
 import com.vividprojects.protoplanner.di.Injectable;
 import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.dialogs.EditTextDialog;
 import com.vividprojects.protoplanner.utils.ItemActionsBlock;
-import com.vividprojects.protoplanner.utils.ItemActionsRecord;
 import com.vividprojects.protoplanner.viewmodels.BlockListViewModel;
-import com.vividprojects.protoplanner.viewmodels.BlockListViewModel_;
-import com.vividprojects.protoplanner.viewmodels.RecordListViewModel;
 
 import javax.inject.Inject;
 
@@ -41,9 +36,9 @@ import static android.app.Activity.RESULT_OK;
 public class BlockListFragment extends Fragment implements Injectable, ItemActionsBlock {
     private static final int REQUEST_NEW_BLOCK_NAME = 1;
 
-    private BlockssFragmentBinding binding;
+    private BlocksFragmentBinding binding;
     private BlockListBindingModel bindingModelBlocks;
-    private BlockListViewModel_ model;
+    private BlockListViewModel model;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -79,7 +74,7 @@ public class BlockListFragment extends Fragment implements Injectable, ItemActio
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = BlockssFragmentBinding.inflate(inflater);
+        binding = BlocksFragmentBinding.inflate(inflater);
         return binding.getRoot();
     }
 
@@ -87,7 +82,7 @@ public class BlockListFragment extends Fragment implements Injectable, ItemActio
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(BlockListViewModel_.class);
+        model = ViewModelProviders.of(getActivity(),viewModelFactory).get(BlockListViewModel.class);
         bindingModelBlocks = model.getBlockListBindingModel();
         bindingModelBlocks.setContext(this);
         binding.setBlocksModel(bindingModelBlocks);

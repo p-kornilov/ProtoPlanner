@@ -29,21 +29,11 @@ public class VariantInShop extends RealmObject {
     private final RealmResults<Variant> variantPrimary = null;
 
     public VariantInShop(){
-        price = 0;
-        comment = "";
-        url = "";
-        title = "";
-        address = "";
-        currency = new Currency();
+        this("", "", "", "", 0, new Currency());
     }
 
     public VariantInShop(double price, Currency currency) {
-        this.price = price;
-        this.currency = currency;
-        comment = "";
-        url = "";
-        title = "";
-        address = "";
+        this("", "", "", "", price, currency);
     }
 
     public VariantInShop(String title, String url, String address, String comment, double price, Currency currency) {

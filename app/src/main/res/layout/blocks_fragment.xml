@@ -1,35 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="blocksModel" type="com.vividprojects.protoplanner.bindingmodels.BlockListBindingModel"/>
+    </data>
 
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="123dp"
-        app:srcCompat="@color/black" />
-
-    <Button
-        android:id="@+id/button_load"
-        android:layout_width="194dp"
-        android:layout_height="wrap_content"
-        android:text="Load" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"/>
-
-    <TextView
-        android:id="@+id/textView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_blocks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:text="Blocks fragment"
-        android:visibility="visible" />
+        android:layout_weight="1"
+        android:background="@null"
+        bind:dividerAdapterStart="@{0}"
+        bind:dividerAdapterEnd="@{0}"
+        bind:layoutManagerHorizontal="@{false}"
+        bind:fabManager="@{blocksModel.blockListFabManager}"
+        android:adapter="@{blocksModel.blockListAdapter}"
+        tools:listitem="@layout/block_item"/>
 
-</LinearLayout>
+</layout>

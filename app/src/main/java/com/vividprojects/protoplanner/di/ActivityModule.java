@@ -1,5 +1,6 @@
 package com.vividprojects.protoplanner.di;
 
+import com.vividprojects.protoplanner.ui.activity.BlockActivity;
 import com.vividprojects.protoplanner.ui.activity.ContainerItemActivity;
 import com.vividprojects.protoplanner.ui.activity.ContainerListActivity;
 import com.vividprojects.protoplanner.ui.helpers.DialogFullScreenActivity;
@@ -22,6 +23,9 @@ public abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
     abstract RecordActivity contributeRecordActivity();
+
+    @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
+    abstract BlockActivity contributeBlockActivity();
 
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
     abstract ImageViewActivity contributeImageViewActivity();

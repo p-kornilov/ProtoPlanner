@@ -1,14 +1,17 @@
 package com.vividprojects.protoplanner.viewmodels;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
+import com.vividprojects.protoplanner.bindingmodels.BlockListBindingModel;
+import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Filter;
-import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.coredata.Resource;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
+import com.vividprojects.protoplanner.datamanager.DataSubscriber;
 import com.vividprojects.protoplanner.utils.FabActions;
 
 import java.util.List;
@@ -22,40 +25,49 @@ import javax.inject.Inject;
 
 public class BlockListViewModel extends ViewModel implements FabActions {
 
-    private final MutableLiveData<Filter> filter;
+    private Runnable addAction;
 
-    private final LiveData<Resource<List<Record.Plain>>> list;
+    final MutableLiveData<Filter> filter;
 
-    private final LiveData<Integer> loadProgress;
-    private final MutableLiveData<String> loadProgressSwitcher;
+    private final LiveData<Resource<List<Block.Plain>>> list;
+    private final LiveData<Resource<Block.Plain>> refreshedBlock;
+    private final MutableLiveData<String> refreshedBlockId = new MutableLiveData<>();
 
     private DataRepository dataRepository;
+    private DataSubscriber dataSubscriber;
 
- //   @Inject
- //   SDFileManager fileManager;   // TODO Заинжектить dataRepository и из нее раскрутить/проверить всю цепочку, потом перенести логику в model
+    private BlockListBindingModel blockListBindingModel;
+    private MediatorLiveData<Block.Plain> changedBlock = new MediatorLiveData<>();
 
+    private LiveData<Block.Plain> currentSubscribedBlock;
+
+    private MutableLiveData<String> newBlockName = new MutableLiveData<>();
+    private final LiveData<Block.Plain> newBlock;
 
     @Inject
-    public BlockListViewModel(DataRepository dataRepository) {
+    public BlockListViewModel(DataRepository dataRepository, DataSubscriber dataSubscriber) {
         //super();
         //list = new MutableLiveData<>();
 
+        blockListBindingModel = new BlockListBindingModel();
+        blockListBindingModel.setDefaultImage(dataRepository.getDefaultVariantImage());
+
         this.dataRepository = dataRepository;
+        this.dataSubscriber = dataSubscriber;
 
         this.filter = new MutableLiveData<>();
         list = Transformations.switchMap(filter,input -> {
 /*            if (input.isEmpty()) {
                 return AbsentLiveData.create();
             } else {
-                return dataRepository.loadRecords(input.getFilter());
+                return dataRepository.loadBlocks(input.getFilter());
             }*/
-            return BlockListViewModel.this.dataRepository.loadRecords(input.getFilter());
+            return BlockListViewModel.this.dataRepository.loadBlocks(input.getFilter());
         });
 
-        loadProgressSwitcher = new MutableLiveData<>();
-        loadProgress = Transformations.switchMap(loadProgressSwitcher,url->{
-           return null;//dataRepository.saveImageFromURLtoVariant(url,null);
-        });
+        refreshedBlock = Transformations.switchMap(refreshedBlockId, id -> null);// BlockListViewModel.this.dataRepository.loadBlock(id));
+        newBlock = Transformations.switchMap(newBlockName, name -> null);// BlockListViewModel.this.dataRepository.newBlock(name));
+
     }
 
     public void setFilter(List<String> ids) {
@@ -66,25 +78,57 @@ public class BlockListViewModel extends ViewModel implements FabActions {
         filter.setValue(update);
     }
 
-    public LiveData<Resource<List<Record.Plain>>> getList(){
+    public LiveData<Resource<List<Block.Plain>>> getList(){
 
-        return list;//dataRepository.loadRecords();
+        return list;//dataRepository.loadBlocks();
     }
 
-    public LiveData<Integer> getLoadProgress(){
-        return loadProgress;
+    public BlockListBindingModel getBlockListBindingModel() {
+        return blockListBindingModel;
     }
 
-    public void load(String url) {
-        loadProgressSwitcher.setValue(url);
-//        dataRepository.initImages();
-     //   dataRepository.saveImageFromURL("http://anub.ru/uploads/07.2015/976_podborka_34.jpg",null).observe(this,progress->{
+    public LiveData<Resource<Block.Plain>> getRefreshedBlock() {
+        return refreshedBlock;
+    }
 
-      //  });
+    public void refreshBlock(String id) {
+        //dataRepository.attachVariantToBlock(id, blockItemId.getValue());
+        refreshedBlockId.setValue(id);
+    }
+
+    public void subscribeToBlock(String id) {
+        if (currentSubscribedBlock != null) {
+            if (currentSubscribedBlock.getValue() != null)
+                dataSubscriber.unsubscribePlain(currentSubscribedBlock.getValue().id);
+            changedBlock.removeSource(currentSubscribedBlock);
+        }
+        currentSubscribedBlock = dataSubscriber.subscribePlain(Block.Plain.class,id);
+        changedBlock.addSource(currentSubscribedBlock, rp->changedBlock.setValue(rp));
+    }
+
+    public LiveData<Block.Plain> getChangedBlock() {
+        return changedBlock;
+    }
+
+    public void setActionAdd(Runnable addAction) {
+        this.addAction = addAction;
     }
 
     @Override
     public void actionAdd() {
+        if (addAction != null)
+            addAction.run();
+    }
 
+    public void createNewBlock(String blockName) {
+        newBlockName.setValue(blockName);
+    }
+
+    public LiveData<Block.Plain> getNewBlock() {
+        return newBlock;
+    }
+
+    public void deleteBlock(String id) {
+       // dataRepository.deleteBlock(id);
     }
 }

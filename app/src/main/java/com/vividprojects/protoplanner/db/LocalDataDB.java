@@ -122,6 +122,32 @@ public class LocalDataDB {
         return comment;
     }
 
+    public Block.Plain setBlockName(String id, String name) {
+        Block block = realm.where(Block.class).equalTo("id",id).findFirst();
+        if (block == null)
+            return null;
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                block.setName(name);
+            }
+        });
+        return block.getPlain();
+    }
+
+    public String setBlockComment(String id, String comment) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Block block = realm.where(Block.class).equalTo("id",id).findFirst();
+                if (block != null) {
+                    block.setComment(comment);
+                }
+            }
+        });
+        return comment;
+    }
+
     public void showDB(){
         /*        String measures = "[";
 
@@ -289,8 +315,8 @@ public class LocalDataDB {
             return this;
         }
 
-        public QueryRecords block_equalTo(String name) {
-            query = query.equalTo("block.name",name);
+        public QueryRecords blockEqualTo(String id) {
+            query = query.equalTo("attachedRecords.block.id", id);
             return this;
         }
 
@@ -319,7 +345,7 @@ public class LocalDataDB {
         }
     }
 
-    //---------------- Records --------------------------------------------------------------
+    //---------------- Blocks --------------------------------------------------------------
     public QueryBlocks queryBlocks() {
         return new QueryBlocks();
     }

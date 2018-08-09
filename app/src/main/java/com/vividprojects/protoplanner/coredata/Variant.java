@@ -1,5 +1,7 @@
 package com.vividprojects.protoplanner.coredata;
 
+import com.vividprojects.protoplanner.utils.Id;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -195,7 +197,7 @@ public class Variant extends RealmObject {
         return plain;
     }
 
-    public static class Plain {
+    public static class Plain implements Id {
         public String id;
         public String title;
         public Measure.Plain  measure;
@@ -234,6 +236,11 @@ public class Variant extends RealmObject {
             plain.variantsRecord = new ArrayList<>();
 
             return plain;
+        }
+
+        @Override
+        public String getId() {
+            return id;
         }
     }
 

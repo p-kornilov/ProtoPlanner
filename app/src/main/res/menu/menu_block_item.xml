@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mbi_action_group"
+        android:orderInCategory="100"
+        android:title="Group by"
+        android:icon="@drawable/ic_group_edited_24dp"
+        app:showAsAction="always"/>
+</menu>

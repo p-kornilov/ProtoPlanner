@@ -3,8 +3,8 @@ package com.vividprojects.protoplanner.di;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import com.vividprojects.protoplanner.viewmodels.BlockItemViewModel;
 import com.vividprojects.protoplanner.viewmodels.BlockListViewModel;
-import com.vividprojects.protoplanner.viewmodels.BlockListViewModel_;
 import com.vividprojects.protoplanner.viewmodels.CurrencyEditViewModel;
 import com.vividprojects.protoplanner.viewmodels.CurrencyListViewModel;
 import com.vividprojects.protoplanner.viewmodels.ImageViewViewModel;
@@ -36,20 +36,18 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(BlockListViewModel_.class)
-    abstract ViewModel bindBlockListViewModel(BlockListViewModel_ blockListViewModel);
-
-/*
-    @Binds
-    @IntoMap
     @ViewModelKey(BlockListViewModel.class)
     abstract ViewModel bindBlockListViewModel(BlockListViewModel blockListViewModel);
-*/
 
     @Binds
     @IntoMap
     @ViewModelKey(RecordItemViewModel.class)
     abstract ViewModel bindRecordItemViewModel(RecordItemViewModel recordItemViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BlockItemViewModel.class)
+    abstract ViewModel bindBlockItemViewModel(BlockItemViewModel blockItemViewModel);
 
     @Binds
     @IntoMap

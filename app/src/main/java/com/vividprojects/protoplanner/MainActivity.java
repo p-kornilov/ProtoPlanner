@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,17 +15,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.vividprojects.protoplanner.datamanager.DataRepository;
 import com.vividprojects.protoplanner.ui.NavigationController;
+import com.vividprojects.protoplanner.ui.fragments.BlockItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.BlockListFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordItemFragment;
 import com.vividprojects.protoplanner.ui.fragments.RecordListFragment;
 import com.vividprojects.protoplanner.utils.FabActions;
 import com.vividprojects.protoplanner.viewmodels.BlockListViewModel;
-import com.vividprojects.protoplanner.viewmodels.BlockListViewModel_;
 import com.vividprojects.protoplanner.viewmodels.RecordListViewModel;
 import com.vividprojects.protoplanner.widgets.FabManager;
 
@@ -124,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
                 fragment = new BlockListFragment();
                 fragmentTransaction.replace(R.id.lists_container, fragment, FRAGMENT_BLOCK);
                 fragmentTransaction.commit();
-                model = ViewModelProviders.of(this,viewModelFactory).get(BlockListViewModel_.class);
+                model = ViewModelProviders.of(this,viewModelFactory).get(BlockListViewModel.class);
         }
     }
 
@@ -165,6 +163,15 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         final RecordItemFragment fragment = RecordItemFragment.create(id);
+        fragmentTransaction.replace(R.id.item_container, fragment);
+        fragmentTransaction.commit();
+    }
+
+    public void setBlockItem(String id) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        final BlockItemFragment fragment = BlockItemFragment.create(id);
         fragmentTransaction.replace(R.id.item_container, fragment);
         fragmentTransaction.commit();
     }

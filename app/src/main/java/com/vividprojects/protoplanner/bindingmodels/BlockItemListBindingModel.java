@@ -37,7 +37,7 @@ public class BlockItemListBindingModel extends BaseObservable implements Selecta
         this.context = new WeakReference<>(context);
         this.listAdapter = listAdapter;
         this.defaultImage = defaultImage;
-        if (block.value < 0) {
+        if (block.value < 0 || block.value == -0) {
             this.value = -1*block.value;
             this.valueError = true;
         } else {
@@ -74,7 +74,7 @@ public class BlockItemListBindingModel extends BaseObservable implements Selecta
 
     @Bindable
     public String getBlockItemListElementsCount() {
-        return String.valueOf(block.elementsCount);
+        return "(" + block.elementsCount + ")";
     }
 
     public void onItemClick() {

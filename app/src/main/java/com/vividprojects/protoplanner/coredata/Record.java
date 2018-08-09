@@ -1,5 +1,7 @@
 package com.vividprojects.protoplanner.coredata;
 
+import com.vividprojects.protoplanner.utils.Id;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -7,6 +9,8 @@ import java.util.UUID;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.annotations.LinkingObjects;
 import io.realm.annotations.PrimaryKey;
 
 public class Record extends RealmObject{
@@ -16,8 +20,9 @@ public class Record extends RealmObject{
     private Variant mainVariant;
     private RealmList<Variant> variants;
     private RealmList<Label> labels;
-    private Block block;
     private String comment;
+    @LinkingObjects("record")
+    private final RealmResults<AttachedRecord> attachedRecords  = null;
 
     public Record() {
         mainVariant = null;
@@ -40,12 +45,12 @@ public class Record extends RealmObject{
         this.comment = comment;
     }
 
-    public Block getBlock() {
+  /*  public Block getBlock() {
         return block;
     }
-
-    public boolean addToBlock(Block b) {
-        if (block==b) {
+*/
+    public boolean attachToBlock(Block b) {
+/*        if (block.equals(b)) {
             return true;
         } else if (block==null) {
             if (b.addRecord(this)) {
@@ -53,7 +58,7 @@ public class Record extends RealmObject{
                 return true;
             } else
                 return false;
-        } else
+        } else*/
             return false;
     }
 
@@ -157,9 +162,9 @@ public class Record extends RealmObject{
             str += "Main variant is empty\n";
         }
 
-        if (block!=null) {
+/*        if (block!=null) {
             str += "\tBlock - " + block.getName() + "\n";
-        } else { str += "\tNot in block\n";}
+        } else { str += "\tNot in block\n";}*/
 
         if (!labels.isEmpty()) {
             for (Label l : labels) {
@@ -186,7 +191,7 @@ public class Record extends RealmObject{
 
         Record other = (Record) obj;
 
-        return Objects.equals(mainVariant,other.mainVariant) && Objects.equals(variants,other.variants);
+        return Objects.equals(id,other.id);
     }
 
     public Plain getPlain() {
@@ -208,7 +213,7 @@ public class Record extends RealmObject{
         return plain;
     }
 
-    public class Plain {
+    public class Plain implements Id {
         public String id;
         public String name;
         public Variant.Plain mainVariant;
@@ -216,5 +221,10 @@ public class Record extends RealmObject{
         public List<Label.Plain> labels;
         public String block;
         public String comment;
+
+        @Override
+        public String getId() {
+            return id;
+        }
     }
 }

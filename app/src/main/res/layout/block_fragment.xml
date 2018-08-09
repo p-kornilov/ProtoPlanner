@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="blockModel" type="com.vividprojects.protoplanner.bindingmodels.BlockItemBindingModel"/>
+        <import type="android.view.View"/>
+    </data>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rf_card1"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="0dp"
+                android:background="@color/white">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp">
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="13dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="Comment"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/rf_comment_edit_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:background="@null"
+                    android:cropToPadding="false"
+                    android:padding="12dp"
+                    android:visibility="visible"
+                    android:onClick="@{()->blockModel.onCommentEditClick()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_edit_gray_24dp" />
+
+                    <TextView
+                        android:id="@+id/rf_comment_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:autoLink="web"
+                        android:ellipsize="start"
+                        android:fontFamily="@font/roboto"
+                        android:linksClickable="true"
+                        android:singleLine="false"
+                        android:text="@{blockModel.blockComment}"
+                        tools:text="Комментарий"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="@dimen/record_left_padding"
+                        android:layout_marginTop="13dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textView3"/>
+
+
+
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="13dp"
+                    android:background="@color/black_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rf_comment_text" />
+
+                <TextView
+                    android:id="@+id/bf_text_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/record_left_padding"
+                    android:layout_marginTop="13dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="Total value"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider1" />
+
+                <TextView
+                    android:id="@+id/bf_total_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="13dp"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/green"
+                    android:text="@{blockModel.blockTotalValue}"
+                    tools:text="1000"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toBottomOf="@id/bf_text_summary"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/bf_text_total_records"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/record_left_padding"
+                    android:layout_marginTop="13dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="Records"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider1" />
+
+                <TextView
+                    android:id="@+id/bf_total_records"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="13dp"
+
+                    android:fontFamily="@font/roboto"
+                    android:text="@{blockModel.blockTotalRecords}"
+                    android:textColor="@color/black"
+                    tools:text="1000"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toBottomOf="@id/bf_text_summary"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rf_card3"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/white">
+
+            <android.support.constraint.ConstraintLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp">
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/bf_records_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:focusable="false"
+                    bind:dividerAdapterStart="@{88}"
+                    bind:dividerAdapterEnd="@{16}"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/record_item"
+                    bind:layoutManagerHorizontal="@{false}"
+                    android:adapter="@{blockModel.recordsAdapter}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </android.support.v7.widget.RecyclerView>
+
+
+            </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+</layout>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 
+import com.vividprojects.protoplanner.ui.activity.BlockActivity;
 import com.vividprojects.protoplanner.ui.activity.ContainerItemActivity;
 import com.vividprojects.protoplanner.ui.activity.ContainerListActivity;
 import com.vividprojects.protoplanner.ui.activity.ImageViewActivity;
@@ -102,7 +103,7 @@ public class NavigationController {
     }
 
     public void openBlock(String id) {
-/*        if (isTablet) {
+        if (isTablet) {
             ((MainActivity) currentActivity).setBlockItem(id);
         } else {
             Intent intent;
@@ -114,7 +115,7 @@ public class NavigationController {
 
             intent.putExtra("BLOCK_ID",id);
             context.startActivity(intent);
-        }*/
+        }
     }
 
     public static void openImageView(int position, String variant, Context context) {

@@ -2,9 +2,11 @@ package com.vividprojects.protoplanner.datamanager;
 
 import android.arch.lifecycle.MutableLiveData;
 
+import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.coredata.Variant;
 import com.vividprojects.protoplanner.utils.DataQuery;
+import com.vividprojects.protoplanner.utils.Id;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -42,15 +44,26 @@ public class DataSubscriber {
                 }
     }
 
-    public void updateSubscribedRecord(Record.Plain rp) {
+/*    public void updateSubscribedRecord(Record.Plain rp) {
         if (rp != null && subscribedPlains.containsKey(rp.id))
             subscribedPlains.get(rp.id).setValue(rp);
     }
 
+    public void updateSubscribedBlock(Block.Plain bp) {
+        if (bp != null && subscribedPlains.containsKey(bp.id))
+            subscribedPlains.get(rp.id).setValue(rp);
+    }*/
+
+    public void updateSubscribedItem(Id item) {
+        if (item != null && subscribedPlains.containsKey(item.getId()))
+            subscribedPlains.get(item.getId()).setValue(item);
+    }
+
     public void updateSubscribedVariant(Variant.Plain vp) {
         updateSubscribedRecord(vp);
-        if (vp != null && subscribedPlains.containsKey(vp.id))
-            subscribedPlains.get(vp.id).setValue(vp);
+        updateSubscribedItem(vp);
+/*        if (vp != null && subscribedPlains.containsKey(vp.id))
+            subscribedPlains.get(vp.id).setValue(vp);*/
     }
 
 /*    public void unsubscribeRecord(String id) {

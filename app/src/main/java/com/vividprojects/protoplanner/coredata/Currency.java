@@ -54,27 +54,6 @@ public class Currency extends RealmObject {
         this.flag_id = flag_id;
     }
 
-/*    public Currency(String iso_code_str, int iso_code_int, int iso_name_id, String symbol, int pattern, boolean auto_update){
-        this.iso_code_str = iso_code_str;
-        this.iso_code_int = iso_code_int;
-        this.iso_name_id = iso_name_id;
-        this.symbol = symbol;
-        this.pattern = pattern;
-        this.auto_update = auto_update;
-    }*/
-
-/*
-    public Currency(String iso_code_str, int iso_code_int, String custom_name, String symbol, int pattern, boolean auto_update){
-        this.iso_code_str = iso_code_str;
-        this.iso_code_int = iso_code_int;
-        this.iso_name_id = 0;
-        this.symbol = symbol;
-        this.pattern = pattern;
-        this.custom_name = custom_name;
-        this.auto_update = auto_update;
-    }
-*/
-
     public boolean isExchangeable() {
         return exchange_base != 0 && exchange_rate != 0;
     }

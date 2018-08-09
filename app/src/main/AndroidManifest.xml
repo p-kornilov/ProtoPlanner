@@ -49,6 +49,16 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
+            android:name=".ui.activity.BlockActivity"
+            android:label="test"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name=".ui.activity.ImageViewActivity"
             android:label="ImageView"
             android:windowSoftInputMode="adjustResize"

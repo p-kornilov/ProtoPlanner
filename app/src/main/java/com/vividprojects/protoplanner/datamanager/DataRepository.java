@@ -164,6 +164,46 @@ public class DataRepository {
         }.asLiveData();
     }
 
+    public LiveData<Resource<List<Record.Plain>>> loadRecords(String blockId) {
+        return new NetworkBoundResource<List<Record.Plain>, List<Record.Plain>>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull List<Record.Plain> item) {
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable List<Record.Plain> data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<List<Record.Plain>> loadFromLocalDB() {
+                MutableLiveData<List<Record.Plain>> ld = new MutableLiveData<>();
+                List<Record> records;
+                if (blockId != null) {
+                    records = localDataDB.queryRecords().blockEqualTo(blockId).findAll();
+                    List<Record.Plain> recordsPlain = new ArrayList<>();
+                    if (records != null) {
+                        for (Record r : records) {
+                            Record.Plain rp = r.getPlain();
+                            setFullImagePath(rp.mainVariant);
+                            recordsPlain.add(rp);
+                        }
+                    }
+                    ld.setValue(recordsPlain);
+                }
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<List<Record.Plain>>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<List<Record.Plain>>>();
+            }
+        }.asLiveData();
+    }
+
     public LiveData<Resource<List<Block.Plain>>> loadBlocks(List<String> filter) {
         return new NetworkBoundResource<List<Block.Plain>, List<Block.Plain>>(appExecutors) {
             @Override
@@ -239,6 +279,39 @@ public class DataRepository {
             @Override
             protected LiveData<NetworkResponse<Record.Plain>> loadFromNetworkDB() {
                 return new MutableLiveData<NetworkResponse<Record.Plain>>();
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<Block.Plain>> loadBlock(String id) {
+        return new NetworkBoundResource<Block.Plain, Block.Plain>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull Block.Plain item) {
+
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Block.Plain data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Block.Plain> loadFromLocalDB() {
+                MutableLiveData<Block.Plain> ld = new MutableLiveData<>();
+                Block block = localDataDB
+                        .queryBlocks()
+                        .id_equalTo(id)
+                        .findFirst();
+                if (block != null)
+                    ld.setValue(block.getPlain());
+                return ld;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<NetworkResponse<Block.Plain>> loadFromNetworkDB() {
+                return new MutableLiveData<NetworkResponse<Block.Plain>>();
             }
         }.asLiveData();
     }
@@ -381,7 +454,7 @@ public class DataRepository {
     public LiveData<String> setBasicVariant(String recordId, String variantId) {
         Record.Plain rp = localDataDB.setBasicVariant(recordId, variantId);
         setFullImagePath(rp.mainVariant);
-        dataSubscriber.updateSubscribedRecord(rp);
+        dataSubscriber.updateSubscribedItem(rp);
         MutableLiveData<String> vId = new MutableLiveData<>();
         vId.setValue(variantId);
         return vId;
@@ -390,11 +463,11 @@ public class DataRepository {
     public void createBasicVariant(String recordId, String variantId) {
         Record.Plain rp = localDataDB.createBasicVariant(recordId, variantId);
         setFullImagePath(rp.mainVariant);
-        dataSubscriber.updateSubscribedRecord(rp);
+        dataSubscriber.updateSubscribedItem(rp);
     }
 
     public void saveMainVariantToRecord(String variantId, String recordId) {
-        dataSubscriber.updateSubscribedRecord(localDataDB.saveMainVariantToRecord(variantId, recordId));
+        dataSubscriber.updateSubscribedItem(localDataDB.saveMainVariantToRecord(variantId, recordId));
     }
 
     public LiveData<Resource<List<String>>> loadImagesForVariant(String id) {
@@ -473,33 +546,31 @@ public class DataRepository {
         setFullImagePath(rp.mainVariant);
         record.setValue(rp);
 
-        dataSubscriber.updateSubscribedRecord(rp);
+        dataSubscriber.updateSubscribedItem(rp);
 
         return record;
     }
 
-/*    public LiveData<Record.Plain> subscribeRecordPlain(String id) {
-        MutableLiveData<Record.Plain> ld = new MutableLiveData<>();
-        Record record = localDataDB
-                .queryRecords()
-                .id_equalTo(id)
-                .findFirst();
-        if (record != null) {
-            Record.Plain rp = record.getPlain();
-            setFullImagePath(rp.mainVariant);
-            for (Variant.Plain v : rp.variants)
-                setFullImagePath(v);
-            ld.setValue(rp);
-            subscribedRecords.put(id,ld);
-            return ld;
-        } else
-            return null;
-    }*/
+    public LiveData<Block.Plain> setBlockName(String id, String name) {
+        MutableLiveData<Block.Plain> block = new MutableLiveData<>();
+        Block.Plain bp = localDataDB.setBlockName(id,name);
+        block.setValue(bp);
+
+        dataSubscriber.updateSubscribedItem(bp);
+
+        return block;
+    }
 
     public LiveData<String> setRecordComment(String id, String name) {
         MutableLiveData<String> recordComment = new MutableLiveData<>();
         recordComment.setValue(localDataDB.setRecordComment(id,name));
         return recordComment;
+    }
+
+    public LiveData<String> setBlockComment(String id, String name) {
+        MutableLiveData<String> blockComment = new MutableLiveData<>();
+        blockComment.setValue(localDataDB.setBlockComment(id,name));
+        return blockComment;
     }
 
     public LiveData<List<Label.Plain>> getLabels(MutableLiveData<List<Label.Plain>> labels) {
@@ -645,7 +716,7 @@ public class DataRepository {
         Record.Plain rp = localDataDB.saveLabelsForRecord(recordItemId,ids);
         setFullImagePath(rp.mainVariant);
 
-        dataSubscriber.updateSubscribedRecord(rp);
+        dataSubscriber.updateSubscribedItem(rp);
     };
 
     public void deleteLabel(String id) {
