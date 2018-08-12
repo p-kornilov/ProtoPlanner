@@ -4,6 +4,24 @@
         android:id="@+id/mbi_action_group"
         android:orderInCategory="100"
         android:title="Group by"
-        android:icon="@drawable/ic_group_edited_24dp"
+        android:icon="@drawable/ic_group_24dp"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/mbi_action_filter"
+        android:orderInCategory="100"
+        android:title="Filter"
+        android:icon="@drawable/ic_filter_list_white_24dp"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/mbi_action_labels"
+        android:orderInCategory="100"
+        android:title="Local block labels"
+        android:icon="@drawable/ic_label_white_24dp"
+        app:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/mbi_action_edit"
+        android:orderInCategory="100"
+        android:title="Edit name"
+        android:icon="@drawable/ic_edit_white_24dp"
+        app:showAsAction="ifRoom|withText" />
 </menu>

@@ -46,6 +46,6 @@
         android:layout_margin="@dimen/fab_margin"
         android:visibility="visible"
         android:layout_gravity="bottom|end"
-        app:srcCompat="@drawable/ic_edit_white_24dp" />
+        app:srcCompat="@drawable/ic_add_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
