@@ -65,9 +65,9 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         if (!editId.equals(""))
-                            model.editLabel(labelName.getText().toString(),colorPickerAdapter.getColor(),editId);
+                            model.editLabel(labelName.getText().toString(), "",colorPickerAdapter.getColor(),editId);
                         else
-                            model.newLabel(labelName.getText().toString(),colorPickerAdapter.getColor());
+                            model.newLabel(labelName.getText().toString(), "",colorPickerAdapter.getColor());
 
                         CreateLabelDialog.this.getDialog().cancel();
                     }

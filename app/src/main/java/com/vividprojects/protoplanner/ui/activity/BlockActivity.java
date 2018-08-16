@@ -60,7 +60,8 @@ public class BlockActivity extends AppCompatActivity implements HasSupportFragme
         model = ViewModelHelper.obtainViewModel(BlockItemViewModel.class, getSupportFragmentManager(), viewModelFactory, this);
         model.getBlockName().observe(this, name -> {
             if (name != null) {
-                toolbar.setTitle(name);
+                actionBar.setTitle(name);
+                //toolbar.setTitle(name);
             }
         });
 

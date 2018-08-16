@@ -63,6 +63,16 @@ public class BlockItemBindingModel extends BaseObservable {
         return String.valueOf(block.elementsCount);
     }
 
+    @Bindable
+    public String getBlockFilteredValue(){
+        return String.valueOf(block.value);
+    }
+
+    @Bindable
+    public String getBlockFilteredRecords(){
+        return String.valueOf(block.elementsCount);
+    }
+
     public String getBlockId() {
         return block.id;
     }

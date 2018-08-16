@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="obj" type="com.vividprojects.protoplanner.bindingmodels.LabelsItemListBindingModel"/>
+        <import type="android.view.View"/>
+        <import type="com.vividprojects.protoplanner.widgets.ChipsLayout"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:id="@+id/li_textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/record_left_padding"
+            android:layout_marginTop="13dp"
+            android:fontFamily="@font/roboto"
+            android:text="@{obj.labelsListGroupName}"
+            tools:text="Group name"
+            android:visibility="@{obj.labelsListGroupVisible ? View.VISIBLE : View.GONE}"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.vividprojects.protoplanner.widgets.ChipsLayout
+            android:id="@+id/li_chiplayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:animateLayoutChanges="true"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            bind:labelsLayoutMode="@{ChipsLayout.MODE_FULL}"
+            bind:labelsLayoutData="@{obj.labelsListLabels}"
+            bind:labelsLayoutDataSelected="@{null}"
+            bind:selectedSort="@{obj.labelsListSelectedSort}"
+            bind:nameSort="@{obj.labelsListNameSort}"
+            bind:chipsFilter="@{obj.labelsListFilter}"
+            bind:animateChanges="@{true}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/li_textView1" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

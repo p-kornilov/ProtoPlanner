@@ -1,7 +1,9 @@
 package com.vividprojects.protoplanner.widgets;
 
+import android.animation.LayoutTransition;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Constraints;
@@ -224,6 +226,19 @@ public class BindingHelper {
                 }
             }
         });
+    }
+
+    @BindingAdapter("app:srcCompat")
+    public static void setImageDrawable(ImageView view, Drawable drawable) {
+        view.setImageDrawable(drawable);
+    }
+
+    @BindingAdapter("bind:animateChanges")
+    public static void setImageDrawable(ViewGroup view, boolean animateChanges) {
+        if (animateChanges) {
+            LayoutTransition transition = view.getLayoutTransition();
+            transition.enableTransitionType(LayoutTransition.CHANGING);
+        }
     }
 
     public static int getMeasureImageResource(int measure) {

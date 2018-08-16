@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="labelsModel" type="com.vividprojects.protoplanner.bindingmodels.LabelsListBindingModel"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context="com.vividprojects.protoplanner.MainActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/AppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                bind:title="Labels" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/al_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    bind:dividerAdapterStart="@{0}"
+                    bind:dividerAdapterEnd="@{0}"
+                    bind:layoutManagerHorizontal="@{false}"
+                    android:adapter="@{labelsModel.labelsListAdapter}"
+                    tools:listitem="@layout/labels_item"/>
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:onClick="@{()->labelsModel.onFabClick()}"
+            app:srcCompat="@{labelsModel.startedForResult ? @drawable/ic_check_white_24dp : @drawable/ic_add_white_24dp}" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

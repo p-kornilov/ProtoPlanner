@@ -1,8 +1,10 @@
 package com.vividprojects.protoplanner.widgets;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -135,7 +137,7 @@ public class ChipsLayout extends ViewGroup {
             noneChip.setData(null, MODE_NONE);
             noneChip.setVisibility(GONE);
             addView(noneChip);
-            this.labels.add(Label.getPlain(0,"None","0"));
+            this.labels.add(Label.getPlain(0,"None","","0"));
         }
 
         this.labels.addAll(labels);
@@ -447,6 +449,21 @@ public class ChipsLayout extends ViewGroup {
         public LayoutParams(ViewGroup.LayoutParams source) {
             super(source);
         }
+    }
+
+    @BindingAdapter("bind:selectedSort")
+    public static void setSelectedSort(ChipsLayout chl, boolean selectedSort) {
+        chl.setSelectedSort(selectedSort);
+    }
+
+    @BindingAdapter("bind:nameSort")
+    public static void setNameSort(ChipsLayout chl, boolean nameSort) {
+        chl.setNameSort(nameSort);
+    }
+
+    @BindingAdapter("bind:chipsFilter")
+    public static void setChipsFilter(ChipsLayout chl, String filter) {
+        chl.setFilter(filter);
     }
 
 }

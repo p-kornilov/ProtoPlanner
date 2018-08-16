@@ -308,6 +308,10 @@ public class InitHelperLocalDB {
                     realm.insertOrUpdate(new Label(Pallet.getNameColors().get(i), Pallet.getColors().get(i),"",null));
                 }
 
+                for (int i=0; i<colorCount; i++) {
+                    realm.insertOrUpdate(new Label(Pallet.getNameColors().get(i), Pallet.getColors().get(i),"Test group",null));
+                }
+
 /*                Record r = realm.where(Record.class).findFirst();
                 r.addVariant(vv2);*/
 
@@ -317,10 +321,11 @@ public class InitHelperLocalDB {
                     r.addLabel(l);
                 }*/
 
-                realm.insertOrUpdate(new Block("Блокнот 1", Block.PRIORITY_OFF, cr));
+                realm.insertOrUpdate(new Block("Блокнот 1 blblblblblb lblbl", Block.PRIORITY_OFF, cr));
                 Block b = realm.where(Block.class).contains("name","Блокнот 1").findFirst();
                 b.attachRecord(r2);
                 b.attachRecord(new Record(v3));
+                b.setComment("Комментарий для блокнота");
 
             }
         });

@@ -58,7 +58,7 @@ public class LocalDataDB {
     }
 
     public Label.Plain createLabel(Label.Plain label) {
-        Label newLabel = new Label(label.name, label.color,"",null);
+        Label newLabel = new Label(label.name, label.color, "",null);
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {

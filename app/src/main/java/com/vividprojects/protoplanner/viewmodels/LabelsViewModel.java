@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
+import com.vividprojects.protoplanner.adapters.LabelsListAdapter;
+import com.vividprojects.protoplanner.bindingmodels.LabelsListBindingModel;
 import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
 
@@ -34,11 +36,14 @@ public class LabelsViewModel extends ViewModel {
     private String currentLabel = "";
 
     private DataRepository dataRepository;
+    private LabelsListBindingModel labelsListBindingModel;
 
     @Inject
     public LabelsViewModel(DataRepository dataRepository) {
 
         this.dataRepository = dataRepository;
+
+        labelsListBindingModel = new LabelsListBindingModel();
 
       //  all_labels_live = new MutableLiveData<>();
         current_labels_live = new MutableLiveData<>();
@@ -118,16 +123,19 @@ public class LabelsViewModel extends ViewModel {
         return onEditLabel;
     }
 
-    public void newLabel(String name, int color) {
-        newLabelTrigger.setValue(Label.getPlain(color,name,""));
+    public void newLabel(String name, String group, int color) {
+        newLabelTrigger.setValue(Label.getPlain(color, name, group,""));
     }
 
-    public void editLabel(String name, int color, String id) {
-        editLabelTrigger.setValue(Label.getPlain(color,name,id));
+    public void editLabel(String name, String group, int color, String id) {
+        editLabelTrigger.setValue(Label.getPlain(color, name, group, id));
     }
 
     public LiveData<Label.Plain> getOnNewLabel() {
         return onNewLabel;
     }
 
+    public LabelsListBindingModel getLabelsListBindingModel() {
+        return labelsListBindingModel;
+    }
 }

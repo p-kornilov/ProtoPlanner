@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:background="@null"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:cropToPadding="false"
                     android:padding="12dp"
                     android:visibility="visible"
@@ -57,7 +57,7 @@
                     app:srcCompat="@drawable/ic_edit_gray_24dp" />
 
                     <TextView
-                        android:id="@+id/rf_comment_text"
+                        android:id="@+id/bf_comment_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:autoLink="web"
@@ -88,7 +88,7 @@
                     android:background="@color/black_divider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rf_comment_text" />
+                    app:layout_constraintTop_toBottomOf="@id/bf_comment_text" />
 
                 <TextView
                     android:id="@+id/bf_text_summary"
@@ -97,13 +97,53 @@
                     android:layout_marginStart="@dimen/record_left_padding"
                     android:layout_marginTop="13dp"
                     android:fontFamily="@font/roboto"
-                    android:text="Total value"
+                    android:text="Records"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider1" />
 
+                <ImageButton
+                    android:id="@+id/bf_labels_edit_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:cropToPadding="false"
+                    android:padding="12dp"
+                    android:visibility="visible"
+                    android:onClick="@{()->blockModel.onCommentEditClick()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/divider1"
+                    app:srcCompat="@drawable/ic_label_gray_24dp" />
+
+                <ImageButton
+                    android:id="@+id/bf_filter_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:cropToPadding="false"
+                    android:padding="12dp"
+                    android:visibility="visible"
+                    android:onClick="@{()->blockModel.onCommentEditClick()}"
+                    app:layout_constraintEnd_toStartOf="@id/bf_labels_edit_button"
+                    app:layout_constraintTop_toTopOf="@+id/divider1"
+                    app:srcCompat="@drawable/ic_filter_list_gray_24dp" />
+
+                <ImageButton
+                    android:id="@+id/bf_group_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:cropToPadding="false"
+                    android:padding="12dp"
+                    android:visibility="visible"
+                    android:onClick="@{()->blockModel.onCommentEditClick()}"
+                    app:layout_constraintEnd_toStartOf="@id/bf_filter_button"
+                    app:layout_constraintTop_toTopOf="@+id/divider1"
+                    app:srcCompat="@drawable/ic_group_gray_24dp" />
+
                 <TextView
-                    android:id="@+id/bf_total_value"
+                    android:id="@+id/bf_filtered_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
@@ -111,38 +151,114 @@
                     android:layout_marginTop="13dp"
                     android:fontFamily="@font/roboto"
                     android:textColor="@color/green"
-                    android:text="@{blockModel.blockTotalValue}"
-                    tools:text="1000"
+                    android:text="@{blockModel.blockFilteredValue}"
+                    tools:text="$1000"
                     android:textSize="18sp"
                     app:layout_constraintTop_toBottomOf="@id/bf_text_summary"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
-                    android:id="@+id/bf_text_total_records"
+                    android:id="@+id/bf_text_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/record_left_padding"
-                    android:layout_marginTop="13dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginStart="4dp"
                     android:fontFamily="@font/roboto"
-                    android:text="Records"
+                    android:textColor="@color/green"
+                    android:text="("
                     android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/divider1" />
+                    app:layout_constraintBottom_toBottomOf="@id/bf_filtered_value"
+                    app:layout_constraintStart_toEndOf="@id/bf_filtered_value" />
+
+                <TextView
+                    android:id="@+id/bf_total_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/green"
+                    android:text="@{blockModel.blockTotalValue}"
+                    tools:text="$1000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/bf_filtered_value"
+                    app:layout_constraintStart_toEndOf="@id/bf_text_1" />
+
+                <TextView
+                    android:id="@+id/bf_text_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/green"
+                    android:text=")"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/bf_filtered_value"
+                    app:layout_constraintStart_toEndOf="@id/bf_total_value" />
+
+                <TextView
+                    android:id="@+id/bf_text_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="/"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toBottomOf="@id/bf_text_summary"
+                    app:layout_constraintStart_toEndOf="@id/bf_text_2" />
+
+                <TextView
+                    android:id="@+id/bf_filtered_records"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="@{blockModel.blockFilteredRecords}"
+                    android:textColor="@color/black"
+                    tools:text="1000"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toBottomOf="@id/bf_text_summary"
+                    app:layout_constraintStart_toEndOf="@id/bf_text_3" />
+
+                <TextView
+                    android:id="@+id/bf_text_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/black"
+                    android:text="("
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/bf_filtered_value"
+                    app:layout_constraintStart_toEndOf="@id/bf_filtered_records" />
 
                 <TextView
                     android:id="@+id/bf_total_records"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="13dp"
-
+                    android:layout_marginBottom="1dp"
                     android:fontFamily="@font/roboto"
-                    android:text="@{blockModel.blockTotalRecords}"
                     android:textColor="@color/black"
+                    android:text="@{blockModel.blockTotalRecords}"
                     tools:text="1000"
-                    android:textSize="18sp"
-                    app:layout_constraintTop_toBottomOf="@id/bf_text_summary"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/bf_filtered_value"
+                    app:layout_constraintStart_toEndOf="@id/bf_text_4" />
+
+                <TextView
+                    android:id="@+id/bf_text_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/black"
+                    android:text=")"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/bf_filtered_value"
+                    app:layout_constraintStart_toEndOf="@id/bf_total_records" />
 
             </android.support.constraint.ConstraintLayout>
             </android.support.v7.widget.CardView>

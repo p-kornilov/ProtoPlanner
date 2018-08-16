@@ -72,7 +72,7 @@ public class DeleteLabelDialog extends DialogFragment implements Injectable {
         Bundle b = getArguments();
         if ( b!= null) {
             List<Label.Plain> list = new ArrayList<>();
-            list.add(Label.getPlain(b.getInt("COLOR", -1),b.getString("NAME", ""),""));
+            list.add(Label.getPlain(b.getInt("COLOR", -1),b.getString("NAME", ""),"",""));
             label.setMode(ChipsLayout.MODE_NON_TOUCH);
             label.setData(list,null);
         }

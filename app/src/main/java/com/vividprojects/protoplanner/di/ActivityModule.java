@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.di;
 import com.vividprojects.protoplanner.ui.activity.BlockActivity;
 import com.vividprojects.protoplanner.ui.activity.ContainerItemActivity;
 import com.vividprojects.protoplanner.ui.activity.ContainerListActivity;
+import com.vividprojects.protoplanner.ui.activity.LabelsActivity_;
 import com.vividprojects.protoplanner.ui.helpers.DialogFullScreenActivity;
 import com.vividprojects.protoplanner.ui.activity.ImageViewActivity;
 import com.vividprojects.protoplanner.ui.LabelsActivity;
@@ -32,6 +33,9 @@ public abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
     abstract LabelsActivity contributeLabelsActivity();
+
+    @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
+    abstract LabelsActivity_ contributeLabelsActivity_();
 
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
     abstract ContainerItemActivity contributeContainerItemActivity();
