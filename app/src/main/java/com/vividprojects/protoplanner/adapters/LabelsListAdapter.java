@@ -6,6 +6,7 @@ import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.bindingmodels.LabelsItemListBindingModel;
 import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Label;
+import com.vividprojects.protoplanner.coredata.LabelGroup;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -73,24 +74,26 @@ public class LabelsListAdapter extends DataBindingAdapter {
 
     private void createModels() {
         models.clear();
-        Map<String,List<Label.Plain>> t = new HashMap<>();
+        Map<String,List<Label.Plain>> labelsMap = new HashMap<>();
+        Map<String,LabelGroup.Plain> groupsMap = new HashMap<>();
         for (int i = 0; i < filtered_data.size(); i++) {
 
             Label.Plain label = filtered_data.get(i);
+            groupsMap.put(label.group.id,label.group);
 
             List<Label.Plain> l;
-            if (t.containsKey(label.group)) {
-                l = t.get(label.group);
+            if (labelsMap.containsKey(label.group.id)) {
+                l = labelsMap.get(label.group.id);
             } else {
                 l = new ArrayList<>();
             }
             l.add(label);
-            t.put(label.group,l);
+            labelsMap.put(label.group.id,l);
 
         }
 
-        for (Map.Entry<String,List<Label.Plain>> e : t.entrySet()) {
-            LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), e.getValue(), e.getKey(), showGroups);
+        for (Map.Entry<String,List<Label.Plain>> e : labelsMap.entrySet()) {
+            LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), e.getValue(), groupsMap.get(e.getKey()), showGroups);
             models.add(model);
         }
     }

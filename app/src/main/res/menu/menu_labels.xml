@@ -25,9 +25,15 @@
         </menu>
     </item>
     <item
-        android:id="@+id/labels_add"
+        android:id="@+id/groups_add"
         android:orderInCategory="100"
-        android:title="New Label"
-        android:icon="@drawable/ic_add_white_24dp"
+        android:title="Add Group"
+        android:icon="@drawable/ic_group_add_white_24dp"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/commit"
+        android:orderInCategory="100"
+        android:title="Commit"
+        android:icon="@drawable/ic_check_white_24dp"
         app:showAsAction="always" />
 </menu>

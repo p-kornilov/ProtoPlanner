@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.bindingmodels.LabelsListBindingModel;
@@ -38,6 +40,9 @@ import com.vividprojects.protoplanner.viewmodel.ViewModelHolder;
 import com.vividprojects.protoplanner.viewmodels.LabelsViewModel;
 import com.vividprojects.protoplanner.widgets.Chip;
 import com.vividprojects.protoplanner.widgets.ChipsLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -128,6 +133,8 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         }
 
+
+
         if (getCallingActivity() != null)
             startedForResult = true;
 
@@ -160,6 +167,7 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
 */
         String id = getIntent().getStringExtra("RECORD_ID");
         model.refreshOriginal(id);
+
     }
 
     private void openNewLabelDialog() {
@@ -202,6 +210,9 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
             bindingModel.setSelectedSort(true);
         }
 
+        MenuItem commit = menu.findItem(R.id.commit);
+        commit.setVisible(startedForResult);
+
         return true;
     }
 
@@ -228,7 +239,7 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
                     bindingModel.setSelectedSort(false);
                 }
                 break;
-            case R.id.labels_add:
+            case R.id.groups_add:
                 openNewLabelDialog();
                 break;
             case android.R.id.home:

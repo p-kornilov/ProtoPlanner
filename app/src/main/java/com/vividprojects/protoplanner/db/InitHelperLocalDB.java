@@ -10,6 +10,7 @@ import com.vividprojects.protoplanner.api.ExchangeRates;
 import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Currency;
 import com.vividprojects.protoplanner.coredata.Label;
+import com.vividprojects.protoplanner.coredata.LabelGroup;
 import com.vividprojects.protoplanner.coredata.Measure;
 import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.coredata.Variant;
@@ -267,14 +268,19 @@ public class InitHelperLocalDB {
                 v4.addImage("00000000-def4-0000-0000-000000000000");
                 v4.addImage("00000000-def5-0000-0000-000000000000");
 
+                LabelGroup g = new LabelGroup("Test group", 0xffffffff);
+                realm.insertOrUpdate(g);
+                LabelGroup g0 = new LabelGroup("", 0xff0000ff);
+                realm.insertOrUpdate(g0);
+
                 Record r2 = new Record(v4);
                 r2.setName("Фильтр");
                 r2.setComment("Комментарий для записи со ссылкой http://test.com");
-                r2.addLabel(new Label("Green", Color.GREEN,"",null));
-                r2.addLabel(new Label("Yellow", Color.YELLOW,"",null));
-                r2.addLabel(new Label("Blue", Color.BLUE,"",null));
-                r2.addLabel(new Label("Red", Color.RED,"",null));
-                r2.addLabel(new Label("Magenta", Color.MAGENTA,"",null));
+                r2.addLabel(new Label("Green", Color.GREEN, g0,null));
+                r2.addLabel(new Label("Yellow", Color.YELLOW, g0,null));
+                r2.addLabel(new Label("Blue", Color.BLUE, g0,null));
+                r2.addLabel(new Label("Red", Color.RED, g0,null));
+                r2.addLabel(new Label("Magenta", Color.MAGENTA, g0,null));
                 r2.addVariant(v);
                 r2.addVariant(v2);
                 r2.addVariant(v3);
@@ -305,11 +311,11 @@ public class InitHelperLocalDB {
                 int colorCount = Pallet.getColors().size();
 
                 for (int i=0; i<colorCount; i++) {
-                    realm.insertOrUpdate(new Label(Pallet.getNameColors().get(i), Pallet.getColors().get(i),"",null));
+                    realm.insertOrUpdate(new Label(Pallet.getNameColors().get(i), Pallet.getColors().get(i), g0,null));
                 }
 
                 for (int i=0; i<colorCount; i++) {
-                    realm.insertOrUpdate(new Label(Pallet.getNameColors().get(i), Pallet.getColors().get(i),"Test group",null));
+                    realm.insertOrUpdate(new Label(Pallet.getNameColors().get(i), Pallet.getColors().get(i), g,null));
                 }
 
 /*                Record r = realm.where(Record.class).findFirst();

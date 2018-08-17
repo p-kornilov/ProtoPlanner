@@ -15,13 +15,26 @@
         android:layout_height="wrap_content"
         android:paddingBottom="16dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:background="@{obj.labelsListGroupColor}"
+            tools:background="@color/Amber"
+            android:orientation="horizontal">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:background="@drawable/scrim_white"/>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/li_textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/record_left_padding"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/roboto"
             android:text="@{obj.labelsListGroupName}"
             tools:text="Group name"
@@ -29,6 +42,32 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/li_add_label_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:cropToPadding="false"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_add_grey_24dp" />
+
+        <ImageButton
+            android:id="@+id/li_edit_group_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:cropToPadding="false"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@id/li_add_label_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_edit_gray_24dp" />
 
         <com.vividprojects.protoplanner.widgets.ChipsLayout
             android:id="@+id/li_chiplayout"

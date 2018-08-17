@@ -10,19 +10,18 @@ public class Label extends RealmObject {
     private String id = UUID.randomUUID().toString();
     private String name;
     private LabelGroup group;
-    private String g;
     private int color;
     private Block block;
 
     public Label() {
-        this("", 0, "", null);
+        this("", 0, null, null);
     }
 
-    public Label(String name, int color, String g, Block block){
+    public Label(String name, int color, LabelGroup group, Block block){
         this.name = name;
         this.color = color;
         this.block = block;
-        this.g = g;
+        this.group = group;
     }
 
     public String getId() {
@@ -59,8 +58,7 @@ public class Label extends RealmObject {
         Plain plain = new Plain();
         plain.color = color;
         plain.name = name;
-//        plain.group = group != null ? group.getPlain() : null;
-        plain.group = g;
+        plain.group = group.getPlain();
         plain.id = id;
         return plain;
     }
@@ -69,14 +67,14 @@ public class Label extends RealmObject {
         Plain plain = new Plain();
         plain.color = color;
         plain.name = name;
-        plain.group = group;
+        //plain.group = group;
         plain.id = id;
         return plain;
     }
 
     public static class Plain {
         public String name;
-        public String group;
+        public LabelGroup.Plain group;
         public int color;
         public String id;
     }

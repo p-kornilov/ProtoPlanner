@@ -58,7 +58,7 @@ public class LabelGroup extends RealmObject {
     public static Plain getPlain(int color, String name, String id){
         Plain plain = new Plain();
         plain.color = color;
-        plain.name = name;
+        plain.name = name != null ? name : "";
         plain.id = id;
         return plain;
     }

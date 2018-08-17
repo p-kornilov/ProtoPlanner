@@ -6,6 +6,7 @@ import android.databinding.Bindable;
 
 import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.coredata.Label;
+import com.vividprojects.protoplanner.coredata.LabelGroup;
 
 
 import java.lang.ref.WeakReference;
@@ -16,14 +17,14 @@ public class LabelsItemListBindingModel extends BaseObservable {
 
     private boolean showGroup = false;
     private WeakReference<Context> context;
-    private String groupName;
+    private LabelGroup.Plain group;
     private boolean selectedSort = false;
     private boolean nameSort = false;
     private String filter = "";
 
-    public LabelsItemListBindingModel(Context context, List<Label.Plain> labels, String groupName, boolean showGroup) {
+    public LabelsItemListBindingModel(Context context, List<Label.Plain> labels, LabelGroup.Plain group, boolean showGroup) {
         this.labels = labels;
-        this.groupName = groupName;
+        this.group = group;
         this.showGroup = showGroup;
 
         this.context = new WeakReference<>(context);
@@ -34,8 +35,13 @@ public class LabelsItemListBindingModel extends BaseObservable {
     }
 
     @Bindable
+    public int getLabelsListGroupColor() {
+        return group != null ? group.color : 0xffffffff;
+    }
+
+    @Bindable
     public String getLabelsListGroupName() {
-        return groupName;
+        return group != null ? group.name : "";
     }
 
     @Bindable

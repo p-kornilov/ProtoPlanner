@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorSelected">#203F51B5</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FFFF4081</color>
     <color name="colorChipViewBackground">#E0E0E0</color>
     <color name="chips_opened_bg">#009688</color>
     <color name="colorCloseChip">#ababab</color>

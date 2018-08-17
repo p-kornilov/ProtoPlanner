@@ -279,7 +279,7 @@ public class LabelsActivity extends AppCompatActivity implements HasSupportFragm
                     chipsAvailable.setSelectedSort(false);
                 }
                 break;
-            case R.id.labels_add:
+            case R.id.groups_add:
                 openNewLabelDialog();
                 break;
             case android.R.id.home:
