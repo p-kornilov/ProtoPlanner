@@ -8,6 +8,7 @@ import android.util.Log;
 import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Currency;
 import com.vividprojects.protoplanner.coredata.Label;
+import com.vividprojects.protoplanner.coredata.LabelGroup;
 import com.vividprojects.protoplanner.coredata.Measure;
 import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.coredata.Variant;
@@ -491,6 +492,32 @@ public class LocalDataDB {
         public Label findFirst() {
             Label rr = query.findFirst();
             return rr;
+        }
+    }
+
+    //---------------- Labels ---------------------------------------------------------------
+    public QueryLabelGroups queryLabelGroups() {
+        return new QueryLabelGroups();
+    }
+
+    public class QueryLabelGroups {
+        RealmQuery<LabelGroup> query;
+
+        public QueryLabelGroups () {
+            query = realm.where(LabelGroup.class);
+        }
+
+        public QueryLabelGroups id_equalTo(String id) {
+            query = query.equalTo("id",id);
+            return this;
+        }
+
+        public List<LabelGroup> findAll() {
+            return new ArrayList<>(query.findAll());
+        }
+
+        public LabelGroup findFirst() {
+            return query.findFirst();
         }
     }
 

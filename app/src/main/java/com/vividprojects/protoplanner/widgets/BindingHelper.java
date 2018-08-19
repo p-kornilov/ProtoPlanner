@@ -177,7 +177,7 @@ public class BindingHelper {
 
     @BindingAdapter({"bind:labelsLayoutData","bind:labelsLayoutDataSelected"})
     public static void setLabelsLayoutData(ChipsLayout layout, Label.Plain[] labels, String[] selected) {
-        if (layout != null) {
+        if (layout != null && labels != null) {
             layout.setData(Arrays.asList(labels), selected);
         }
     }

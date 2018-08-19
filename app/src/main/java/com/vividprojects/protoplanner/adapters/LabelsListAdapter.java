@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 public class LabelsListAdapter extends DataBindingAdapter {
-    private List<Label.Plain> data = new ArrayList<>();
-    private List<Label.Plain> filtered_data = new ArrayList<>();
+    private List<Label.Plain> dataLabels = new ArrayList<>();
+    private List<LabelGroup.Plain> dataGroups = new ArrayList<>();
+    private List<Label.Plain> filtered_dataLabels = new ArrayList<>();
+    private List<LabelGroup.Plain> filtered_dataGroups = new ArrayList<>();
     private List<LabelsItemListBindingModel> models = new ArrayList<>();
 
     private WeakReference<Context> context;
@@ -49,11 +51,14 @@ public class LabelsListAdapter extends DataBindingAdapter {
         return models.get(position);
     }
 
-    public void setData(List<Label.Plain> data) {
-        this.data.clear();
-        this.data.addAll(data);
+    public void setData(List<Label.Plain> dataLabels, List<LabelGroup.Plain> dataGroups) {
+        this.dataLabels.clear();
+        this.dataGroups.clear();
+        this.dataLabels.addAll(dataLabels);
+        this.dataGroups.addAll(dataGroups);
 
-        this.filtered_data = data;
+        this.filtered_dataLabels = this.dataLabels;
+        this.filtered_dataGroups = this.dataGroups;
         createModels();
     }
 
@@ -76,24 +81,24 @@ public class LabelsListAdapter extends DataBindingAdapter {
         models.clear();
         Map<String,List<Label.Plain>> labelsMap = new HashMap<>();
         Map<String,LabelGroup.Plain> groupsMap = new HashMap<>();
-        for (int i = 0; i < filtered_data.size(); i++) {
+        for (LabelGroup.Plain lp : filtered_dataGroups)
+            groupsMap.put(lp.id, lp);
+        for (int i = 0; i < filtered_dataLabels.size(); i++) {
 
-            Label.Plain label = filtered_data.get(i);
-            groupsMap.put(label.group.id,label.group);
+            Label.Plain label = filtered_dataLabels.get(i);
 
             List<Label.Plain> l;
             if (labelsMap.containsKey(label.group.id)) {
                 l = labelsMap.get(label.group.id);
             } else {
                 l = new ArrayList<>();
+                labelsMap.put(label.group.id,l);
             }
             l.add(label);
-            labelsMap.put(label.group.id,l);
-
         }
 
-        for (Map.Entry<String,List<Label.Plain>> e : labelsMap.entrySet()) {
-            LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), e.getValue(), groupsMap.get(e.getKey()), showGroups);
+        for (String groupId : LabelGroup.Plain.sort(groupsMap.keySet(), labelsMap)) {
+            LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), labelsMap.get(groupId), groupsMap.get(groupId), showGroups);
             models.add(model);
         }
     }

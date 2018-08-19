@@ -151,6 +151,11 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
             if (labels != null)
                 bindingModel.setLabelsList(labels);
         });
+
+        model.getLabelGroups().observe(this, groups -> {
+            if (groups != null)
+                bindingModel.setLabelGroupsList(groups);
+        });
 /*
         model.getDeleteLabelTrigger().observe(this, deletedId->{
             if (deletedId != null)

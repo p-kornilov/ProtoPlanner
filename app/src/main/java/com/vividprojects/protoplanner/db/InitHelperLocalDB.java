@@ -268,10 +268,14 @@ public class InitHelperLocalDB {
                 v4.addImage("00000000-def4-0000-0000-000000000000");
                 v4.addImage("00000000-def5-0000-0000-000000000000");
 
-                LabelGroup g = new LabelGroup("Test group", 0xffffffff);
+                LabelGroup g = new LabelGroup("Test group", 0xff0000ff);
                 realm.insertOrUpdate(g);
-                LabelGroup g0 = new LabelGroup("", 0xff0000ff);
+                LabelGroup g0 = new LabelGroup("Default group", 0xffffffff);
                 realm.insertOrUpdate(g0);
+                LabelGroup g1 = new LabelGroup("Empty group", 0xff00ff00);
+                realm.insertOrUpdate(g1);
+                LabelGroup g2 = new LabelGroup("Empty group2", 0xff99ff00);
+                realm.insertOrUpdate(g2);
 
                 Record r2 = new Record(v4);
                 r2.setName("Фильтр");

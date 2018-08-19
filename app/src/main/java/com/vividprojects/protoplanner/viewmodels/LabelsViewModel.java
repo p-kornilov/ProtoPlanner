@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModel;
 import com.vividprojects.protoplanner.adapters.LabelsListAdapter;
 import com.vividprojects.protoplanner.bindingmodels.LabelsListBindingModel;
 import com.vividprojects.protoplanner.coredata.Label;
+import com.vividprojects.protoplanner.coredata.LabelGroup;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 
 public class LabelsViewModel extends ViewModel {
     private final LiveData<List<Label.Plain>> original_labels_live;
+    private final LiveData<List<LabelGroup.Plain>> original_label_groups_live;
     private final LiveData<List<Label.Plain>> original_labelsSelected_live;
     private final MutableLiveData<List<Label.Plain>> current_labels_live;
     private final MutableLiveData<List<Label.Plain>> current_labelsSelected_live;
@@ -58,7 +60,7 @@ public class LabelsViewModel extends ViewModel {
         newLabelTrigger = new MutableLiveData<>();
 
         original_labels_live = Transformations.switchMap(recordId,id->dataRepository.getLabels());
-
+        original_label_groups_live = Transformations.switchMap(recordId,id->dataRepository.getLabelGroups());
 
         original_labelsSelected_live = Transformations.switchMap(recordId,id->dataRepository.getRecordLabels(id));
 
@@ -81,6 +83,7 @@ public class LabelsViewModel extends ViewModel {
     }
 
     public LiveData<List<Label.Plain>> getLabels() {return current_labels_live;};
+    public LiveData<List<LabelGroup.Plain>> getLabelGroups() {return original_label_groups_live;};
     public LiveData<List<Label.Plain>> getSelectedLabels() {return current_labelsSelected_live;};
 
     public void selectLabel(Label.Plain label) {

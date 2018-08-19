@@ -15,6 +15,7 @@ import android.util.Log;
 import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Currency;
 import com.vividprojects.protoplanner.coredata.Label;
+import com.vividprojects.protoplanner.coredata.LabelGroup;
 import com.vividprojects.protoplanner.coredata.Measure;
 import com.vividprojects.protoplanner.coredata.Resource;
 import com.vividprojects.protoplanner.coredata.Variant;
@@ -598,6 +599,21 @@ public class DataRepository {
             labels.setValue(al);
         }
         return labels;
+    }
+
+    public LiveData<List<LabelGroup.Plain>> getLabelGroups() {
+        MutableLiveData<List<LabelGroup.Plain>> groups = new MutableLiveData<>();
+        List<LabelGroup> labelGroupsL = localDataDB
+                .queryLabelGroups()
+                .findAll();
+        if (labelGroupsL!=null) {
+            ArrayList<LabelGroup.Plain> al = new ArrayList<>();
+            for (LabelGroup group : labelGroupsL) {
+                al.add(group.getPlain());
+            }
+            groups.setValue(al);
+        }
+        return groups;
     }
 
     public LiveData<List<Label.Plain>> getRecordLabels(String id) {

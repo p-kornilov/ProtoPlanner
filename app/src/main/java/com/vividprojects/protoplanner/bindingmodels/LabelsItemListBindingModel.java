@@ -66,7 +66,7 @@ public class LabelsItemListBindingModel extends BaseObservable {
 
     @Bindable
     public Label.Plain[] getLabelsListLabels() {
-        return labels.toArray(new Label.Plain[labels.size()]);
+        return labels != null ? labels.toArray(new Label.Plain[labels.size()]) : null;
     }
 
     public void setSelectedSort(boolean selectedSort) {

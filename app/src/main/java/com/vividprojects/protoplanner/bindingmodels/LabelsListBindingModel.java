@@ -10,11 +10,13 @@ import com.vividprojects.protoplanner.BR;
 import com.vividprojects.protoplanner.adapters.LabelsListAdapter;
 import com.vividprojects.protoplanner.adapters.RecordListAdapter;
 import com.vividprojects.protoplanner.coredata.Label;
+import com.vividprojects.protoplanner.coredata.LabelGroup;
 import com.vividprojects.protoplanner.coredata.Record;
 import com.vividprojects.protoplanner.utils.ItemActionsRecord;
 import com.vividprojects.protoplanner.widgets.FabManager;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LabelsListBindingModel extends BaseObservable {
@@ -24,6 +26,8 @@ public class LabelsListBindingModel extends BaseObservable {
     private boolean startedForResult;
     private boolean selectedSort = false;
     private boolean nameSort = false;
+    private List<Label.Plain> labelList = null;
+    private List<LabelGroup.Plain> labelGroupList = null;
 
     public void setContext(Context context, boolean showGroups, boolean startedForResult) {
         this.labelsListAdapter = new LabelsListAdapter(context, showGroups);
@@ -41,8 +45,27 @@ public class LabelsListBindingModel extends BaseObservable {
     }
 
     public void setLabelsList(List<Label.Plain> list) {
-        labelsListAdapter.setData(list);
-        notifyPropertyChanged(BR.labelsListAdapter);
+        if (this.labelList != null) {
+            this.labelList.clear();
+            this.labelList.addAll(list);
+        } else
+            this.labelList = new ArrayList<>(list);
+        if (this.labelGroupList != null) {
+            labelsListAdapter.setData(this.labelList, this.labelGroupList);
+            notifyPropertyChanged(BR.labelsListAdapter);
+        }
+    }
+
+    public void setLabelGroupsList(List<LabelGroup.Plain> list) {
+        if (this.labelGroupList != null) {
+            this.labelGroupList.clear();
+            this.labelGroupList.addAll(list);
+        } else
+            this.labelGroupList = new ArrayList<>(list);
+        if (this.labelList != null) {
+            labelsListAdapter.setData(this.labelList, this.labelGroupList);
+            notifyPropertyChanged(BR.labelsListAdapter);
+        }
     }
 
     public void setSelectedSort(boolean selectedSort) {

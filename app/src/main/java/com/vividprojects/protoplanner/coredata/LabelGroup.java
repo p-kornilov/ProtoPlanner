@@ -1,5 +1,10 @@
 package com.vividprojects.protoplanner.coredata;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import io.realm.RealmObject;
@@ -67,5 +72,18 @@ public class LabelGroup extends RealmObject {
         public String name;
         public int color;
         public String id;
+
+        public static <T> List<String> sort(Set<String> list, Map<String, List<T>> map) {
+            String[] holder_list = new String[list.size()];
+            list.toArray(holder_list);
+
+            Arrays.sort(holder_list,(x, y)->{
+                int xLen = map.get(x) != null ? map.get(x).size() : 0;
+                int yLen = map.get(y) != null ? map.get(y).size() : 0;
+                return yLen - xLen;
+            });
+
+            return new ArrayList<>(Arrays.asList(holder_list));
+        }
     }
 }
