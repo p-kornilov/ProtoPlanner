@@ -141,4 +141,8 @@ public class LabelsViewModel extends ViewModel {
     public LabelsListBindingModel getLabelsListBindingModel() {
         return labelsListBindingModel;
     }
+
+    public void deleteGroup(String groupId) {
+        dataRepository.deleteLabelGroup(groupId);
+    }
 }

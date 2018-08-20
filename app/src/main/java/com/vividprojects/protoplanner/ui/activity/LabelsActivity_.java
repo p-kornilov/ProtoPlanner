@@ -35,6 +35,7 @@ import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.dialogs.CreateLabelDialog;
 import com.vividprojects.protoplanner.ui.dialogs.DeleteLabelDialog;
 import com.vividprojects.protoplanner.utils.Display;
+import com.vividprojects.protoplanner.utils.ItemActionsLabel;
 import com.vividprojects.protoplanner.utils.Settings;
 import com.vividprojects.protoplanner.viewmodel.ViewModelHolder;
 import com.vividprojects.protoplanner.viewmodels.LabelsViewModel;
@@ -49,7 +50,7 @@ import javax.inject.Inject;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class LabelsActivity_ extends AppCompatActivity implements HasSupportFragmentInjector {
+public class LabelsActivity_ extends AppCompatActivity implements HasSupportFragmentInjector, ItemActionsLabel {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -255,6 +256,20 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void itemGroupDelete(String groupId) {
+        model.deleteGroup(groupId);
+    }
+
+    @Override
+    public void itemGroupEdit(String groupId) {
+
+    }
+
+    @Override
+    public void itemLabelAdd(String groupId) {
+
+    }
 
     @Override
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {

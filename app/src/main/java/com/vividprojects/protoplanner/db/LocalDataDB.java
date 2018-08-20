@@ -16,6 +16,7 @@ import com.vividprojects.protoplanner.coredata.VariantInShop;
 import com.vividprojects.protoplanner.utils.Bundle1;
 import com.vividprojects.protoplanner.utils.Settings;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -201,6 +202,20 @@ public class LocalDataDB {
                 Label v = realm.where(Label.class).contains("id",id).findFirst();
                 if (v != null)
                     v.deleteFromRealm();
+            }
+        });
+    }
+
+    public void deleteLabelGroup(String groupId) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<Label> labels = realm.where(Label.class).contains("group.id",groupId).findAll();
+                if (labels != null)
+                    labels.deleteAllFromRealm();
+                LabelGroup g = realm.where(LabelGroup.class).contains("id",groupId).findFirst();
+                if (g != null)
+                    g.deleteFromRealm();
             }
         });
     }

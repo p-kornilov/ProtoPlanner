@@ -739,6 +739,10 @@ public class DataRepository {
         localDataDB.deleteLabel(id);
     }
 
+    public void deleteLabelGroup(String groupId) {
+        localDataDB.deleteLabelGroup(groupId);
+    }
+
     public int getHeight() {return context.getResources().getConfiguration().screenHeightDp;}
 
     public Context getContext() {return context;}

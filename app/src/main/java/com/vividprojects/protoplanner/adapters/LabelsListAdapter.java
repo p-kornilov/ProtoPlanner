@@ -7,6 +7,8 @@ import com.vividprojects.protoplanner.bindingmodels.LabelsItemListBindingModel;
 import com.vividprojects.protoplanner.coredata.Block;
 import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.coredata.LabelGroup;
+import com.vividprojects.protoplanner.utils.DeleteDialogHelper;
+import com.vividprojects.protoplanner.utils.ItemActionsLabel;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LabelsListAdapter extends DataBindingAdapter {
+public class LabelsListAdapter extends DataBindingAdapter implements ItemActionsLabel {
     private List<Label.Plain> dataLabels = new ArrayList<>();
     private List<LabelGroup.Plain> dataGroups = new ArrayList<>();
     private List<Label.Plain> filtered_dataLabels = new ArrayList<>();
@@ -24,17 +26,12 @@ public class LabelsListAdapter extends DataBindingAdapter {
     private WeakReference<Context> context;
     private String filter;
     private boolean showGroups = false;
+    private ItemActionsLabel master;
 
     public LabelsListAdapter(Context context, boolean showGroups) {
         this.context = new WeakReference<>(context);
         this.showGroups = showGroups;
     }
-
-/*
-    public void setMaster(ItemActionsBlock master) {
-        this.master = master;
-    }
-*/
 
     @Override
     protected int getLayoutIdForPosition(int position) {
@@ -98,7 +95,7 @@ public class LabelsListAdapter extends DataBindingAdapter {
         }
 
         for (String groupId : LabelGroup.Plain.sort(groupsMap.keySet(), labelsMap)) {
-            LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), labelsMap.get(groupId), groupsMap.get(groupId), showGroups);
+            LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), this, labelsMap.get(groupId), groupsMap.get(groupId), showGroups);
             models.add(model);
         }
     }
@@ -130,4 +127,31 @@ public class LabelsListAdapter extends DataBindingAdapter {
 */
     }
 
+    @Override
+    public void itemGroupDelete(String groupId) {
+        DeleteDialogHelper.show(context.get(), "Are you sure to delete group?", () -> {
+            int pos;
+            LabelGroup.Plain g = null;
+            for (pos = 0; pos < models.size(); pos++)
+                if (models.get(pos).getGroup().id.equals(groupId)) {
+                    g = models.get(pos).getGroup();
+                    break;
+                }
+            dataGroups.remove(g);
+            filtered_dataGroups.remove(g);
+            models.remove(pos);
+            ((ItemActionsLabel) context.get()).itemGroupDelete(groupId);
+            notifyItemRemoved(pos);
+        });
+    }
+
+    @Override
+    public void itemGroupEdit(String groupId) {
+        ((ItemActionsLabel) context.get()).itemGroupEdit(groupId);
+    }
+
+    @Override
+    public void itemLabelAdd(String groupId) {
+        ((ItemActionsLabel) context.get()).itemLabelAdd(groupId);
+    }
 }
