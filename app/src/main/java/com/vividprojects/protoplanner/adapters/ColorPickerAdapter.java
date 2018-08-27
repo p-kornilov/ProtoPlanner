@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.widgets.Pallet;
@@ -23,7 +24,7 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
     private ViewGroup parent;
     private int lastChecked = -1;
     private int currentColor = -1;
-
+    private boolean clickable = true;
 
     private List<ColorPicker> data;
 
@@ -79,17 +80,20 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         View root;
+        LinearLayout layout;
         public ColorPicker data;
 
         ViewHolder(View view) {
             super(view);
             image = view.findViewById(R.id.cp_selector);
             root = view.findViewById(R.id.cp_color);
+            layout = view.findViewById(R.id.cp_layout);
 
-            view.setOnClickListener(new View.OnClickListener() {
+            layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    selected(ViewHolder.this.getAdapterPosition());
+                    if (clickable)
+                        selected(ViewHolder.this.getAdapterPosition());
                 }
             });
         }
@@ -110,14 +114,19 @@ public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.
 
     }
 
+    public void setClickable(boolean clickable) {
+        this.clickable = clickable;
+    }
+
     private void selected(int position){
         if (lastChecked != position) {
             data.get(position).checked = true;
             currentColor = data.get(position).color;
             if (lastChecked != -1)
                 data.get(lastChecked).checked = false;
+            notifyItemChanged(lastChecked);
             lastChecked = position;
-            notifyDataSetChanged();
+            notifyItemChanged(position);
         }
     }
 }

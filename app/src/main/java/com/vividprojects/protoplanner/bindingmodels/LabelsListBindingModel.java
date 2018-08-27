@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.vividprojects.protoplanner.BR;
@@ -32,6 +33,10 @@ public class LabelsListBindingModel extends BaseObservable {
     public void setContext(Context context, boolean showGroups, boolean startedForResult) {
         this.labelsListAdapter = new LabelsListAdapter(context, showGroups);
         this.startedForResult = startedForResult;
+    }
+
+    public void setListLayoutManager(LinearLayoutManager layoutManager) {
+        labelsListAdapter.setListLayoutManager(layoutManager);
     }
 
     @Bindable
@@ -66,6 +71,16 @@ public class LabelsListBindingModel extends BaseObservable {
             labelsListAdapter.setData(this.labelList, this.labelGroupList);
             notifyPropertyChanged(BR.labelsListAdapter);
         }
+    }
+
+    public void addGroup(LabelGroup.Plain group) {
+        labelsListAdapter.addGroup(group);
+        notifyPropertyChanged(BR.labelsListAdapter);
+    }
+
+    public void editGroup(LabelGroup.Plain group) {
+        labelsListAdapter.editGroup(group);
+        notifyPropertyChanged(BR.labelsListAdapter);
     }
 
     public void setSelectedSort(boolean selectedSort) {

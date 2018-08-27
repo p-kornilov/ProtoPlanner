@@ -46,6 +46,10 @@ public class LabelsItemListBindingModel extends BaseObservable {
         return group;
     }
 
+    public void setGroup(LabelGroup.Plain group) {
+        this.group = group;
+    }
+
     @Bindable
     public int getLabelsListGroupColor() {
         return group != null ? group.color : 0xffffffff;

@@ -84,6 +84,31 @@ public class LocalDataDB {
         return label;
     }
 
+    public LabelGroup.Plain createLabelGroup(LabelGroup.Plain group) {
+        LabelGroup newGroup = new LabelGroup(group.name, group.color);
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.insertOrUpdate(newGroup);
+            }
+        });
+        return newGroup.getPlain();
+    }
+
+    public LabelGroup.Plain editLabelGroup(LabelGroup.Plain group) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                LabelGroup editGroup = realm.where(LabelGroup.class).equalTo("id",group.id).findFirst();
+                if (editGroup != null) {
+                    editGroup.setName(group.name);
+                    editGroup.setColor(group.color);
+                }
+            }
+        });
+        return group;
+    }
+
     public Record.Plain newRecord(String recordName) {
         if (recordName == null)
             return null;

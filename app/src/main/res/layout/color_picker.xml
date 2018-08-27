@@ -2,11 +2,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cp_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:clipToPadding="false"
-    android:background="@null">
+    android:background="?attr/selectableItemBackgroundBorderless">
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cp_color"
         android:layout_width="36dp"

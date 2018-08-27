@@ -532,6 +532,18 @@ public class DataRepository {
         return labelId;
     }
 
+    public LiveData<LabelGroup.Plain> createLabelGroup(LabelGroup.Plain group) {
+        MutableLiveData<LabelGroup.Plain> groupId = new MutableLiveData<>();
+        groupId.setValue(localDataDB.createLabelGroup(group));
+        return groupId;
+    }
+
+    public LiveData<LabelGroup.Plain> editLabelGroup(LabelGroup.Plain group) {
+        MutableLiveData<LabelGroup.Plain> groupId = new MutableLiveData<>();
+        groupId.setValue(localDataDB.editLabelGroup(group));
+        return groupId;
+    }
+
     private void setFullImagePath(Variant.Plain variant) {
         if (variant != null) {
             for (int i = 0; i < variant.full_images.size(); i++)
@@ -614,6 +626,17 @@ public class DataRepository {
             groups.setValue(al);
         }
         return groups;
+    }
+
+    public LiveData<LabelGroup.Plain> getLabelGroup(String id) {
+        MutableLiveData<LabelGroup.Plain> group = new MutableLiveData<>();
+        LabelGroup labelGroup = localDataDB
+                .queryLabelGroups()
+                .id_equalTo(id)
+                .findFirst();
+        if (labelGroup != null)
+            group.setValue(labelGroup.getPlain());
+        return group;
     }
 
     public LiveData<List<Label.Plain>> getRecordLabels(String id) {

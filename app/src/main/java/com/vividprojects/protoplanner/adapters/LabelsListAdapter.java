@@ -1,6 +1,9 @@
 package com.vividprojects.protoplanner.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
+import android.support.v7.widget.RecyclerView;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.bindingmodels.LabelsItemListBindingModel;
@@ -28,9 +31,15 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
     private boolean showGroups = false;
     private ItemActionsLabel master;
 
+    private LinearLayoutManager layoutManager;
+
     public LabelsListAdapter(Context context, boolean showGroups) {
         this.context = new WeakReference<>(context);
         this.showGroups = showGroups;
+    }
+
+    public void setListLayoutManager(LinearLayoutManager layoutManager) {
+        this.layoutManager = layoutManager;
     }
 
     @Override
@@ -57,6 +66,39 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
         this.filtered_dataLabels = this.dataLabels;
         this.filtered_dataGroups = this.dataGroups;
         createModels();
+    }
+
+    public void addGroup(LabelGroup.Plain group) {
+        dataGroups.add(group);
+        LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), this, null, group, showGroups);
+        models.add(model);
+        notifyItemInserted(models.size()-1);
+        scrollTo(models.size()-1);
+    }
+
+    public void editGroup(LabelGroup.Plain group) {
+        for (LabelGroup.Plain g : dataGroups)
+            if (g.id.equals(group.id)) {
+                g.color = group.color;
+                g.name = group.name;
+            }
+
+        for (LabelsItemListBindingModel m : models)
+            if (m.getGroup().id.equals(group.id)) {
+                m.setGroup(group);
+                notifyItemChanged(models.indexOf(m));
+            }
+    }
+
+    private void scrollTo(int position) {
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(context.get()) {
+            @Override protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
+        smoothScroller.setTargetPosition(position);
+        layoutManager.startSmoothScroll(smoothScroller);
     }
 
     public void setSelectedSort(boolean selectedSort) {

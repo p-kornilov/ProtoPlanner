@@ -310,7 +310,7 @@ public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapte
 
     }
 
-    public void scrollToTop() {
+    private void scrollToTop() {
         RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(context.getContext()) {
             @Override protected int getVerticalSnapPreference() {
                 return LinearSmoothScroller.SNAP_TO_START;

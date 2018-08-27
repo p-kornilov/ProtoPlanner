@@ -13,6 +13,7 @@ import com.vividprojects.protoplanner.datamanager.DataRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -31,9 +32,17 @@ public class LabelsViewModel extends ViewModel {
     private final MutableLiveData<String> recordId;
     private final MutableLiveData<String> deleteLabelTrigger;
     private final LiveData<Label.Plain> onNewLabel;
+    private final LiveData<LabelGroup.Plain> onNewGroup;
     private final LiveData<Label.Plain> onEditLabel;
-    private final MutableLiveData<Label.Plain> newLabelTrigger;
-    private final MutableLiveData<Label.Plain> editLabelTrigger;
+    private final LiveData<LabelGroup.Plain> onEditGroup;
+    private final MutableLiveData<Label.Plain> newLabelTrigger = new MutableLiveData<>();
+    private final MutableLiveData<LabelGroup.Plain> newGroupTrigger = new MutableLiveData<>();
+    private final MutableLiveData<Label.Plain> editLabelTrigger = new MutableLiveData<>();
+    private final MutableLiveData<LabelGroup.Plain> editGroupTrigger = new MutableLiveData<>();
+
+    private final MutableLiveData<String> onStartEditGroupId = new MutableLiveData<>();
+    private final LiveData<LabelGroup.Plain> onStartEditGroup;
+
 
     private String currentLabel = "";
 
@@ -51,13 +60,11 @@ public class LabelsViewModel extends ViewModel {
         current_labels_live = new MutableLiveData<>();
         current_labelsSelected_live = new MutableLiveData<>();
         deleteLabelTrigger = new MutableLiveData<>();
-        editLabelTrigger = new MutableLiveData<>();
 
         labels_avail = new ArrayList<>();
         labels_selected = new ArrayList<>();
 
         recordId = new MutableLiveData<>();
-        newLabelTrigger = new MutableLiveData<>();
 
         original_labels_live = Transformations.switchMap(recordId,id->dataRepository.getLabels());
         original_label_groups_live = Transformations.switchMap(recordId,id->dataRepository.getLabelGroups());
@@ -65,8 +72,11 @@ public class LabelsViewModel extends ViewModel {
         original_labelsSelected_live = Transformations.switchMap(recordId,id->dataRepository.getRecordLabels(id));
 
         onNewLabel = Transformations.switchMap(newLabelTrigger, (label)->dataRepository.createLabel(label));
+        onNewGroup = Transformations.switchMap(newGroupTrigger, (group)->dataRepository.createLabelGroup(group));
         onEditLabel = Transformations.switchMap(editLabelTrigger, (label)->dataRepository.editLabel(label));
+        onEditGroup = Transformations.switchMap(editGroupTrigger, (group)->dataRepository.editLabelGroup(group));
 
+        onStartEditGroup = Transformations.switchMap(onStartEditGroupId, (groupId)->dataRepository.getLabelGroup(groupId));
 
         original_labels_live.observeForever(labels->{
             labels_avail.clear();
@@ -126,6 +136,10 @@ public class LabelsViewModel extends ViewModel {
         return onEditLabel;
     }
 
+    public LiveData<LabelGroup.Plain> getOnEditGroup() {
+        return onEditGroup;
+    }
+
     public void newLabel(String name, String group, int color) {
         newLabelTrigger.setValue(Label.getPlain(color, name, group,""));
     }
@@ -134,8 +148,20 @@ public class LabelsViewModel extends ViewModel {
         editLabelTrigger.setValue(Label.getPlain(color, name, group, id));
     }
 
+    public void newGroup(String name, int color) {
+        newGroupTrigger.setValue(LabelGroup.getPlain(color, name, ""));
+    }
+
+    public void editGroup(String name, int color, String id) {
+        editGroupTrigger.setValue(LabelGroup.getPlain(color, name, id));
+    }
+
     public LiveData<Label.Plain> getOnNewLabel() {
         return onNewLabel;
+    }
+
+    public LiveData<LabelGroup.Plain> getOnNewGroup() {
+        return onNewGroup;
     }
 
     public LabelsListBindingModel getLabelsListBindingModel() {
@@ -144,5 +170,13 @@ public class LabelsViewModel extends ViewModel {
 
     public void deleteGroup(String groupId) {
         dataRepository.deleteLabelGroup(groupId);
+    }
+
+    public void startEditGroup(String id) {
+        onStartEditGroupId.setValue(id);
+    }
+
+    public LiveData<LabelGroup.Plain> getOnStartEditGroup() {
+        return onStartEditGroup;
     }
 }

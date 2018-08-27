@@ -1,24 +1,15 @@
 package com.vividprojects.protoplanner.ui.activity;
 
-import android.animation.LayoutTransition;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
-import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -26,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.bindingmodels.LabelsListBindingModel;
@@ -34,16 +24,10 @@ import com.vividprojects.protoplanner.databinding.ActivityLabelsBinding;
 import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.dialogs.CreateLabelDialog;
 import com.vividprojects.protoplanner.ui.dialogs.DeleteLabelDialog;
-import com.vividprojects.protoplanner.utils.Display;
 import com.vividprojects.protoplanner.utils.ItemActionsLabel;
 import com.vividprojects.protoplanner.utils.Settings;
-import com.vividprojects.protoplanner.viewmodel.ViewModelHolder;
 import com.vividprojects.protoplanner.viewmodels.LabelsViewModel;
 import com.vividprojects.protoplanner.widgets.Chip;
-import com.vividprojects.protoplanner.widgets.ChipsLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -67,16 +51,16 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
     private ActivityLabelsBinding binding;
     private LabelsListBindingModel bindingModel;
 
-    private Runnable onFabClick = () -> {
+/*    private Runnable onFabClick = () -> {
         if (startedForResult) {
-/*            Intent intent = new Intent();
+*//*            Intent intent = new Intent();
             intent.putExtra("SELECTED", chipsAvailable.getSelected());
             setResult(RESULT_OK, intent);
-            finish();*/
+            finish();*//*
         } else {
             openNewLabelDialog();
         }
-    };
+    };*/
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -143,7 +127,7 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
 
         bindingModel = model.getLabelsListBindingModel();
         bindingModel.setContext(this, true, startedForResult);
-        bindingModel.setOnFabClick(onFabClick);
+        bindingModel.setOnFabClick(null);
         binding.setLabelsModel(bindingModel);
 
         String[] selectedArray = getIntent().getStringArrayExtra("SELECTED");
@@ -161,24 +145,39 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
         model.getDeleteLabelTrigger().observe(this, deletedId->{
             if (deletedId != null)
                 chipsAvailable.deleteChip(deletedId);
+        }); */
+
+        model.getOnNewGroup().observe(this,newGroup->{
+            bindingModel.addGroup(newGroup);
         });
 
-        model.getOnNewLabel().observe(this,newLabel->{
-            chipsAvailable.insertChip(newLabel, this);
+        model.getOnEditGroup().observe(this, group ->{
+            bindingModel.editGroup(group);
         });
 
-        model.getOnEditLabel().observe(this,editLabel->{
-            chipsAvailable.editChip(editLabel);
+        model.getOnStartEditGroup().observe(this, group ->{
+            if (group != null) {
+                CreateLabelDialog dialog = new CreateLabelDialog();
+                Bundle b = new Bundle();
+                b.putBoolean("FORGROUP", true);
+                b.putInt("GROUPCOLOR", group.color);
+                b.putString("NAME", group.name);
+                b.putString("ID", group.id);
+                dialog.setArguments(b);
+                dialog.show(getSupportFragmentManager(), "Edit group");
+            }
         });
-*/
+
         String id = getIntent().getStringExtra("RECORD_ID");
         model.refreshOriginal(id);
 
     }
 
-    private void openNewLabelDialog() {
+    private void openNewGroupDialog() {
         CreateLabelDialog dialog = new CreateLabelDialog();
-        //dialog.setTarget(RecordItemFragment.this,REQUEST_LABELS_SET);
+        Bundle b = new Bundle();
+        b.putBoolean("FORGROUP",true);
+        dialog.setArguments(b);
         dialog.show(getSupportFragmentManager(),"Create Label");
     }
 
@@ -246,7 +245,8 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
                 }
                 break;
             case R.id.groups_add:
-                openNewLabelDialog();
+                bindingModel.setListLayoutManager((LinearLayoutManager) binding.alRecycler.getLayoutManager());
+                openNewGroupDialog();
                 break;
             case android.R.id.home:
                 finish();
@@ -263,7 +263,7 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
 
     @Override
     public void itemGroupEdit(String groupId) {
-
+        model.startEditGroup(groupId);
     }
 
     @Override
