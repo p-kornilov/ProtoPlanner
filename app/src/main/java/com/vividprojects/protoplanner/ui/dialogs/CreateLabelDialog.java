@@ -44,6 +44,7 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
     private boolean forGroup = false;
     private int groupColor = -1;
     private int labelColor = -1;
+    private String groupId = "";
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -87,6 +88,7 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
             labelName.setText(b.getString("NAME", ""));
             labelColor = b.getInt("COLOR", -1);
             editId = b.getString("ID", "");
+            groupId = b.getString("GROUPID", "");
         }
 
 /*        forGroup = false;
@@ -160,7 +162,7 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
                     if (forGroup)
                         model.newGroup(labelName.getText().toString(), colorPickerAdapter.getColor());
                     else
-                        model.newLabel(labelName.getText().toString(), "", colorPickerAdapter.getColor());
+                        model.newLabel(labelName.getText().toString(), groupId, colorPickerAdapter.getColor());
                 }
                 CreateLabelDialog.this.getDialog().cancel();
             }

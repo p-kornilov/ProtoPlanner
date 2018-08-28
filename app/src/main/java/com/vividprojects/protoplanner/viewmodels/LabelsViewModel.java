@@ -32,10 +32,12 @@ public class LabelsViewModel extends ViewModel {
     private final MutableLiveData<String> recordId;
     private final MutableLiveData<String> deleteLabelTrigger;
     private final LiveData<Label.Plain> onNewLabel;
+    private final LiveData<Label.Plain> onStartAddLabel;
     private final LiveData<LabelGroup.Plain> onNewGroup;
     private final LiveData<Label.Plain> onEditLabel;
     private final LiveData<LabelGroup.Plain> onEditGroup;
     private final MutableLiveData<Label.Plain> newLabelTrigger = new MutableLiveData<>();
+    private final MutableLiveData<String> onStartAddLabelTrigger = new MutableLiveData<>();
     private final MutableLiveData<LabelGroup.Plain> newGroupTrigger = new MutableLiveData<>();
     private final MutableLiveData<Label.Plain> editLabelTrigger = new MutableLiveData<>();
     private final MutableLiveData<LabelGroup.Plain> editGroupTrigger = new MutableLiveData<>();
@@ -72,6 +74,15 @@ public class LabelsViewModel extends ViewModel {
         original_labelsSelected_live = Transformations.switchMap(recordId,id->dataRepository.getRecordLabels(id));
 
         onNewLabel = Transformations.switchMap(newLabelTrigger, (label)->dataRepository.createLabel(label));
+        onStartAddLabel = Transformations.switchMap(onStartAddLabelTrigger, (groupId)-> {
+            Label.Plain label = null;
+            LiveData<LabelGroup.Plain> g = dataRepository.getLabelGroup(groupId);
+            if (g != null)
+                label = Label.getPlain(-1,"",g.getValue(), null);
+            MutableLiveData<Label.Plain> ml = new MutableLiveData<>();
+            ml.setValue(label);
+            return ml;
+        });
         onNewGroup = Transformations.switchMap(newGroupTrigger, (group)->dataRepository.createLabelGroup(group));
         onEditLabel = Transformations.switchMap(editLabelTrigger, (label)->dataRepository.editLabel(label));
         onEditGroup = Transformations.switchMap(editGroupTrigger, (group)->dataRepository.editLabelGroup(group));
@@ -140,12 +151,12 @@ public class LabelsViewModel extends ViewModel {
         return onEditGroup;
     }
 
-    public void newLabel(String name, String group, int color) {
-        newLabelTrigger.setValue(Label.getPlain(color, name, group,""));
+    public void newLabel(String name, String groupId, int color) {
+        newLabelTrigger.setValue(Label.getPlain(color, name, groupId,""));
     }
 
     public void editLabel(String name, String group, int color, String id) {
-        editLabelTrigger.setValue(Label.getPlain(color, name, group, id));
+        editLabelTrigger.setValue(Label.getPlain(color, name, "", id));
     }
 
     public void newGroup(String name, int color) {
@@ -176,7 +187,15 @@ public class LabelsViewModel extends ViewModel {
         onStartEditGroupId.setValue(id);
     }
 
+    public void startAddLabel(String groupId) {
+        onStartAddLabelTrigger.setValue(groupId);
+    }
+
     public LiveData<LabelGroup.Plain> getOnStartEditGroup() {
         return onStartEditGroup;
+    }
+
+    public LiveData<Label.Plain> getOnStartAddLabel() {
+        return onStartAddLabel;
     }
 }

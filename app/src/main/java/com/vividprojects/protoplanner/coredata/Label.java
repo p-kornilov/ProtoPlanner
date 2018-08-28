@@ -63,11 +63,21 @@ public class Label extends RealmObject {
         return plain;
     }
 
-    public static Plain getPlain(int color, String name, String group, String id){
+    public static Plain getPlain(int color, String name, LabelGroup.Plain group, String id){
         Plain plain = new Plain();
         plain.color = color;
         plain.name = name;
-        //plain.group = group;
+        plain.group = group;
+        plain.id = id;
+        return plain;
+    }
+
+    public static Plain getPlain(int color, String name, String groupId, String id){
+        Plain plain = new Plain();
+        plain.color = color;
+        plain.name = name;
+        plain.group = new LabelGroup.Plain();
+        plain.group.id = groupId;
         plain.id = id;
         return plain;
     }

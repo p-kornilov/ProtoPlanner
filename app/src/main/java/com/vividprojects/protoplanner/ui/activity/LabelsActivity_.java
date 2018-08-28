@@ -168,6 +168,21 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
             }
         });
 
+        model.getOnStartAddLabel().observe(this, label ->{
+            if (label != null) {
+                CreateLabelDialog dialog = new CreateLabelDialog();
+                Bundle b = new Bundle();
+                b.putBoolean("FORGROUP", false);
+                b.putInt("GROUPCOLOR", label.group.color);
+                b.putInt("COLOR", label.group.color);
+                b.putString("NAME", "");
+                b.putString("GROUPID", label.group.id);
+                b.putString("ID", "");
+                dialog.setArguments(b);
+                dialog.show(getSupportFragmentManager(), "New Label");
+            }
+        });
+
         String id = getIntent().getStringExtra("RECORD_ID");
         model.refreshOriginal(id);
 
@@ -268,7 +283,7 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
 
     @Override
     public void itemLabelAdd(String groupId) {
-
+        model.startAddLabel(groupId);
     }
 
     @Override
