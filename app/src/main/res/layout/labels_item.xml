@@ -85,6 +85,7 @@
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
+            bind:chipsInsertChip="@{obj.labelsInsertedLabel}"
             bind:labelsLayoutMode="@{ChipsLayout.MODE_FULL}"
             bind:labelsLayoutData="@{obj.labelsListLabels}"
             bind:labelsLayoutDataSelected="@{null}"

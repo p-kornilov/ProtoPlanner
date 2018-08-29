@@ -20,6 +20,7 @@ import java.util.List;
 
 public class LabelsItemListBindingModel extends BaseObservable {
     private List<Label.Plain> labels;
+    private Label.Plain insertedLabel = null;
 
     private boolean showGroup = false;
     private WeakReference<Context> context;
@@ -42,12 +43,33 @@ public class LabelsItemListBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.labelsListGroupVisible);
     }
 
+    public void refreshLabel(Label.Plain label) {
+        int pos = -1;
+        for (Label.Plain l : labels)
+            if (l.id.equals(label.id)) {
+                pos = labels.indexOf(l);
+                l.color = label.color;
+                l.name = label.name;
+                break;
+            }
+        if (pos == -1) {
+            labels.add(label);
+            insertedLabel = label;
+            notifyPropertyChanged(BR.labelsInsertedLabel);
+        }
+    }
+
     public LabelGroup.Plain getGroup() {
         return group;
     }
 
     public void setGroup(LabelGroup.Plain group) {
         this.group = group;
+    }
+
+    @Bindable
+    public Label.Plain getLabelsInsertedLabel() {
+        return insertedLabel;
     }
 
     @Bindable

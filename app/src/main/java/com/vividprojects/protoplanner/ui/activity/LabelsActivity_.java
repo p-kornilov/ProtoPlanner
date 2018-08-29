@@ -151,6 +151,10 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
             bindingModel.addGroup(newGroup);
         });
 
+        model.getOnNewLabel().observe(this,newLabel->{
+            bindingModel.refreshLabel(newLabel);
+        });
+
         model.getOnEditGroup().observe(this, group ->{
             bindingModel.editGroup(group);
         });

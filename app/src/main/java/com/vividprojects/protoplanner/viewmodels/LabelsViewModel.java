@@ -10,6 +10,8 @@ import com.vividprojects.protoplanner.bindingmodels.LabelsListBindingModel;
 import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.coredata.LabelGroup;
 import com.vividprojects.protoplanner.datamanager.DataRepository;
+import com.vividprojects.protoplanner.utils.SingleEventTransformations;
+import com.vividprojects.protoplanner.utils.SingleLiveEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,7 @@ public class LabelsViewModel extends ViewModel {
     private List<Label.Plain> labels_selected;
     private final MutableLiveData<String> recordId;
     private final MutableLiveData<String> deleteLabelTrigger;
-    private final LiveData<Label.Plain> onNewLabel;
+    private final SingleLiveEvent<Label.Plain> onNewLabel;
     private final LiveData<Label.Plain> onStartAddLabel;
     private final LiveData<LabelGroup.Plain> onNewGroup;
     private final LiveData<Label.Plain> onEditLabel;
@@ -73,7 +75,7 @@ public class LabelsViewModel extends ViewModel {
 
         original_labelsSelected_live = Transformations.switchMap(recordId,id->dataRepository.getRecordLabels(id));
 
-        onNewLabel = Transformations.switchMap(newLabelTrigger, (label)->dataRepository.createLabel(label));
+        onNewLabel = SingleEventTransformations.switchMap(newLabelTrigger, (label)->dataRepository.createLabel(label));
         onStartAddLabel = Transformations.switchMap(onStartAddLabelTrigger, (groupId)-> {
             Label.Plain label = null;
             LiveData<LabelGroup.Plain> g = dataRepository.getLabelGroup(groupId);

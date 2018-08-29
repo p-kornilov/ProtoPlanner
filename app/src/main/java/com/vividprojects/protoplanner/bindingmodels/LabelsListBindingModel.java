@@ -78,6 +78,11 @@ public class LabelsListBindingModel extends BaseObservable {
         notifyPropertyChanged(BR.labelsListAdapter);
     }
 
+    public void refreshLabel(Label.Plain label) {
+        labelsListAdapter.refreshLabel(label);
+        //notifyPropertyChanged(BR.labelsListAdapter);
+    }
+
     public void editGroup(LabelGroup.Plain group) {
         labelsListAdapter.editGroup(group);
         notifyPropertyChanged(BR.labelsListAdapter);

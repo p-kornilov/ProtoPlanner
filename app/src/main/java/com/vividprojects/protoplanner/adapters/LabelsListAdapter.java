@@ -76,6 +76,12 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
         scrollTo(models.size()-1);
     }
 
+    public void refreshLabel(Label.Plain label) {
+        for (LabelsItemListBindingModel m : models)
+            if (m.getGroup().id.equals(label.group.id))
+                m.refreshLabel(label);
+    }
+
     public void editGroup(LabelGroup.Plain group) {
         for (LabelGroup.Plain g : dataGroups)
             if (g.id.equals(group.id)) {

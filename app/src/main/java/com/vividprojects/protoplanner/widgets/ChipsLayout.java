@@ -466,6 +466,12 @@ public class ChipsLayout extends ViewGroup {
         chl.setFilter(filter);
     }
 
+    @BindingAdapter("bind:chipsInsertChip")
+    public static void bindingInsertChip(ChipsLayout chl, Label.Plain chip) {
+        if (chip != null)
+            chl.insertChip(chip, (Activity) chl.getContext());
+    }
+
 }
 
 class LabelHolder {
