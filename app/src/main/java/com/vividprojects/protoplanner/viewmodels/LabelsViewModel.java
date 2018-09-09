@@ -85,6 +85,7 @@ public class LabelsViewModel extends ViewModel {
             ml.setValue(label);
             return ml;
         });
+
         onNewGroup = Transformations.switchMap(newGroupTrigger, (group)->dataRepository.createLabelGroup(group));
         onEditLabel = Transformations.switchMap(editLabelTrigger, (label)->dataRepository.editLabel(label));
         onEditGroup = Transformations.switchMap(editGroupTrigger, (group)->dataRepository.editLabelGroup(group));
@@ -169,7 +170,7 @@ public class LabelsViewModel extends ViewModel {
         editGroupTrigger.setValue(LabelGroup.getPlain(color, name, id));
     }
 
-    public LiveData<Label.Plain> getOnNewLabel() {
+    public SingleLiveEvent<Label.Plain> getOnNewLabel() {
         return onNewLabel;
     }
 
