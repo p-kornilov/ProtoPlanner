@@ -125,10 +125,15 @@ public class SingleEventTransformations {
                         @Override
                         public void onChanged(@Nullable Y y) {
                             result.setValue(y);
-                            r.setValue(y);
                         }
                     });
                 }
+            }
+        });
+        result.observeForever(new Observer<Y>(){
+            @Override
+            public void onChanged(@Nullable Y y) {
+                r.setValue(y);
             }
         });
         return r;

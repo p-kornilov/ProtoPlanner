@@ -118,6 +118,10 @@ public class Chip extends ConstraintLayout {
         init(context);
     }
 
+    public Label.Plain getLabel() {
+        return label;
+    }
+
     private void init(Context context) {
         rootView = inflate(context, R.layout.chip_layout,this);
         textView = rootView.findViewById(R.id.textChip);

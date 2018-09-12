@@ -15,6 +15,7 @@ import android.widget.RemoteViews;
 
 import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.R;
+import com.vividprojects.protoplanner.utils.ActivityResolver;
 import com.vividprojects.protoplanner.utils.Display;
 
 import java.util.ArrayList;
@@ -152,7 +153,9 @@ public class ChipsLayout extends ViewGroup {
                 chip.setData(label,mode,this.selected.contains(label.id));
             else
                 chip.setData(label,mode);
+
             addView(chip);
+            activity = activity != null ? activity : ActivityResolver.getActivity(this);
             if (activity != null)
                 activity.registerForContextMenu(chip);
 //            this.labels.add(LabelHolder.getHolder(label.name,isSelected));
@@ -469,7 +472,7 @@ public class ChipsLayout extends ViewGroup {
     @BindingAdapter("bind:chipsInsertChip")
     public static void bindingInsertChip(ChipsLayout chl, Label.Plain chip) {
         if (chip != null)
-            chl.insertChip(chip, (Activity) chl.getContext());
+            chl.insertChip(chip, ActivityResolver.getActivity(chl));
     }
 
 }

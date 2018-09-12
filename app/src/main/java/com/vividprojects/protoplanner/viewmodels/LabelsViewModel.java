@@ -34,10 +34,10 @@ public class LabelsViewModel extends ViewModel {
     private final MutableLiveData<String> recordId;
     private final MutableLiveData<String> deleteLabelTrigger;
     private final SingleLiveEvent<Label.Plain> onNewLabel;
-    private final LiveData<Label.Plain> onStartAddLabel;
-    private final LiveData<LabelGroup.Plain> onNewGroup;
-    private final LiveData<Label.Plain> onEditLabel;
-    private final LiveData<LabelGroup.Plain> onEditGroup;
+    private final SingleLiveEvent<Label.Plain> onStartAddLabel;
+    private final SingleLiveEvent<LabelGroup.Plain> onNewGroup;
+    private final SingleLiveEvent<Label.Plain> onEditLabel;
+    private final SingleLiveEvent<LabelGroup.Plain> onEditGroup;
     private final MutableLiveData<Label.Plain> newLabelTrigger = new MutableLiveData<>();
     private final MutableLiveData<String> onStartAddLabelTrigger = new MutableLiveData<>();
     private final MutableLiveData<LabelGroup.Plain> newGroupTrigger = new MutableLiveData<>();
@@ -45,10 +45,11 @@ public class LabelsViewModel extends ViewModel {
     private final MutableLiveData<LabelGroup.Plain> editGroupTrigger = new MutableLiveData<>();
 
     private final MutableLiveData<String> onStartEditGroupId = new MutableLiveData<>();
-    private final LiveData<LabelGroup.Plain> onStartEditGroup;
+    private final SingleLiveEvent<LabelGroup.Plain> onStartEditGroup;
 
 
     private String currentLabel = "";
+    private Label.Plain currentLabel_ = null;
 
     private DataRepository dataRepository;
     private LabelsListBindingModel labelsListBindingModel;
@@ -76,7 +77,7 @@ public class LabelsViewModel extends ViewModel {
         original_labelsSelected_live = Transformations.switchMap(recordId,id->dataRepository.getRecordLabels(id));
 
         onNewLabel = SingleEventTransformations.switchMap(newLabelTrigger, (label)->dataRepository.createLabel(label));
-        onStartAddLabel = Transformations.switchMap(onStartAddLabelTrigger, (groupId)-> {
+        onStartAddLabel = SingleEventTransformations.switchMap(onStartAddLabelTrigger, (groupId)-> {
             Label.Plain label = null;
             LiveData<LabelGroup.Plain> g = dataRepository.getLabelGroup(groupId);
             if (g != null)
@@ -85,11 +86,11 @@ public class LabelsViewModel extends ViewModel {
             ml.setValue(label);
             return ml;
         });
-        onNewGroup = Transformations.switchMap(newGroupTrigger, (group)->dataRepository.createLabelGroup(group));
-        onEditLabel = Transformations.switchMap(editLabelTrigger, (label)->dataRepository.editLabel(label));
-        onEditGroup = Transformations.switchMap(editGroupTrigger, (group)->dataRepository.editLabelGroup(group));
+        onNewGroup = SingleEventTransformations.switchMap(newGroupTrigger, (group)->dataRepository.createLabelGroup(group));
+        onEditLabel = SingleEventTransformations.switchMap(editLabelTrigger, (label)->dataRepository.editLabel(label));
+        onEditGroup = SingleEventTransformations.switchMap(editGroupTrigger, (group)->dataRepository.editLabelGroup(group));
 
-        onStartEditGroup = Transformations.switchMap(onStartEditGroupId, (groupId)->dataRepository.getLabelGroup(groupId));
+        onStartEditGroup = SingleEventTransformations.switchMap(onStartEditGroupId, (groupId)->dataRepository.getLabelGroup(groupId));
 
         original_labels_live.observeForever(labels->{
             labels_avail.clear();
@@ -132,6 +133,14 @@ public class LabelsViewModel extends ViewModel {
         int i =1;
     }
 
+    public void setCurrentLabel(Label.Plain label) {
+        this.currentLabel_ = label;
+    }
+
+    public Label.Plain getCurrentLabel_() {
+        return currentLabel_;
+    }
+
     public String getCurrentLabel() {
         return currentLabel;
     }
@@ -169,11 +178,11 @@ public class LabelsViewModel extends ViewModel {
         editGroupTrigger.setValue(LabelGroup.getPlain(color, name, id));
     }
 
-    public LiveData<Label.Plain> getOnNewLabel() {
+    public SingleLiveEvent<Label.Plain> getOnNewLabel() {
         return onNewLabel;
     }
 
-    public LiveData<LabelGroup.Plain> getOnNewGroup() {
+    public SingleLiveEvent<LabelGroup.Plain> getOnNewGroup() {
         return onNewGroup;
     }
 
@@ -193,11 +202,11 @@ public class LabelsViewModel extends ViewModel {
         onStartAddLabelTrigger.setValue(groupId);
     }
 
-    public LiveData<LabelGroup.Plain> getOnStartEditGroup() {
+    public SingleLiveEvent<LabelGroup.Plain> getOnStartEditGroup() {
         return onStartEditGroup;
     }
 
-    public LiveData<Label.Plain> getOnStartAddLabel() {
+    public SingleLiveEvent<Label.Plain> getOnStartAddLabel() {
         return onStartAddLabel;
     }
 }

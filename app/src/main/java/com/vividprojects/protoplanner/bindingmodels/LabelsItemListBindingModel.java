@@ -16,10 +16,11 @@ import com.vividprojects.protoplanner.utils.ItemActionsLabel;
 
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LabelsItemListBindingModel extends BaseObservable {
-    private List<Label.Plain> labels;
+    private List<Label.Plain> labels = new ArrayList<>();
     private Label.Plain insertedLabel = null;
 
     private boolean showGroup = false;
@@ -31,7 +32,9 @@ public class LabelsItemListBindingModel extends BaseObservable {
     private ItemActionsLabel listAdapter;
 
     public LabelsItemListBindingModel(Context context, ItemActionsLabel listAdapter, List<Label.Plain> labels, LabelGroup.Plain group, boolean showGroup) {
-        this.labels = labels;
+        this.labels.clear();
+        if (labels != null)
+            this.labels.addAll(labels);
         this.group = group;
         this.showGroup = showGroup;
         this.listAdapter = listAdapter;

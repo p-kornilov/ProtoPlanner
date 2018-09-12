@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 
 import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.bindingmodels.LabelsListBindingModel;
+import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.databinding.ActivityLabelsBinding;
 import com.vividprojects.protoplanner.ui.NavigationController;
 import com.vividprojects.protoplanner.ui.dialogs.CreateLabelDialog;
@@ -69,7 +70,9 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_labels_longpress, menu);
         currentLongPressedChip = (Chip)v;
-        model.setCurrentLabel(currentLongPressedChip.getChipId());
+        //model.setCurrentLabel(currentLongPressedChip.getChipId());
+        if (currentLongPressedChip != null)
+            model.setCurrentLabel(currentLongPressedChip.getLabel());
     }
 
     @Override
@@ -77,14 +80,15 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.al_edit:
-                CreateLabelDialog dialog = new CreateLabelDialog();
+/*                CreateLabelDialog dialog = new CreateLabelDialog();
                 Bundle b = new Bundle();
                 b.putInt("COLOR",currentLongPressedChip.getColor());
                 b.putString("NAME",currentLongPressedChip.getTitle());
                 b.putString("ID",currentLongPressedChip.getChipId());
                 dialog.setArguments(b);
              //   dialog.setData(currentLongPressedChip.getName());
-                dialog.show(getSupportFragmentManager(),"Create Label");
+                dialog.show(getSupportFragmentManager(),"Create Label");*/
+                showDialogLabel(model.getCurrentLabel_());
                 return true;
             case R.id.al_delete:
                 DeleteLabelDialog ddialog = new DeleteLabelDialog();
@@ -173,23 +177,26 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
         });
 
         model.getOnStartAddLabel().observe(this, label ->{
-            if (label != null) {
-                CreateLabelDialog dialog = new CreateLabelDialog();
-                Bundle b = new Bundle();
-                b.putBoolean("FORGROUP", false);
-                b.putInt("GROUPCOLOR", label.group.color);
-                b.putInt("COLOR", label.group.color);
-                b.putString("NAME", "");
-                b.putString("GROUPID", label.group.id);
-                b.putString("ID", "");
-                dialog.setArguments(b);
-                dialog.show(getSupportFragmentManager(), "New Label");
-            }
+            if (label != null)
+                showDialogLabel(label);
         });
 
         String id = getIntent().getStringExtra("RECORD_ID");
         model.refreshOriginal(id);
 
+    }
+
+    private void showDialogLabel(Label.Plain label) {
+        CreateLabelDialog dialog = new CreateLabelDialog();
+        Bundle b = new Bundle();
+        b.putBoolean("FORGROUP", false);
+        b.putInt("GROUPCOLOR", label.group.color);
+        b.putInt("COLOR", label.color != -1 ? label.color : label.group.color);
+        b.putString("NAME", label.name);
+        b.putString("GROUPID", label.group.id);
+        b.putString("ID", label.id);
+        dialog.setArguments(b);
+        dialog.show(getSupportFragmentManager(), "New Label");
     }
 
     private void openNewGroupDialog() {
