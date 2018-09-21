@@ -15,6 +15,7 @@ import com.vividprojects.protoplanner.utils.ItemActionsLabel;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +31,14 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
     private String filter;
     private boolean showGroups = false;
     private ItemActionsLabel master;
+    private boolean startedForResult;
 
     private LinearLayoutManager layoutManager;
 
-    public LabelsListAdapter(Context context, boolean showGroups) {
+    public LabelsListAdapter(Context context, boolean showGroups, boolean startedForResult) {
         this.context = new WeakReference<>(context);
         this.showGroups = showGroups;
+        this.startedForResult = startedForResult;
     }
 
     public void setListLayoutManager(LinearLayoutManager layoutManager) {
@@ -57,7 +60,7 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
         return models.get(position);
     }
 
-    public void setData(List<Label.Plain> dataLabels, List<LabelGroup.Plain> dataGroups) {
+    public void setData(List<Label.Plain> dataLabels, List<LabelGroup.Plain> dataGroups, String[] selected) {
         this.dataLabels.clear();
         this.dataGroups.clear();
         this.dataLabels.addAll(dataLabels);
@@ -65,12 +68,12 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
 
         this.filtered_dataLabels = this.dataLabels;
         this.filtered_dataGroups = this.dataGroups;
-        createModels();
+        createModels(selected);
     }
 
     public void addGroup(LabelGroup.Plain group) {
         dataGroups.add(group);
-        LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), this, null, group, showGroups);
+        LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), this, null, group, showGroups, null, startedForResult);
         models.add(model);
         notifyItemInserted(models.size()-1);
         scrollTo(models.size()-1);
@@ -80,6 +83,12 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
         for (LabelsItemListBindingModel m : models)
             if (m.getGroup().id.equals(label.group.id))
                 m.refreshLabel(label);
+    }
+
+    public void deleteLabel(Label.Plain label) {
+        for (LabelsItemListBindingModel m : models)
+            if (m.getGroup().id.equals(label.group.id))
+                m.deleteLabel(label.id);
     }
 
     public void editGroup(LabelGroup.Plain group) {
@@ -122,7 +131,16 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
             model.setFilter(filter);
     }
 
-    private void createModels() {
+    public String[] getSelected() {
+        List<String> s = new ArrayList<>();
+        for (LabelsItemListBindingModel m : models) {
+            if (m.getSelected() != null)
+                s.addAll(Arrays.asList(m.getSelected()));
+        }
+        return s.toArray(new String[s.size()]);
+    }
+
+    private void createModels(String[] selected) {
         models.clear();
         Map<String,List<Label.Plain>> labelsMap = new HashMap<>();
         Map<String,LabelGroup.Plain> groupsMap = new HashMap<>();
@@ -143,7 +161,7 @@ public class LabelsListAdapter extends DataBindingAdapter implements ItemActions
         }
 
         for (String groupId : LabelGroup.Plain.sort(groupsMap.keySet(), labelsMap)) {
-            LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), this, labelsMap.get(groupId), groupsMap.get(groupId), showGroups);
+            LabelsItemListBindingModel model = new LabelsItemListBindingModel(context.get(), this, labelsMap.get(groupId), groupsMap.get(groupId), showGroups, selected, startedForResult);
             models.add(model);
         }
     }

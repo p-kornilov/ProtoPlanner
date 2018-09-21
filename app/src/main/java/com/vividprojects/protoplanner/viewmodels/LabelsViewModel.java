@@ -32,7 +32,7 @@ public class LabelsViewModel extends ViewModel {
     private List<Label.Plain> labels_avail;
     private List<Label.Plain> labels_selected;
     private final MutableLiveData<String> recordId;
-    private final MutableLiveData<String> deleteLabelTrigger;
+   // private final MutableLiveData<String> deleteLabelTrigger;
     private final SingleLiveEvent<Label.Plain> onNewLabel;
     private final SingleLiveEvent<Label.Plain> onStartAddLabel;
     private final SingleLiveEvent<LabelGroup.Plain> onNewGroup;
@@ -64,7 +64,7 @@ public class LabelsViewModel extends ViewModel {
       //  all_labels_live = new MutableLiveData<>();
         current_labels_live = new MutableLiveData<>();
         current_labelsSelected_live = new MutableLiveData<>();
-        deleteLabelTrigger = new MutableLiveData<>();
+        //deleteLabelTrigger = new MutableLiveData<>();
 
         labels_avail = new ArrayList<>();
         labels_selected = new ArrayList<>();
@@ -146,15 +146,18 @@ public class LabelsViewModel extends ViewModel {
     }
 
     public void deleteCurrentLabel() {
-        deleteLabelTrigger.setValue(currentLabel);
-        dataRepository.deleteLabel(currentLabel);
+        //deleteLabelTrigger.setValue(currentLabel);
+        labelsListBindingModel.deleteLabel(currentLabel_);
+        dataRepository.deleteLabel(currentLabel_.id);
     }
 
+/*
     public LiveData<String> getDeleteLabelTrigger() {
         return deleteLabelTrigger;
     }
+*/
 
-    public LiveData<Label.Plain> getOnEditLabel() {
+    public SingleLiveEvent<Label.Plain> getOnEditLabel() {
         return onEditLabel;
     }
 
@@ -166,8 +169,8 @@ public class LabelsViewModel extends ViewModel {
         newLabelTrigger.setValue(Label.getPlain(color, name, groupId,""));
     }
 
-    public void editLabel(String name, String group, int color, String id) {
-        editLabelTrigger.setValue(Label.getPlain(color, name, "", id));
+    public void editLabel(String name, String groupId, int color, String id) {
+        editLabelTrigger.setValue(Label.getPlain(color, name, groupId, id));
     }
 
     public void newGroup(String name, int color) {

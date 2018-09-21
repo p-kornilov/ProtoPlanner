@@ -69,17 +69,7 @@
                 android:value=".MainActivity" />-->
         </activity>
         <activity
-            android:name=".ui.LabelsActivity"
-            android:label="Labels"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity
-            android:name=".ui.activity.LabelsActivity_"
+            android:name=".ui.activity.LabelsActivity"
             android:label="Labels_"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity"

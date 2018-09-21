@@ -157,7 +157,7 @@ public class CreateLabelDialog extends DialogFragment implements Injectable {
                     if (forGroup)
                         model.editGroup(labelName.getText().toString(), colorPickerAdapter.getColor(), editId);
                     else
-                        model.editLabel(labelName.getText().toString(), "", colorPickerAdapter.getColor(), editId);
+                        model.editLabel(labelName.getText().toString(), groupId, colorPickerAdapter.getColor(), editId);
                 } else {
                     if (forGroup)
                         model.newGroup(labelName.getText().toString(), colorPickerAdapter.getColor());

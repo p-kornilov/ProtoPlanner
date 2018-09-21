@@ -13,6 +13,7 @@ import com.vividprojects.protoplanner.R;
 import com.vividprojects.protoplanner.coredata.Label;
 import com.vividprojects.protoplanner.coredata.LabelGroup;
 import com.vividprojects.protoplanner.utils.ItemActionsLabel;
+import com.vividprojects.protoplanner.widgets.ChipsLayout;
 
 
 import java.lang.ref.WeakReference;
@@ -22,6 +23,10 @@ import java.util.List;
 public class LabelsItemListBindingModel extends BaseObservable {
     private List<Label.Plain> labels = new ArrayList<>();
     private Label.Plain insertedLabel = null;
+    private Label.Plain editedLabel = null;
+    private String removedLabel = null;
+    private String[] selectedId = null;
+    private String[] selected = null;
 
     private boolean showGroup = false;
     private WeakReference<Context> context;
@@ -30,20 +35,25 @@ public class LabelsItemListBindingModel extends BaseObservable {
     private boolean nameSort = false;
     private String filter = "";
     private ItemActionsLabel listAdapter;
+    private boolean startedForResult;
 
-    public LabelsItemListBindingModel(Context context, ItemActionsLabel listAdapter, List<Label.Plain> labels, LabelGroup.Plain group, boolean showGroup) {
+    public LabelsItemListBindingModel(Context context, ItemActionsLabel listAdapter, List<Label.Plain> labels, LabelGroup.Plain group, boolean showGroup, String[] selectedId, boolean startedForResult) {
         this.labels.clear();
         if (labels != null)
             this.labels.addAll(labels);
         this.group = group;
         this.showGroup = showGroup;
         this.listAdapter = listAdapter;
+        this.selectedId = selectedId;
+        this.startedForResult = startedForResult;
 
         this.context = new WeakReference<>(context);
 
         notifyPropertyChanged(BR.labelsListLabels);
         notifyPropertyChanged(BR.labelsListGroupName);
         notifyPropertyChanged(BR.labelsListGroupVisible);
+        notifyPropertyChanged(BR.labelsSelected);
+        notifyPropertyChanged(BR.labelsMode);
     }
 
     public void refreshLabel(Label.Plain label) {
@@ -53,6 +63,8 @@ public class LabelsItemListBindingModel extends BaseObservable {
                 pos = labels.indexOf(l);
                 l.color = label.color;
                 l.name = label.name;
+                editedLabel = label;
+                notifyPropertyChanged(BR.labelsEditedLabel);
                 break;
             }
         if (pos == -1) {
@@ -62,12 +74,51 @@ public class LabelsItemListBindingModel extends BaseObservable {
         }
     }
 
+    public void deleteLabel(String labelId) {
+        for (Label.Plain l : labels)
+            if (l.id.equals(labelId)) {
+                removedLabel = l.id;
+                labels.remove(labels.indexOf(l));
+                notifyPropertyChanged(BR.labelsRemovedLabel);
+                break;
+            }
+    }
+
     public LabelGroup.Plain getGroup() {
         return group;
     }
 
     public void setGroup(LabelGroup.Plain group) {
         this.group = group;
+    }
+
+    @Bindable
+    public String[] getLabelsSelected() {
+        return selectedId;
+    }
+
+    @Bindable
+    public int getLabelsMode() {
+        return startedForResult ? ChipsLayout.MODE_FULL : ChipsLayout.MODE_NON_SELECTABLE;
+    }
+
+    @Bindable
+    public void setLabelsSelected(String[] selected) {
+        this.selected = selected;
+    }
+
+    public String[] getSelected() {
+        return selected;
+    }
+
+    @Bindable
+    public Label.Plain getLabelsEditedLabel() {
+        return editedLabel;
+    }
+
+    @Bindable
+    public String getLabelsRemovedLabel() {
+        return removedLabel;
     }
 
     @Bindable

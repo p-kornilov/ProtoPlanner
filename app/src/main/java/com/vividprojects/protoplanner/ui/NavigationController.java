@@ -10,7 +10,7 @@ import com.vividprojects.protoplanner.ui.activity.BlockActivity;
 import com.vividprojects.protoplanner.ui.activity.ContainerItemActivity;
 import com.vividprojects.protoplanner.ui.activity.ContainerListActivity;
 import com.vividprojects.protoplanner.ui.activity.ImageViewActivity;
-import com.vividprojects.protoplanner.ui.activity.LabelsActivity_;
+import com.vividprojects.protoplanner.ui.activity.LabelsActivity;
 import com.vividprojects.protoplanner.ui.activity.RecordActivity;
 import com.vividprojects.protoplanner.MainActivity;
 import com.vividprojects.protoplanner.R;
@@ -136,9 +136,9 @@ public class NavigationController {
 
         Intent intent;
         if (Build.VERSION.SDK_INT <= 23) {
-            intent = new Intent(context, LabelsActivity_.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent = new Intent(context, LabelsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } else {
-            intent = new Intent(context, LabelsActivity_.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent = new Intent(context, LabelsActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
         context.startActivity(intent);
     }

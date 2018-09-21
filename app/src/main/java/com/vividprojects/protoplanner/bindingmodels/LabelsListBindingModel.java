@@ -27,11 +27,12 @@ public class LabelsListBindingModel extends BaseObservable {
     private boolean startedForResult;
     private boolean selectedSort = false;
     private boolean nameSort = false;
+    private String[] selected = null;
     private List<Label.Plain> labelList = null;
     private List<LabelGroup.Plain> labelGroupList = null;
 
     public void setContext(Context context, boolean showGroups, boolean startedForResult) {
-        this.labelsListAdapter = new LabelsListAdapter(context, showGroups);
+        this.labelsListAdapter = new LabelsListAdapter(context, showGroups, startedForResult);
         this.startedForResult = startedForResult;
     }
 
@@ -49,16 +50,21 @@ public class LabelsListBindingModel extends BaseObservable {
         return startedForResult;
     }
 
-    public void setLabelsList(List<Label.Plain> list) {
+    public void setLabelsList(List<Label.Plain> list, String[] selected) {
         if (this.labelList != null) {
             this.labelList.clear();
             this.labelList.addAll(list);
         } else
             this.labelList = new ArrayList<>(list);
+        this.selected = selected;
         if (this.labelGroupList != null) {
-            labelsListAdapter.setData(this.labelList, this.labelGroupList);
+            labelsListAdapter.setData(this.labelList, this.labelGroupList, selected);
             notifyPropertyChanged(BR.labelsListAdapter);
         }
+    }
+
+    public String[] getSelected() {
+        return labelsListAdapter.getSelected();
     }
 
     public void setLabelGroupsList(List<LabelGroup.Plain> list) {
@@ -68,7 +74,7 @@ public class LabelsListBindingModel extends BaseObservable {
         } else
             this.labelGroupList = new ArrayList<>(list);
         if (this.labelList != null) {
-            labelsListAdapter.setData(this.labelList, this.labelGroupList);
+            labelsListAdapter.setData(this.labelList, this.labelGroupList, selected);
             notifyPropertyChanged(BR.labelsListAdapter);
         }
     }
@@ -81,6 +87,10 @@ public class LabelsListBindingModel extends BaseObservable {
     public void refreshLabel(Label.Plain label) {
         labelsListAdapter.refreshLabel(label);
         //notifyPropertyChanged(BR.labelsListAdapter);
+    }
+
+    public void deleteLabel(Label.Plain label) {
+        labelsListAdapter.deleteLabel(label);
     }
 
     public void editGroup(LabelGroup.Plain group) {

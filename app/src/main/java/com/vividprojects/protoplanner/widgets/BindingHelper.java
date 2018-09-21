@@ -3,6 +3,7 @@ package com.vividprojects.protoplanner.widgets;
 import android.animation.LayoutTransition;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
+import android.databinding.InverseBindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
@@ -181,6 +182,12 @@ public class BindingHelper {
             layout.setData(Arrays.asList(labels), selected);
         }
     }
+
+/*
+    @BindingAdapter("bind:labelsLayoutDataSelected")
+    public static void setLabelsLayoutDatad(ChipsLayout layout, String[] selected) {
+    }
+*/
 
     @BindingAdapter("bind:layoutManagerHorizontal")
     public static void setLayoutManagerCustom(RecyclerView recycler, boolean orientation) {

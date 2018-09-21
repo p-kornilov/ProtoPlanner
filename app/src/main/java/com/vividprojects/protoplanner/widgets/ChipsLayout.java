@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
+import android.databinding.InverseBindingAdapter;
+import android.databinding.InverseBindingListener;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -33,6 +35,7 @@ public class ChipsLayout extends ViewGroup {
     public static final int MODE_NON_TOUCH = 1;
     public static final int MODE_SMALL = 2;
     public static final int MODE_NONE = 3;
+    public static final int MODE_NON_SELECTABLE = 4;
 
     private static final int arrayLength = 50;
     int[] widthList = new int[arrayLength];
@@ -52,6 +55,8 @@ public class ChipsLayout extends ViewGroup {
     private int mode = MODE_FULL;
     private List<Label.Plain> labels;
     private Set<String> selected;
+
+    private InverseBindingListener attrChange;
 
     public ChipsLayout(Context context) {
         super(context);
@@ -241,12 +246,16 @@ public class ChipsLayout extends ViewGroup {
         selected.add(id);
         if (selectedSort)
             setSelectedSort(true);
+        if (attrChange != null)
+            attrChange.onChange();
     }
 
     public void chipUnSelected(String id) {
         selected.remove(id);
         if (selectedSort)
             setSelectedSort(true);
+        if (attrChange != null)
+            attrChange.onChange();
     }
 
     public String[] getSelected(){
@@ -261,6 +270,10 @@ public class ChipsLayout extends ViewGroup {
         for (int i = 0; i < size; i++)
             rlist[i] = labels.get(i).id;
         return rlist;
+    }
+
+    public void setSelectedChangeListener(final InverseBindingListener attrChange) {
+        this.attrChange = attrChange;
     }
 
     @Override
@@ -473,6 +486,28 @@ public class ChipsLayout extends ViewGroup {
     public static void bindingInsertChip(ChipsLayout chl, Label.Plain chip) {
         if (chip != null)
             chl.insertChip(chip, ActivityResolver.getActivity(chl));
+    }
+
+    @BindingAdapter("bind:chipsEditChip")
+    public static void bindingEditChip(ChipsLayout chl, Label.Plain chip) {
+        if (chip != null)
+            chl.editChip(chip);
+    }
+
+    @BindingAdapter("bind:chipsRemoveChip")
+    public static void bindingRemoveChip(ChipsLayout chl, String id) {
+        if (id != null)
+            chl.deleteChip(id);
+    }
+
+    @InverseBindingAdapter(attribute = "bind:labelsLayoutDataSelected", event = "labelsLayoutDataSelectedChanged")
+    public static String[] getLabelsSelected(ChipsLayout chl) {
+        return chl.getSelected();
+    }
+
+    @BindingAdapter("app:labelsLayoutDataSelectedChanged")
+    public static void setListeners(ChipsLayout chl, final InverseBindingListener attrChange) {
+        chl.setSelectedChangeListener(attrChange);
     }
 
 }

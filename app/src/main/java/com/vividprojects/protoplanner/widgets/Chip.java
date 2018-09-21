@@ -23,6 +23,7 @@ import com.vividprojects.protoplanner.utils.Display;
 
 import static com.vividprojects.protoplanner.widgets.ChipsLayout.MODE_FULL;
 import static com.vividprojects.protoplanner.widgets.ChipsLayout.MODE_NONE;
+import static com.vividprojects.protoplanner.widgets.ChipsLayout.MODE_NON_SELECTABLE;
 import static com.vividprojects.protoplanner.widgets.ChipsLayout.MODE_NON_TOUCH;
 import static com.vividprojects.protoplanner.widgets.ChipsLayout.MODE_SMALL;
 import static com.vividprojects.protoplanner.widgets.Pallet.AMBER;
@@ -160,15 +161,6 @@ public class Chip extends ConstraintLayout {
         this.label = label;
         switch (mode) {
             case MODE_FULL:
-                setColor(label.color);
-                textView.setText(label.name);
-                if (selected) {
-                    deleteButton.setVisibility(VISIBLE);
-                    textView.setPadding(Display.calc_pixels(12), 0, 0, 0);
-                } else {
-                    deleteButton.setVisibility(GONE);
-                    textView.setPadding(Display.calc_pixels(12),0,Display.calc_pixels(12),0);
-                }
                 mContent.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -178,6 +170,16 @@ public class Chip extends ConstraintLayout {
                             showButton();
                     }
                 });
+            case MODE_NON_SELECTABLE:
+                setColor(label.color);
+                textView.setText(label.name);
+                if (selected) {
+                    deleteButton.setVisibility(VISIBLE);
+                    textView.setPadding(Display.calc_pixels(12), 0, 0, 0);
+                } else {
+                    deleteButton.setVisibility(GONE);
+                    textView.setPadding(Display.calc_pixels(12),0,Display.calc_pixels(12),0);
+                }
 
                 mContent.setOnLongClickListener(new OnLongClickListener() {
                     @Override

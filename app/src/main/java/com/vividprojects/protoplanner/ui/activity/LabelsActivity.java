@@ -2,6 +2,7 @@ package com.vividprojects.protoplanner.ui.activity;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,7 +36,7 @@ import javax.inject.Inject;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class LabelsActivity_ extends AppCompatActivity implements HasSupportFragmentInjector, ItemActionsLabel {
+public class LabelsActivity extends AppCompatActivity implements HasSupportFragmentInjector, ItemActionsLabel {
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -51,17 +52,6 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
     private boolean startedForResult = false;
     private ActivityLabelsBinding binding;
     private LabelsListBindingModel bindingModel;
-
-/*    private Runnable onFabClick = () -> {
-        if (startedForResult) {
-*//*            Intent intent = new Intent();
-            intent.putExtra("SELECTED", chipsAvailable.getSelected());
-            setResult(RESULT_OK, intent);
-            finish();*//*
-        } else {
-            openNewLabelDialog();
-        }
-    };*/
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -80,28 +70,15 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.al_edit:
-/*                CreateLabelDialog dialog = new CreateLabelDialog();
-                Bundle b = new Bundle();
-                b.putInt("COLOR",currentLongPressedChip.getColor());
-                b.putString("NAME",currentLongPressedChip.getTitle());
-                b.putString("ID",currentLongPressedChip.getChipId());
-                dialog.setArguments(b);
-             //   dialog.setData(currentLongPressedChip.getName());
-                dialog.show(getSupportFragmentManager(),"Create Label");*/
                 showDialogLabel(model.getCurrentLabel_());
                 return true;
             case R.id.al_delete:
                 DeleteLabelDialog ddialog = new DeleteLabelDialog();
                 Bundle db = new Bundle();
-                db.putInt("COLOR",currentLongPressedChip.getColor());
-                db.putString("NAME",currentLongPressedChip.getTitle());
+                db.putInt("COLOR",model.getCurrentLabel_().color);
+                db.putString("NAME",model.getCurrentLabel_().name);
                 ddialog.setArguments(db);
-                //   dialog.setData(currentLongPressedChip.getName());
                 ddialog.show(getSupportFragmentManager(),"Delete Label");
-/*
-                chipsAvailable.deleteChip(model.getCurrentLabel());
-                model.deleteCurrentLabel();
-*/
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -115,17 +92,19 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
         binding = DataBindingUtil.setContentView(this, R.layout.activity_labels_);//ActivityLabelsBinding.inflate(getLayoutInflater());
         setSupportActionBar(binding.toolbar);
 
+        if (getCallingActivity() != null)
+            startedForResult = true;
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+            if (startedForResult)
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            else
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         }
 
-
-
-        if (getCallingActivity() != null)
-            startedForResult = true;
 
         model = ViewModelProviders.of(this,viewModelFactory).get(LabelsViewModel.class);
 
@@ -138,25 +117,24 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
 
         model.getLabels().observe(this, labels -> {
             if (labels != null)
-                bindingModel.setLabelsList(labels);
+                bindingModel.setLabelsList(labels, selectedArray);
         });
 
         model.getLabelGroups().observe(this, groups -> {
             if (groups != null)
                 bindingModel.setLabelGroupsList(groups);
         });
-/*
-        model.getDeleteLabelTrigger().observe(this, deletedId->{
-            if (deletedId != null)
-                chipsAvailable.deleteChip(deletedId);
-        }); */
 
         model.getOnNewGroup().observe(this,newGroup->{
             bindingModel.addGroup(newGroup);
         });
 
-        model.getOnNewLabel().observe(this,newLabel->{
+        model.getOnNewLabel().observe(this, newLabel -> {
             bindingModel.refreshLabel(newLabel);
+        });
+
+        model.getOnEditLabel().observe(this, label -> { //TODO Объединить с onNew
+            bindingModel.refreshLabel(label);
         });
 
         model.getOnEditGroup().observe(this, group ->{
@@ -273,6 +251,12 @@ public class LabelsActivity_ extends AppCompatActivity implements HasSupportFrag
             case R.id.groups_add:
                 bindingModel.setListLayoutManager((LinearLayoutManager) binding.alRecycler.getLayoutManager());
                 openNewGroupDialog();
+                break;
+            case R.id.commit:
+                Intent intent = new Intent();
+                intent.putExtra("SELECTED", bindingModel.getSelected());
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             case android.R.id.home:
                 finish();

@@ -9,7 +9,7 @@
         android:layout_width="0px"
         android:layout_height="0px"/>
 
-    <com.vividprojects.protoplanner.Widgets.ChipsLayout
+    <com.vividprojects.protoplanner.widgets.ChipsLayout
         android:id="@+id/chipLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
